@@ -63,7 +63,7 @@ jobs:
         run: npm run docs:sync:check:strict
 
       - name: Security audit (prod dependencies)
-        run: npm audit --omit=dev --audit-level=high
+        run: npm run audit:prod
 
       - name: Validate tag matches package version
         if: startsWith(github.ref, 'refs/tags/v')

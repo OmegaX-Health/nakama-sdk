@@ -46,6 +46,7 @@ function normalizeSimulationCommitment(
 function buildSimulationVerificationMetadata(params: {
   sigVerifyRequested: boolean;
   sigVerifyUsed: boolean;
+  signatureVerified?: boolean;
   verificationDowngraded?: boolean;
 }) {
   const verificationDowngraded =
@@ -54,7 +55,9 @@ function buildSimulationVerificationMetadata(params: {
   return {
     sigVerifyRequested: params.sigVerifyRequested,
     sigVerifyUsed: params.sigVerifyUsed,
-    signatureVerified: params.sigVerifyUsed && !verificationDowngraded,
+    signatureVerified:
+      params.signatureVerified ??
+      (params.sigVerifyUsed && !verificationDowngraded),
     verificationDowngraded,
   };
 }
@@ -236,7 +239,11 @@ export function createRpcClient(connection: Connection): RpcClient {
             unitsConsumed: null,
             err: error,
             failure: normalizeClaimSimulationFailure({ err: error, logs: [] }),
-            ...defaultVerificationMetadata,
+            ...buildSimulationVerificationMetadata({
+              sigVerifyRequested: sigVerify,
+              sigVerifyUsed: sigVerify,
+              signatureVerified: false,
+            }),
           };
         }
 

@@ -203,7 +203,7 @@ test('createRpcClient fails closed when signature verification fallback is not e
     /Invalid arguments/,
   );
   assert.equal(result.sigVerifyRequested, true);
-  assert.equal(result.sigVerifyUsed, false);
+  assert.equal(result.sigVerifyUsed, true);
   assert.equal(result.signatureVerified, false);
   assert.equal(result.verificationDowngraded, false);
   assert.equal(simulationOptions.length, 1);
