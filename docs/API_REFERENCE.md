@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.3`.
+This page documents the public SDK surface shipped in `0.8.4`.
 
 ## Core runtime entrypoints
 
@@ -27,6 +27,13 @@ Returned by `createRpcClient(...)`.
 - `broadcastSignedTx(...)`
 - `simulateSignedTx(...)`
 - `getSignatureStatus(...)`
+
+`simulateSignedTx(...)` verifies signatures by default. If an RPC rejects the
+signature-verifying simulation argument combination, the SDK fails closed unless
+the caller explicitly passes `allowSigVerifyFallback: true`. Results include
+`sigVerifyRequested`, `sigVerifyUsed`, `signatureVerified`, and
+`verificationDowngraded` so intake services can reject unverified preflight
+results.
 
 ## Canonical instruction builders
 
@@ -95,7 +102,7 @@ Returned by `createProtocolClient(...)`.
 
 Every instruction also exposes a sibling `build...Instruction(...)` helper.
 
-Custody-sensitive builders now mirror the on-chain custody requirements directly. `buildCreateDomainAssetVaultTx(...)` requires a concrete vault token account, while sponsor funding, premium payments, and LP capital deposits require source token account, vault token account, asset mint, and token program accounts. Redemption builders take shares only; payout assets are derived on-chain.
+Custody-sensitive builders now mirror the on-chain custody requirements directly. `buildCreateDomainAssetVaultTx(...)` derives the protocol-owned `domain_asset_vault_token` PDA, while sponsor funding, premium payments, LP capital deposits, and redemption processing require source or recipient token accounts, the canonical vault token account, asset mint, and token program accounts.
 
 ## Canonical account readers
 
@@ -122,8 +129,11 @@ Returned by `createProtocolClient(...)`.
 - `fetchAllocationLedger(...)`
 - `fetchOracleProfile(...)`
 - `fetchPoolOracleApproval(...)`
+- `fetchPoolOracleFeeVault(...)`
 - `fetchPoolOraclePolicy(...)`
 - `fetchPoolOraclePermissionSet(...)`
+- `fetchPoolTreasuryVault(...)`
+- `fetchProtocolFeeVault(...)`
 - `fetchOutcomeSchema(...)`
 - `fetchSchemaDependencyLedger(...)`
 
@@ -140,6 +150,7 @@ Available from the root package and `@omegax/protocol-sdk/protocol_seeds`.
 - `deriveProtocolGovernancePda(...)`
 - `deriveReserveDomainPda(...)`
 - `deriveDomainAssetVaultPda(...)`
+- `deriveDomainAssetVaultTokenAccountPda(...)`
 - `deriveDomainAssetLedgerPda(...)`
 - `deriveHealthPlanPda(...)`
 - `derivePlanReserveLedgerPda(...)`
@@ -158,8 +169,11 @@ Available from the root package and `@omegax/protocol-sdk/protocol_seeds`.
 - `deriveAllocationLedgerPda(...)`
 - `deriveOracleProfilePda(...)`
 - `derivePoolOracleApprovalPda(...)`
+- `derivePoolOracleFeeVaultPda(...)`
 - `derivePoolOraclePolicyPda(...)`
 - `derivePoolOraclePermissionSetPda(...)`
+- `derivePoolTreasuryVaultPda(...)`
+- `deriveProtocolFeeVaultPda(...)`
 - `deriveOutcomeSchemaPda(...)`
 - `deriveSchemaDependencyLedgerPda(...)`
 
@@ -168,6 +182,7 @@ Seed constants:
 - `SEED_PROTOCOL_GOVERNANCE`
 - `SEED_RESERVE_DOMAIN`
 - `SEED_DOMAIN_ASSET_VAULT`
+- `SEED_DOMAIN_ASSET_VAULT_TOKEN`
 - `SEED_DOMAIN_ASSET_LEDGER`
 - `SEED_HEALTH_PLAN`
 - `SEED_PLAN_RESERVE_LEDGER`
@@ -186,8 +201,11 @@ Seed constants:
 - `SEED_ALLOCATION_LEDGER`
 - `SEED_ORACLE_PROFILE`
 - `SEED_POOL_ORACLE_APPROVAL`
+- `SEED_POOL_ORACLE_FEE_VAULT`
 - `SEED_POOL_ORACLE_POLICY`
 - `SEED_POOL_ORACLE_PERMISSION_SET`
+- `SEED_POOL_TREASURY_VAULT`
+- `SEED_PROTOCOL_FEE_VAULT`
 - `SEED_OUTCOME_SCHEMA`
 - `SEED_SCHEMA_DEPENDENCY_LEDGER`
 - `ZERO_PUBKEY`

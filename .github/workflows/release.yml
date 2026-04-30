@@ -62,6 +62,9 @@ jobs:
       - name: Docs sync parity (strict)
         run: npm run docs:sync:check:strict
 
+      - name: Security audit (prod dependencies)
+        run: npm run audit:prod
+
       - name: Validate tag matches package version
         if: startsWith(github.ref, 'refs/tags/v')
         env:

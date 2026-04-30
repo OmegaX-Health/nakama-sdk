@@ -109,7 +109,7 @@ Use this path when you need to create the settlement boundary, launch sponsor pr
 
 Use this when preparing the settlement boundary for a new domain and asset.
 
-`buildCreateDomainAssetVaultTx(...)` requires the SPL vault token account that will hold the asset for the domain. Do not pass a placeholder address; the protocol rejects missing custody rails.
+`buildCreateDomainAssetVaultTx(...)` derives the protocol-owned SPL vault token account at the canonical `domain_asset_vault_token` PDA. Do not create or pass an admin-owned token account; the protocol initializes the PDA-owned account inline.
 
 Builders:
 
@@ -118,6 +118,9 @@ Builders:
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
+- `buildInitProtocolFeeVaultTx(...)`
+- `buildInitPoolTreasuryVaultTx(...)`
+- `buildInitPoolOracleFeeVaultTx(...)`
 
 Readers:
 
@@ -130,7 +133,7 @@ Readers:
 
 Use this for sponsor budgets, reward programs, or early-stage plans that do not need LP capital.
 
-Sponsor budget and premium builders now move tokens as part of the instruction. Provide the payer source token account, the configured domain vault token account, the asset mint, and the token program alongside the reserve ledgers.
+Sponsor budget and premium builders now move tokens as part of the instruction. Provide the payer source token account, the canonical domain vault token account, the asset mint, and the token program alongside the reserve ledgers. Premium and claim-settlement fee flows also require the matching protocol or oracle fee-vault accounts when fees are configured.
 
 Builders:
 

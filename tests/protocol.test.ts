@@ -9,6 +9,7 @@ import {
   buildAttestClaimCaseTx,
   buildCreateDomainAssetVaultTx,
   buildOpenMemberPositionTx,
+  buildProtocolInstruction,
   CLAIM_INTAKE_APPROVED,
   CAPITAL_CLASS_RESTRICTION_WRAPPER_ONLY,
   FUNDING_LINE_TYPE_SPONSOR_BUDGET,
@@ -22,12 +23,17 @@ import {
   decodeProtocolAccount,
   deriveClaimAttestationPda,
   deriveAllocationPositionPda,
+  deriveDomainAssetVaultTokenAccountPda,
   deriveHealthPlanPda,
   deriveLiquidityPoolPda,
+  deriveMemberPositionPda,
   deriveMembershipAnchorSeatPda,
   deriveOracleProfilePda,
+  derivePoolOracleFeeVaultPda,
   deriveOutcomeSchemaPda,
   derivePoolOraclePolicyPda,
+  derivePoolTreasuryVaultPda,
+  deriveProtocolFeeVaultPda,
   deriveProtocolGovernancePda,
   deriveReserveDomainPda,
   getProgramId,
@@ -67,9 +73,28 @@ test('PDA helpers match manual derivation under canonical seeds', () => {
     reserveDomain,
     poolId: 'omega-health-income',
   });
+  const assetMint = Keypair.generate().publicKey;
+  const domainAssetVaultToken = deriveDomainAssetVaultTokenAccountPda({
+    reserveDomain,
+    assetMint,
+  });
+  const protocolFeeVault = deriveProtocolFeeVaultPda({
+    reserveDomain,
+    assetMint,
+  });
+  const poolTreasuryVault = derivePoolTreasuryVaultPda({
+    liquidityPool,
+    assetMint,
+  });
+  const poolOracleFeeVault = derivePoolOracleFeeVaultPda({
+    liquidityPool,
+    oracle: Keypair.generate().publicKey,
+    assetMint,
+  });
+  const anchorRef = Keypair.generate().publicKey;
   const membershipAnchorSeat = deriveMembershipAnchorSeatPda({
     healthPlan,
-    anchorRef: 'anchor-seat-alpha',
+    anchorRef,
   });
   const oracleProfile = deriveOracleProfilePda({
     oracle: Keypair.generate().publicKey,
@@ -102,6 +127,13 @@ test('PDA helpers match manual derivation under canonical seeds', () => {
   assert.equal(reserveDomain.toBase58(), manualDomain.toBase58());
   assert.match(healthPlan.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
   assert.match(liquidityPool.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
+  assert.match(
+    domainAssetVaultToken.toBase58(),
+    /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
+  );
+  assert.match(protocolFeeVault.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
+  assert.match(poolTreasuryVault.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
+  assert.match(poolOracleFeeVault.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
   assert.match(
     membershipAnchorSeat.toBase58(),
     /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
@@ -203,6 +235,48 @@ test('buildAttestClaimCaseTx rejects unsupported attestation decisions before su
   );
 });
 
+test('buildProtocolInstruction uses the selected programId for omitted optional accounts', () => {
+  const customProgramId = Keypair.generate().publicKey;
+  const authority = Keypair.generate().publicKey;
+
+  const ix = buildProtocolInstruction({
+    instructionName: 'create_obligation',
+    programId: customProgramId,
+    args: {
+      obligation_id: 'obligation-1',
+      asset_mint: ZERO,
+      policy_series: ZERO,
+      member_wallet: ZERO,
+      beneficiary: ZERO,
+      claim_case: ZERO,
+      liquidity_pool: ZERO,
+      capital_class: ZERO,
+      allocation_position: ZERO,
+      delivery_mode: 0,
+      amount: 1n,
+      creation_reason_hash: Array.from(new Uint8Array(32)),
+    },
+    accounts: {
+      authority,
+      protocol_governance: Keypair.generate().publicKey,
+      health_plan: Keypair.generate().publicKey,
+      domain_asset_ledger: Keypair.generate().publicKey,
+      funding_line: Keypair.generate().publicKey,
+      funding_line_ledger: Keypair.generate().publicKey,
+      plan_reserve_ledger: Keypair.generate().publicKey,
+      obligation: Keypair.generate().publicKey,
+      system_program: Keypair.generate().publicKey,
+    },
+  });
+
+  assert.equal(ix.programId.toBase58(), customProgramId.toBase58());
+  for (const index of [7, 8, 9]) {
+    assert.equal(ix.keys[index]?.pubkey.toBase58(), customProgramId.toBase58());
+    assert.equal(ix.keys[index]?.isSigner, false);
+    assert.equal(ix.keys[index]?.isWritable, false);
+  }
+});
+
 test('buildOpenMemberPositionTx keeps invite authority as an optional signer', () => {
   const wallet = Keypair.generate().publicKey;
   const healthPlanAddress = Keypair.generate().publicKey;
@@ -231,39 +305,101 @@ test('buildOpenMemberPositionTx keeps invite authority as an optional signer', (
   assert.equal(inviteAuthority?.isWritable, false);
 });
 
-test('buildCreateDomainAssetVaultTx requires a concrete vault token account', () => {
+test('buildOpenMemberPositionTx derives member anchor accounts with the selected program id', () => {
+  const wallet = Keypair.generate().publicKey;
+  const healthPlanAddress = Keypair.generate().publicKey;
+  const anchorRefAddress = Keypair.generate().publicKey;
+  const programId = Keypair.generate().publicKey;
+
+  const tx = buildOpenMemberPositionTx({
+    wallet,
+    healthPlanAddress,
+    anchorRefAddress,
+    programId,
+    recentBlockhash: '11111111111111111111111111111111',
+    eligibilityStatus: 1,
+    delegatedRightsMask: 0,
+    proofMode: 2,
+    tokenGateAmountSnapshot: 0n,
+    inviteExpiresAt: 1n,
+  });
+
+  const keys = tx.instructions[0]?.keys ?? [];
+  assert.equal(tx.instructions[0]?.programId.toBase58(), programId.toBase58());
+  assert.equal(
+    keys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda(programId).toBase58(),
+  );
+  assert.equal(
+    keys[3]?.pubkey.toBase58(),
+    deriveMemberPositionPda({
+      healthPlan: healthPlanAddress,
+      wallet,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    keys[4]?.pubkey.toBase58(),
+    deriveMembershipAnchorSeatPda({
+      healthPlan: healthPlanAddress,
+      anchorRef: anchorRefAddress,
+      programId,
+    }).toBase58(),
+  );
+  for (const index of [5, 6]) {
+    assert.equal(keys[index]?.pubkey.toBase58(), programId.toBase58());
+    assert.equal(keys[index]?.isSigner, false);
+    assert.equal(keys[index]?.isWritable, false);
+  }
+});
+
+test('buildCreateDomainAssetVaultTx derives the protocol-owned vault token account', () => {
   const authority = Keypair.generate().publicKey;
   const reserveDomainAddress = Keypair.generate().publicKey;
   const assetMint = Keypair.generate().publicKey;
-  const vaultTokenAccountAddress = Keypair.generate().publicKey;
+  const vaultTokenAccountAddress = deriveDomainAssetVaultTokenAccountPda({
+    reserveDomain: reserveDomainAddress,
+    assetMint,
+  });
 
   const tx = buildCreateDomainAssetVaultTx({
+    authority,
+    reserveDomainAddress,
+    assetMint,
+    recentBlockhash: '11111111111111111111111111111111',
+  });
+
+  assert.equal(tx.instructions.length, 1);
+  assert.equal(tx.feePayer?.toBase58(), authority.toBase58());
+  assert.equal(tx.instructions[0]?.data.byteLength, 40);
+  assert.equal(
+    tx.instructions[0]?.keys[6]?.pubkey.toBase58(),
+    vaultTokenAccountAddress.toBase58(),
+  );
+  assert.equal(tx.instructions[0]?.keys[6]?.isWritable, true);
+
+  const explicitTx = buildCreateDomainAssetVaultTx({
     authority,
     reserveDomainAddress,
     assetMint,
     vaultTokenAccountAddress,
     recentBlockhash: '11111111111111111111111111111111',
   });
-
-  assert.equal(tx.instructions.length, 1);
-  assert.equal(tx.feePayer?.toBase58(), authority.toBase58());
-
-  const encodedVault = tx.instructions[0]?.data.slice(40);
   assert.equal(
-    new PublicKey(encodedVault ?? Buffer.alloc(32)).toBase58(),
+    explicitTx.instructions[0]?.keys[6]?.pubkey.toBase58(),
     vaultTokenAccountAddress.toBase58(),
   );
 
-  assert.throws(
-    () =>
-      buildCreateDomainAssetVaultTx({
-        authority,
-        reserveDomainAddress,
-        assetMint,
-        vaultTokenAccountAddress: undefined as never,
-        recentBlockhash: '11111111111111111111111111111111',
-      }),
-    /public key value is required/,
+  const staleOverrideTx = buildCreateDomainAssetVaultTx({
+    authority,
+    reserveDomainAddress,
+    assetMint,
+    vaultTokenAccountAddress: Keypair.generate().publicKey,
+    recentBlockhash: '11111111111111111111111111111111',
+  });
+  assert.equal(
+    staleOverrideTx.instructions[0]?.keys[6]?.pubkey.toBase58(),
+    vaultTokenAccountAddress.toBase58(),
   );
 });
 

@@ -35,8 +35,11 @@ export type ProtocolAccountName =
   | 'PolicySeries'
   | 'PoolClassLedger'
   | 'PoolOracleApproval'
+  | 'PoolOracleFeeVault'
   | 'PoolOraclePermissionSet'
   | 'PoolOraclePolicy'
+  | 'PoolTreasuryVault'
+  | 'ProtocolFeeVault'
   | 'ProtocolGovernance'
   | 'ReserveDomain'
   | 'SchemaDependencyLedger'
@@ -123,6 +126,10 @@ export interface AttestClaimCaseArgs {
   schema_key_hash: Uint8Array | number[];
 }
 
+export interface AuthorizeClaimRecipientArgs {
+  delegate_recipient: PublicKeyish;
+}
+
 export interface BackfillSchemaDependencyLedgerArgs {
   schema_key_hash: Uint8Array | number[];
   pool_rule_addresses: Array<PublicKeyish>;
@@ -186,6 +193,7 @@ export interface ClaimCase {
   claim_id: string;
   claimant: string;
   adjudicator: string;
+  delegate_recipient: string;
   evidence_ref_hash: Uint8Array | number[];
   decision_support_hash: Uint8Array | number[];
   intake_status: number;
@@ -243,7 +251,6 @@ export interface CreateCapitalClassArgs {
 
 export interface CreateDomainAssetVaultArgs {
   asset_mint: PublicKeyish;
-  vault_token_account: PublicKeyish;
 }
 
 export interface CreateHealthPlanArgs {
@@ -352,6 +359,30 @@ export interface DomainAssetVault {
   bump: number;
 }
 
+export interface FeeAccruedEvent {
+  vault: string;
+  asset_mint: string;
+  amount: BigNumberish;
+  accrued_total: BigNumberish;
+}
+
+export interface FeeVaultInitializedEvent {
+  vault: string;
+  scope: string;
+  asset_mint: string;
+  fee_recipient: string;
+  rail: number;
+}
+
+export interface FeeWithdrawnEvent {
+  vault: string;
+  asset_mint: string;
+  amount: BigNumberish;
+  configured_recipient: string;
+  recipient: string;
+  withdrawn_total: BigNumberish;
+}
+
 export interface FundSponsorBudgetArgs {
   amount: BigNumberish;
 }
@@ -433,6 +464,22 @@ export interface ImpairmentRecordedEvent {
   obligation: string;
   amount: BigNumberish;
   reason_hash: Uint8Array | number[];
+}
+
+export interface InitPoolOracleFeeVaultArgs {
+  oracle: PublicKeyish;
+  asset_mint: PublicKeyish;
+  fee_recipient: PublicKeyish;
+}
+
+export interface InitPoolTreasuryVaultArgs {
+  asset_mint: PublicKeyish;
+  fee_recipient: PublicKeyish;
+}
+
+export interface InitProtocolFeeVaultArgs {
+  asset_mint: PublicKeyish;
+  fee_recipient: PublicKeyish;
 }
 
 export interface InitializeProtocolGovernanceArgs {
@@ -748,6 +795,16 @@ export interface PoolOracleApprovalChangedEvent {
   active: boolean;
 }
 
+export interface PoolOracleFeeVault {
+  liquidity_pool: string;
+  oracle: string;
+  asset_mint: string;
+  fee_recipient: string;
+  accrued_fees: BigNumberish;
+  withdrawn_fees: BigNumberish;
+  bump: number;
+}
+
 export interface PoolOraclePermissionSet {
   liquidity_pool: string;
   oracle: string;
@@ -783,8 +840,26 @@ export interface PoolOraclePolicyChangedEvent {
   oracle_fee_bps: number;
 }
 
+export interface PoolTreasuryVault {
+  liquidity_pool: string;
+  asset_mint: string;
+  fee_recipient: string;
+  accrued_fees: BigNumberish;
+  withdrawn_fees: BigNumberish;
+  bump: number;
+}
+
 export interface ProcessRedemptionQueueArgs {
   shares: BigNumberish;
+}
+
+export interface ProtocolFeeVault {
+  reserve_domain: string;
+  asset_mint: string;
+  fee_recipient: string;
+  accrued_fees: BigNumberish;
+  withdrawn_fees: BigNumberish;
+  bump: number;
 }
 
 export interface ProtocolGovernance {
@@ -1039,6 +1114,10 @@ export interface VersionPolicySeriesArgs {
   cycle_seconds: BigNumberish;
 }
 
+export interface WithdrawArgs {
+  amount: BigNumberish;
+}
+
 export interface AdjudicateClaimCaseAccounts {
   authority: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1072,6 +1151,13 @@ export interface AttestClaimCaseAccounts {
   outcome_schema: PublicKeyish;
   claim_attestation: PublicKeyish;
   system_program?: PublicKeyish;
+}
+
+export interface AuthorizeClaimRecipientAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  member_position: PublicKeyish;
+  claim_case: PublicKeyish;
 }
 
 export interface BackfillSchemaDependencyLedgerAccounts {
@@ -1122,6 +1208,9 @@ export interface CreateDomainAssetVaultAccounts {
   reserve_domain: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  token_program: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
@@ -1193,6 +1282,7 @@ export interface DepositIntoCapitalClassAccounts {
   capital_class: PublicKeyish;
   pool_class_ledger: PublicKeyish;
   lp_position: PublicKeyish;
+  pool_treasury_vault: PublicKeyish;
   source_token_account: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
@@ -1214,6 +1304,35 @@ export interface FundSponsorBudgetAccounts {
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
   token_program: PublicKeyish;
+}
+
+export interface InitPoolOracleFeeVaultAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  liquidity_pool: PublicKeyish;
+  oracle_profile: PublicKeyish;
+  pool_oracle_approval: PublicKeyish;
+  domain_asset_vault?: PublicKeyish;
+  pool_oracle_fee_vault: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface InitPoolTreasuryVaultAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  liquidity_pool: PublicKeyish;
+  domain_asset_vault?: PublicKeyish;
+  pool_treasury_vault: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface InitProtocolFeeVaultAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  reserve_domain: PublicKeyish;
+  domain_asset_vault?: PublicKeyish;
+  protocol_fee_vault: PublicKeyish;
+  system_program?: PublicKeyish;
 }
 
 export interface InitializeProtocolGovernanceAccounts {
@@ -1279,6 +1398,11 @@ export interface ProcessRedemptionQueueAccounts {
   capital_class: PublicKeyish;
   pool_class_ledger: PublicKeyish;
   lp_position: PublicKeyish;
+  pool_treasury_vault: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
+  token_program: PublicKeyish;
 }
 
 export interface RecordPremiumPaymentAccounts {
@@ -1291,6 +1415,7 @@ export interface RecordPremiumPaymentAccounts {
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
   series_reserve_ledger?: PublicKeyish;
+  protocol_fee_vault: PublicKeyish;
   source_token_account: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
@@ -1404,6 +1529,14 @@ export interface SettleClaimCaseAccounts {
   allocation_ledger?: PublicKeyish;
   claim_case: PublicKeyish;
   obligation?: PublicKeyish;
+  protocol_fee_vault: PublicKeyish;
+  pool_oracle_fee_vault?: PublicKeyish;
+  pool_oracle_policy?: PublicKeyish;
+  member_position: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
+  token_program: PublicKeyish;
 }
 
 export interface SettleObligationAccounts {
@@ -1421,6 +1554,11 @@ export interface SettleObligationAccounts {
   allocation_ledger?: PublicKeyish;
   obligation: PublicKeyish;
   claim_case?: PublicKeyish;
+  member_position?: PublicKeyish;
+  asset_mint?: PublicKeyish;
+  vault_token_account?: PublicKeyish;
+  recipient_token_account?: PublicKeyish;
+  token_program?: PublicKeyish;
 }
 
 export interface UpdateAllocationCapsAccounts {
@@ -1486,6 +1624,74 @@ export interface VersionPolicySeriesAccounts {
   next_policy_series: PublicKeyish;
   next_series_reserve_ledger: PublicKeyish;
   system_program?: PublicKeyish;
+}
+
+export interface WithdrawPoolOracleFeeSolAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  liquidity_pool: PublicKeyish;
+  oracle_profile: PublicKeyish;
+  pool_oracle_fee_vault: PublicKeyish;
+  recipient: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface WithdrawPoolOracleFeeSplAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  liquidity_pool: PublicKeyish;
+  oracle_profile: PublicKeyish;
+  pool_oracle_fee_vault: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  domain_asset_ledger: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
+  token_program: PublicKeyish;
+}
+
+export interface WithdrawPoolTreasurySolAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  liquidity_pool: PublicKeyish;
+  pool_treasury_vault: PublicKeyish;
+  recipient: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface WithdrawPoolTreasurySplAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  liquidity_pool: PublicKeyish;
+  pool_treasury_vault: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  domain_asset_ledger: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
+  token_program: PublicKeyish;
+}
+
+export interface WithdrawProtocolFeeSolAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  reserve_domain: PublicKeyish;
+  protocol_fee_vault: PublicKeyish;
+  recipient: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface WithdrawProtocolFeeSplAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  reserve_domain: PublicKeyish;
+  protocol_fee_vault: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  domain_asset_ledger: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
+  token_program: PublicKeyish;
 }
 
 export interface ProtocolClient {
@@ -1562,6 +1768,18 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       AttestClaimCaseArgs,
       AttestClaimCaseAccounts
+    >,
+  ): Transaction;
+  buildAuthorizeClaimRecipientInstruction(
+    params: BuildInstructionParams<
+      AuthorizeClaimRecipientArgs,
+      AuthorizeClaimRecipientAccounts
+    >,
+  ): TransactionInstruction;
+  buildAuthorizeClaimRecipientTx(
+    params: BuildTransactionParams<
+      AuthorizeClaimRecipientArgs,
+      AuthorizeClaimRecipientAccounts
     >,
   ): Transaction;
   buildBackfillSchemaDependencyLedgerInstruction(
@@ -1730,6 +1948,42 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       FundSponsorBudgetArgs,
       FundSponsorBudgetAccounts
+    >,
+  ): Transaction;
+  buildInitPoolOracleFeeVaultInstruction(
+    params: BuildInstructionParams<
+      InitPoolOracleFeeVaultArgs,
+      InitPoolOracleFeeVaultAccounts
+    >,
+  ): TransactionInstruction;
+  buildInitPoolOracleFeeVaultTx(
+    params: BuildTransactionParams<
+      InitPoolOracleFeeVaultArgs,
+      InitPoolOracleFeeVaultAccounts
+    >,
+  ): Transaction;
+  buildInitPoolTreasuryVaultInstruction(
+    params: BuildInstructionParams<
+      InitPoolTreasuryVaultArgs,
+      InitPoolTreasuryVaultAccounts
+    >,
+  ): TransactionInstruction;
+  buildInitPoolTreasuryVaultTx(
+    params: BuildTransactionParams<
+      InitPoolTreasuryVaultArgs,
+      InitPoolTreasuryVaultAccounts
+    >,
+  ): Transaction;
+  buildInitProtocolFeeVaultInstruction(
+    params: BuildInstructionParams<
+      InitProtocolFeeVaultArgs,
+      InitProtocolFeeVaultAccounts
+    >,
+  ): TransactionInstruction;
+  buildInitProtocolFeeVaultTx(
+    params: BuildTransactionParams<
+      InitProtocolFeeVaultArgs,
+      InitProtocolFeeVaultAccounts
     >,
   ): Transaction;
   buildInitializeProtocolGovernanceInstruction(
@@ -2038,6 +2292,78 @@ export interface ProtocolClient {
       VersionPolicySeriesAccounts
     >,
   ): Transaction;
+  buildWithdrawPoolOracleFeeSolInstruction(
+    params: BuildInstructionParams<
+      WithdrawArgs,
+      WithdrawPoolOracleFeeSolAccounts
+    >,
+  ): TransactionInstruction;
+  buildWithdrawPoolOracleFeeSolTx(
+    params: BuildTransactionParams<
+      WithdrawArgs,
+      WithdrawPoolOracleFeeSolAccounts
+    >,
+  ): Transaction;
+  buildWithdrawPoolOracleFeeSplInstruction(
+    params: BuildInstructionParams<
+      WithdrawArgs,
+      WithdrawPoolOracleFeeSplAccounts
+    >,
+  ): TransactionInstruction;
+  buildWithdrawPoolOracleFeeSplTx(
+    params: BuildTransactionParams<
+      WithdrawArgs,
+      WithdrawPoolOracleFeeSplAccounts
+    >,
+  ): Transaction;
+  buildWithdrawPoolTreasurySolInstruction(
+    params: BuildInstructionParams<
+      WithdrawArgs,
+      WithdrawPoolTreasurySolAccounts
+    >,
+  ): TransactionInstruction;
+  buildWithdrawPoolTreasurySolTx(
+    params: BuildTransactionParams<
+      WithdrawArgs,
+      WithdrawPoolTreasurySolAccounts
+    >,
+  ): Transaction;
+  buildWithdrawPoolTreasurySplInstruction(
+    params: BuildInstructionParams<
+      WithdrawArgs,
+      WithdrawPoolTreasurySplAccounts
+    >,
+  ): TransactionInstruction;
+  buildWithdrawPoolTreasurySplTx(
+    params: BuildTransactionParams<
+      WithdrawArgs,
+      WithdrawPoolTreasurySplAccounts
+    >,
+  ): Transaction;
+  buildWithdrawProtocolFeeSolInstruction(
+    params: BuildInstructionParams<
+      WithdrawArgs,
+      WithdrawProtocolFeeSolAccounts
+    >,
+  ): TransactionInstruction;
+  buildWithdrawProtocolFeeSolTx(
+    params: BuildTransactionParams<
+      WithdrawArgs,
+      WithdrawProtocolFeeSolAccounts
+    >,
+  ): Transaction;
+  buildWithdrawProtocolFeeSplInstruction(
+    params: BuildInstructionParams<
+      WithdrawArgs,
+      WithdrawProtocolFeeSplAccounts
+    >,
+  ): TransactionInstruction;
+  buildWithdrawProtocolFeeSplTx(
+    params: BuildTransactionParams<
+      WithdrawArgs,
+      WithdrawProtocolFeeSplAccounts
+    >,
+  ): Transaction;
   fetchAllocationLedger(
     address: PublicKeyish,
   ): Promise<AllocationLedger | null>;
@@ -2077,12 +2403,21 @@ export interface ProtocolClient {
   fetchPoolOracleApproval(
     address: PublicKeyish,
   ): Promise<PoolOracleApproval | null>;
+  fetchPoolOracleFeeVault(
+    address: PublicKeyish,
+  ): Promise<PoolOracleFeeVault | null>;
   fetchPoolOraclePermissionSet(
     address: PublicKeyish,
   ): Promise<PoolOraclePermissionSet | null>;
   fetchPoolOraclePolicy(
     address: PublicKeyish,
   ): Promise<PoolOraclePolicy | null>;
+  fetchPoolTreasuryVault(
+    address: PublicKeyish,
+  ): Promise<PoolTreasuryVault | null>;
+  fetchProtocolFeeVault(
+    address: PublicKeyish,
+  ): Promise<ProtocolFeeVault | null>;
   fetchProtocolGovernance(
     address?: PublicKeyish,
   ): Promise<ProtocolGovernance | null>;

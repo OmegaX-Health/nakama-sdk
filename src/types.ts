@@ -188,6 +188,7 @@ export interface SimulateSignedTxParams {
   commitment?: Commitment;
   replaceRecentBlockhash?: boolean;
   sigVerify?: boolean;
+  allowSigVerifyFallback?: boolean;
 }
 
 export interface SimulateSignedTxResult {
@@ -196,6 +197,10 @@ export interface SimulateSignedTxResult {
   unitsConsumed: number | null;
   err: unknown | null;
   failure: ClaimFailureDetail | null;
+  sigVerifyRequested: boolean;
+  sigVerifyUsed: boolean;
+  signatureVerified: boolean;
+  verificationDowngraded: boolean;
 }
 
 export interface GetSignatureStatusParams {

@@ -157,10 +157,64 @@ test('createRpcClient simulates versioned transactions without stale decoding as
   assert.equal(result.ok, true);
   assert.deepEqual(result.logs, ['ok']);
   assert.equal(result.unitsConsumed, 1234);
+  assert.equal(result.sigVerifyRequested, true);
+  assert.equal(result.sigVerifyUsed, true);
+  assert.equal(result.signatureVerified, true);
+  assert.equal(result.verificationDowngraded, false);
   assert.ok(simulatedTx instanceof VersionedTransaction);
 });
 
-test('createRpcClient retries signed simulation without sigVerify when RPC rejects argument combination', async () => {
+test('createRpcClient fails closed when signature verification fallback is not explicitly allowed', async () => {
+  const payer = Keypair.generate();
+  const recipient = Keypair.generate();
+  const tx = new Transaction({
+    feePayer: payer.publicKey,
+    recentBlockhash: '11111111111111111111111111111111',
+  }).add(
+    SystemProgram.transfer({
+      fromPubkey: payer.publicKey,
+      toPubkey: recipient.publicKey,
+      lamports: 1,
+    }),
+  );
+  tx.sign(payer);
+
+  const simulationOptions: unknown[] = [];
+  const rpc = createRpcClient(
+    createRpcConnectionStub({
+      async simulateTransaction(_transaction: unknown, options: unknown) {
+        simulationOptions.push(options);
+        throw new Error('Invalid arguments');
+      },
+    }),
+  );
+
+  const result = await rpc.simulateSignedTx({
+    signedTxBase64: tx.serialize().toString('base64'),
+    sigVerify: true,
+    replaceRecentBlockhash: true,
+  });
+
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.logs, []);
+  assert.equal(result.unitsConsumed, null);
+  assert.match(
+    result.err instanceof Error ? result.err.message : '',
+    /Invalid arguments/,
+  );
+  assert.equal(result.sigVerifyRequested, true);
+  assert.equal(result.sigVerifyUsed, true);
+  assert.equal(result.signatureVerified, false);
+  assert.equal(result.verificationDowngraded, false);
+  assert.equal(simulationOptions.length, 1);
+  assert.deepEqual(simulationOptions[0], {
+    commitment: 'confirmed',
+    replaceRecentBlockhash: true,
+    sigVerify: true,
+  });
+});
+
+test('createRpcClient only downgrades signature verification when explicitly allowed', async () => {
   const payer = Keypair.generate();
   const recipient = Keypair.generate();
   const tx = new Transaction({
@@ -187,7 +241,7 @@ test('createRpcClient retries signed simulation without sigVerify when RPC rejec
           value: {
             err: null,
             logs: ['retry-ok'],
-            unitsConsumed: 4321,
+            unitsConsumed: 2222,
           },
         };
       },
@@ -197,26 +251,31 @@ test('createRpcClient retries signed simulation without sigVerify when RPC rejec
   const result = await rpc.simulateSignedTx({
     signedTxBase64: tx.serialize().toString('base64'),
     sigVerify: true,
-    replaceRecentBlockhash: true,
+    replaceRecentBlockhash: false,
+    allowSigVerifyFallback: true,
   });
 
   assert.equal(result.ok, true);
   assert.deepEqual(result.logs, ['retry-ok']);
-  assert.equal(result.unitsConsumed, 4321);
+  assert.equal(result.unitsConsumed, 2222);
+  assert.equal(result.sigVerifyRequested, true);
+  assert.equal(result.sigVerifyUsed, false);
+  assert.equal(result.signatureVerified, false);
+  assert.equal(result.verificationDowngraded, true);
   assert.equal(simulationOptions.length, 2);
   assert.deepEqual(simulationOptions[0], {
     commitment: 'confirmed',
-    replaceRecentBlockhash: true,
+    replaceRecentBlockhash: false,
     sigVerify: true,
   });
   assert.deepEqual(simulationOptions[1], {
     commitment: 'confirmed',
-    replaceRecentBlockhash: true,
+    replaceRecentBlockhash: false,
     sigVerify: false,
   });
 });
 
-test('createRpcClient retries signed simulation without sigVerify when RPC rejects sigVerify alone', async () => {
+test('createRpcClient marks unsigned fallback simulations as unverified', async () => {
   const payer = Keypair.generate();
   const recipient = Keypair.generate();
   const tx = new Transaction({
@@ -229,7 +288,6 @@ test('createRpcClient retries signed simulation without sigVerify when RPC rejec
       lamports: 1,
     }),
   );
-  tx.sign(payer);
 
   const simulationOptions: unknown[] = [];
   const rpc = createRpcClient(
@@ -242,8 +300,8 @@ test('createRpcClient retries signed simulation without sigVerify when RPC rejec
         return {
           value: {
             err: null,
-            logs: ['retry-ok-no-blockhash-replace'],
-            unitsConsumed: 2222,
+            logs: ['unsigned-fallback-ok'],
+            unitsConsumed: 1,
           },
         };
       },
@@ -251,23 +309,69 @@ test('createRpcClient retries signed simulation without sigVerify when RPC rejec
   );
 
   const result = await rpc.simulateSignedTx({
-    signedTxBase64: tx.serialize().toString('base64'),
+    signedTxBase64: tx
+      .serialize({ requireAllSignatures: false, verifySignatures: false })
+      .toString('base64'),
     sigVerify: true,
-    replaceRecentBlockhash: false,
+    allowSigVerifyFallback: true,
   });
 
   assert.equal(result.ok, true);
-  assert.deepEqual(result.logs, ['retry-ok-no-blockhash-replace']);
-  assert.equal(result.unitsConsumed, 2222);
+  assert.deepEqual(result.logs, ['unsigned-fallback-ok']);
+  assert.equal(result.sigVerifyRequested, true);
+  assert.equal(result.sigVerifyUsed, false);
+  assert.equal(result.signatureVerified, false);
+  assert.equal(result.verificationDowngraded, true);
   assert.equal(simulationOptions.length, 2);
+});
+
+test('createRpcClient reports simulation metadata when sigVerify is disabled by the caller', async () => {
+  const payer = Keypair.generate();
+  const recipient = Keypair.generate();
+  const tx = new Transaction({
+    feePayer: payer.publicKey,
+    recentBlockhash: '11111111111111111111111111111111',
+  }).add(
+    SystemProgram.transfer({
+      fromPubkey: payer.publicKey,
+      toPubkey: recipient.publicKey,
+      lamports: 1,
+    }),
+  );
+
+  const simulationOptions: unknown[] = [];
+  const rpc = createRpcClient(
+    createRpcConnectionStub({
+      async simulateTransaction(_transaction: unknown, options: unknown) {
+        simulationOptions.push(options);
+        return {
+          value: {
+            err: null,
+            logs: ['ok-no-sigverify'],
+            unitsConsumed: 7,
+          },
+        };
+      },
+    }),
+  );
+
+  const result = await rpc.simulateSignedTx({
+    signedTxBase64: tx
+      .serialize({ requireAllSignatures: false, verifySignatures: false })
+      .toString('base64'),
+    sigVerify: false,
+  });
+
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.logs, ['ok-no-sigverify']);
+  assert.equal(result.sigVerifyRequested, false);
+  assert.equal(result.sigVerifyUsed, false);
+  assert.equal(result.signatureVerified, false);
+  assert.equal(result.verificationDowngraded, false);
+  assert.equal(simulationOptions.length, 1);
   assert.deepEqual(simulationOptions[0], {
     commitment: 'confirmed',
-    replaceRecentBlockhash: false,
-    sigVerify: true,
-  });
-  assert.deepEqual(simulationOptions[1], {
-    commitment: 'confirmed',
-    replaceRecentBlockhash: false,
+    replaceRecentBlockhash: true,
     sigVerify: false,
   });
 });

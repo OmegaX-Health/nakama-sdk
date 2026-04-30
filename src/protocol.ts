@@ -33,6 +33,7 @@ import {
   deriveClaimAttestationPda,
   deriveClaimCasePda,
   deriveDomainAssetLedgerPda,
+  deriveDomainAssetVaultTokenAccountPda,
   deriveDomainAssetVaultPda,
   deriveFundingLineLedgerPda,
   deriveFundingLinePda,
@@ -85,6 +86,9 @@ type IdlInstructionEntry = {
 
 const CODER = new BorshCoder(protocolIdl as never);
 const ZERO_HASH_HEX = '00'.repeat(32);
+const SPL_TOKEN_PROGRAM_ID = new PublicKey(
+  'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+);
 const TYPE_BY_NAME = new Map<string, IdlStruct>(
   ((protocolIdl as { types?: IdlTypeEntry[] }).types ?? []).map((entry) => [
     entry.name,
@@ -312,6 +316,7 @@ function normalizeDecodedValue(type: IdlType, value: unknown): unknown {
 function resolveInstructionAccounts(
   instructionName: ProtocolInstructionName,
   accounts: GenericInstructionAccounts,
+  programId: PublicKeyish,
 ): Array<{ pubkey: PublicKey; isSigner: boolean; isWritable: boolean }> {
   return (PROTOCOL_INSTRUCTION_ACCOUNTS[instructionName] ?? []).flatMap(
     (
@@ -332,7 +337,7 @@ function resolveInstructionAccounts(
         if (account.optional) {
           return [
             {
-              pubkey: toPublicKey(PROTOCOL_PROGRAM_ID),
+              pubkey: toPublicKey(programId),
               isSigner: false,
               isWritable: false,
             },
@@ -445,9 +450,15 @@ export function buildProtocolInstruction(
     normalizedArgs,
   );
 
+  const resolvedProgramId = params.programId ?? PROTOCOL_PROGRAM_ID;
+
   return new TransactionInstruction({
-    programId: toPublicKey(params.programId ?? PROTOCOL_PROGRAM_ID),
-    keys: resolveInstructionAccounts(params.instructionName, params.accounts),
+    programId: toPublicKey(resolvedProgramId),
+    keys: resolveInstructionAccounts(
+      params.instructionName,
+      params.accounts,
+      resolvedProgramId,
+    ),
     data: Buffer.from(encoded),
   });
 }
@@ -513,9 +524,10 @@ export type ProtocolInstructionAccountInput = {
 
 function normalizeOrderedInstructionAccounts(
   accounts: ProtocolInstructionAccountInput[],
+  programId: PublicKeyish = PROTOCOL_PROGRAM_ID,
 ): Array<{ pubkey: PublicKey; isSigner: boolean; isWritable: boolean }> {
   return accounts.map((account) => {
-    const pubkey = toPublicKey(account.pubkey ?? getProgramId());
+    const pubkey = toPublicKey(account.pubkey ?? programId);
     return {
       pubkey,
       isSigner: account.pubkey ? Boolean(account.isSigner) : false,
@@ -544,7 +556,10 @@ function buildOrderedInstruction(params: {
 
   return new TransactionInstruction({
     programId: toPublicKey(params.programId ?? PROTOCOL_PROGRAM_ID),
-    keys: normalizeOrderedInstructionAccounts(params.accounts),
+    keys: normalizeOrderedInstructionAccounts(
+      params.accounts,
+      params.programId ?? PROTOCOL_PROGRAM_ID,
+    ),
     data: Buffer.from(encoded),
   });
 }
@@ -704,28 +719,36 @@ export function buildCreateDomainAssetVaultTx(params: {
   reserveDomainAddress: PublicKeyish;
   assetMint: PublicKeyish;
   recentBlockhash: string;
-  vaultTokenAccountAddress: PublicKeyish;
+  vaultTokenAccountAddress?: PublicKeyish;
+  tokenProgram?: PublicKeyish;
   programId?: PublicKeyish;
 }): Transaction {
   const authority = toPublicKey(params.authority);
   const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const vaultTokenAccount = deriveDomainAssetVaultTokenAccountPda({
+    reserveDomain: params.reserveDomainAddress,
+    assetMint,
+    programId,
+  });
+
   return buildOrderedTransaction({
     feePayer: authority,
     recentBlockhash: params.recentBlockhash,
     instructionName: 'create_domain_asset_vault',
-    programId: params.programId,
+    programId,
     args: {
       asset_mint: assetMint,
-      vault_token_account: toPublicKey(params.vaultTokenAccountAddress),
     },
     accounts: [
       { pubkey: authority, isSigner: true, isWritable: true },
-      { pubkey: deriveProtocolGovernancePda() },
+      { pubkey: deriveProtocolGovernancePda(programId) },
       { pubkey: params.reserveDomainAddress, isWritable: true },
       {
         pubkey: deriveDomainAssetVaultPda({
           reserveDomain: params.reserveDomainAddress,
           assetMint,
+          programId,
         }),
         isWritable: true,
       },
@@ -733,9 +756,13 @@ export function buildCreateDomainAssetVaultTx(params: {
         pubkey: deriveDomainAssetLedgerPda({
           reserveDomain: params.reserveDomainAddress,
           assetMint,
+          programId,
         }),
         isWritable: true,
       },
+      { pubkey: assetMint },
+      { pubkey: vaultTokenAccount, isWritable: true },
+      { pubkey: toPublicKey(params.tokenProgram ?? SPL_TOKEN_PROGRAM_ID) },
       { pubkey: SystemProgram.programId },
     ],
   });
@@ -942,11 +969,13 @@ export function buildOpenMemberPositionTx(params: {
     healthPlan: params.healthPlanAddress,
     wallet,
     seriesScope,
+    programId: params.programId,
   });
   const membershipAnchorSeat = !anchorRef.equals(ZERO_PUBKEY_KEY)
     ? deriveMembershipAnchorSeatPda({
         healthPlan: params.healthPlanAddress,
-        anchorRef: anchorRef.toBase58(),
+        anchorRef,
+        programId: params.programId,
       })
     : undefined;
 
@@ -978,7 +1007,7 @@ export function buildOpenMemberPositionTx(params: {
     },
     accounts: [
       { pubkey: wallet, isSigner: true, isWritable: true },
-      { pubkey: deriveProtocolGovernancePda() },
+      { pubkey: deriveProtocolGovernancePda(params.programId) },
       { pubkey: params.healthPlanAddress },
       { pubkey: memberPosition, isWritable: true },
       optionalProtocolAccount(membershipAnchorSeat, true),
@@ -1999,6 +2028,20 @@ export function createProtocolClient(
   programId: PublicKeyish = PROTOCOL_PROGRAM_ID,
 ): ProtocolClient {
   const resolvedProgramId = toPublicKey(programId);
+  const resolveClientProgramId = (inputProgramId?: PublicKeyish): PublicKey => {
+    if (inputProgramId === undefined || inputProgramId === null) {
+      return resolvedProgramId;
+    }
+
+    const requestedProgramId = toPublicKey(inputProgramId);
+    if (!requestedProgramId.equals(resolvedProgramId)) {
+      throw new Error(
+        `programId mismatch: expected ${resolvedProgramId.toBase58()}, received ${requestedProgramId.toBase58()}`,
+      );
+    }
+
+    return resolvedProgramId;
+  };
 
   const client: Record<string, unknown> = {
     connection,
@@ -2014,7 +2057,7 @@ export function createProtocolClient(
     ) =>
       buildProtocolInstruction({
         ...params,
-        programId: params.programId ?? resolvedProgramId,
+        programId: resolveClientProgramId(params.programId),
       }),
     buildTransaction: (
       params: BuildTransactionParams<
@@ -2026,7 +2069,7 @@ export function createProtocolClient(
     ) =>
       buildProtocolTransaction({
         ...params,
-        programId: params.programId ?? resolvedProgramId,
+        programId: resolveClientProgramId(params.programId),
       }),
     decodeAccount: <T = Record<string, unknown>>(
       accountName: ProtocolAccountName,
@@ -2056,7 +2099,7 @@ export function createProtocolClient(
       buildProtocolInstruction({
         ...params,
         instructionName,
-        programId: params.programId ?? resolvedProgramId,
+        programId: resolveClientProgramId(params.programId),
       });
 
     client[`build${pascalName}Tx`] = (
@@ -2068,7 +2111,7 @@ export function createProtocolClient(
       buildProtocolTransaction({
         ...params,
         instructionName,
-        programId: params.programId ?? resolvedProgramId,
+        programId: resolveClientProgramId(params.programId),
       });
   }
 

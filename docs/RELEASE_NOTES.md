@@ -1,5 +1,19 @@
 # Release Notes — `@omegax/protocol-sdk`
 
+## Unreleased
+
+## `0.8.4`
+
+- Refreshed generated IDL, contract, and type bindings against the current post-fee-vault `omegax-protocol` surface at commit `f343039`.
+- Folded in the security PRs that bind protocol-client builders to the configured program id, keep domain vault custody protocol-controlled, derive membership-anchor seats from pubkey bytes, and use the selected program id for omitted optional accounts.
+- Updated `buildCreateDomainAssetVaultTx(...)` so it derives the canonical `domain_asset_vault_token` PDA inline; stale `vaultTokenAccountAddress` inputs no longer redirect custody.
+- Added PDA helpers for `deriveDomainAssetVaultTokenAccountPda(...)`, `deriveProtocolFeeVaultPda(...)`, `derivePoolTreasuryVaultPda(...)`, and `derivePoolOracleFeeVaultPda(...)`.
+- Reflected the new fee-vault lifecycle, pool-treasury deposit/redemption fee accounting, and protocol-owned SPL rail setup in the SDK localnet smoke.
+- Hardened `simulateSignedTx(...)` so signature-verification downgrades fail closed by default and require explicit `allowSigVerifyFallback: true`.
+- Added simulation metadata fields so integrations can reject unverified preflight results before claim or intake processing.
+- Updated the local protocol verification harness to clone the classic SPL Token program into the validator before token CPI smoke tests.
+- Restored a production moderate-audit CI gate with a narrow allowance for the current no-fix Solana-chain `uuid` advisory path.
+
 ## `0.8.3`
 
 - Refreshed generated IDL, contract, and type bindings against `omegax-protocol v0.3.1`.

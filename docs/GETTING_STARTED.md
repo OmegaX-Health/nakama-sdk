@@ -82,12 +82,20 @@ const result = await rpc.broadcastSignedTx({
 Simulate before sending when you want preflight detail:
 
 ```ts
-const signedTxBase64 = Buffer.from(tx.serialize()).toString('base64');
+const signedTx = await wallet.signTransaction(tx);
+const signedTxBase64 = Buffer.from(signedTx.serialize()).toString('base64');
 const simulation = await rpc.simulateSignedTx({
   signedTxBase64,
   sigVerify: true,
 });
+if (!simulation.signatureVerified) {
+  throw new Error('Transaction signature was not verified during simulation.');
+}
 ```
+
+Simulation is preflight feedback, not authentication. Claim and intake services
+that accept user-submitted transactions should call `validateSignedClaimTx(...)`
+before trusting the signer or intent.
 
 ## Path A: Oracle and event producers
 
@@ -135,7 +143,7 @@ Then continue with:
 
 Start here when you need to create settlement boundaries, plan lanes, or LP capital flows on the canonical model.
 
-Reserve-moving builders require real token rails. Create the domain vault with its SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client.
+Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client.
 
 Example: derive canonical addresses for a sponsor-side deployment:
 
@@ -143,6 +151,7 @@ Example: derive canonical addresses for a sponsor-side deployment:
 import {
   deriveProtocolGovernancePda,
   deriveReserveDomainPda,
+  deriveDomainAssetVaultTokenAccountPda,
   deriveHealthPlanPda,
 } from '@omegax/protocol-sdk';
 
@@ -154,6 +163,11 @@ const reserveDomain = deriveReserveDomainPda({
 const healthPlan = deriveHealthPlanPda({
   reserveDomain,
   planId: 'builder-demo-plan',
+  programId,
+}).toBase58();
+const vaultTokenAccount = deriveDomainAssetVaultTokenAccountPda({
+  reserveDomain,
+  assetMint: process.env.ASSET_MINT!,
   programId,
 }).toBase58();
 ```

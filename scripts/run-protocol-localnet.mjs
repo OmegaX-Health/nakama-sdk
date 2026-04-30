@@ -30,6 +30,7 @@ const protocolProgramId =
   process.env.PROTOCOL_PROGRAM_ID ??
   process.env.NEXT_PUBLIC_PROTOCOL_PROGRAM_ID ??
   'Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B';
+const classicTokenProgramId = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
 const zeroPubkey = new PublicKey('11111111111111111111111111111111');
 
 function nowStamp() {
@@ -365,6 +366,10 @@ async function runPhase(params) {
     String(faucetPort),
     '--dynamic-port-range',
     `${dynamicPortStart}-${dynamicPortEnd}`,
+    '--url',
+    'https://api.devnet.solana.com',
+    '--clone-upgradeable-program',
+    classicTokenProgramId,
   ];
 
   if (legacySchemaFixture) {
@@ -433,6 +438,7 @@ async function runPhase(params) {
 
   try {
     await waitForRpc(rpcUrl);
+    await waitForProgram(rpcUrl, classicTokenProgramId);
     await waitForProgram(rpcUrl, protocolProgramId);
     await params.run({
       rpcUrl,

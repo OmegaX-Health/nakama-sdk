@@ -35,7 +35,9 @@ import {
   derivePlanReserveLedgerPda,
   derivePolicySeriesPda,
   derivePoolClassLedgerPda,
+  derivePoolTreasuryVaultPda,
   deriveProtocolGovernancePda,
+  deriveDomainAssetVaultTokenAccountPda,
   deriveReserveDomainPda,
   deriveSeriesReserveLedgerPda,
   recomputeReserveBalanceSheet,
@@ -215,13 +217,20 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     null,
     6,
   );
-  const vaultTokenAccountKey = await createAccount(
-    connection,
-    admin,
-    assetMintKey,
-    admin.publicKey,
-    Keypair.generate(),
-  );
+  const reserveDomain = deriveReserveDomainPda({
+    domainId: 'sdk-open-domain',
+    programId,
+  }).toBase58();
+  const domainAssetVaultKey = deriveDomainAssetVaultPda({
+    reserveDomain,
+    assetMint: assetMintKey,
+    programId,
+  });
+  const vaultTokenAccountKey = deriveDomainAssetVaultTokenAccountPda({
+    reserveDomain,
+    assetMint: assetMintKey,
+    programId,
+  });
   const adminSourceTokenAccountKey = await createAccount(
     connection,
     admin,
@@ -260,15 +269,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   const tokenProgram = TOKEN_PROGRAM_ID.toBase58();
 
   const protocolGovernance = deriveProtocolGovernancePda(programId).toBase58();
-  const reserveDomain = deriveReserveDomainPda({
-    domainId: 'sdk-open-domain',
-    programId,
-  }).toBase58();
-  const domainAssetVault = deriveDomainAssetVaultPda({
-    reserveDomain,
-    assetMint,
-    programId,
-  }).toBase58();
+  const domainAssetVault = domainAssetVaultKey.toBase58();
   const domainAssetLedger = deriveDomainAssetLedgerPda({
     reserveDomain,
     assetMint,
@@ -327,6 +328,11 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   }).toBase58();
   const poolClassLedger = derivePoolClassLedgerPda({
     capitalClass,
+    assetMint,
+    programId,
+  }).toBase58();
+  const poolTreasuryVault = derivePoolTreasuryVaultPda({
+    liquidityPool,
     assetMint,
     programId,
   }).toBase58();
@@ -403,7 +409,6 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     tx: (await buildTx('buildCreateDomainAssetVaultTx', {
       args: {
         asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
       },
       accounts: {
         authority: admin.publicKey.toBase58(),
@@ -411,6 +416,9 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         reserve_domain: reserveDomain,
         domain_asset_vault: domainAssetVault,
         domain_asset_ledger: domainAssetLedger,
+        asset_mint: assetMint,
+        vault_token_account: vaultTokenAccount,
+        token_program: tokenProgram,
       },
     })) as never,
   });
@@ -726,13 +734,32 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   });
 
   await simulateAndBroadcast({
+    label: 'init_pool_treasury_vault',
+    rpc,
+    signers: [admin],
+    tx: (await buildTx('buildInitPoolTreasuryVaultTx', {
+      args: {
+        asset_mint: assetMint,
+        fee_recipient: admin.publicKey.toBase58(),
+      },
+      accounts: {
+        authority: admin.publicKey.toBase58(),
+        protocol_governance: protocolGovernance,
+        liquidity_pool: liquidityPool,
+        domain_asset_vault: domainAssetVault,
+        pool_treasury_vault: poolTreasuryVault,
+      },
+    })) as never,
+  });
+
+  await simulateAndBroadcast({
     label: 'deposit_into_capital_class',
     rpc,
     signers: [member],
     tx: (await buildTx('buildDepositIntoCapitalClassTx', {
       args: {
         amount: 200_000n,
-        shares: 200_000n,
+        shares: 199_700n,
         credentialed: true,
       },
       accounts: {
@@ -744,6 +771,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         capital_class: capitalClass,
         pool_class_ledger: poolClassLedger,
         lp_position: lpPosition,
+        pool_treasury_vault: poolTreasuryVault,
         source_token_account: memberSourceTokenAccount,
         asset_mint: assetMint,
         vault_token_account: vaultTokenAccount,
@@ -789,6 +817,11 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         capital_class: capitalClass,
         pool_class_ledger: poolClassLedger,
         lp_position: lpPosition,
+        pool_treasury_vault: poolTreasuryVault,
+        asset_mint: assetMint,
+        vault_token_account: vaultTokenAccount,
+        recipient_token_account: memberSourceTokenAccount,
+        token_program: tokenProgram,
       },
     })) as never,
   });
@@ -812,7 +845,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   assert.equal((fetchedVault as { asset_mint: string }).asset_mint, assetMint);
   assert.equal(
     (fetchedVault as { total_assets: bigint }).total_assets,
-    600_000n,
+    600_075n,
   );
 
   const fetchedPlan = await protocol.fetchHealthPlan(healthPlan);
@@ -863,14 +896,14 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   );
   assert.equal(
     (fetchedLiquidityPool as { total_value_locked: bigint }).total_value_locked,
-    150_000n,
+    150_075n,
   );
 
   const fetchedCapitalClass = await protocol.fetchCapitalClass(capitalClass);
   assert.ok(fetchedCapitalClass, 'expected live CapitalClass account');
   assert.equal(
     (fetchedCapitalClass as { total_shares: bigint }).total_shares,
-    150_000n,
+    149_700n,
   );
   assert.equal(
     (fetchedCapitalClass as { pending_redemptions: bigint })
@@ -880,11 +913,11 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
 
   const fetchedLpPosition = await protocol.fetchLPPosition(lpPosition);
   assert.ok(fetchedLpPosition, 'expected live LPPosition account');
-  assert.equal((fetchedLpPosition as { shares: bigint }).shares, 150_000n);
+  assert.equal((fetchedLpPosition as { shares: bigint }).shares, 149_700n);
   assert.equal(
     (fetchedLpPosition as { realized_distributions: bigint })
       .realized_distributions,
-    50_000n,
+    49_925n,
   );
 
   const fetchedDomainLedger =

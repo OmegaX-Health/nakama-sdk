@@ -13,6 +13,7 @@ export const MAX_ID_SEED_BYTES = 32;
 export const SEED_PROTOCOL_GOVERNANCE = 'protocol_governance';
 export const SEED_RESERVE_DOMAIN = 'reserve_domain';
 export const SEED_DOMAIN_ASSET_VAULT = 'domain_asset_vault';
+export const SEED_DOMAIN_ASSET_VAULT_TOKEN = 'domain_asset_vault_token';
 export const SEED_DOMAIN_ASSET_LEDGER = 'domain_asset_ledger';
 export const SEED_HEALTH_PLAN = 'health_plan';
 export const SEED_PLAN_RESERVE_LEDGER = 'plan_reserve_ledger';
@@ -34,6 +35,9 @@ export const SEED_ORACLE_PROFILE = 'oracle_profile';
 export const SEED_POOL_ORACLE_APPROVAL = 'pool_oracle_approval';
 export const SEED_POOL_ORACLE_POLICY = 'pool_oracle_policy';
 export const SEED_POOL_ORACLE_PERMISSION_SET = 'pool_oracle_permission_set';
+export const SEED_PROTOCOL_FEE_VAULT = 'protocol_fee_vault';
+export const SEED_POOL_TREASURY_VAULT = 'pool_treasury_vault';
+export const SEED_POOL_ORACLE_FEE_VAULT = 'pool_oracle_fee_vault';
 export const SEED_OUTCOME_SCHEMA = 'outcome_schema';
 export const SEED_SCHEMA_DEPENDENCY_LEDGER = 'schema_dependency_ledger';
 export const SEED_CLAIM_ATTESTATION = 'claim_attestation';
@@ -142,6 +146,21 @@ export function deriveDomainAssetVaultPda(params: {
   );
 }
 
+export function deriveDomainAssetVaultTokenAccountPda(params: {
+  reserveDomain: PublicKeyish;
+  assetMint: PublicKeyish;
+  programId?: PublicKeyish;
+}): PublicKey {
+  return derivePda(
+    [
+      TEXT_ENCODER.encode(SEED_DOMAIN_ASSET_VAULT_TOKEN),
+      toPublicKey(params.reserveDomain).toBytes(),
+      toPublicKey(params.assetMint).toBytes(),
+    ],
+    params.programId ?? PROGRAM_ID,
+  );
+}
+
 export function deriveDomainAssetLedgerPda(params: {
   reserveDomain: PublicKeyish;
   assetMint: PublicKeyish;
@@ -236,14 +255,14 @@ export function deriveMemberPositionPda(params: {
 
 export function deriveMembershipAnchorSeatPda(params: {
   healthPlan: PublicKeyish;
-  anchorRef: string;
+  anchorRef: PublicKeyish;
   programId?: PublicKeyish;
 }): PublicKey {
   return derivePda(
     [
       TEXT_ENCODER.encode(SEED_MEMBERSHIP_ANCHOR_SEAT),
       toPublicKey(params.healthPlan).toBytes(),
-      stringSeed(params.anchorRef, 'anchor ref'),
+      toPublicKey(params.anchorRef).toBytes(),
     ],
     params.programId ?? PROGRAM_ID,
   );
@@ -450,6 +469,53 @@ export function derivePoolOraclePermissionSetPda(params: {
       TEXT_ENCODER.encode(SEED_POOL_ORACLE_PERMISSION_SET),
       toPublicKey(params.liquidityPool).toBytes(),
       toPublicKey(params.oracle).toBytes(),
+    ],
+    params.programId ?? PROGRAM_ID,
+  );
+}
+
+export function deriveProtocolFeeVaultPda(params: {
+  reserveDomain: PublicKeyish;
+  assetMint: PublicKeyish;
+  programId?: PublicKeyish;
+}): PublicKey {
+  return derivePda(
+    [
+      TEXT_ENCODER.encode(SEED_PROTOCOL_FEE_VAULT),
+      toPublicKey(params.reserveDomain).toBytes(),
+      toPublicKey(params.assetMint).toBytes(),
+    ],
+    params.programId ?? PROGRAM_ID,
+  );
+}
+
+export function derivePoolTreasuryVaultPda(params: {
+  liquidityPool: PublicKeyish;
+  assetMint: PublicKeyish;
+  programId?: PublicKeyish;
+}): PublicKey {
+  return derivePda(
+    [
+      TEXT_ENCODER.encode(SEED_POOL_TREASURY_VAULT),
+      toPublicKey(params.liquidityPool).toBytes(),
+      toPublicKey(params.assetMint).toBytes(),
+    ],
+    params.programId ?? PROGRAM_ID,
+  );
+}
+
+export function derivePoolOracleFeeVaultPda(params: {
+  liquidityPool: PublicKeyish;
+  oracle: PublicKeyish;
+  assetMint: PublicKeyish;
+  programId?: PublicKeyish;
+}): PublicKey {
+  return derivePda(
+    [
+      TEXT_ENCODER.encode(SEED_POOL_ORACLE_FEE_VAULT),
+      toPublicKey(params.liquidityPool).toBytes(),
+      toPublicKey(params.oracle).toBytes(),
+      toPublicKey(params.assetMint).toBytes(),
     ],
     params.programId ?? PROGRAM_ID,
   );

@@ -19,10 +19,15 @@ import {
 function shouldRetrySignedSimulationWithoutSigVerify(params: {
   error: unknown;
   sigVerify: boolean;
+  allowSigVerifyFallback: boolean;
 }): boolean {
   const message =
     params.error instanceof Error ? params.error.message : String(params.error);
-  return params.sigVerify && /invalid arguments/i.test(message);
+  return (
+    params.sigVerify &&
+    params.allowSigVerifyFallback &&
+    /invalid arguments/i.test(message)
+  );
 }
 
 function normalizeSimulationCommitment(
@@ -36,6 +41,25 @@ function normalizeSimulationCommitment(
     default:
       return 'confirmed';
   }
+}
+
+function buildSimulationVerificationMetadata(params: {
+  sigVerifyRequested: boolean;
+  sigVerifyUsed: boolean;
+  signatureVerified?: boolean;
+  verificationDowngraded?: boolean;
+}) {
+  const verificationDowngraded =
+    params.verificationDowngraded ??
+    (params.sigVerifyRequested && !params.sigVerifyUsed);
+  return {
+    sigVerifyRequested: params.sigVerifyRequested,
+    sigVerifyUsed: params.sigVerifyUsed,
+    signatureVerified:
+      params.signatureVerified ??
+      (params.sigVerifyUsed && !verificationDowngraded),
+    verificationDowngraded,
+  };
 }
 
 export type OmegaXNetwork = 'devnet' | 'mainnet';
@@ -163,6 +187,12 @@ export function createRpcClient(connection: Connection): RpcClient {
     async simulateSignedTx(
       params: SimulateSignedTxParams,
     ): Promise<SimulateSignedTxResult> {
+      const sigVerify = params.sigVerify ?? true;
+      const defaultVerificationMetadata = buildSimulationVerificationMetadata({
+        sigVerifyRequested: sigVerify,
+        sigVerifyUsed: false,
+        verificationDowngraded: false,
+      });
       let tx: SolanaTransaction;
       try {
         tx = decodeSolanaTransaction(params.signedTxBase64);
@@ -173,16 +203,20 @@ export function createRpcClient(connection: Connection): RpcClient {
           unitsConsumed: null,
           err: error,
           failure: normalizeClaimSimulationFailure({ err: error, logs: [] }),
+          ...defaultVerificationMetadata,
         };
       }
 
       const replaceRecentBlockhash = params.replaceRecentBlockhash ?? true;
-      const sigVerify = params.sigVerify ?? true;
       const baseOptions = {
         commitment: normalizeSimulationCommitment(params.commitment),
         replaceRecentBlockhash,
         sigVerify,
       };
+      let verificationMetadata = buildSimulationVerificationMetadata({
+        sigVerifyRequested: sigVerify,
+        sigVerifyUsed: sigVerify,
+      });
 
       let result;
       try {
@@ -196,6 +230,7 @@ export function createRpcClient(connection: Connection): RpcClient {
           !shouldRetrySignedSimulationWithoutSigVerify({
             error,
             sigVerify,
+            allowSigVerifyFallback: params.allowSigVerifyFallback ?? false,
           })
         ) {
           return {
@@ -204,6 +239,11 @@ export function createRpcClient(connection: Connection): RpcClient {
             unitsConsumed: null,
             err: error,
             failure: normalizeClaimSimulationFailure({ err: error, logs: [] }),
+            ...buildSimulationVerificationMetadata({
+              sigVerifyRequested: sigVerify,
+              sigVerifyUsed: sigVerify,
+              signatureVerified: false,
+            }),
           };
         }
 
@@ -216,6 +256,11 @@ export function createRpcClient(connection: Connection): RpcClient {
               sigVerify: false,
             },
           );
+          verificationMetadata = buildSimulationVerificationMetadata({
+            sigVerifyRequested: sigVerify,
+            sigVerifyUsed: false,
+            verificationDowngraded: true,
+          });
         } catch (retryError) {
           return {
             ok: false,
@@ -225,6 +270,11 @@ export function createRpcClient(connection: Connection): RpcClient {
             failure: normalizeClaimSimulationFailure({
               err: retryError,
               logs: [],
+            }),
+            ...buildSimulationVerificationMetadata({
+              sigVerifyRequested: sigVerify,
+              sigVerifyUsed: false,
+              verificationDowngraded: true,
             }),
           };
         }
@@ -245,6 +295,7 @@ export function createRpcClient(connection: Connection): RpcClient {
             err: result.value.err,
             logs,
           }),
+          ...verificationMetadata,
         };
       }
 
@@ -254,6 +305,7 @@ export function createRpcClient(connection: Connection): RpcClient {
         unitsConsumed,
         err: null,
         failure: null,
+        ...verificationMetadata,
       };
     },
 

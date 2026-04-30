@@ -36,6 +36,20 @@ Fix:
 - Ensure your fee payer signs before serialization.
 - Align the signer with the authority required by the instruction scope.
 
+### Simulation returns `signatureVerified: false`
+
+Cause:
+
+- The caller disabled `sigVerify`, or explicitly allowed fallback after the RPC
+  rejected signature-verifying simulation arguments.
+
+Fix:
+
+- Treat the simulation as preflight-only.
+- Re-sign and simulate with `sigVerify: true`.
+- For claim or intake flows, call `validateSignedClaimTx(...)` before trusting
+  the submitted transaction.
+
 ### `rpc_timeout`
 
 Cause:

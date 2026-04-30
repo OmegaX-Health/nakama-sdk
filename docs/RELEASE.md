@@ -4,8 +4,8 @@ This is the maintainer flow for publishing the canonical SDK release.
 
 ## Release targets
 
-- Protocol: `omegax-protocol v0.3.1`
-- SDK: `@omegax/protocol-sdk v0.8.3`
+- Protocol: `omegax-protocol` commit `f343039`
+- SDK: `@omegax/protocol-sdk v0.8.4`
 - Docs portal: `docs.omegax.health` content synced to the matching SDK surface
 
 ## Preconditions
@@ -30,8 +30,13 @@ npm run docs:sync:check:strict
 npm run verify:protocol:local
 npm run test:protocol:localnet
 npm pack --dry-run
-npm audit --omit=dev --audit-level=moderate
+npm run audit:prod
 ```
+
+Production moderate-or-higher dependency advisories are release blockers unless
+`npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
+Solana-chain moderate advisories are allowed only through that script's narrow
+documented exception rather than forced transitive overrides.
 
 ## Protocol binding refresh
 
@@ -49,9 +54,9 @@ Commit regenerated artifacts with the source change. Do not hand-edit generated 
 2. Finalize and push `omegax-docs` `main`.
 3. Update `docs/OMEGAX_DOCS_SYNC.json` with the merged docs commit.
 4. Finalize and push `omegax-sdk` `main`.
-5. Tag SDK `v0.8.3`.
+5. Tag SDK `v0.8.4`.
 6. Confirm `npm publish` and import smoke pass.
-7. Tag protocol `v0.3.1` as the final public release marker.
+7. Tag the matching protocol release marker only after the protocol repo owner approves that public tag.
 
 ## Post-publish verification
 
@@ -63,6 +68,6 @@ Then run a clean install/import smoke test:
 
 ```bash
 npm init -y
-npm install @omegax/protocol-sdk@0.8.3
+npm install @omegax/protocol-sdk@0.8.4
 node --input-type=module -e "const m = await import('@omegax/protocol-sdk'); console.log(Object.keys(m).length)"
 ```

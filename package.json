@@ -1,6 +1,6 @@
 {
   "name": "@omegax/protocol-sdk",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "TypeScript SDK for the canonical OmegaX health capital markets protocol surface on Solana devnet.",
   "author": "OMEGAX HEALTH FZCO",
   "contributors": [
@@ -88,6 +88,7 @@
     "docs:sync:check": "node scripts/check-omegax-docs-sync.mjs",
     "docs:sync:check:strict": "node scripts/check-omegax-docs-sync.mjs --strict",
     "docs:sync:update": "node scripts/update-docs-sync-manifest.mjs",
+    "audit:prod": "node scripts/audit-prod-dependencies.mjs",
     "test": "node scripts/run-tests.mjs",
     "dev": "tsx watch src/index.ts"
   },
