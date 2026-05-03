@@ -53,6 +53,16 @@ Helpers:
 - `createOracleSignerFromKmsAdapter(...)`
 - `attestOutcome(...)`
 
+On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool, capital class, allocation position, pool oracle approval, permission set, and pool oracle policy accounts; otherwise the SDK uses omitted optional account placeholders.
+
+Useful constants:
+
+- `CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE`
+- `CLAIM_ATTESTATION_DECISION_SUPPORT_DENY`
+- `CLAIM_ATTESTATION_DECISION_REQUEST_REVIEW`
+- `CLAIM_ATTESTATION_DECISION_ABSTAIN`
+- `POOL_ORACLE_PERMISSION_ATTEST_CLAIM`
+
 ## Path B: Health / wallet / app builders
 
 Use this path when your app needs member, claim, obligation, and payout state without owning the entire sponsor or capital stack.
@@ -111,14 +121,21 @@ Use this when preparing the settlement boundary for a new domain and asset.
 
 `buildCreateDomainAssetVaultTx(...)` derives the protocol-owned SPL vault token account at the canonical `domain_asset_vault_token` PDA. Do not create or pass an admin-owned token account; the protocol initializes the PDA-owned account inline.
 
+Reserve asset rails are first-class protocol objects. Use `buildConfigureReserveAssetRailTx(...)` to set the role, oracle source, decimals, and bounds for an asset, then `buildPublishReserveAssetRailPriceTx(...)` when a governance or oracle source publishes the current reserve price. `deriveReserveAssetRailPda(...)` gives clients the canonical rail address for reads and instruction accounts.
+
 Builders:
 
 - `buildInitializeProtocolGovernanceTx(...)`
+- `buildRotateProtocolGovernanceAuthorityTx(...)`
 - `buildSetProtocolEmergencyPauseTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
+- `buildConfigureReserveAssetRailTx(...)`
+- `buildPublishReserveAssetRailPriceTx(...)`
 - `buildInitProtocolFeeVaultTx(...)`
+- `buildWithdrawProtocolFeeSolTx(...)`
+- `buildWithdrawProtocolFeeSplTx(...)`
 - `buildInitPoolTreasuryVaultTx(...)`
 - `buildInitPoolOracleFeeVaultTx(...)`
 
@@ -128,6 +145,14 @@ Readers:
 - `fetchReserveDomain(...)`
 - `fetchDomainAssetVault(...)`
 - `fetchDomainAssetLedger(...)`
+- `fetchReserveAssetRail(...)`
+
+PDA helpers:
+
+- `deriveReserveAssetRailPda(...)`
+- `deriveProtocolFeeVaultPda(...)`
+- `derivePoolTreasuryVaultPda(...)`
+- `derivePoolOracleFeeVaultPda(...)`
 
 ### Workflow C2: Sponsor-funded health plan
 
@@ -140,11 +165,20 @@ Builders:
 - `buildCreateHealthPlanTx(...)`
 - `buildUpdateHealthPlanControlsTx(...)`
 - `buildCreatePolicySeriesTx(...)`
+- `buildInitializeSeriesReserveLedgerTx(...)`
 - `buildVersionPolicySeriesTx(...)`
 - `buildOpenMemberPositionTx(...)`
 - `buildUpdateMemberEligibilityTx(...)`
 - `buildOpenFundingLineTx(...)`
 - `buildFundSponsorBudgetTx(...)`
+- `buildCreateCommitmentCampaignTx(...)`
+- `buildCreateCommitmentPaymentRailTx(...)`
+- `buildDepositCommitmentTx(...)`
+- `buildActivateDirectPremiumCommitmentTx(...)`
+- `buildActivateTreasuryCreditCommitmentTx(...)`
+- `buildActivateWaterfallCommitmentTx(...)`
+- `buildRefundCommitmentTx(...)`
+- `buildPauseCommitmentCampaignTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
 - `buildSettleObligationTx(...)`
@@ -157,6 +191,10 @@ Readers:
 - `fetchMemberPosition(...)`
 - `fetchFundingLine(...)`
 - `fetchFundingLineLedger(...)`
+- `fetchCommitmentCampaign(...)`
+- `fetchCommitmentPaymentRail(...)`
+- `fetchCommitmentLedger(...)`
+- `fetchCommitmentPosition(...)`
 - `fetchPlanReserveLedger(...)`
 - `fetchSeriesReserveLedger(...)`
 - `fetchObligation(...)`
@@ -178,6 +216,7 @@ Builders:
 - `buildCreateCapitalClassTx(...)`
 - `buildUpdateCapitalClassControlsTx(...)`
 - `buildDepositIntoCapitalClassTx(...)`
+- `buildUpdateLpPositionCredentialingTx(...)`
 - `buildRequestRedemptionTx(...)`
 - `buildProcessRedemptionQueueTx(...)`
 

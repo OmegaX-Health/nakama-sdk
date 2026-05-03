@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## `0.8.5`
+
+- Refreshed generated IDL, contract, and type bindings against the local `omegax-protocol` surface at commit `f5b2515`, covering 67 instructions, 35 accounts, and 134 types.
+- Added PDA helpers for `deriveReserveAssetRailPda(...)`, `deriveCommitmentCampaignPda(...)`, `deriveCommitmentPaymentRailPda(...)`, `deriveCommitmentLedgerPda(...)`, and `deriveCommitmentPositionPda(...)`.
+- Added `buildInitializeSeriesReserveLedgerTx(...)` for initializing extra-asset series reserve accounting.
+- Exported canonical commitment, reserve asset role/source, membership mode/gate/proof, claim-attestation decision, pool-oracle permission, oracle type, schema family/visibility, and native SOL mint constants from the root package and protocol-model module.
+- Updated `buildAttestClaimCaseTx(...)` for the expanded local protocol account list, including `protocol_governance`, `health_plan`, `funding_line`, optional pool oracle scope accounts, writable `claim_case`, and the current `ClaimAttestation` fields.
+- Kept SDK docs and docs-portal mappings on the release-ready `0.8.5` target without publishing, pushing, or deploying.
+
 ## `0.8.4`
 
 - Refreshed generated IDL, contract, and type bindings against the current post-fee-vault `omegax-protocol` surface at commit `f343039`.

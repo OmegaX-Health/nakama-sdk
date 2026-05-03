@@ -19,6 +19,10 @@ export type ProtocolAccountName =
   | 'CapitalClass'
   | 'ClaimAttestation'
   | 'ClaimCase'
+  | 'CommitmentCampaign'
+  | 'CommitmentLedger'
+  | 'CommitmentPaymentRail'
+  | 'CommitmentPosition'
   | 'DomainAssetLedger'
   | 'DomainAssetVault'
   | 'FundingLine'
@@ -41,6 +45,7 @@ export type ProtocolAccountName =
   | 'PoolTreasuryVault'
   | 'ProtocolFeeVault'
   | 'ProtocolGovernance'
+  | 'ReserveAssetRail'
   | 'ReserveDomain'
   | 'SchemaDependencyLedger'
   | 'SeriesReserveLedger';
@@ -64,6 +69,10 @@ export interface BuildTransactionParams<
   feePayer?: PublicKeyish;
   prependInstructions?: TransactionInstruction[];
   appendInstructions?: TransactionInstruction[];
+}
+
+export interface ActivateCommitmentArgs {
+  activation_reason_hash: Uint8Array | number[];
 }
 
 export interface AdjudicateClaimCaseArgs {
@@ -177,7 +186,13 @@ export interface ClaimAttestation {
   decision: number;
   attestation_hash: Uint8Array | number[];
   attestation_ref_hash: Uint8Array | number[];
+  evidence_ref_hash: Uint8Array | number[];
+  decision_support_hash: Uint8Array | number[];
   schema_key_hash: Uint8Array | number[];
+  schema_hash: Uint8Array | number[];
+  schema_version: number;
+  liquidity_pool: string;
+  allocation_position: string;
   created_at_ts: BigNumberish;
   updated_at_ts: BigNumberish;
   bump: number;
@@ -204,6 +219,7 @@ export interface ClaimCase {
   reserved_amount: BigNumberish;
   recovered_amount: BigNumberish;
   appeal_count: number;
+  attestation_count: number;
   linked_obligation: string;
   opened_at: BigNumberish;
   updated_at: BigNumberish;
@@ -224,6 +240,144 @@ export interface ClaimCaseStateChangedEvent {
   claim_case: string;
   intake_status: number;
   approved_amount: BigNumberish;
+}
+
+export interface CommitmentActivatedEvent {
+  campaign: string;
+  position: string;
+  beneficiary: string;
+  payment_amount: BigNumberish;
+  coverage_amount: BigNumberish;
+  mode: number;
+}
+
+export interface CommitmentCampaign {
+  reserve_domain: string;
+  health_plan: string;
+  policy_series: string;
+  coverage_funding_line: string;
+  payment_asset_mint: string;
+  coverage_asset_mint: string;
+  activation_authority: string;
+  campaign_id: string;
+  display_name: string;
+  metadata_uri: string;
+  mode: number;
+  status: number;
+  deposit_amount: BigNumberish;
+  coverage_amount: BigNumberish;
+  hard_cap_amount: BigNumberish;
+  starts_at_ts: BigNumberish;
+  refund_after_ts: BigNumberish;
+  expires_at_ts: BigNumberish;
+  terms_hash: Uint8Array | number[];
+  audit_nonce: BigNumberish;
+  bump: number;
+}
+
+export interface CommitmentCampaignCreatedEvent {
+  campaign: string;
+  health_plan: string;
+  funding_line: string;
+  payment_asset_mint: string;
+  coverage_asset_mint: string;
+  mode: number;
+}
+
+export interface CommitmentCampaignStatusChangedEvent {
+  campaign: string;
+  status: number;
+  authority: string;
+  reason_hash: Uint8Array | number[];
+}
+
+export interface CommitmentDepositedEvent {
+  campaign: string;
+  position: string;
+  depositor: string;
+  beneficiary: string;
+  amount: BigNumberish;
+  queue_index: BigNumberish;
+}
+
+export interface CommitmentLedger {
+  campaign: string;
+  payment_asset_mint: string;
+  pending_amount: BigNumberish;
+  activated_amount: BigNumberish;
+  treasury_locked_amount: BigNumberish;
+  refunded_amount: BigNumberish;
+  canceled_amount: BigNumberish;
+  next_queue_index: BigNumberish;
+  bump: number;
+}
+
+export interface CommitmentPaymentRail {
+  campaign: string;
+  reserve_domain: string;
+  payment_asset_mint: string;
+  coverage_asset_mint: string;
+  reserve_asset_rail: string;
+  coverage_funding_line: string;
+  mode: number;
+  status: number;
+  deposit_amount: BigNumberish;
+  coverage_amount: BigNumberish;
+  hard_cap_amount: BigNumberish;
+  audit_nonce: BigNumberish;
+  bump: number;
+}
+
+export interface CommitmentPaymentRailCreatedEvent {
+  campaign: string;
+  payment_rail: string;
+  payment_asset_mint: string;
+  coverage_asset_mint: string;
+  reserve_asset_rail: string;
+  mode: number;
+}
+
+export interface CommitmentPosition {
+  campaign: string;
+  ledger: string;
+  depositor: string;
+  beneficiary: string;
+  payment_asset_mint: string;
+  coverage_asset_mint: string;
+  amount: BigNumberish;
+  coverage_amount: BigNumberish;
+  queue_index: BigNumberish;
+  state: number;
+  accepted_terms_hash: Uint8Array | number[];
+  paid_at: BigNumberish;
+  activated_at: BigNumberish;
+  refunded_at: BigNumberish;
+  bump: number;
+}
+
+export interface CommitmentRefundedEvent {
+  campaign: string;
+  position: string;
+  depositor: string;
+  amount: BigNumberish;
+}
+
+export interface ConfigureReserveAssetRailArgs {
+  asset_mint: PublicKeyish;
+  oracle_authority: PublicKeyish;
+  asset_symbol: string;
+  role: number;
+  payout_priority: number;
+  oracle_source: number;
+  oracle_feed_id: Uint8Array | number[];
+  max_staleness_seconds: BigNumberish;
+  haircut_bps: number;
+  max_exposure_bps: number;
+  deposit_enabled: boolean;
+  payout_enabled: boolean;
+  capacity_enabled: boolean;
+  active: boolean;
+  reason_hash: Uint8Array | number[];
 }
 
 export interface CreateAllocationPositionArgs {
@@ -247,6 +401,34 @@ export interface CreateCapitalClassArgs {
   fee_bps: number;
   min_lockup_seconds: BigNumberish;
   pause_flags: number;
+}
+
+export interface CreateCommitmentCampaignArgs {
+  campaign_id: string;
+  display_name: string;
+  metadata_uri: string;
+  payment_asset_mint: PublicKeyish;
+  coverage_asset_mint: PublicKeyish;
+  activation_authority: PublicKeyish;
+  mode: number;
+  deposit_amount: BigNumberish;
+  coverage_amount: BigNumberish;
+  hard_cap_amount: BigNumberish;
+  starts_at_ts: BigNumberish;
+  refund_after_ts: BigNumberish;
+  expires_at_ts: BigNumberish;
+  terms_hash: Uint8Array | number[];
+}
+
+export interface CreateCommitmentPaymentRailArgs {
+  payment_asset_mint: PublicKeyish;
+  coverage_asset_mint: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+  coverage_funding_line: PublicKeyish;
+  mode: number;
+  deposit_amount: BigNumberish;
+  coverage_amount: BigNumberish;
+  hard_cap_amount: BigNumberish;
 }
 
 export interface CreateDomainAssetVaultArgs {
@@ -337,6 +519,11 @@ export interface CreateReserveDomainArgs {
 
 export interface DeallocateCapitalArgs {
   amount: BigNumberish;
+}
+
+export interface DepositCommitmentArgs {
+  beneficiary: PublicKeyish;
+  accepted_terms_hash: Uint8Array | number[];
 }
 
 export interface DepositIntoCapitalClassArgs {
@@ -485,6 +672,10 @@ export interface InitProtocolFeeVaultArgs {
 export interface InitializeProtocolGovernanceArgs {
   protocol_fee_bps: number;
   emergency_pause: boolean;
+}
+
+export interface InitializeSeriesReserveLedgerArgs {
+  asset_mint: PublicKeyish;
 }
 
 export interface LPPosition {
@@ -723,6 +914,11 @@ export interface OutcomeSchemaStateChangedEvent {
   verified: boolean;
 }
 
+export interface PauseCommitmentCampaignArgs {
+  status: number;
+  reason_hash: Uint8Array | number[];
+}
+
 export interface PlanReserveLedger {
   health_plan: string;
   asset_mint: string;
@@ -883,6 +1079,13 @@ export interface ProtocolGovernanceInitializedEvent {
   emergency_pause: boolean;
 }
 
+export interface PublishReserveAssetRailPriceArgs {
+  price_usd_1e8: BigNumberish;
+  confidence_bps: number;
+  published_at_ts: BigNumberish;
+  proof_hash: Uint8Array | number[];
+}
+
 export interface RecordPremiumPaymentArgs {
   amount: BigNumberish;
 }
@@ -892,6 +1095,10 @@ export interface RedemptionRequestedEvent {
   owner: string;
   shares: BigNumberish;
   asset_amount: BigNumberish;
+}
+
+export interface RefundCommitmentArgs {
+  refund_reason_hash: Uint8Array | number[];
 }
 
 export interface RegisterOracleArgs {
@@ -922,6 +1129,52 @@ export interface ReleaseReserveArgs {
 
 export interface RequestRedemptionArgs {
   shares: BigNumberish;
+}
+
+export interface ReserveAssetRail {
+  reserve_domain: string;
+  asset_mint: string;
+  oracle_authority: string;
+  asset_symbol: string;
+  role: number;
+  payout_priority: number;
+  oracle_source: number;
+  oracle_feed_id: Uint8Array | number[];
+  max_staleness_seconds: BigNumberish;
+  haircut_bps: number;
+  max_exposure_bps: number;
+  deposit_enabled: boolean;
+  payout_enabled: boolean;
+  capacity_enabled: boolean;
+  active: boolean;
+  last_price_usd_1e8: BigNumberish;
+  last_price_confidence_bps: number;
+  last_price_published_at_ts: BigNumberish;
+  last_price_slot: BigNumberish;
+  last_price_proof_hash: Uint8Array | number[];
+  audit_nonce: BigNumberish;
+  bump: number;
+}
+
+export interface ReserveAssetRailConfiguredEvent {
+  reserve_domain: string;
+  reserve_asset_rail: string;
+  asset_mint: string;
+  role: number;
+  payout_priority: number;
+  oracle_source: number;
+  active: boolean;
+  reason_hash: Uint8Array | number[];
+}
+
+export interface ReserveAssetRailPricePublishedEvent {
+  reserve_asset_rail: string;
+  asset_mint: string;
+  oracle_authority: string;
+  price_usd_1e8: BigNumberish;
+  confidence_bps: number;
+  published_at_ts: BigNumberish;
+  proof_hash: Uint8Array | number[];
 }
 
 export interface ReserveBalanceSheet {
@@ -1118,6 +1371,52 @@ export interface WithdrawArgs {
   amount: BigNumberish;
 }
 
+export interface ActivateDirectPremiumCommitmentAccounts {
+  activation_authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_rail: PublicKeyish;
+  ledger: PublicKeyish;
+  position: PublicKeyish;
+  coverage_domain_asset_ledger: PublicKeyish;
+  coverage_funding_line: PublicKeyish;
+  coverage_funding_line_ledger: PublicKeyish;
+  coverage_plan_reserve_ledger: PublicKeyish;
+  coverage_series_reserve_ledger?: PublicKeyish;
+}
+
+export interface ActivateTreasuryCreditCommitmentAccounts {
+  activation_authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_rail: PublicKeyish;
+  ledger: PublicKeyish;
+  position: PublicKeyish;
+  coverage_domain_asset_ledger: PublicKeyish;
+  coverage_funding_line: PublicKeyish;
+  coverage_funding_line_ledger: PublicKeyish;
+  coverage_plan_reserve_ledger: PublicKeyish;
+  coverage_series_reserve_ledger?: PublicKeyish;
+}
+
+export interface ActivateWaterfallCommitmentAccounts {
+  activation_authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_rail: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+  ledger: PublicKeyish;
+  position: PublicKeyish;
+  coverage_domain_asset_ledger: PublicKeyish;
+  coverage_funding_line: PublicKeyish;
+  coverage_funding_line_ledger: PublicKeyish;
+  coverage_plan_reserve_ledger: PublicKeyish;
+  coverage_series_reserve_ledger?: PublicKeyish;
+}
+
 export interface AdjudicateClaimCaseAccounts {
   authority: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1146,9 +1445,18 @@ export interface AttachClaimEvidenceRefAccounts {
 
 export interface AttestClaimCaseAccounts {
   oracle: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
   oracle_profile: PublicKeyish;
   claim_case: PublicKeyish;
+  funding_line: PublicKeyish;
   outcome_schema: PublicKeyish;
+  liquidity_pool?: PublicKeyish;
+  capital_class?: PublicKeyish;
+  allocation_position?: PublicKeyish;
+  pool_oracle_approval?: PublicKeyish;
+  pool_oracle_permission_set?: PublicKeyish;
+  pool_oracle_policy?: PublicKeyish;
   claim_attestation: PublicKeyish;
   system_program?: PublicKeyish;
 }
@@ -1181,6 +1489,14 @@ export interface CloseOutcomeSchemaAccounts {
   recipient_system_account: PublicKeyish;
 }
 
+export interface ConfigureReserveAssetRailAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  reserve_domain: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
 export interface CreateAllocationPositionAccounts {
   authority: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1199,6 +1515,35 @@ export interface CreateCapitalClassAccounts {
   liquidity_pool: PublicKeyish;
   capital_class: PublicKeyish;
   pool_class_ledger: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface CreateCommitmentCampaignAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  payment_domain_asset_vault: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+  coverage_domain_asset_ledger: PublicKeyish;
+  coverage_funding_line: PublicKeyish;
+  coverage_funding_line_ledger: PublicKeyish;
+  coverage_plan_reserve_ledger: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_rail: PublicKeyish;
+  ledger: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
+export interface CreateCommitmentPaymentRailAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_domain_asset_vault: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+  coverage_funding_line: PublicKeyish;
+  payment_rail: PublicKeyish;
+  ledger: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
@@ -1273,6 +1618,21 @@ export interface DeallocateCapitalAccounts {
   allocation_ledger: PublicKeyish;
 }
 
+export interface DepositCommitmentAccounts {
+  depositor: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_rail: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+  ledger: PublicKeyish;
+  position: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  source_token_account: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  token_program: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
 export interface DepositIntoCapitalClassAccounts {
   owner: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1341,6 +1701,15 @@ export interface InitializeProtocolGovernanceAccounts {
   system_program?: PublicKeyish;
 }
 
+export interface InitializeSeriesReserveLedgerAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  policy_series: PublicKeyish;
+  series_reserve_ledger: PublicKeyish;
+  system_program?: PublicKeyish;
+}
+
 export interface MarkImpairmentAccounts {
   authority: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1358,6 +1727,7 @@ export interface MarkImpairmentAccounts {
 
 export interface OpenClaimCaseAccounts {
   authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   member_position: PublicKeyish;
   funding_line: PublicKeyish;
@@ -1389,6 +1759,13 @@ export interface OpenMemberPositionAccounts {
   system_program?: PublicKeyish;
 }
 
+export interface PauseCommitmentCampaignAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  campaign: PublicKeyish;
+}
+
 export interface ProcessRedemptionQueueAccounts {
   authority: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1405,6 +1782,12 @@ export interface ProcessRedemptionQueueAccounts {
   token_program: PublicKeyish;
 }
 
+export interface PublishReserveAssetRailPriceAccounts {
+  authority: PublicKeyish;
+  protocol_governance: PublicKeyish;
+  reserve_asset_rail: PublicKeyish;
+}
+
 export interface RecordPremiumPaymentAccounts {
   authority: PublicKeyish;
   protocol_governance: PublicKeyish;
@@ -1419,6 +1802,19 @@ export interface RecordPremiumPaymentAccounts {
   source_token_account: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
+  token_program: PublicKeyish;
+}
+
+export interface RefundCommitmentAccounts {
+  depositor: PublicKeyish;
+  campaign: PublicKeyish;
+  payment_rail: PublicKeyish;
+  ledger: PublicKeyish;
+  position: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
   token_program: PublicKeyish;
 }
 
@@ -1722,6 +2118,42 @@ export interface ProtocolClient {
     accountName: ProtocolAccountName,
     address: PublicKeyish,
   ): Promise<T | null>;
+  buildActivateDirectPremiumCommitmentInstruction(
+    params: BuildInstructionParams<
+      ActivateCommitmentArgs,
+      ActivateDirectPremiumCommitmentAccounts
+    >,
+  ): TransactionInstruction;
+  buildActivateDirectPremiumCommitmentTx(
+    params: BuildTransactionParams<
+      ActivateCommitmentArgs,
+      ActivateDirectPremiumCommitmentAccounts
+    >,
+  ): Transaction;
+  buildActivateTreasuryCreditCommitmentInstruction(
+    params: BuildInstructionParams<
+      ActivateCommitmentArgs,
+      ActivateTreasuryCreditCommitmentAccounts
+    >,
+  ): TransactionInstruction;
+  buildActivateTreasuryCreditCommitmentTx(
+    params: BuildTransactionParams<
+      ActivateCommitmentArgs,
+      ActivateTreasuryCreditCommitmentAccounts
+    >,
+  ): Transaction;
+  buildActivateWaterfallCommitmentInstruction(
+    params: BuildInstructionParams<
+      ActivateCommitmentArgs,
+      ActivateWaterfallCommitmentAccounts
+    >,
+  ): TransactionInstruction;
+  buildActivateWaterfallCommitmentTx(
+    params: BuildTransactionParams<
+      ActivateCommitmentArgs,
+      ActivateWaterfallCommitmentAccounts
+    >,
+  ): Transaction;
   buildAdjudicateClaimCaseInstruction(
     params: BuildInstructionParams<
       AdjudicateClaimCaseArgs,
@@ -1818,6 +2250,18 @@ export interface ProtocolClient {
       CloseOutcomeSchemaAccounts
     >,
   ): Transaction;
+  buildConfigureReserveAssetRailInstruction(
+    params: BuildInstructionParams<
+      ConfigureReserveAssetRailArgs,
+      ConfigureReserveAssetRailAccounts
+    >,
+  ): TransactionInstruction;
+  buildConfigureReserveAssetRailTx(
+    params: BuildTransactionParams<
+      ConfigureReserveAssetRailArgs,
+      ConfigureReserveAssetRailAccounts
+    >,
+  ): Transaction;
   buildCreateAllocationPositionInstruction(
     params: BuildInstructionParams<
       CreateAllocationPositionArgs,
@@ -1840,6 +2284,30 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       CreateCapitalClassArgs,
       CreateCapitalClassAccounts
+    >,
+  ): Transaction;
+  buildCreateCommitmentCampaignInstruction(
+    params: BuildInstructionParams<
+      CreateCommitmentCampaignArgs,
+      CreateCommitmentCampaignAccounts
+    >,
+  ): TransactionInstruction;
+  buildCreateCommitmentCampaignTx(
+    params: BuildTransactionParams<
+      CreateCommitmentCampaignArgs,
+      CreateCommitmentCampaignAccounts
+    >,
+  ): Transaction;
+  buildCreateCommitmentPaymentRailInstruction(
+    params: BuildInstructionParams<
+      CreateCommitmentPaymentRailArgs,
+      CreateCommitmentPaymentRailAccounts
+    >,
+  ): TransactionInstruction;
+  buildCreateCommitmentPaymentRailTx(
+    params: BuildTransactionParams<
+      CreateCommitmentPaymentRailArgs,
+      CreateCommitmentPaymentRailAccounts
     >,
   ): Transaction;
   buildCreateDomainAssetVaultInstruction(
@@ -1926,6 +2394,18 @@ export interface ProtocolClient {
       DeallocateCapitalAccounts
     >,
   ): Transaction;
+  buildDepositCommitmentInstruction(
+    params: BuildInstructionParams<
+      DepositCommitmentArgs,
+      DepositCommitmentAccounts
+    >,
+  ): TransactionInstruction;
+  buildDepositCommitmentTx(
+    params: BuildTransactionParams<
+      DepositCommitmentArgs,
+      DepositCommitmentAccounts
+    >,
+  ): Transaction;
   buildDepositIntoCapitalClassInstruction(
     params: BuildInstructionParams<
       DepositIntoCapitalClassArgs,
@@ -1998,6 +2478,18 @@ export interface ProtocolClient {
       InitializeProtocolGovernanceAccounts
     >,
   ): Transaction;
+  buildInitializeSeriesReserveLedgerInstruction(
+    params: BuildInstructionParams<
+      InitializeSeriesReserveLedgerArgs,
+      InitializeSeriesReserveLedgerAccounts
+    >,
+  ): TransactionInstruction;
+  buildInitializeSeriesReserveLedgerTx(
+    params: BuildTransactionParams<
+      InitializeSeriesReserveLedgerArgs,
+      InitializeSeriesReserveLedgerAccounts
+    >,
+  ): Transaction;
   buildMarkImpairmentInstruction(
     params: BuildInstructionParams<MarkImpairmentArgs, MarkImpairmentAccounts>,
   ): TransactionInstruction;
@@ -2034,6 +2526,18 @@ export interface ProtocolClient {
       OpenMemberPositionAccounts
     >,
   ): Transaction;
+  buildPauseCommitmentCampaignInstruction(
+    params: BuildInstructionParams<
+      PauseCommitmentCampaignArgs,
+      PauseCommitmentCampaignAccounts
+    >,
+  ): TransactionInstruction;
+  buildPauseCommitmentCampaignTx(
+    params: BuildTransactionParams<
+      PauseCommitmentCampaignArgs,
+      PauseCommitmentCampaignAccounts
+    >,
+  ): Transaction;
   buildProcessRedemptionQueueInstruction(
     params: BuildInstructionParams<
       ProcessRedemptionQueueArgs,
@@ -2046,6 +2550,18 @@ export interface ProtocolClient {
       ProcessRedemptionQueueAccounts
     >,
   ): Transaction;
+  buildPublishReserveAssetRailPriceInstruction(
+    params: BuildInstructionParams<
+      PublishReserveAssetRailPriceArgs,
+      PublishReserveAssetRailPriceAccounts
+    >,
+  ): TransactionInstruction;
+  buildPublishReserveAssetRailPriceTx(
+    params: BuildTransactionParams<
+      PublishReserveAssetRailPriceArgs,
+      PublishReserveAssetRailPriceAccounts
+    >,
+  ): Transaction;
   buildRecordPremiumPaymentInstruction(
     params: BuildInstructionParams<
       RecordPremiumPaymentArgs,
@@ -2056,6 +2572,18 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       RecordPremiumPaymentArgs,
       RecordPremiumPaymentAccounts
+    >,
+  ): Transaction;
+  buildRefundCommitmentInstruction(
+    params: BuildInstructionParams<
+      RefundCommitmentArgs,
+      RefundCommitmentAccounts
+    >,
+  ): TransactionInstruction;
+  buildRefundCommitmentTx(
+    params: BuildTransactionParams<
+      RefundCommitmentArgs,
+      RefundCommitmentAccounts
     >,
   ): Transaction;
   buildRegisterOracleInstruction(
@@ -2375,6 +2903,18 @@ export interface ProtocolClient {
     address: PublicKeyish,
   ): Promise<ClaimAttestation | null>;
   fetchClaimCase(address: PublicKeyish): Promise<ClaimCase | null>;
+  fetchCommitmentCampaign(
+    address: PublicKeyish,
+  ): Promise<CommitmentCampaign | null>;
+  fetchCommitmentLedger(
+    address: PublicKeyish,
+  ): Promise<CommitmentLedger | null>;
+  fetchCommitmentPaymentRail(
+    address: PublicKeyish,
+  ): Promise<CommitmentPaymentRail | null>;
+  fetchCommitmentPosition(
+    address: PublicKeyish,
+  ): Promise<CommitmentPosition | null>;
   fetchDomainAssetLedger(
     address: PublicKeyish,
   ): Promise<DomainAssetLedger | null>;
@@ -2421,6 +2961,9 @@ export interface ProtocolClient {
   fetchProtocolGovernance(
     address?: PublicKeyish,
   ): Promise<ProtocolGovernance | null>;
+  fetchReserveAssetRail(
+    address: PublicKeyish,
+  ): Promise<ReserveAssetRail | null>;
   fetchReserveDomain(address: PublicKeyish): Promise<ReserveDomain | null>;
   fetchSchemaDependencyLedger(
     address: PublicKeyish,

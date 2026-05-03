@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.4`.
+This page documents the public SDK surface shipped in `0.8.5`.
 
 ## Core runtime entrypoints
 
@@ -42,22 +42,38 @@ Returned by `createProtocolClient(...)`.
 ### Governance and scoped controls
 
 - `buildInitializeProtocolGovernanceTx(...)`
+- `buildRotateProtocolGovernanceAuthorityTx(...)`
 - `buildSetProtocolEmergencyPauseTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
+- `buildConfigureReserveAssetRailTx(...)`
+- `buildPublishReserveAssetRailPriceTx(...)`
+- `buildInitProtocolFeeVaultTx(...)`
+- `buildWithdrawProtocolFeeSolTx(...)`
+- `buildWithdrawProtocolFeeSplTx(...)`
 - `buildCreateHealthPlanTx(...)`
 - `buildUpdateHealthPlanControlsTx(...)`
 - `buildCreatePolicySeriesTx(...)`
+- `buildInitializeSeriesReserveLedgerTx(...)`
 - `buildVersionPolicySeriesTx(...)`
 - `buildOpenMemberPositionTx(...)`
 - `buildUpdateMemberEligibilityTx(...)`
+- `buildAuthorizeClaimRecipientTx(...)`
 
 ### Plan-side funding and obligations
 
 - `buildOpenFundingLineTx(...)`
 - `buildFundSponsorBudgetTx(...)`
 - `buildRecordPremiumPaymentTx(...)`
+- `buildCreateCommitmentCampaignTx(...)`
+- `buildCreateCommitmentPaymentRailTx(...)`
+- `buildDepositCommitmentTx(...)`
+- `buildActivateDirectPremiumCommitmentTx(...)`
+- `buildActivateTreasuryCreditCommitmentTx(...)`
+- `buildActivateWaterfallCommitmentTx(...)`
+- `buildRefundCommitmentTx(...)`
+- `buildPauseCommitmentCampaignTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
 - `buildSettleObligationTx(...)`
@@ -69,13 +85,18 @@ Returned by `createProtocolClient(...)`.
 - `buildAttachClaimEvidenceRefTx(...)`
 - `buildAdjudicateClaimCaseTx(...)`
 - `buildSettleClaimCaseTx(...)`
+- `buildAttestClaimCaseTx(...)`
 
 ### LP capital and class lifecycle
 
 - `buildCreateLiquidityPoolTx(...)`
+- `buildInitPoolTreasuryVaultTx(...)`
+- `buildWithdrawPoolTreasurySolTx(...)`
+- `buildWithdrawPoolTreasurySplTx(...)`
 - `buildCreateCapitalClassTx(...)`
 - `buildUpdateCapitalClassControlsTx(...)`
 - `buildDepositIntoCapitalClassTx(...)`
+- `buildUpdateLpPositionCredentialingTx(...)`
 - `buildRequestRedemptionTx(...)`
 - `buildProcessRedemptionQueueTx(...)`
 
@@ -95,6 +116,9 @@ Returned by `createProtocolClient(...)`.
 - `buildSetPoolOracleTx(...)`
 - `buildSetPoolOraclePermissionsTx(...)`
 - `buildSetPoolOraclePolicyTx(...)`
+- `buildInitPoolOracleFeeVaultTx(...)`
+- `buildWithdrawPoolOracleFeeSolTx(...)`
+- `buildWithdrawPoolOracleFeeSplTx(...)`
 - `buildRegisterOutcomeSchemaTx(...)`
 - `buildVerifyOutcomeSchemaTx(...)`
 - `buildBackfillSchemaDependencyLedgerTx(...)`
@@ -112,14 +136,21 @@ Returned by `createProtocolClient(...)`.
 - `fetchReserveDomain(...)`
 - `fetchDomainAssetVault(...)`
 - `fetchDomainAssetLedger(...)`
+- `fetchReserveAssetRail(...)`
 - `fetchHealthPlan(...)`
 - `fetchPlanReserveLedger(...)`
 - `fetchPolicySeries(...)`
 - `fetchSeriesReserveLedger(...)`
 - `fetchMemberPosition(...)`
+- `fetchMembershipAnchorSeat(...)`
 - `fetchFundingLine(...)`
 - `fetchFundingLineLedger(...)`
+- `fetchCommitmentCampaign(...)`
+- `fetchCommitmentPaymentRail(...)`
+- `fetchCommitmentLedger(...)`
+- `fetchCommitmentPosition(...)`
 - `fetchClaimCase(...)`
+- `fetchClaimAttestation(...)`
 - `fetchObligation(...)`
 - `fetchLiquidityPool(...)`
 - `fetchCapitalClass(...)`
@@ -152,14 +183,21 @@ Available from the root package and `@omegax/protocol-sdk/protocol_seeds`.
 - `deriveDomainAssetVaultPda(...)`
 - `deriveDomainAssetVaultTokenAccountPda(...)`
 - `deriveDomainAssetLedgerPda(...)`
+- `deriveReserveAssetRailPda(...)`
 - `deriveHealthPlanPda(...)`
 - `derivePlanReserveLedgerPda(...)`
 - `derivePolicySeriesPda(...)`
 - `deriveSeriesReserveLedgerPda(...)`
 - `deriveMemberPositionPda(...)`
+- `deriveMembershipAnchorSeatPda(...)`
 - `deriveFundingLinePda(...)`
 - `deriveFundingLineLedgerPda(...)`
+- `deriveCommitmentCampaignPda(...)`
+- `deriveCommitmentPaymentRailPda(...)`
+- `deriveCommitmentLedgerPda(...)`
+- `deriveCommitmentPositionPda(...)`
 - `deriveClaimCasePda(...)`
+- `deriveClaimAttestationPda(...)`
 - `deriveObligationPda(...)`
 - `deriveLiquidityPoolPda(...)`
 - `deriveCapitalClassPda(...)`
@@ -184,14 +222,21 @@ Seed constants:
 - `SEED_DOMAIN_ASSET_VAULT`
 - `SEED_DOMAIN_ASSET_VAULT_TOKEN`
 - `SEED_DOMAIN_ASSET_LEDGER`
+- `SEED_RESERVE_ASSET_RAIL`
 - `SEED_HEALTH_PLAN`
 - `SEED_PLAN_RESERVE_LEDGER`
 - `SEED_POLICY_SERIES`
 - `SEED_SERIES_RESERVE_LEDGER`
 - `SEED_MEMBER_POSITION`
+- `SEED_MEMBERSHIP_ANCHOR_SEAT`
 - `SEED_FUNDING_LINE`
 - `SEED_FUNDING_LINE_LEDGER`
+- `SEED_COMMITMENT_CAMPAIGN`
+- `SEED_COMMITMENT_PAYMENT_RAIL`
+- `SEED_COMMITMENT_LEDGER`
+- `SEED_COMMITMENT_POSITION`
 - `SEED_CLAIM_CASE`
+- `SEED_CLAIM_ATTESTATION`
 - `SEED_OBLIGATION`
 - `SEED_LIQUIDITY_POOL`
 - `SEED_CAPITAL_CLASS`
@@ -254,16 +299,53 @@ Constants:
 - `FUNDING_LINE_STATUS_OPEN`
 - `FUNDING_LINE_STATUS_PAUSED`
 - `FUNDING_LINE_STATUS_CLOSED`
+- `COMMITMENT_MODE_DIRECT_PREMIUM`
+- `COMMITMENT_MODE_TREASURY_CREDIT`
+- `COMMITMENT_MODE_WATERFALL_RESERVE`
+- `COMMITMENT_CAMPAIGN_STATUS_DRAFT`
+- `COMMITMENT_CAMPAIGN_STATUS_ACTIVE`
+- `COMMITMENT_CAMPAIGN_STATUS_PAUSED`
+- `COMMITMENT_CAMPAIGN_STATUS_CANCELED`
+- `COMMITMENT_CAMPAIGN_STATUS_CLOSED`
+- `COMMITMENT_POSITION_PENDING`
+- `COMMITMENT_POSITION_DIRECT_PREMIUM_ACTIVATED`
+- `COMMITMENT_POSITION_TREASURY_LOCKED`
+- `COMMITMENT_POSITION_REFUNDED`
+- `COMMITMENT_POSITION_WATERFALL_RESERVE_ACTIVATED`
+- `RESERVE_ASSET_ROLE_PRIMARY_STABLE`
+- `RESERVE_ASSET_ROLE_SECONDARY_STABLE`
+- `RESERVE_ASSET_ROLE_VOLATILE_COLLATERAL`
+- `RESERVE_ASSET_ROLE_TREASURY_LAST_RESORT`
+- `RESERVE_ORACLE_SOURCE_NONE`
+- `RESERVE_ORACLE_SOURCE_CHAINLINK_DATA_STREAM`
+- `RESERVE_ORACLE_SOURCE_CHAINLINK_DATA_FEED`
+- `RESERVE_ORACLE_SOURCE_GOVERNANCE_ATTESTED`
 - `ELIGIBILITY_PENDING`
 - `ELIGIBILITY_ELIGIBLE`
 - `ELIGIBILITY_PAUSED`
 - `ELIGIBILITY_CLOSED`
+- `MEMBERSHIP_MODE_OPEN`
+- `MEMBERSHIP_MODE_TOKEN_GATE`
+- `MEMBERSHIP_MODE_INVITE_ONLY`
+- `MEMBERSHIP_GATE_KIND_OPEN`
+- `MEMBERSHIP_GATE_KIND_INVITE_ONLY`
+- `MEMBERSHIP_GATE_KIND_NFT_ANCHOR`
+- `MEMBERSHIP_GATE_KIND_STAKE_ANCHOR`
+- `MEMBERSHIP_GATE_KIND_FUNGIBLE_SNAPSHOT`
+- `MEMBERSHIP_PROOF_MODE_OPEN`
+- `MEMBERSHIP_PROOF_MODE_TOKEN_GATE`
+- `MEMBERSHIP_PROOF_MODE_INVITE_PERMIT`
 - `CLAIM_INTAKE_OPEN`
 - `CLAIM_INTAKE_UNDER_REVIEW`
 - `CLAIM_INTAKE_APPROVED`
 - `CLAIM_INTAKE_DENIED`
 - `CLAIM_INTAKE_SETTLED`
 - `CLAIM_INTAKE_CLOSED`
+- `CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE`
+- `CLAIM_ATTESTATION_DECISION_SUPPORT_DENY`
+- `CLAIM_ATTESTATION_DECISION_REQUEST_REVIEW`
+- `CLAIM_ATTESTATION_DECISION_ABSTAIN`
+- `POOL_ORACLE_PERMISSION_ATTEST_CLAIM`
 - `OBLIGATION_STATUS_PROPOSED`
 - `OBLIGATION_STATUS_RESERVED`
 - `OBLIGATION_STATUS_CLAIMABLE_PAYABLE`
@@ -290,6 +372,18 @@ Constants:
 - `PAUSE_FLAG_REDEMPTION_QUEUE_ONLY`
 - `PAUSE_FLAG_ORACLE_FINALITY_HOLD`
 - `PAUSE_FLAG_ALLOCATION_FREEZE`
+- `ORACLE_TYPE_LAB`
+- `ORACLE_TYPE_HOSPITAL_CLINIC`
+- `ORACLE_TYPE_HEALTH_APP`
+- `ORACLE_TYPE_WEARABLE_DATA_PROVIDER`
+- `ORACLE_TYPE_OTHER`
+- `SCHEMA_FAMILY_KERNEL`
+- `SCHEMA_FAMILY_CLINICAL`
+- `SCHEMA_FAMILY_CLAIMS_CODING`
+- `SCHEMA_VISIBILITY_PUBLIC`
+- `SCHEMA_VISIBILITY_PRIVATE`
+- `SCHEMA_VISIBILITY_RESTRICTED`
+- `NATIVE_SOL_MINT`
 
 ## Claims helpers
 
