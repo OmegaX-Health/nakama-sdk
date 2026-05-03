@@ -103,25 +103,26 @@ From there:
 This package exposes the live canonical object model:
 
 - protocol governance and scoped controls
-- reserve domains and domain asset vaults
+- reserve domains, domain asset vaults, reserve asset rails, and fee vaults
 - health plans and policy series
-- member positions
-- funding lines, obligations, and claim cases
+- member positions and membership anchors
+- funding lines, commitment campaigns, obligations, and claim cases
 - liquidity pools, capital classes, LP positions, and allocation positions
-- oracle profiles, pool oracle approvals, oracle policies, and permission sets
+- oracle profiles, pool oracle approvals, oracle policies, permission sets, and claim attestations
 - outcome schemas and schema dependency ledgers
 - reserve-aware read models for sponsors, members, and capital providers
 - RPC helpers for unsigned transaction submission flows
 
 ## Release status
 
-- SDK release target: `0.8.4`
-- Protocol surface target: `omegax-protocol` commit `f343039`
+- SDK release target: `0.8.5`
+- Protocol surface target: `omegax-protocol` commit `f5b2515`
 - Current public network target: Solana devnet beta
 - Public docs: [docs.omegax.health](https://docs.omegax.health)
 
 ## Release notes
 
+- `0.8.5` refreshes generated bindings for the 66-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, and expands `buildAttestClaimCaseTx(...)` for the current claim-attestation account list.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
 - `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
 - `0.8.2` keeps invite-only member enrollment builders aligned with the protocol account metas by preserving the optional invite-authority signer.
@@ -146,7 +147,7 @@ This package exposes the live canonical object model:
 
 - Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
 - `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
-- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, and `deriveCapitalClassPda(...)`
+- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveCommitmentCampaignPda(...)`, and `deriveCapitalClassPda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
 - `@omegax/protocol-sdk/claims`: claim and obligation failure normalization helpers such as `normalizeClaimSimulationFailure(...)`
 - `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, and `attestOutcome(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
@@ -156,10 +157,10 @@ This package exposes the live canonical object model:
 
 ## What the SDK is for
 
-- Sponsors and operators can build reserve-domain, health-plan, policy-series, funding-line, obligation, and claim-case transactions directly.
+- Sponsors and operators can build reserve-domain, reserve-rail, health-plan, policy-series, funding-line, commitment, obligation, and claim-case transactions directly.
 - Capital providers can derive capital-class and allocation addresses, inspect ledgers, and build deposit and redemption flows against canonical pool and class objects.
 - Wallet apps and members can inspect plan participation, obligations, claim state, and payout history with the read-model helpers.
-- Oracle operators can register profiles, configure pool policy, and use a narrower attestation helper surface for outcome packaging.
+- Oracle operators can register profiles, configure pool policy, attest claim cases on-chain, and use a narrower attestation helper surface for outcome packaging.
 - External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
 
 ## What the SDK does not do

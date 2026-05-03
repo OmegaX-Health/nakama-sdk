@@ -21,7 +21,7 @@ npm install @omegax/protocol-sdk
 
 - Oracle and event producers: register oracle operators, configure pool policy, and package compatible outcome attestations.
 - Health / wallet / app builders: read member, claim, and payout state, then build user-facing enrollment or claim flows.
-- Sponsor and capital integrators: launch reserve domains, plans, funding lines, pools, classes, and allocation flows on the canonical surface.
+- Sponsor and capital integrators: launch reserve domains, reserve asset rails, plans, funding lines, commitment campaigns, pools, classes, and allocation flows on the canonical surface.
 
 ## Create clients
 
@@ -109,6 +109,7 @@ Relevant builders and helpers:
 - `buildSetPoolOracleTx(...)`
 - `buildSetPoolOraclePermissionsTx(...)`
 - `buildSetPoolOraclePolicyTx(...)`
+- `buildAttestClaimCaseTx(...)`
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
 - `attestOutcome(...)`
@@ -151,8 +152,10 @@ Example: derive canonical addresses for a sponsor-side deployment:
 import {
   deriveProtocolGovernancePda,
   deriveReserveDomainPda,
+  deriveReserveAssetRailPda,
   deriveDomainAssetVaultTokenAccountPda,
   deriveHealthPlanPda,
+  deriveCommitmentCampaignPda,
 } from '@omegax/protocol-sdk';
 
 const protocolGovernance = deriveProtocolGovernancePda(programId).toBase58();
@@ -170,6 +173,16 @@ const vaultTokenAccount = deriveDomainAssetVaultTokenAccountPda({
   assetMint: process.env.ASSET_MINT!,
   programId,
 }).toBase58();
+const reserveAssetRail = deriveReserveAssetRailPda({
+  reserveDomain,
+  assetMint: process.env.ASSET_MINT!,
+  programId,
+}).toBase58();
+const commitmentCampaign = deriveCommitmentCampaignPda({
+  healthPlan,
+  campaignId: 'builder-demo-commitment',
+  programId,
+}).toBase58();
 ```
 
 Relevant builders and helpers:
@@ -177,8 +190,13 @@ Relevant builders and helpers:
 - `buildInitializeProtocolGovernanceTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
+- `buildConfigureReserveAssetRailTx(...)`
+- `buildCreateCommitmentCampaignTx(...)`
+- `buildCreateCommitmentPaymentRailTx(...)`
+- `buildDepositCommitmentTx(...)`
 - `buildCreateHealthPlanTx(...)`
 - `buildCreatePolicySeriesTx(...)`
+- `buildInitializeSeriesReserveLedgerTx(...)`
 - `buildOpenFundingLineTx(...)`
 - `buildCreateLiquidityPoolTx(...)`
 - `buildCreateCapitalClassTx(...)`

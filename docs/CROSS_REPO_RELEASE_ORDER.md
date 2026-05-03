@@ -4,8 +4,8 @@ Use this sequence to publish the canonical OmegaX protocol release train without
 
 ## Target versions
 
-- `omegax-protocol`: commit `f343039`
-- `omegax-sdk`: `v0.8.4`
+- `omegax-protocol`: commit `f5b2515`
+- `omegax-sdk`: `v0.8.5`
 - `omegax-docs`: synced to the same canonical surface on `main`
 
 ## Local preparation order
@@ -21,7 +21,7 @@ Use this sequence to publish the canonical OmegaX protocol release train without
 2. Push `omegax-docs` `main`.
 3. Push `omegax-sdk` `main`.
 4. Confirm docs deploy succeeded.
-5. Tag and push SDK `v0.8.4`.
+5. Tag and push SDK `v0.8.5`.
 6. Confirm npm publish and clean install smoke.
 7. Tag and push the matching protocol release marker only after approval.
 
