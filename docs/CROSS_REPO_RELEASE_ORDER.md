@@ -4,7 +4,7 @@ Use this sequence to publish the canonical OmegaX protocol release train without
 
 ## Target versions
 
-- `omegax-protocol`: commit `f5b2515`
+- `omegax-protocol`: commit `2326371`
 - `omegax-sdk`: `v0.8.5`
 - `omegax-docs`: synced to the same canonical surface on `main`
 

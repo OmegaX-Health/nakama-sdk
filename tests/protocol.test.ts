@@ -25,7 +25,10 @@ import {
   buildPauseCommitmentCampaignTx,
   buildPublishReserveAssetRailPriceTx,
   buildProtocolInstruction,
+  buildRegisterOracleTx,
+  buildReserveObligationTx,
   buildRefundCommitmentTx,
+  buildSettleObligationTx,
   buildUpdateLpPositionCredentialingTx,
   CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE,
   CLAIM_INTAKE_APPROVED,
@@ -366,6 +369,7 @@ test('buildOpenClaimCaseTx includes protocol governance and derived claim case a
   const healthPlanAddress = Keypair.generate().publicKey;
   const memberPositionAddress = Keypair.generate().publicKey;
   const fundingLineAddress = Keypair.generate().publicKey;
+  const claimantAddress = Keypair.generate().publicKey;
   const claimId = 'claim-001';
 
   const tx = buildOpenClaimCaseTx({
@@ -373,6 +377,7 @@ test('buildOpenClaimCaseTx includes protocol governance and derived claim case a
     healthPlanAddress,
     memberPositionAddress,
     fundingLineAddress,
+    claimantAddress,
     claimId,
     recentBlockhash: '11111111111111111111111111111111',
   });
@@ -447,6 +452,165 @@ test('buildProtocolInstruction uses the selected programId for omitted optional 
     assert.equal(ix.keys[index]?.isSigner, false);
     assert.equal(ix.keys[index]?.isWritable, false);
   }
+});
+
+test('production builders reject custom program IDs without an unsafe flag', () => {
+  const previousNodeEnv = process.env.NODE_ENV;
+  const previousUnsafeFlag =
+    process.env.OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID;
+  process.env.NODE_ENV = 'production';
+  delete process.env.OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID;
+
+  try {
+    assert.throws(
+      () =>
+        buildProtocolInstruction({
+          instructionName: 'create_reserve_domain',
+          programId: Keypair.generate().publicKey,
+          args: {
+            domain_id: 'domain-1',
+            display_name: 'Domain',
+            domain_admin: Keypair.generate().publicKey,
+            settlement_mode: 0,
+            legal_structure_hash: Array.from(new Uint8Array(32)),
+            compliance_baseline_hash: Array.from(new Uint8Array(32)),
+            allowed_rail_mask: 0,
+            pause_flags: 0,
+          },
+          accounts: {
+            authority: Keypair.generate().publicKey,
+            protocol_governance: deriveProtocolGovernancePda(),
+            reserve_domain: deriveReserveDomainPda({ domainId: 'domain-1' }),
+            system_program: ZERO,
+          },
+        }),
+      /custom programId/,
+    );
+  } finally {
+    if (previousNodeEnv === undefined) {
+      delete process.env.NODE_ENV;
+    } else {
+      process.env.NODE_ENV = previousNodeEnv;
+    }
+    if (previousUnsafeFlag === undefined) {
+      delete process.env.OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID;
+    } else {
+      process.env.OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID =
+        previousUnsafeFlag;
+    }
+  }
+});
+
+test('raw protocol builders reject permissive numeric and fixed-array coercion', () => {
+  const validAccounts = {
+    authority: Keypair.generate().publicKey,
+    protocol_governance: deriveProtocolGovernancePda(),
+    reserve_domain: deriveReserveDomainPda({ domainId: 'domain-1' }),
+    system_program: ZERO,
+  };
+  const validArgs = {
+    domain_id: 'domain-1',
+    display_name: 'Domain',
+    domain_admin: Keypair.generate().publicKey,
+    settlement_mode: 0,
+    legal_structure_hash: Array.from(new Uint8Array(32)),
+    compliance_baseline_hash: Array.from(new Uint8Array(32)),
+    allowed_rail_mask: 0,
+    pause_flags: 0,
+  };
+
+  assert.throws(
+    () =>
+      buildProtocolInstruction({
+        instructionName: 'create_reserve_domain',
+        args: { ...validArgs, settlement_mode: -1 },
+        accounts: validAccounts,
+      }),
+    /unsigned 8-bit range/,
+  );
+  assert.throws(
+    () =>
+      buildProtocolInstruction({
+        instructionName: 'create_reserve_domain',
+        args: { ...validArgs, pause_flags: 1.5 },
+        accounts: validAccounts,
+      }),
+    /safe integer/,
+  );
+  assert.throws(
+    () =>
+      buildProtocolInstruction({
+        instructionName: 'create_reserve_domain',
+        args: { ...validArgs, legal_structure_hash: [1, 2, 3] },
+        accounts: validAccounts,
+      }),
+    /fixed array of length 32/,
+  );
+});
+
+test('convenience builders fail closed on privileged and partial account scopes', () => {
+  const authority = Keypair.generate().publicKey;
+  const assetMint = Keypair.generate().publicKey;
+
+  assert.throws(
+    () =>
+      buildOpenClaimCaseTx({
+        authority,
+        healthPlanAddress: Keypair.generate().publicKey,
+        memberPositionAddress: Keypair.generate().publicKey,
+        fundingLineAddress: Keypair.generate().publicKey,
+        claimId: 'claim-operator',
+        recentBlockhash: '11111111111111111111111111111111',
+      }),
+    /claimantAddress or memberWalletAddress is required/,
+  );
+  assert.throws(
+    () =>
+      buildRegisterOracleTx({
+        admin: Keypair.generate().publicKey,
+        oracle: Keypair.generate().publicKey,
+        recentBlockhash: '11111111111111111111111111111111',
+        oracleType: 1,
+        displayName: 'Oracle',
+        legalName: 'Oracle LLC',
+        websiteUrl: 'https://example.com',
+        appUrl: 'https://example.com/app',
+        logoUri: 'https://example.com/logo.png',
+        webhookUrl: 'https://example.com/hook',
+        supportedSchemaKeyHashesHex: ['ab'.repeat(32)],
+      }),
+    /admin and oracle to match/,
+  );
+  assert.throws(
+    () =>
+      buildReserveObligationTx({
+        authority,
+        healthPlanAddress: Keypair.generate().publicKey,
+        reserveDomainAddress: Keypair.generate().publicKey,
+        fundingLineAddress: Keypair.generate().publicKey,
+        assetMint,
+        obligationAddress: Keypair.generate().publicKey,
+        recentBlockhash: '11111111111111111111111111111111',
+        amount: 1n,
+        capitalClassAddress: Keypair.generate().publicKey,
+      }),
+    /LP allocation account scope/,
+  );
+  assert.throws(
+    () =>
+      buildSettleObligationTx({
+        authority,
+        healthPlanAddress: Keypair.generate().publicKey,
+        reserveDomainAddress: Keypair.generate().publicKey,
+        fundingLineAddress: Keypair.generate().publicKey,
+        assetMint,
+        obligationAddress: Keypair.generate().publicKey,
+        recentBlockhash: '11111111111111111111111111111111',
+        nextStatus: OBLIGATION_STATUS_SETTLED,
+        amount: 1n,
+      } as Parameters<typeof buildSettleObligationTx>[0]),
+    /settle_obligation requires memberPositionAddress/,
+  );
 });
 
 test('buildOpenMemberPositionTx keeps invite authority as an optional signer', () => {
@@ -947,7 +1111,11 @@ test('reserve rail and commitment builders derive canonical rail and campaign ac
     recentBlockhash,
   });
   assert.equal(
-    depositTx.instructions[0]?.keys[5]?.pubkey.toBase58(),
+    depositTx.instructions[0]?.keys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda().toBase58(),
+  );
+  assert.equal(
+    depositTx.instructions[0]?.keys[6]?.pubkey.toBase58(),
     position.toBase58(),
   );
 

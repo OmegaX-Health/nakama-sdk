@@ -62,6 +62,20 @@ function bytesEqual(left: Uint8Array, right: Uint8Array): boolean {
   );
 }
 
+function parsedExpiryMillis(value: string): number | null {
+  const expiresAtMillis = Date.parse(value);
+  return Number.isFinite(expiresAtMillis) ? expiresAtMillis : null;
+}
+
+function currentMillis(value?: string | Date): number {
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === 'string') {
+    const parsed = Date.parse(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return Date.now();
+}
+
 export function validateSignedClaimTx(
   params: ValidateSignedClaimTxParams,
 ): ValidateSignedClaimTxResult {
@@ -77,8 +91,65 @@ export function validateSignedClaimTx(
     };
   }
 
-  const expectedUnsignedTxBase64 =
-    params.expectedUnsignedTxBase64?.trim() ?? '';
+  const intent = params.claimIntent;
+  if (intent) {
+    const intentId = intent.intentId.trim();
+    const nonce = intent.nonce.trim();
+    const requiredSigner = intent.requiredSigner.trim();
+    const expiresAtMillis = parsedExpiryMillis(intent.expiresAtIso);
+    const nowMillis = currentMillis(params.nowIso);
+
+    if (
+      !intentId ||
+      (params.expectedIntentId !== undefined &&
+        intentId !== params.expectedIntentId.trim())
+    ) {
+      return {
+        valid: false,
+        txSignature: solanaTransactionFirstSignature(tx),
+        reason: 'intent_id_mismatch',
+        signer: solanaTransactionRequiredSigner(tx),
+      };
+    }
+    if (
+      !nonce ||
+      (params.expectedNonce !== undefined &&
+        nonce !== params.expectedNonce.trim())
+    ) {
+      return {
+        valid: false,
+        txSignature: solanaTransactionFirstSignature(tx),
+        reason: 'intent_nonce_mismatch',
+        signer: solanaTransactionRequiredSigner(tx),
+      };
+    }
+    if (
+      !requiredSigner ||
+      (params.requiredSigner !== undefined &&
+        requiredSigner !== params.requiredSigner.trim())
+    ) {
+      return {
+        valid: false,
+        txSignature: solanaTransactionFirstSignature(tx),
+        reason: 'required_signer_mismatch',
+        signer: solanaTransactionRequiredSigner(tx),
+      };
+    }
+    if (expiresAtMillis === null || expiresAtMillis <= nowMillis) {
+      return {
+        valid: false,
+        txSignature: solanaTransactionFirstSignature(tx),
+        reason: 'intent_expired',
+        signer: solanaTransactionRequiredSigner(tx),
+      };
+    }
+  }
+
+  const expectedUnsignedTxBase64 = (
+    params.expectedUnsignedTxBase64 ??
+    intent?.unsignedTxBase64 ??
+    ''
+  ).trim();
   if (!expectedUnsignedTxBase64) {
     return {
       valid: false,
@@ -96,6 +167,17 @@ export function validateSignedClaimTx(
     const expectedMessageBytes =
       solanaTransactionMessageBytes(expectedUnsignedTx);
     if (!bytesEqual(signedMessageBytes, expectedMessageBytes)) {
+      if (
+        params.requireExactMessage ||
+        params.allowBlockhashRefresh === false
+      ) {
+        return {
+          valid: false,
+          txSignature: solanaTransactionFirstSignature(tx),
+          reason: 'intent_message_mismatch',
+          signer: solanaTransactionRequiredSigner(tx),
+        };
+      }
       const signedIntentBytes = solanaTransactionIntentMessageBytes(tx);
       const expectedIntentBytes =
         solanaTransactionIntentMessageBytes(expectedUnsignedTx);
@@ -117,7 +199,11 @@ export function validateSignedClaimTx(
     };
   }
 
-  const expectedSigner = params.requiredSigner.trim();
+  const expectedSigner = (
+    params.requiredSigner ??
+    intent?.requiredSigner ??
+    ''
+  ).trim();
   const signer = solanaTransactionRequiredSigner(tx);
   if (!signer) {
     return {
@@ -125,6 +211,14 @@ export function validateSignedClaimTx(
       txSignature: null,
       reason: 'missing_fee_payer',
       signer: null,
+    };
+  }
+  if (!expectedSigner) {
+    return {
+      valid: false,
+      txSignature: solanaTransactionFirstSignature(tx),
+      reason: 'required_signer_mismatch',
+      signer,
     };
   }
   if (signer !== expectedSigner) {
@@ -175,6 +269,9 @@ export function mapValidationReasonToClaimFailure(
   reason: ValidateSignedClaimTxReason | null,
 ): ClaimFailureCode | null {
   if (!reason) return null;
+  if (reason === 'intent_expired') return 'intent_expired';
+  if (reason === 'intent_id_mismatch') return 'intent_id_mismatch';
+  if (reason === 'intent_nonce_mismatch') return 'intent_nonce_mismatch';
   if (reason === 'intent_message_mismatch') return 'intent_message_mismatch';
   if (reason === 'required_signer_mismatch') return 'required_signer_mismatch';
   return 'unknown';

@@ -16,7 +16,9 @@ export type ClaimFailureCode =
   | 'seeker_rule_misconfigured'
   | 'seeker_commitment_disabled'
   | 'intent_expired'
+  | 'intent_id_mismatch'
   | 'intent_message_mismatch'
+  | 'intent_nonce_mismatch'
   | 'required_signer_mismatch'
   | 'simulation_failed_insufficient_funds'
   | 'simulation_failed_pool_paused'
@@ -45,6 +47,7 @@ export interface ClaimFailureDetail {
 
 export type ClaimIntent = {
   intentId: string;
+  nonce: string;
   unsignedTxBase64: string;
   requiredSigner: string;
   expiresAtIso: string;
@@ -93,6 +96,31 @@ export type OutcomeAttestation = {
   digestHex: string;
 };
 
+export type ProtocolBoundAttestationContext = {
+  network: string;
+  programId: string;
+  healthPlan: string;
+  fundingLine: string;
+  claimCase: string;
+  policySeries?: string | null;
+  liquidityPool?: string | null;
+  capitalClass?: string | null;
+  allocationPosition?: string | null;
+  poolOracleApproval?: string | null;
+  poolOraclePermissionSet?: string | null;
+  poolOraclePolicy?: string | null;
+  schemaKeyHashHex: string;
+  audience: string;
+  nonce: string;
+  issuedAtIso: string;
+  asOfIso: string;
+  expiresAtIso: string;
+};
+
+export type ProtocolBoundOutcomeAttestation = OutcomeAttestation & {
+  context: ProtocolBoundAttestationContext;
+};
+
 export type OracleSigner = {
   keyId: string;
   publicKeyBase58: string;
@@ -107,6 +135,9 @@ export type OracleKmsSignerAdapter = {
 
 export type ValidateSignedClaimTxReason =
   | 'invalid_transaction_base64'
+  | 'intent_expired'
+  | 'intent_id_mismatch'
+  | 'intent_nonce_mismatch'
   | 'missing_fee_payer'
   | 'required_signer_mismatch'
   | 'missing_required_signature'
@@ -115,8 +146,14 @@ export type ValidateSignedClaimTxReason =
 
 export interface ValidateSignedClaimTxParams {
   signedTxBase64: string;
-  requiredSigner: string;
-  expectedUnsignedTxBase64: string;
+  requiredSigner?: string;
+  expectedUnsignedTxBase64?: string;
+  claimIntent?: ClaimIntent;
+  expectedIntentId?: string;
+  expectedNonce?: string;
+  nowIso?: string | Date;
+  allowBlockhashRefresh?: boolean;
+  requireExactMessage?: boolean;
 }
 
 export interface ValidateSignedClaimTxResult {

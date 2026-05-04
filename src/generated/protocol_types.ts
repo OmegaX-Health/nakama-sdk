@@ -1620,6 +1620,7 @@ export interface DeallocateCapitalAccounts {
 
 export interface DepositCommitmentAccounts {
   depositor: PublicKeyish;
+  protocol_governance: PublicKeyish;
   campaign: PublicKeyish;
   payment_rail: PublicKeyish;
   reserve_asset_rail: PublicKeyish;
@@ -1928,6 +1929,7 @@ export interface SettleClaimCaseAccounts {
   protocol_fee_vault: PublicKeyish;
   pool_oracle_fee_vault?: PublicKeyish;
   pool_oracle_policy?: PublicKeyish;
+  oracle_fee_attestation?: PublicKeyish;
   member_position: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;

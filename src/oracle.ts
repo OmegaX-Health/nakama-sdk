@@ -2,6 +2,7 @@ import bs58 from 'bs58';
 import nacl from 'tweetnacl';
 
 import {
+  assertCanonicalJsonValue,
   newId,
   nowIso,
   sha256Hex,
@@ -12,6 +13,8 @@ import type {
   OracleKmsSignerAdapter,
   OracleSigner,
   OutcomeAttestation,
+  ProtocolBoundAttestationContext,
+  ProtocolBoundOutcomeAttestation,
 } from './types.js';
 
 export type AttestOutcomeParams = {
@@ -28,6 +31,25 @@ export type AttestOutcomeParams = {
 
 export type AttestOutcomeResult = {
   attestation: OutcomeAttestation;
+  txSignature: string | null;
+};
+
+export type AttestProtocolOutcomeParams = {
+  userId: string;
+  cycleId: string;
+  outcomeId: string;
+  payload: Record<string, unknown>;
+  context: Omit<ProtocolBoundAttestationContext, 'issuedAtIso'> & {
+    issuedAtIso?: string;
+  };
+  signer: OracleSigner;
+  submitAttestation?: (
+    attestation: ProtocolBoundOutcomeAttestation,
+  ) => Promise<{ txSignature?: string }>;
+};
+
+export type AttestProtocolOutcomeResult = {
+  attestation: ProtocolBoundOutcomeAttestation;
   txSignature: string | null;
 };
 
@@ -96,6 +118,138 @@ function canonicalAttestationBody(params: {
   };
 }
 
+function normalizeProtocolContext(
+  context: AttestProtocolOutcomeParams['context'],
+  issuedAtIso: string,
+): ProtocolBoundAttestationContext {
+  const normalized: ProtocolBoundAttestationContext = {
+    network: context.network.trim(),
+    programId: context.programId.trim(),
+    healthPlan: context.healthPlan.trim(),
+    fundingLine: context.fundingLine.trim(),
+    claimCase: context.claimCase.trim(),
+    policySeries: context.policySeries?.trim() || null,
+    liquidityPool: context.liquidityPool?.trim() || null,
+    capitalClass: context.capitalClass?.trim() || null,
+    allocationPosition: context.allocationPosition?.trim() || null,
+    poolOracleApproval: context.poolOracleApproval?.trim() || null,
+    poolOraclePermissionSet: context.poolOraclePermissionSet?.trim() || null,
+    poolOraclePolicy: context.poolOraclePolicy?.trim() || null,
+    schemaKeyHashHex: context.schemaKeyHashHex.trim().toLowerCase(),
+    audience: context.audience.trim(),
+    nonce: context.nonce.trim(),
+    issuedAtIso: toIsoString(context.issuedAtIso ?? issuedAtIso),
+    asOfIso: toIsoString(context.asOfIso),
+    expiresAtIso: toIsoString(context.expiresAtIso),
+  };
+
+  for (const [key, value] of Object.entries(normalized)) {
+    if (typeof value === 'string' && value.length === 0) {
+      throw new Error(`protocol attestation context ${key} is required`);
+    }
+  }
+  if (!/^[0-9a-f]{64}$/.test(normalized.schemaKeyHashHex)) {
+    throw new Error(
+      'protocol attestation context schemaKeyHashHex must be a 32-byte hex string',
+    );
+  }
+  if (
+    Date.parse(normalized.expiresAtIso) <= Date.parse(normalized.issuedAtIso)
+  ) {
+    throw new Error('protocol attestation expiry must be after issuance');
+  }
+
+  return normalized;
+}
+
+function assertPoolScopeIsComplete(
+  context: ProtocolBoundAttestationContext,
+): void {
+  const values = [
+    context.liquidityPool,
+    context.capitalClass,
+    context.allocationPosition,
+    context.poolOracleApproval,
+    context.poolOraclePermissionSet,
+    context.poolOraclePolicy,
+  ];
+  const present = values.filter((value) => value && value.length > 0).length;
+  if (present > 0 && present !== values.length) {
+    throw new Error(
+      'protocol attestation pool scope must include liquidity pool, capital class, allocation position, oracle approval, permission set, and policy together',
+    );
+  }
+}
+
+function publicKeyBytes(publicKeyBase58: string): Uint8Array {
+  const bytes = bs58.decode(publicKeyBase58);
+  if (bytes.length !== nacl.sign.publicKeyLength) {
+    throw new Error('oracle signer public key must be 32 bytes');
+  }
+  return bytes;
+}
+
+function verifySignatureOrThrow(params: {
+  message: Uint8Array;
+  signature: Uint8Array;
+  publicKeyBase58: string;
+}): void {
+  if (params.signature.length !== nacl.sign.signatureLength) {
+    throw new Error('oracle attestation signature must be 64 bytes');
+  }
+  const ok = nacl.sign.detached.verify(
+    params.message,
+    params.signature,
+    publicKeyBytes(params.publicKeyBase58),
+  );
+  if (!ok) {
+    throw new Error('oracle attestation signature verification failed');
+  }
+}
+
+function signCanonicalAttestation(params: {
+  body: Record<string, unknown>;
+  signer: OracleSigner;
+}): Promise<{ signature: Uint8Array; digestHex: string }> {
+  assertCanonicalJsonValue(params.body, 'oracle attestation body');
+  const canonical = stableStringify(params.body);
+  const message = new TextEncoder().encode(canonical);
+  return params.signer.sign(message).then((signature) => {
+    verifySignatureOrThrow({
+      message,
+      signature,
+      publicKeyBase58: params.signer.publicKeyBase58,
+    });
+    return {
+      signature,
+      digestHex: sha256Hex(message),
+    };
+  });
+}
+
+export function verifyOracleAttestation(
+  attestation: OutcomeAttestation | ProtocolBoundOutcomeAttestation,
+): boolean {
+  try {
+    const {
+      signatureBase64,
+      digestHex: expectedDigestHex,
+      ...body
+    } = attestation;
+    assertCanonicalJsonValue(body, 'oracle attestation body');
+    const message = new TextEncoder().encode(stableStringify(body));
+    if (sha256Hex(message) !== expectedDigestHex) return false;
+    verifySignatureOrThrow({
+      message,
+      signature: Uint8Array.from(Buffer.from(signatureBase64, 'base64')),
+      publicKeyBase58: attestation.verifier.publicKeyBase58,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function attestOutcome(
   params: AttestOutcomeParams,
 ): Promise<AttestOutcomeResult> {
@@ -112,13 +266,58 @@ export async function attestOutcome(
     verifierKeyId: params.signer.keyId,
     verifierPublicKeyBase58: params.signer.publicKeyBase58,
   });
-  const canonical = stableStringify(body);
-  const message = new TextEncoder().encode(canonical);
-  const signature = await params.signer.sign(message);
+  const { signature, digestHex } = await signCanonicalAttestation({
+    body,
+    signer: params.signer,
+  });
   const attestation: OutcomeAttestation = {
     ...body,
     signatureBase64: Buffer.from(signature).toString('base64'),
-    digestHex: sha256Hex(message),
+    digestHex,
+  };
+
+  let txSignature: string | null = null;
+  if (params.submitAttestation) {
+    const result = await params.submitAttestation(attestation);
+    txSignature =
+      typeof result?.txSignature === 'string' ? result.txSignature : null;
+  }
+
+  return {
+    attestation,
+    txSignature,
+  };
+}
+
+export async function attestProtocolOutcome(
+  params: AttestProtocolOutcomeParams,
+): Promise<AttestProtocolOutcomeResult> {
+  const id = newId('att');
+  const issuedAtIso = nowIso();
+  const context = normalizeProtocolContext(params.context, issuedAtIso);
+  assertPoolScopeIsComplete(context);
+  const body = {
+    ...canonicalAttestationBody({
+      id,
+      userId: params.userId,
+      cycleId: params.cycleId,
+      outcomeId: params.outcomeId,
+      asOfIso: context.asOfIso,
+      issuedAtIso: context.issuedAtIso,
+      payload: params.payload,
+      verifierKeyId: params.signer.keyId,
+      verifierPublicKeyBase58: params.signer.publicKeyBase58,
+    }),
+    context,
+  };
+  const { signature, digestHex } = await signCanonicalAttestation({
+    body,
+    signer: params.signer,
+  });
+  const attestation: ProtocolBoundOutcomeAttestation = {
+    ...body,
+    signatureBase64: Buffer.from(signature).toString('base64'),
+    digestHex,
   };
 
   let txSignature: string | null = null;

@@ -59,6 +59,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Secret scan (gitleaks config)
+        run: node scripts/check-secrets.mjs
+
+      - name: Install-script allowlist
+        run: node scripts/check-install-scripts.mjs
+
       - name: Install dependencies
         run: npm ci
 
@@ -85,6 +91,9 @@ jobs:
 
       - name: Dry-run package
         run: npm pack --dry-run
+
+      - name: Package manifest allowlist
+        run: npm run security:package
 
       - name: Security audit (prod dependencies)
         run: npm run audit:prod

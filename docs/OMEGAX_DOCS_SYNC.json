@@ -7,26 +7,32 @@
   "pages": [
     {
       "sdkDoc": "README.md",
+      "sdkDocSha256": "f773eefdaa1dc314d7eb5071a9ddfd1784ce5d74d3415eba293c731cbab147ae",
       "omegaxDocsPath": "website/docs/sdk/overview.md"
     },
     {
       "sdkDoc": "docs/GETTING_STARTED.md",
+      "sdkDocSha256": "e3b3eb07670b373d585fded0c5e05cdde67dcb9bcbb56d7595ee60084d8dd898",
       "omegaxDocsPath": "website/docs/sdk/getting-started.md"
     },
     {
       "sdkDoc": "docs/WORKFLOWS.md",
+      "sdkDocSha256": "d8e0218ef734272bad8ec0381ecf0cc90f1aeb9a53742cde3cc3e22aff2cc918",
       "omegaxDocsPath": "website/docs/sdk/workflows.md"
     },
     {
       "sdkDoc": "docs/API_REFERENCE.md",
+      "sdkDocSha256": "cf907e90edf8fbb60770d29906ec84b47e474cedda7cb71cea04b6cd835da071",
       "omegaxDocsPath": "website/docs/sdk/api-reference.md"
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
+      "sdkDocSha256": "ce504135d287b424fcc8450a3e209e770082bbace39bd4152066ff759aaf3652",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {
       "sdkDoc": "docs/TROUBLESHOOTING.md",
+      "sdkDocSha256": "9352ad3b04ce6169cf186e1691dbaa710f0db595c74ef01d263512638f80d95d",
       "omegaxDocsPath": "website/docs/sdk/troubleshooting.md"
     }
   ]

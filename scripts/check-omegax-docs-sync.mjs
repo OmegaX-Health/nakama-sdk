@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { access, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
@@ -25,6 +27,11 @@ async function fileExists(path) {
   }
 }
 
+async function sha256File(path) {
+  const bytes = await readFile(path);
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
 function isIsoDate(value) {
   if (typeof value !== 'string') return false;
   const parsed = Date.parse(value);
@@ -33,6 +40,40 @@ function isIsoDate(value) {
 
 function isCommitSha(value) {
   return /^[0-9a-f]{7,40}$/i.test(value);
+}
+
+async function verifyDocsCommitAncestry(docsCommit, warnings, errors) {
+  const docsRepoDir = resolve(
+    process.env.OMEGAX_DOCS_REPO_DIR || '../omegax-docs',
+  );
+  if (!(await fileExists(resolve(docsRepoDir, '.git')))) {
+    warn(
+      'Skipping docs commit ancestry check because omegax-docs is not available locally.',
+      warnings,
+    );
+    return;
+  }
+
+  const refCandidates = ['origin/main', 'main'];
+  let verified = false;
+  for (const ref of refCandidates) {
+    const result = spawnSync(
+      'git',
+      ['-C', docsRepoDir, 'merge-base', '--is-ancestor', docsCommit, ref],
+      { encoding: 'utf8' },
+    );
+    if (result.status === 0) {
+      verified = true;
+      break;
+    }
+  }
+
+  if (!verified) {
+    fail(
+      `omegaxDocsCommit ${docsCommit} is not reachable from omegax-docs main.`,
+      errors,
+    );
+  }
 }
 
 async function main() {
@@ -121,6 +162,7 @@ async function main() {
     for (const [index, page] of manifest.pages.entries()) {
       const sdkDoc = String(page?.sdkDoc ?? '').trim();
       const omegaxDocsPath = String(page?.omegaxDocsPath ?? '').trim();
+      const sdkDocSha256 = String(page?.sdkDocSha256 ?? '').trim();
 
       if (!sdkDoc) {
         fail(`pages[${index}].sdkDoc is required.`, errors);
@@ -155,8 +197,27 @@ async function main() {
       const exists = await fileExists(resolve(sdkDoc));
       if (!exists) {
         fail(`Mapped sdkDoc file does not exist: ${sdkDoc}`, errors);
+      } else if (strict) {
+        if (!/^[0-9a-f]{64}$/i.test(sdkDocSha256)) {
+          fail(
+            `pages[${index}].sdkDocSha256 must be a 64-character SHA-256 hash in strict mode.`,
+            errors,
+          );
+        } else {
+          const actualHash = await sha256File(resolve(sdkDoc));
+          if (actualHash !== sdkDocSha256.toLowerCase()) {
+            fail(
+              `pages[${index}].sdkDocSha256 does not match ${sdkDoc}.`,
+              errors,
+            );
+          }
+        }
       }
     }
+  }
+
+  if (strict && isCommitSha(docsCommit) && !placeholders.has(docsCommit)) {
+    await verifyDocsCommitAncestry(docsCommit, warnings, errors);
   }
 
   for (const message of warnings) {

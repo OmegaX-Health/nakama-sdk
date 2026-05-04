@@ -8,6 +8,7 @@ This page documents the public SDK surface shipped in `0.8.5`.
 - `getOmegaXNetworkInfo(...)`
 - `OMEGAX_NETWORKS`
 - `createRpcClient(...)`
+- `createSafeProtocolClient(...)`
 - `createProtocolClient(...)`
 - `getProtocolIdl()`
 - `listProtocolInstructionNames()`
@@ -18,6 +19,7 @@ This page documents the public SDK surface shipped in `0.8.5`.
 - `buildProtocolInstruction(...)`
 - `buildProtocolTransaction(...)`
 - `compileTransactionToV0(...)`
+- `preflightClassicTokenAccount(...)`
 
 ## RPC client
 
@@ -38,6 +40,14 @@ results.
 ## Canonical instruction builders
 
 Returned by `createProtocolClient(...)`.
+
+Use `createSafeProtocolClient(...)` for product and operator flows. It wraps the
+checked convenience builders, pins the canonical program ID by default, and
+preflights classic SPL token custody accounts when a `Connection` is available.
+`buildProtocolInstruction(...)`, `buildProtocolTransaction(...)`, and the raw
+dynamic builders remain advanced APIs for protocol engineering and tests; they
+reject permissive numeric coercion and fixed-array length drift before Borsh
+encoding.
 
 ### Governance and scoped controls
 
@@ -126,7 +136,7 @@ Returned by `createProtocolClient(...)`.
 
 Every instruction also exposes a sibling `build...Instruction(...)` helper.
 
-Custody-sensitive builders now mirror the on-chain custody requirements directly. `buildCreateDomainAssetVaultTx(...)` derives the protocol-owned `domain_asset_vault_token` PDA, while sponsor funding, premium payments, LP capital deposits, and redemption processing require source or recipient token accounts, the canonical vault token account, asset mint, and token program accounts.
+Custody-sensitive builders now mirror the on-chain custody requirements directly. `buildCreateDomainAssetVaultTx(...)` derives the protocol-owned `domain_asset_vault_token` PDA, while sponsor funding, premium payments, obligation settlement, LP capital deposits, and redemption processing require source or recipient token accounts, the canonical vault token account, asset mint, and token program accounts. LP allocation reserve/release/settle/impairment helpers require pool class ledger, allocation position, and allocation ledger scope together rather than accepting partial optional account sets.
 
 ## Canonical account readers
 
@@ -393,8 +403,13 @@ Available from the root package and `@omegax/protocol-sdk/claims`.
 - `normalizeClaimRpcFailure(...)`
 - `validateSignedClaimTx(...)`
 
-`validateSignedClaimTx(...)` requires `expectedUnsignedTxBase64` and fails closed
-when the signed transaction does not match that intent.
+`validateSignedClaimTx(...)` requires a matching unsigned transaction intent and
+fails closed when the signed transaction does not match that intent. Claim
+intents should include `intentId`, `nonce`, `expiresAtIso`, `requiredSigner`,
+and `unsignedTxBase64`; the validator rejects stale intents, wrong nonces, wrong
+signers, malformed transactions, and message tampering. Recent-blockhash refresh
+is allowed only when every non-blockhash byte still matches, and
+`requireExactMessage: true` disables even that for high-risk operator flows.
 
 The claims module also re-exports:
 
@@ -410,6 +425,14 @@ Available from the root package and `@omegax/protocol-sdk/oracle`.
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
 - `attestOutcome(...)`
+- `attestProtocolOutcome(...)`
+- `verifyOracleAttestation(...)`
+
+Use `attestProtocolOutcome(...)` for settlement-grade protocol evidence. Its
+context binds the evidence to network, program ID, health plan, funding line,
+claim case, optional pool allocation scope, schema key hash, audience, nonce,
+issue time, as-of time, and expiry. Generic `attestOutcome(...)` remains
+available for telemetry and non-settlement event packaging.
 
 ## Shared utilities
 

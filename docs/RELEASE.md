@@ -4,7 +4,7 @@ This is the maintainer flow for publishing the canonical SDK release.
 
 ## Release targets
 
-- Protocol: `omegax-protocol` commit `f5b2515`
+- Protocol: `omegax-protocol` commit `2326371`
 - SDK: `@omegax/protocol-sdk v0.8.5`
 - Docs portal: `docs.omegax.health` content synced to the matching SDK surface
 
@@ -13,6 +13,7 @@ This is the maintainer flow for publishing the canonical SDK release.
 - `package.json` version is final.
 - `docs/RELEASE_NOTES.md` is updated for the version being published.
 - `docs/OMEGAX_DOCS_SYNC.json` points at the merged docs commit.
+- Each docs sync mapping includes a current `sdkDocSha256` content hash.
 - Local protocol parity is green against the intended sibling `omegax-protocol` workspace.
 - SDK commits include `Signed-off-by` trailers because CI enforces DCO.
 
@@ -27,10 +28,13 @@ npm run build
 npm test
 npm run docs:check
 npm run docs:sync:check:strict
+npm run security:secrets
+npm run security:install-scripts
+npm run security:package
+npm run audit:prod
 npm run verify:protocol:local
 npm run test:protocol:localnet
 npm pack --dry-run
-npm run audit:prod
 ```
 
 Production moderate-or-higher dependency advisories are release blockers unless
@@ -55,8 +59,12 @@ Commit regenerated artifacts with the source change. Do not hand-edit generated 
 3. Update `docs/OMEGAX_DOCS_SYNC.json` with the merged docs commit.
 4. Finalize and push `omegax-sdk` `main`.
 5. Tag SDK `v0.8.5`.
-6. Confirm `npm publish` and import smoke pass.
-7. Tag the matching protocol release marker only after the protocol repo owner approves that public tag.
+6. Let the release workflow complete the uncredentialed `verify` job.
+7. Approve the protected `npm-production` publish job only after verify is green.
+8. Confirm `npm publish` and clean import smoke pass.
+9. Tag the matching protocol release marker only after the protocol repo owner approves that public tag.
+
+The publish job is the only job with npm credentials and OIDC. Prefer npm trusted publishing for `npm-production`; if token publishing is still required, use a granular npm automation token scoped only to this package.
 
 ## Post-publish verification
 

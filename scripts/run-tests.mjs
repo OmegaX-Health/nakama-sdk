@@ -45,6 +45,10 @@ export function runTests() {
     ['--import', 'tsx', '--test', ...testFiles],
     {
       cwd: REPO_ROOT,
+      env: {
+        ...process.env,
+        NODE_ENV: process.env.NODE_ENV || 'test',
+      },
       stdio: 'inherit',
     },
   );
