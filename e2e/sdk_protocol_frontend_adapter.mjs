@@ -2,10 +2,26 @@ import * as protocol from '../src/protocol.js';
 import * as models from '../src/protocol_models.js';
 import * as seeds from '../src/protocol_seeds.js';
 
+const CLASSIC_SPL_TOKEN_PROGRAM_ID =
+  'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
+
+function buildSettleObligationTxForSurfaceAudit(params) {
+  return protocol.buildSettleObligationTx({
+    ...params,
+    memberPositionAddress: params.memberPositionAddress ?? seeds.ZERO_PUBKEY,
+    vaultTokenAccountAddress:
+      params.vaultTokenAccountAddress ?? seeds.ZERO_PUBKEY,
+    recipientTokenAccountAddress:
+      params.recipientTokenAccountAddress ?? seeds.ZERO_PUBKEY,
+    tokenProgramId: params.tokenProgramId ?? CLASSIC_SPL_TOKEN_PROGRAM_ID,
+  });
+}
+
 const adapter = Object.freeze({
   ...protocol,
   ...models,
   ...seeds,
+  buildSettleObligationTx: buildSettleObligationTxForSurfaceAudit,
 });
 
 export default adapter;

@@ -1,6 +1,11 @@
 import type { Connection } from '@solana/web3.js';
 
-import { createProtocolClient } from '../src/protocol.js';
+import {
+  buildReserveObligationTx,
+  buildSettleObligationTx,
+  createProtocolClient,
+  createSafeProtocolClient,
+} from '../src/protocol.js';
 import type { ProtocolClient } from '../src/types.js';
 
 declare const connection: Connection;
@@ -9,6 +14,15 @@ declare const authority: string;
 declare const recentBlockhash: string;
 declare const protocolGovernance: string;
 declare const reserveDomain: string;
+declare const healthPlan: string;
+declare const fundingLine: string;
+declare const assetMint: string;
+declare const obligation: string;
+declare const memberPosition: string;
+declare const vaultTokenAccount: string;
+declare const recipientTokenAccount: string;
+declare const recipientOwner: string;
+declare const tokenProgram: string;
 
 function assertProtocolClient(protocol: ProtocolClient) {
   void protocol.buildCreateReserveDomainTx({
@@ -39,3 +53,55 @@ const annotatedProtocol: ProtocolClient = createProtocolClient(
   programId,
 );
 assertProtocolClient(annotatedProtocol);
+
+void buildReserveObligationTx({
+  authority,
+  healthPlanAddress: healthPlan,
+  reserveDomainAddress: reserveDomain,
+  fundingLineAddress: fundingLine,
+  assetMint,
+  obligationAddress: obligation,
+  recentBlockhash,
+  amount: 1n,
+});
+
+void buildSettleObligationTx({
+  authority,
+  healthPlanAddress: healthPlan,
+  reserveDomainAddress: reserveDomain,
+  fundingLineAddress: fundingLine,
+  assetMint,
+  obligationAddress: obligation,
+  recentBlockhash,
+  nextStatus: 5,
+  amount: 1n,
+  memberPositionAddress: memberPosition,
+  vaultTokenAccountAddress: vaultTokenAccount,
+  recipientTokenAccountAddress: recipientTokenAccount,
+  tokenProgramId: tokenProgram,
+});
+
+const safeProtocol = createSafeProtocolClient(connection);
+void safeProtocol.buildWithdrawProtocolFeeSolTx({
+  authority,
+  reserveDomainAddress: reserveDomain,
+  recipient: authority,
+  recentBlockhash,
+  amount: 1n,
+});
+void safeProtocol.buildSettleObligationTx({
+  authority,
+  healthPlanAddress: healthPlan,
+  reserveDomainAddress: reserveDomain,
+  fundingLineAddress: fundingLine,
+  assetMint,
+  obligationAddress: obligation,
+  recentBlockhash,
+  nextStatus: 5,
+  amount: 1n,
+  memberPositionAddress: memberPosition,
+  vaultTokenAccountAddress: vaultTokenAccount,
+  recipientTokenAccountAddress: recipientTokenAccount,
+  recipientOwnerAddress: recipientOwner,
+  tokenProgramId: tokenProgram,
+});

@@ -621,6 +621,11 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         plan_reserve_ledger: planReserveLedger,
         series_reserve_ledger: seriesReserveLedger,
         obligation,
+        member_position: memberPosition,
+        asset_mint: assetMint,
+        vault_token_account: vaultTokenAccount,
+        recipient_token_account: adminSourceTokenAccount,
+        token_program: tokenProgram,
       },
     })) as never,
   });
@@ -646,6 +651,11 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         plan_reserve_ledger: planReserveLedger,
         series_reserve_ledger: seriesReserveLedger,
         obligation,
+        member_position: memberPosition,
+        asset_mint: assetMint,
+        vault_token_account: vaultTokenAccount,
+        recipient_token_account: memberSourceTokenAccount,
+        token_program: tokenProgram,
       },
     })) as never,
   });
@@ -671,6 +681,11 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         plan_reserve_ledger: planReserveLedger,
         series_reserve_ledger: seriesReserveLedger,
         obligation,
+        member_position: memberPosition,
+        asset_mint: assetMint,
+        vault_token_account: vaultTokenAccount,
+        recipient_token_account: adminSourceTokenAccount,
+        token_program: tokenProgram,
       },
     })) as never,
   });
@@ -896,7 +911,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   );
   assert.equal(
     (fetchedLiquidityPool as { total_value_locked: bigint }).total_value_locked,
-    150_075n,
+    149_700n,
   );
 
   const fetchedCapitalClass = await protocol.fetchCapitalClass(capitalClass);
@@ -925,7 +940,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   const domainSheet = recomputeReserveBalanceSheet(
     (fetchedDomainLedger as { sheet: Record<string, unknown> }).sheet,
   );
-  assert.equal(domainSheet.funded, 600_000n);
+  assert.equal(domainSheet.funded, 599_700n);
   assert.equal(domainSheet.reserved, 0n);
   assert.equal(domainSheet.pendingRedemption, 0n);
   assert.equal(domainSheet.impaired, 0n);
@@ -951,7 +966,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   const classSheet = recomputeReserveBalanceSheet(
     (fetchedClassLedger as { sheet: Record<string, unknown> }).sheet,
   );
-  assert.equal(classSheet.funded, 150_000n);
+  assert.equal(classSheet.funded, 149_700n);
   assert.equal(classSheet.pendingRedemption, 0n);
-  assert.equal(classSheet.redeemable, 150_000n);
+  assert.equal(classSheet.redeemable, 149_700n);
 });

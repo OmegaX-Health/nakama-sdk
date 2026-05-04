@@ -7,7 +7,7 @@ This guide gets you from install to a usable OmegaX client on Solana devnet beta
 - Node.js `>=20`
 - ESM runtime
 - A Solana RPC endpoint
-- The deployed OmegaX `programId` for your target cluster
+- The canonical deployed OmegaX `programId` for your target cluster
 
 Public integrations should target devnet beta until OmegaX announces public mainnet availability.
 
@@ -30,6 +30,7 @@ import {
   PROTOCOL_PROGRAM_ID,
   createConnection,
   createProtocolClient,
+  createSafeProtocolClient,
   createRpcClient,
   getOmegaXNetworkInfo,
 } from '@omegax/protocol-sdk';
@@ -44,10 +45,17 @@ const connection = createConnection({
   commitment: 'confirmed',
 });
 
-const programId = process.env.OMEGAX_PROGRAM_ID ?? PROTOCOL_PROGRAM_ID;
-const protocol = createProtocolClient(connection, programId);
+const protocol = createSafeProtocolClient(connection, {
+  programId: PROTOCOL_PROGRAM_ID,
+});
+const rawProtocol = createProtocolClient(connection, PROTOCOL_PROGRAM_ID);
 const rpc = createRpcClient(connection);
 ```
+
+Production clients default to the canonical OmegaX program. Custom program IDs
+are rejected unless `unsafeAllowCustomProgramId: true` or
+`OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` is used for devnet, localnet, or
+tests.
 
 ## Inspect the current public surface
 
@@ -95,8 +103,10 @@ if (!simulation.signatureVerified) {
 
 Simulation is preflight feedback, not authentication. Claim and intake services
 that accept user-submitted transactions should call `validateSignedClaimTx(...)`
-with the exact `expectedUnsignedTxBase64` intent before trusting the signer or
-intent.
+with a `ClaimIntent` containing `intentId`, `nonce`, `expiresAtIso`,
+`requiredSigner`, and `unsignedTxBase64` before trusting the signer or intent.
+Operator flows can set `requireExactMessage: true`; wallet flows may allow
+blockhash-only refresh when every non-blockhash byte still matches.
 
 ## Path A: Oracle and event producers
 
@@ -114,6 +124,8 @@ Relevant builders and helpers:
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
 - `attestOutcome(...)`
+- `attestProtocolOutcome(...)`
+- `verifyProtocolOracleAttestation(...)`
 
 Then continue with:
 
@@ -145,7 +157,7 @@ Then continue with:
 
 Start here when you need to create settlement boundaries, plan lanes, or LP capital flows on the canonical model.
 
-Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client.
+Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client. Use the safe client for sponsor funding, premium payments, settlement, LP deposits, redemption requests, queue processing, and fee/treasury withdrawals so PDA derivation, classic SPL token guards, and token-account preflights stay in one place. Safe settlement calls also require `recipientOwnerAddress` to preflight payout token-account ownership before signing.
 
 Example: derive canonical addresses for a sponsor-side deployment:
 

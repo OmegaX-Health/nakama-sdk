@@ -116,13 +116,13 @@ This package exposes the live canonical object model:
 ## Release status
 
 - SDK release target: `0.8.5`
-- Protocol surface target: `omegax-protocol` commit `f5b2515`
+- Protocol surface target: `omegax-protocol` commit `2326371`
 - Current public network target: Solana devnet beta
 - Public docs: [docs.omegax.health](https://docs.omegax.health)
 
 ## Release notes
 
-- `0.8.5` refreshes generated bindings for the 66-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, and expands `buildAttestClaimCaseTx(...)` for the current claim-attestation account list.
+- `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
 - `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
 - `0.8.2` keeps invite-only member enrollment builders aligned with the protocol account metas by preserving the optional invite-authority signer.
@@ -150,7 +150,7 @@ This package exposes the live canonical object model:
 - `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveCommitmentCampaignPda(...)`, and `deriveCapitalClassPda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
 - `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
-- `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, and `attestOutcome(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
+- `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
 - `@omegax/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
 - `@omegax/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
 - `@omegax/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
@@ -162,6 +162,8 @@ This package exposes the live canonical object model:
 - Wallet apps and members can inspect plan participation, obligations, claim state, and payout history with the read-model helpers.
 - Oracle operators can register profiles, configure pool policy, attest claim cases on-chain, and use a narrower attestation helper surface for outcome packaging.
 - External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
+- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client now covers sponsor funding, premium intake, LP deposits/redemptions, redemption processing, settlement, and fee/treasury withdrawals. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
+- Safe settlement calls require `recipientOwnerAddress` alongside the custody accounts so the SDK can preflight payout token-account mint and owner before users sign.
 
 ## What the SDK does not do
 
@@ -180,6 +182,11 @@ npm run format:check
 npm run build
 npm test
 npm run docs:check
+npm run docs:sync:check:strict
+npm run security:secrets
+npm run security:install-scripts
+npm run security:package
+npm run audit:prod
 npm run verify:protocol:local
 ```
 

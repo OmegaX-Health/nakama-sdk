@@ -1,6 +1,6 @@
 // AUTO-GENERATED FILE. DO NOT EDIT MANUALLY.
 // source: shared/protocol_contract.json
-// contract_sha256: d7daf306f61df6768b9737724ce9f09c0dee8582274b7f93b18e107bfad4bdc3
+// contract_sha256: 7c17f469236ac2b62a4e33bebee7cb8073c223665cba532219f504ccae96aa1c
 
 export type ProtocolInstructionName =
   | 'activate_direct_premium_commitment'
@@ -3070,6 +3070,22 @@ export const PROTOCOL_INSTRUCTION_ACCOUNTS: Record<
       pdaSeeds: undefined,
     },
     {
+      name: 'protocol_governance',
+      writable: false,
+      signer: false,
+      optional: false,
+      address: undefined,
+      pdaSeeds: [
+        {
+          kind: 'const',
+          value: [
+            112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101, 114,
+            110, 97, 110, 99, 101,
+          ],
+        },
+      ],
+    },
+    {
       name: 'campaign',
       writable: true,
       signer: false,
@@ -6122,6 +6138,14 @@ export const PROTOCOL_INSTRUCTION_ACCOUNTS: Record<
     },
     {
       name: 'pool_oracle_policy',
+      writable: false,
+      signer: false,
+      optional: true,
+      address: undefined,
+      pdaSeeds: undefined,
+    },
+    {
+      name: 'oracle_fee_attestation',
       writable: false,
       signer: false,
       optional: true,

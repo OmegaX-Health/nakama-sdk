@@ -1,20 +1,74 @@
 import { createHash, randomUUID } from 'node:crypto';
 
-export function stableStringify(value: unknown): string {
+export function assertCanonicalJsonValue(
+  value: unknown,
+  label = 'value',
+  seen = new WeakSet<object>(),
+): void {
+  if (value === null) return;
+
+  const valueType = typeof value;
+  if (valueType === 'string' || valueType === 'boolean') return;
+  if (valueType === 'number') {
+    if (!Number.isFinite(value)) {
+      throw new Error(`${label} must not contain NaN or infinity`);
+    }
+    return;
+  }
+  if (
+    valueType === 'undefined' ||
+    valueType === 'bigint' ||
+    valueType === 'function' ||
+    valueType === 'symbol'
+  ) {
+    throw new Error(`${label} contains unsupported ${valueType} value`);
+  }
+
+  const objectValue = value as object;
+  if (seen.has(objectValue)) {
+    throw new Error(`${label} contains a cyclic object`);
+  }
+  seen.add(objectValue);
+
+  if (Array.isArray(value)) {
+    value.forEach((entry, index) =>
+      assertCanonicalJsonValue(entry, `${label}[${index}]`, seen),
+    );
+    seen.delete(objectValue);
+    return;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) {
+    throw new Error(`${label} must contain only plain JSON objects`);
+  }
+
+  Object.entries(value as Record<string, unknown>).forEach(([key, entry]) =>
+    assertCanonicalJsonValue(entry, `${label}.${key}`, seen),
+  );
+  seen.delete(objectValue);
+}
+
+function stableStringifyInternal(value: unknown): string {
   if (value === null || typeof value !== 'object') {
     return JSON.stringify(value);
   }
 
   if (Array.isArray(value)) {
-    return `[${value.map(stableStringify).join(',')}]`;
+    return `[${value.map(stableStringifyInternal).join(',')}]`;
   }
 
   const entries = Object.entries(value as Record<string, unknown>).sort(
     ([a], [b]) => a.localeCompare(b),
   );
   return `{${entries
-    .map(([key, v]) => `${JSON.stringify(key)}:${stableStringify(v)}`)
+    .map(([key, v]) => `${JSON.stringify(key)}:${stableStringifyInternal(v)}`)
     .join(',')}}`;
+}
+
+export function stableStringify(value: unknown): string {
+  assertCanonicalJsonValue(value);
+  return stableStringifyInternal(value);
 }
 
 export function sha256Hex(value: Uint8Array | string): string {

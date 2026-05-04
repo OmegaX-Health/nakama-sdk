@@ -13,6 +13,11 @@ Use them by builder lane rather than reading the entire catalog in protocol-obje
 5. Broadcast with `broadcastSignedTx(...)`.
 6. Verify state with `fetch...(...)` readers and reserve-model helpers.
 
+Use `createSafeProtocolClient(...)` for product and operator flows. Raw
+`createProtocolClient(...)` builders are useful for protocol engineering and
+tests, but production flows should stay on the safe layer unless an explicit
+unsafe custom-program override is part of a devnet or localnet workflow.
+
 ## Path A: Oracle and event producers
 
 Use this path when your service needs to normalize private inputs into OmegaX-compatible outcome events and policy-bound oracle actions.
@@ -52,8 +57,23 @@ Helpers:
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
 - `attestOutcome(...)`
+- `attestProtocolOutcome(...)`
+- `verifyOracleAttestation(...)`
+- `verifyProtocolOracleAttestation(...)`
 
-On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool, capital class, allocation position, pool oracle approval, permission set, and pool oracle policy accounts; otherwise the SDK uses omitted optional account placeholders.
+Use `attestProtocolOutcome(...)` for settlement-grade claim evidence. It binds
+the signed payload to network, program ID, health plan, funding line, claim
+case, schema key hash, audience, nonce, issue time, as-of time, and expiry.
+Use `verifyProtocolOracleAttestation(...)` before settlement intake so the SDK
+checks signature, expiry, expected network/program/account IDs, audience, nonce,
+and optional pool/class/allocation scope together. Generic
+`attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
+non-settlement telemetry.
+Verifier calls reject unexpected optional policy/pool/class/allocation scope by
+default; pass the expected scope fields for settlement, or set
+`allowUnexpectedOptionalScope` only for non-settlement wildcard consumers.
+
+On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool and capital class so the SDK can derive the allocation and pool-oracle scope accounts together; partial pool scope is rejected.
 
 Useful constants:
 
@@ -95,7 +115,7 @@ Failure helpers:
 - `normalizeClaimSimulationFailure(...)`
 - `normalizeClaimRpcFailure(...)`
 - `validateSignedClaimTx(...)` for checking the submitted signed transaction
-  against the exact unsigned intent before trusting claim intake.
+  against a nonce-bearing, expiring `ClaimIntent` before trusting claim intake.
 
 ### Workflow B2: Member read models
 
@@ -160,7 +180,23 @@ PDA helpers:
 
 Use this for sponsor budgets, reward programs, or early-stage plans that do not need LP capital.
 
-Sponsor budget and premium builders now move tokens as part of the instruction. Provide the payer source token account, the canonical domain vault token account, the asset mint, and the token program alongside the reserve ledgers. Premium and claim-settlement fee flows also require the matching protocol or oracle fee-vault accounts when fees are configured.
+Sponsor budget, premium, and obligation-settlement builders now move tokens as
+part of the instruction. Provide the payer source or payout recipient token
+account, the canonical domain vault token account, the asset mint, and the token
+program alongside the reserve ledgers. Premium and claim-settlement fee flows
+also require the matching protocol or oracle fee-vault accounts when fees are
+configured.
+
+Product integrations should prefer `createSafeProtocolClient(...)` for sponsor
+funding, premium payment, settlement, fee withdrawal, and treasury withdrawal
+flows. The safe layer derives PDA-owned vaults, enforces classic SPL Token
+accounts, and preflights token-account mint/owner where a `Connection` is
+available. Safe settlement additionally requires `recipientOwnerAddress` so the
+payout token account owner is checked before signing.
+
+`buildOpenClaimCaseTx(...)` requires an explicit `claimantAddress` or
+`memberWalletAddress`; operator-submitted claims never default the claimant to
+the operator authority.
 
 Builders:
 
@@ -212,6 +248,11 @@ Use this when capital providers enter through canonical liquidity pools and capi
 
 LP deposits now transfer the deposited asset into the configured domain vault before shares are credited. Redemption requests and queue processing pass shares only; the program derives asset payout from class NAV and queued redemption state.
 
+Product integrations should use `createSafeProtocolClient(...)` for LP deposits,
+redemption requests, and redemption queue processing so pool class ledger, LP
+position, vault, and treasury accounts are derived consistently instead of being
+supplied piecemeal.
+
 Builders:
 
 - `buildCreateLiquidityPoolTx(...)`
@@ -239,6 +280,11 @@ Reserve helpers:
 
 Use this when LP capital is bridged into plan-side funding lines.
 
+Reserve, release, settlement, and impairment builders reject partial LP
+allocation scope. Provide capital class, allocation position, and pool asset
+mint together so the SDK can include the matching `PoolClassLedger`,
+`AllocationPosition`, and `AllocationLedger` accounts together.
+
 Builders:
 
 - `buildCreateAllocationPositionTx(...)`
@@ -265,5 +311,10 @@ npm run format:check
 npm run build
 npm test
 npm run docs:check
+npm run docs:sync:check:strict
+npm run security:secrets
+npm run security:install-scripts
+npm run security:package
+npm run audit:prod
 npm run verify:protocol:local
 ```

@@ -18,6 +18,7 @@ import {
   CLAIM_ATTESTATION_DECISION_REQUEST_REVIEW,
   CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE,
   CLAIM_ATTESTATION_DECISION_SUPPORT_DENY,
+  NATIVE_SOL_MINT,
 } from './protocol_models.js';
 import {
   PROTOCOL_ACCOUNT_DISCRIMINATORS,
@@ -57,9 +58,12 @@ import {
   deriveOutcomeSchemaPda,
   derivePlanReserveLedgerPda,
   derivePoolOracleApprovalPda,
+  derivePoolOracleFeeVaultPda,
   derivePoolOraclePermissionSetPda,
   derivePoolOraclePolicyPda,
+  derivePoolTreasuryVaultPda,
   deriveSchemaDependencyLedgerPda,
+  deriveProtocolFeeVaultPda,
   deriveProtocolGovernancePda,
   derivePoolClassLedgerPda,
   derivePolicySeriesPda,
@@ -102,6 +106,8 @@ const ZERO_HASH_HEX = '00'.repeat(32);
 const SPL_TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
 );
+export const UNSAFE_CUSTOM_PROGRAM_ID_ENV =
+  'OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID';
 const TYPE_BY_NAME = new Map<string, IdlStruct>(
   ((protocolIdl as { types?: IdlTypeEntry[] }).types ?? []).map((entry) => [
     entry.name,
@@ -127,6 +133,35 @@ function classicTokenProgramId(
     );
   }
   return candidate;
+}
+
+function unsafeCustomProgramIdAllowed(explicitFlag?: boolean): boolean {
+  const envValue = String(process.env[UNSAFE_CUSTOM_PROGRAM_ID_ENV] ?? '')
+    .trim()
+    .toLowerCase();
+  return (
+    explicitFlag === true ||
+    envValue === '1' ||
+    envValue === 'true' ||
+    process.env.NODE_ENV === 'test'
+  );
+}
+
+function resolveProgramIdForBuild(params: {
+  programId?: PublicKeyish;
+  unsafeAllowCustomProgramId?: boolean;
+}): PublicKey {
+  const resolved = toPublicKey(params.programId ?? PROTOCOL_PROGRAM_ID);
+  const canonical = toPublicKey(PROTOCOL_PROGRAM_ID);
+  if (
+    !resolved.equals(canonical) &&
+    !unsafeCustomProgramIdAllowed(params.unsafeAllowCustomProgramId)
+  ) {
+    throw new Error(
+      `custom programId ${resolved.toBase58()} is unsafe for production SDK flows; set unsafeAllowCustomProgramId or ${UNSAFE_CUSTOM_PROGRAM_ID_ENV}=1 only for devnet/localnet/test workflows`,
+    );
+  }
+  return resolved;
 }
 
 export const PROTOCOL_IDL_VERSION = ((
@@ -169,6 +204,76 @@ function isBnLike(
     (value as { constructor?: { name?: string } }).constructor?.name === 'BN' &&
     typeof (value as { toString?: unknown }).toString === 'function'
   );
+}
+
+function integerBounds(
+  bits: number,
+  signed: boolean,
+): { min: bigint; max: bigint } {
+  if (signed) {
+    return {
+      min: -(1n << BigInt(bits - 1)),
+      max: (1n << BigInt(bits - 1)) - 1n,
+    };
+  }
+  return {
+    min: 0n,
+    max: (1n << BigInt(bits)) - 1n,
+  };
+}
+
+function normalizeIntegerInput(
+  value: unknown,
+  params: { bits: number; signed: boolean; label: string },
+): bigint {
+  let bigintValue: bigint;
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    const decimalPattern = params.signed ? /^-?\d+$/ : /^\d+$/;
+    if (!decimalPattern.test(trimmed)) {
+      throw new Error(`${params.label} must be a decimal integer string`);
+    }
+    bigintValue = BigInt(trimmed);
+  } else if (value instanceof BN || isBnLike(value)) {
+    bigintValue = BigInt(value.toString(10));
+  } else if (typeof value === 'bigint') {
+    bigintValue = value;
+  } else if (typeof value === 'number') {
+    if (!Number.isInteger(value) || !Number.isSafeInteger(value)) {
+      throw new Error(`${params.label} must be a safe integer number`);
+    }
+    bigintValue = BigInt(value);
+  } else {
+    throw new Error(`${params.label} must be an integer`);
+  }
+
+  const { min, max } = integerBounds(params.bits, params.signed);
+  if (bigintValue < min || bigintValue > max) {
+    throw new Error(
+      `${params.label} is outside ${params.signed ? 'signed' : 'unsigned'} ${params.bits}-bit range`,
+    );
+  }
+  return bigintValue;
+}
+
+function hasAnyAccountScopeValue(
+  values: Array<unknown | null | undefined>,
+): boolean {
+  return values.some((value) => value !== undefined && value !== null);
+}
+
+function assertAllOrNoneAccountScope(
+  label: string,
+  fields: Record<string, unknown | null | undefined>,
+): void {
+  const present = Object.entries(fields).filter(
+    ([, value]) => value !== undefined && value !== null,
+  );
+  if (present.length > 0 && present.length !== Object.keys(fields).length) {
+    throw new Error(
+      `${label} account scope must include ${Object.keys(fields).join(', ')} together`,
+    );
+  }
 }
 
 function readFieldValue(
@@ -215,63 +320,129 @@ function normalizeOptionalHex32(value?: string | null): string {
   return normalizeHex32(trimmed, 'hex value');
 }
 
-function normalizeInputValue(type: IdlType, value: unknown): unknown {
+function normalizeInputValue(
+  type: IdlType,
+  value: unknown,
+  label = 'instruction argument',
+): unknown {
   if (typeof type === 'string') {
     switch (type) {
       case 'pubkey':
         return toPublicKey(value as PublicKeyish);
       case 'u64':
+        return new BN(
+          normalizeIntegerInput(value, {
+            bits: 64,
+            signed: false,
+            label,
+          }).toString(),
+        );
       case 'i64':
-        if (value instanceof BN) return value;
-        if (typeof value === 'bigint') return new BN(value.toString());
-        if (typeof value === 'number')
-          return new BN(Math.trunc(value).toString());
-        return new BN(String(value ?? 0));
+        return new BN(
+          normalizeIntegerInput(value, {
+            bits: 64,
+            signed: true,
+            label,
+          }).toString(),
+        );
       case 'u8':
+        return Number(
+          normalizeIntegerInput(value, {
+            bits: 8,
+            signed: false,
+            label,
+          }),
+        );
       case 'u16':
+        return Number(
+          normalizeIntegerInput(value, {
+            bits: 16,
+            signed: false,
+            label,
+          }),
+        );
       case 'u32':
-        return Number(value ?? 0);
+        return Number(
+          normalizeIntegerInput(value, {
+            bits: 32,
+            signed: false,
+            label,
+          }),
+        );
       case 'bool':
-        return Boolean(value);
+        if (typeof value !== 'boolean') {
+          throw new Error(`${label} must be a boolean`);
+        }
+        return value;
       case 'string':
-        return String(value ?? '');
+        if (typeof value !== 'string') {
+          throw new Error(`${label} must be a string`);
+        }
+        return value;
       default:
         return value;
     }
   }
 
   if ('array' in type) {
-    const [innerType] = type.array;
+    const [innerType, expectedLength] = type.array;
+    if (!(value instanceof Uint8Array) && !Array.isArray(value)) {
+      throw new Error(`${label} must be a fixed array`);
+    }
     const raw =
       value instanceof Uint8Array
         ? [...value]
-        : Array.from((value ?? []) as Iterable<number>);
-    if (innerType === 'u8') {
-      return raw.map((entry) => Number(entry));
+        : Array.isArray(value)
+          ? value
+          : [];
+    if (raw.length !== expectedLength) {
+      throw new Error(
+        `${label} must be a fixed array of length ${expectedLength}`,
+      );
     }
-    return raw.map((entry) => normalizeInputValue(innerType, entry));
+    if (innerType === 'u8') {
+      return raw.map((entry, index) =>
+        Number(
+          normalizeIntegerInput(entry, {
+            bits: 8,
+            signed: false,
+            label: `${label}[${index}]`,
+          }),
+        ),
+      );
+    }
+    return raw.map((entry, index) =>
+      normalizeInputValue(innerType, entry, `${label}[${index}]`),
+    );
   }
 
   if ('option' in type) {
     if (value === null || value === undefined) return null;
-    return normalizeInputValue(type.option, value);
+    return normalizeInputValue(type.option, value, label);
   }
 
   if ('vec' in type) {
-    return Array.from((value ?? []) as Iterable<unknown>).map((entry) =>
-      normalizeInputValue(type.vec, entry),
+    if (!Array.isArray(value)) {
+      throw new Error(`${label} must be an array`);
+    }
+    return value.map((entry, index) =>
+      normalizeInputValue(type.vec, entry, `${label}[${index}]`),
     );
   }
 
   if ('defined' in type) {
     const struct = requireStruct(type.defined.name);
-    const record = isRecord(value) ? value : {};
+    if (!isRecord(value)) {
+      throw new Error(`${label} must be an object`);
+    }
+    const record = value;
     const normalized: Record<string, unknown> = {};
 
     for (const field of struct.fields ?? []) {
       normalized[field.name] = normalizeInputValue(
         field.type,
         readFieldValue(record, field.name),
+        `${label}.${field.name}`,
       );
     }
 
@@ -476,12 +647,38 @@ function decodeFetchedProtocolAccount<T = Record<string, unknown>>(
   return decodeProtocolAccount<T>(accountName, info.data);
 }
 
+function attachProtocolTransactionMetadata(
+  transaction: Transaction,
+  params: {
+    programId: PublicKey;
+    unsafeAllowCustomProgramId?: boolean;
+  },
+): Transaction {
+  Object.defineProperty(transaction, 'omegaxProtocolMetadata', {
+    value: {
+      programId: params.programId.toBase58(),
+      canonicalProgramId: toPublicKey(PROTOCOL_PROGRAM_ID).toBase58(),
+      unsafeCustomProgramId: !params.programId.equals(
+        toPublicKey(PROTOCOL_PROGRAM_ID),
+      ),
+      unsafeAllowCustomProgramId:
+        params.unsafeAllowCustomProgramId === true ||
+        unsafeCustomProgramIdAllowed(),
+    },
+    enumerable: true,
+    configurable: false,
+    writable: false,
+  });
+  return transaction;
+}
+
 export function buildProtocolInstruction(
   params: BuildInstructionParams<
     Record<string, unknown>,
     GenericInstructionAccounts
   > & {
     instructionName: ProtocolInstructionName;
+    unsafeAllowCustomProgramId?: boolean;
   },
 ): TransactionInstruction {
   const instructionArgsType = ARG_TYPE_BY_INSTRUCTION.get(
@@ -496,10 +693,13 @@ export function buildProtocolInstruction(
     normalizedArgs,
   );
 
-  const resolvedProgramId = params.programId ?? PROTOCOL_PROGRAM_ID;
+  const resolvedProgramId = resolveProgramIdForBuild({
+    programId: params.programId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
+  });
 
   return new TransactionInstruction({
-    programId: toPublicKey(resolvedProgramId),
+    programId: resolvedProgramId,
     keys: resolveInstructionAccounts(
       params.instructionName,
       params.accounts,
@@ -515,8 +715,13 @@ export function buildProtocolTransaction(
     GenericInstructionAccounts
   > & {
     instructionName: ProtocolInstructionName;
+    unsafeAllowCustomProgramId?: boolean;
   },
 ): Transaction {
+  const resolvedProgramId = resolveProgramIdForBuild({
+    programId: params.programId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
+  });
   const transaction = new Transaction({
     feePayer: params.feePayer
       ? toPublicKey(params.feePayer)
@@ -533,7 +738,8 @@ export function buildProtocolTransaction(
       instructionName: params.instructionName,
       args: params.args,
       accounts: params.accounts,
-      programId: params.programId,
+      programId: resolvedProgramId,
+      unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
     }),
   );
 
@@ -541,7 +747,10 @@ export function buildProtocolTransaction(
     transaction.add(instruction);
   }
 
-  return transaction;
+  return attachProtocolTransactionMetadata(transaction, {
+    programId: resolvedProgramId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
+  });
 }
 
 function buildConvenienceTransaction(params: {
@@ -551,6 +760,7 @@ function buildConvenienceTransaction(params: {
   args: Record<string, unknown>;
   accounts: GenericInstructionAccounts;
   programId?: PublicKeyish;
+  unsafeAllowCustomProgramId?: boolean;
 }): Transaction {
   return buildProtocolTransaction({
     instructionName: params.instructionName,
@@ -559,6 +769,7 @@ function buildConvenienceTransaction(params: {
     feePayer: params.feePayer,
     recentBlockhash: params.recentBlockhash,
     programId: params.programId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
   });
 }
 
@@ -587,6 +798,7 @@ function buildOrderedInstruction(params: {
   args: Record<string, unknown>;
   accounts: ProtocolInstructionAccountInput[];
   programId?: PublicKeyish;
+  unsafeAllowCustomProgramId?: boolean;
 }): TransactionInstruction {
   const instructionArgsType = ARG_TYPE_BY_INSTRUCTION.get(
     params.instructionName,
@@ -600,11 +812,16 @@ function buildOrderedInstruction(params: {
     normalizedArgs,
   );
 
+  const resolvedProgramId = resolveProgramIdForBuild({
+    programId: params.programId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
+  });
+
   return new TransactionInstruction({
-    programId: toPublicKey(params.programId ?? PROTOCOL_PROGRAM_ID),
+    programId: resolvedProgramId,
     keys: normalizeOrderedInstructionAccounts(
       params.accounts,
-      params.programId ?? PROTOCOL_PROGRAM_ID,
+      resolvedProgramId,
     ),
     data: Buffer.from(encoded),
   });
@@ -617,8 +834,13 @@ function buildOrderedTransaction(params: {
   args: Record<string, unknown>;
   accounts: ProtocolInstructionAccountInput[];
   programId?: PublicKeyish;
+  unsafeAllowCustomProgramId?: boolean;
 }): Transaction {
-  return new Transaction({
+  const resolvedProgramId = resolveProgramIdForBuild({
+    programId: params.programId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
+  });
+  const transaction = new Transaction({
     feePayer: toPublicKey(params.feePayer),
     recentBlockhash: params.recentBlockhash,
   }).add(
@@ -626,9 +848,14 @@ function buildOrderedTransaction(params: {
       instructionName: params.instructionName,
       args: params.args,
       accounts: params.accounts,
-      programId: params.programId,
+      programId: resolvedProgramId,
+      unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
     }),
   );
+  return attachProtocolTransactionMetadata(transaction, {
+    programId: resolvedProgramId,
+    unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
+  });
 }
 
 function optionalProtocolAccount(
@@ -688,6 +915,51 @@ function optionalAllocationLedgerAccount(
     }),
     true,
   );
+}
+
+export type SettlementOutflowAccounts = {
+  memberPositionAddress: PublicKeyish;
+  vaultTokenAccountAddress: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  tokenProgramId: PublicKeyish;
+};
+
+type TokenCustodyFlowParams = {
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+};
+
+function domainVaultAddress(params: TokenCustodyFlowParams): PublicKey {
+  return deriveDomainAssetVaultPda({
+    reserveDomain: params.reserveDomainAddress,
+    assetMint: params.assetMint,
+    programId: params.programId,
+  });
+}
+
+function domainVaultTokenAddress(params: TokenCustodyFlowParams): PublicKey {
+  return params.vaultTokenAccountAddress
+    ? toPublicKey(params.vaultTokenAccountAddress)
+    : deriveDomainAssetVaultTokenAccountPda({
+        reserveDomain: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        programId: params.programId,
+      });
+}
+
+function domainAssetLedgerAddress(params: TokenCustodyFlowParams): PublicKey {
+  return deriveDomainAssetLedgerPda({
+    reserveDomain: params.reserveDomainAddress,
+    assetMint: params.assetMint,
+    programId: params.programId,
+  });
+}
+
+function tokenProgramAddress(tokenProgramId?: PublicKeyish | null): PublicKey {
+  return classicTokenProgramId(tokenProgramId);
 }
 
 function commitmentCampaignAddress(params: {
@@ -1514,6 +1786,7 @@ export function buildDepositCommitmentTx(params: {
     },
     accounts: [
       { pubkey: depositor, isSigner: true, isWritable: true },
+      { pubkey: deriveProtocolGovernancePda(programId) },
       { pubkey: campaign, isWritable: true },
       { pubkey: paymentRail },
       { pubkey: reserveAssetRail },
@@ -1766,6 +2039,622 @@ export function buildRefundCommitmentTx(params: {
   });
 }
 
+function buildFundingInflowTx(params: {
+  instructionName: 'fund_sponsor_budget' | 'record_premium_payment';
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  fundingLineAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  policySeriesAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const tokenProgramId = tokenProgramAddress(params.tokenProgramId);
+  const commonAccounts: GenericInstructionAccounts = {
+    authority,
+    protocol_governance: deriveProtocolGovernancePda(programId),
+    health_plan: toPublicKey(params.healthPlanAddress),
+    domain_asset_vault: domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    domain_asset_ledger: domainAssetLedgerAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    funding_line: toPublicKey(params.fundingLineAddress),
+    funding_line_ledger: deriveFundingLineLedgerPda({
+      fundingLine: params.fundingLineAddress,
+      assetMint,
+      programId,
+    }),
+    plan_reserve_ledger: derivePlanReserveLedgerPda({
+      healthPlan: params.healthPlanAddress,
+      assetMint,
+      programId,
+    }),
+    series_reserve_ledger: params.policySeriesAddress
+      ? deriveSeriesReserveLedgerPda({
+          policySeries: params.policySeriesAddress,
+          assetMint,
+          programId,
+        })
+      : undefined,
+    source_token_account: toPublicKey(params.sourceTokenAccountAddress),
+    asset_mint: assetMint,
+    vault_token_account: domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    }),
+    token_program: tokenProgramId,
+  };
+
+  return buildConvenienceTransaction({
+    instructionName: params.instructionName,
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { amount: params.amount },
+    accounts:
+      params.instructionName === 'record_premium_payment'
+        ? {
+            ...commonAccounts,
+            protocol_fee_vault: deriveProtocolFeeVaultPda({
+              reserveDomain: params.reserveDomainAddress,
+              assetMint,
+              programId,
+            }),
+          }
+        : commonAccounts,
+  });
+}
+
+export function buildFundSponsorBudgetTx(params: {
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  fundingLineAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  policySeriesAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFundingInflowTx({
+    ...params,
+    instructionName: 'fund_sponsor_budget',
+  });
+}
+
+export function buildRecordPremiumPaymentTx(params: {
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  fundingLineAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  policySeriesAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFundingInflowTx({
+    ...params,
+    instructionName: 'record_premium_payment',
+  });
+}
+
+export function buildDepositIntoCapitalClassTx(params: {
+  owner: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  capitalClassAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  shares: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const owner = toPublicKey(params.owner);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  return buildConvenienceTransaction({
+    instructionName: 'deposit_into_capital_class',
+    feePayer: owner,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: {
+      amount: params.amount,
+      shares: params.shares,
+    },
+    accounts: {
+      owner,
+      protocol_governance: deriveProtocolGovernancePda(programId),
+      domain_asset_vault: domainVaultAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      domain_asset_ledger: domainAssetLedgerAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      liquidity_pool: toPublicKey(params.liquidityPoolAddress),
+      capital_class: toPublicKey(params.capitalClassAddress),
+      pool_class_ledger: derivePoolClassLedgerPda({
+        capitalClass: params.capitalClassAddress,
+        assetMint,
+        programId,
+      }),
+      lp_position: deriveLpPositionPda({
+        capitalClass: params.capitalClassAddress,
+        owner,
+        programId,
+      }),
+      pool_treasury_vault: derivePoolTreasuryVaultPda({
+        liquidityPool: params.liquidityPoolAddress,
+        assetMint,
+        programId,
+      }),
+      source_token_account: toPublicKey(params.sourceTokenAccountAddress),
+      asset_mint: assetMint,
+      vault_token_account: domainVaultTokenAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        programId,
+      }),
+      token_program: tokenProgramAddress(params.tokenProgramId),
+      system_program: SystemProgram.programId,
+    },
+  });
+}
+
+export function buildRequestRedemptionTx(params: {
+  owner: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  capitalClassAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recentBlockhash: string;
+  shares: bigint;
+  programId?: PublicKeyish;
+}): Transaction {
+  const owner = toPublicKey(params.owner);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  return buildConvenienceTransaction({
+    instructionName: 'request_redemption',
+    feePayer: owner,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { shares: params.shares },
+    accounts: {
+      owner,
+      protocol_governance: deriveProtocolGovernancePda(programId),
+      liquidity_pool: toPublicKey(params.liquidityPoolAddress),
+      capital_class: toPublicKey(params.capitalClassAddress),
+      pool_class_ledger: derivePoolClassLedgerPda({
+        capitalClass: params.capitalClassAddress,
+        assetMint,
+        programId,
+      }),
+      domain_asset_ledger: domainAssetLedgerAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      lp_position: deriveLpPositionPda({
+        capitalClass: params.capitalClassAddress,
+        owner,
+        programId,
+      }),
+    },
+  });
+}
+
+export function buildProcessRedemptionQueueTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  capitalClassAddress: PublicKeyish;
+  lpOwnerAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  shares: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const lpPosition = deriveLpPositionPda({
+    capitalClass: params.capitalClassAddress,
+    owner: params.lpOwnerAddress,
+    programId,
+  });
+  return buildConvenienceTransaction({
+    instructionName: 'process_redemption_queue',
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { shares: params.shares },
+    accounts: {
+      authority,
+      protocol_governance: deriveProtocolGovernancePda(programId),
+      domain_asset_vault: domainVaultAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      domain_asset_ledger: domainAssetLedgerAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      liquidity_pool: toPublicKey(params.liquidityPoolAddress),
+      capital_class: toPublicKey(params.capitalClassAddress),
+      pool_class_ledger: derivePoolClassLedgerPda({
+        capitalClass: params.capitalClassAddress,
+        assetMint,
+        programId,
+      }),
+      lp_position: lpPosition,
+      pool_treasury_vault: derivePoolTreasuryVaultPda({
+        liquidityPool: params.liquidityPoolAddress,
+        assetMint,
+        programId,
+      }),
+      asset_mint: assetMint,
+      vault_token_account: domainVaultTokenAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        programId,
+      }),
+      recipient_token_account: toPublicKey(params.recipientTokenAccountAddress),
+      token_program: tokenProgramAddress(params.tokenProgramId),
+    },
+  });
+}
+
+function buildFeeWithdrawalSplTx(params: {
+  instructionName:
+    | 'withdraw_protocol_fee_spl'
+    | 'withdraw_pool_treasury_spl'
+    | 'withdraw_pool_oracle_fee_spl';
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  liquidityPoolAddress?: PublicKeyish;
+  oracleAddress?: PublicKeyish;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const baseAccounts: GenericInstructionAccounts = {
+    authority,
+    protocol_governance: deriveProtocolGovernancePda(programId),
+    domain_asset_vault: domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    domain_asset_ledger: domainAssetLedgerAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    asset_mint: assetMint,
+    vault_token_account: domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    }),
+    recipient_token_account: toPublicKey(params.recipientTokenAccountAddress),
+    token_program: tokenProgramAddress(params.tokenProgramId),
+  };
+
+  if (params.instructionName === 'withdraw_protocol_fee_spl') {
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...baseAccounts,
+        reserve_domain: toPublicKey(params.reserveDomainAddress),
+        protocol_fee_vault: deriveProtocolFeeVaultPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.liquidityPoolAddress) {
+    throw new Error(`${params.instructionName} requires liquidityPoolAddress`);
+  }
+  const liquidityPool = toPublicKey(params.liquidityPoolAddress);
+  const commonPoolAccounts = {
+    ...baseAccounts,
+    liquidity_pool: liquidityPool,
+  };
+
+  if (params.instructionName === 'withdraw_pool_treasury_spl') {
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...commonPoolAccounts,
+        pool_treasury_vault: derivePoolTreasuryVaultPda({
+          liquidityPool,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.oracleAddress) {
+    throw new Error('withdraw_pool_oracle_fee_spl requires oracleAddress');
+  }
+  const oracleProfile = deriveOracleProfilePda({
+    oracle: params.oracleAddress,
+    programId,
+  });
+  return buildConvenienceTransaction({
+    instructionName: params.instructionName,
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { amount: params.amount },
+    accounts: {
+      ...commonPoolAccounts,
+      oracle_profile: oracleProfile,
+      pool_oracle_fee_vault: derivePoolOracleFeeVaultPda({
+        liquidityPool,
+        oracle: params.oracleAddress,
+        assetMint,
+        programId,
+      }),
+    },
+  });
+}
+
+export function buildWithdrawProtocolFeeSplTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSplTx({
+    ...params,
+    instructionName: 'withdraw_protocol_fee_spl',
+  });
+}
+
+export function buildWithdrawPoolTreasurySplTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSplTx({
+    ...params,
+    instructionName: 'withdraw_pool_treasury_spl',
+  });
+}
+
+export function buildWithdrawPoolOracleFeeSplTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  oracleAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSplTx({
+    ...params,
+    instructionName: 'withdraw_pool_oracle_fee_spl',
+  });
+}
+
+function buildFeeWithdrawalSolTx(params: {
+  instructionName:
+    | 'withdraw_protocol_fee_sol'
+    | 'withdraw_pool_treasury_sol'
+    | 'withdraw_pool_oracle_fee_sol';
+  authority: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  reserveDomainAddress?: PublicKeyish;
+  liquidityPoolAddress?: PublicKeyish;
+  oracleAddress?: PublicKeyish;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint ?? NATIVE_SOL_MINT);
+  const programId = params.programId ?? getProgramId();
+  const baseAccounts: GenericInstructionAccounts = {
+    authority,
+    protocol_governance: deriveProtocolGovernancePda(programId),
+    recipient: toPublicKey(params.recipient),
+    system_program: SystemProgram.programId,
+  };
+
+  if (params.instructionName === 'withdraw_protocol_fee_sol') {
+    if (!params.reserveDomainAddress) {
+      throw new Error(
+        'withdraw_protocol_fee_sol requires reserveDomainAddress',
+      );
+    }
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...baseAccounts,
+        reserve_domain: toPublicKey(params.reserveDomainAddress),
+        protocol_fee_vault: deriveProtocolFeeVaultPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.liquidityPoolAddress) {
+    throw new Error(`${params.instructionName} requires liquidityPoolAddress`);
+  }
+  const liquidityPool = toPublicKey(params.liquidityPoolAddress);
+  if (params.instructionName === 'withdraw_pool_treasury_sol') {
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...baseAccounts,
+        liquidity_pool: liquidityPool,
+        pool_treasury_vault: derivePoolTreasuryVaultPda({
+          liquidityPool,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.oracleAddress) {
+    throw new Error('withdraw_pool_oracle_fee_sol requires oracleAddress');
+  }
+  return buildConvenienceTransaction({
+    instructionName: params.instructionName,
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { amount: params.amount },
+    accounts: {
+      ...baseAccounts,
+      liquidity_pool: liquidityPool,
+      oracle_profile: deriveOracleProfilePda({
+        oracle: params.oracleAddress,
+        programId,
+      }),
+      pool_oracle_fee_vault: derivePoolOracleFeeVaultPda({
+        liquidityPool,
+        oracle: params.oracleAddress,
+        assetMint,
+        programId,
+      }),
+    },
+  });
+}
+
+export function buildWithdrawProtocolFeeSolTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSolTx({
+    ...params,
+    instructionName: 'withdraw_protocol_fee_sol',
+  });
+}
+
+export function buildWithdrawPoolTreasurySolTx(params: {
+  authority: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSolTx({
+    ...params,
+    instructionName: 'withdraw_pool_treasury_sol',
+  });
+}
+
+export function buildWithdrawPoolOracleFeeSolTx(params: {
+  authority: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  oracleAddress: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSolTx({
+    ...params,
+    instructionName: 'withdraw_pool_oracle_fee_sol',
+  });
+}
+
 export function buildPauseCommitmentCampaignTx(params: {
   authority: PublicKeyish;
   healthPlanAddress: PublicKeyish;
@@ -1991,6 +2880,7 @@ export function buildOpenClaimCaseTx(params: {
   claimId: string;
   policySeriesAddress?: PublicKeyish | null;
   claimantAddress?: PublicKeyish | null;
+  memberWalletAddress?: PublicKeyish | null;
   evidenceRefHashHex?: string | null;
   programId?: PublicKeyish;
 }): Transaction {
@@ -2001,6 +2891,12 @@ export function buildOpenClaimCaseTx(params: {
     claimId: params.claimId,
     programId,
   });
+  const claimantAddress = params.claimantAddress ?? params.memberWalletAddress;
+  if (!claimantAddress) {
+    throw new Error(
+      'claimantAddress or memberWalletAddress is required; operator claim intake must not default claimant to the operator authority',
+    );
+  }
   return buildOrderedTransaction({
     feePayer: authority,
     recentBlockhash: params.recentBlockhash,
@@ -2009,7 +2905,7 @@ export function buildOpenClaimCaseTx(params: {
     args: {
       claim_id: params.claimId,
       policy_series: toPublicKey(params.policySeriesAddress ?? ZERO_PUBKEY_KEY),
-      claimant: toPublicKey(params.claimantAddress ?? authority),
+      claimant: toPublicKey(claimantAddress),
       evidence_ref_hash: Array.from(
         hexToFixedBytes(
           normalizeOptionalHex32(params.evidenceRefHashHex),
@@ -2127,12 +3023,35 @@ function buildObligationFlowTx(params: {
   capitalClassAddress?: PublicKeyish | null;
   allocationPositionAddress?: PublicKeyish | null;
   poolAssetMint?: PublicKeyish | null;
+  memberPositionAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  recipientTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
   args: Record<string, unknown>;
   includeVault?: boolean;
   programId?: PublicKeyish;
 }): Transaction {
   const authority = toPublicKey(params.authority);
   const programId = params.programId ?? getProgramId();
+  assertAllOrNoneAccountScope('LP allocation', {
+    capitalClassAddress: params.capitalClassAddress,
+    allocationPositionAddress: params.allocationPositionAddress,
+    poolAssetMint: params.poolAssetMint,
+  });
+  if (params.instructionName === 'settle_obligation') {
+    assertAllOrNoneAccountScope('settlement outflow', {
+      memberPositionAddress: params.memberPositionAddress,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+      tokenProgramId: params.tokenProgramId,
+    });
+    if (!params.memberPositionAddress) {
+      throw new Error(
+        'settle_obligation requires memberPositionAddress, vaultTokenAccountAddress, recipientTokenAccountAddress, and tokenProgramId for payout/custody safety',
+      );
+    }
+    classicTokenProgramId(params.tokenProgramId);
+  }
   return buildOrderedTransaction({
     feePayer: authority,
     recentBlockhash: params.recentBlockhash,
@@ -2198,6 +3117,15 @@ function buildObligationFlowTx(params: {
       ),
       { pubkey: params.obligationAddress, isWritable: true },
       optionalProtocolAccount(params.claimCaseAddress, true),
+      ...(params.instructionName === 'settle_obligation'
+        ? [
+            optionalProtocolAccount(params.memberPositionAddress),
+            optionalProtocolAccount(params.assetMint),
+            optionalProtocolAccount(params.vaultTokenAccountAddress, true),
+            optionalProtocolAccount(params.recipientTokenAccountAddress, true),
+            optionalProtocolAccount(params.tokenProgramId),
+          ]
+        : []),
     ],
   });
 }
@@ -2248,24 +3176,26 @@ export function buildReleaseReserveTx(params: {
   });
 }
 
-export function buildSettleObligationTx(params: {
-  authority: PublicKeyish;
-  healthPlanAddress: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  fundingLineAddress: PublicKeyish;
-  assetMint: PublicKeyish;
-  obligationAddress: PublicKeyish;
-  recentBlockhash: string;
-  nextStatus: number;
-  amount: bigint;
-  settlementReasonHashHex?: string | null;
-  claimCaseAddress?: PublicKeyish | null;
-  policySeriesAddress?: PublicKeyish | null;
-  capitalClassAddress?: PublicKeyish | null;
-  allocationPositionAddress?: PublicKeyish | null;
-  poolAssetMint?: PublicKeyish | null;
-  programId?: PublicKeyish;
-}): Transaction {
+export function buildSettleObligationTx(
+  params: {
+    authority: PublicKeyish;
+    healthPlanAddress: PublicKeyish;
+    reserveDomainAddress: PublicKeyish;
+    fundingLineAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    obligationAddress: PublicKeyish;
+    recentBlockhash: string;
+    nextStatus: number;
+    amount: bigint;
+    settlementReasonHashHex?: string | null;
+    claimCaseAddress?: PublicKeyish | null;
+    policySeriesAddress?: PublicKeyish | null;
+    capitalClassAddress?: PublicKeyish | null;
+    allocationPositionAddress?: PublicKeyish | null;
+    poolAssetMint?: PublicKeyish | null;
+    programId?: PublicKeyish;
+  } & SettlementOutflowAccounts,
+): Transaction {
   return buildObligationFlowTx({
     ...params,
     instructionName: 'settle_obligation',
@@ -2346,6 +3276,11 @@ export function buildMarkImpairmentTx(params: {
 }): Transaction {
   const authority = toPublicKey(params.authority);
   const programId = params.programId ?? getProgramId();
+  assertAllOrNoneAccountScope('LP allocation', {
+    capitalClassAddress: params.capitalClassAddress,
+    allocationPositionAddress: params.allocationPositionAddress,
+    poolAssetMint: params.poolAssetMint,
+  });
   return buildOrderedTransaction({
     feePayer: authority,
     recentBlockhash: params.recentBlockhash,
@@ -2426,6 +3361,11 @@ export function buildRegisterOracleTx(params: {
 }): Transaction {
   const admin = toPublicKey(params.admin);
   const oracle = toPublicKey(params.oracle);
+  if (!admin.equals(oracle)) {
+    throw new Error(
+      'register_oracle requires admin and oracle to match; use a documented recovery flow before separating these authorities',
+    );
+  }
   return buildConvenienceTransaction({
     instructionName: 'register_oracle',
     feePayer: admin,
@@ -2853,6 +3793,22 @@ export function buildAttestClaimCaseTx(params: {
     params.schemaKeyHashHex,
     'schema key hash',
   );
+  const poolScopeRequested = hasAnyAccountScopeValue([
+    params.liquidityPoolAddress,
+    params.capitalClassAddress,
+    params.allocationPositionAddress,
+    params.poolOracleApprovalAddress,
+    params.poolOraclePermissionSetAddress,
+    params.poolOraclePolicyAddress,
+  ]);
+  if (
+    poolScopeRequested &&
+    (!params.liquidityPoolAddress || !params.capitalClassAddress)
+  ) {
+    throw new Error(
+      'claim attestation pool scope requires liquidityPoolAddress and capitalClassAddress together; derived pool oracle and allocation accounts are added from that complete scope',
+    );
+  }
   const liquidityPool = params.liquidityPoolAddress
     ? toPublicKey(params.liquidityPoolAddress)
     : undefined;
@@ -2951,11 +3907,371 @@ export function compileTransactionToV0(
   return new VersionedTransaction(message);
 }
 
+export async function preflightClassicTokenAccount(params: {
+  connection: Connection;
+  tokenAccountAddress: PublicKeyish;
+  mintAddress: PublicKeyish;
+  ownerAddress?: PublicKeyish | null;
+  label?: string;
+}): Promise<void> {
+  const label = params.label ?? 'token account';
+  const tokenAccount = toPublicKey(params.tokenAccountAddress);
+  const expectedMint = toPublicKey(params.mintAddress);
+  const expectedOwner = params.ownerAddress
+    ? toPublicKey(params.ownerAddress)
+    : null;
+  const info = await params.connection.getAccountInfo(
+    tokenAccount,
+    'confirmed',
+  );
+  if (!info) {
+    throw new Error(`${label} ${tokenAccount.toBase58()} does not exist`);
+  }
+  if (!info.owner.equals(SPL_TOKEN_PROGRAM_ID)) {
+    throw new Error(`${label} must be owned by the classic SPL Token program`);
+  }
+  if (info.data.length < 72) {
+    throw new Error(`${label} has invalid SPL Token account data`);
+  }
+
+  const actualMint = new PublicKey(info.data.subarray(0, 32));
+  const actualOwner = new PublicKey(info.data.subarray(32, 64));
+  if (!actualMint.equals(expectedMint)) {
+    throw new Error(
+      `${label} mint mismatch: expected ${expectedMint.toBase58()}, got ${actualMint.toBase58()}`,
+    );
+  }
+  if (expectedOwner && !actualOwner.equals(expectedOwner)) {
+    throw new Error(
+      `${label} owner mismatch: expected ${expectedOwner.toBase58()}, got ${actualOwner.toBase58()}`,
+    );
+  }
+}
+
+export function createSafeProtocolClient(
+  connection: Connection,
+  options?: {
+    programId?: PublicKeyish;
+    unsafeAllowCustomProgramId?: boolean;
+  },
+) {
+  const programId = resolveProgramIdForBuild({
+    programId: options?.programId,
+    unsafeAllowCustomProgramId: options?.unsafeAllowCustomProgramId,
+  });
+  const raw = createProtocolClient(connection, programId, {
+    unsafeAllowCustomProgramId: options?.unsafeAllowCustomProgramId,
+  });
+
+  const preflightDomainVaultInflow = async (params: {
+    authority: PublicKeyish;
+    reserveDomainAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    sourceTokenAccountAddress: PublicKeyish;
+    vaultTokenAccountAddress?: PublicKeyish | null;
+    sourceLabel: string;
+  }): Promise<void> => {
+    const assetMint = toPublicKey(params.assetMint);
+    const vaultTokenAccount = domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    });
+    const domainAssetVault = domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: params.sourceTokenAccountAddress,
+      mintAddress: assetMint,
+      ownerAddress: params.authority,
+      label: params.sourceLabel,
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: vaultTokenAccount,
+      mintAddress: assetMint,
+      ownerAddress: domainAssetVault,
+      label: 'domain vault token account',
+    });
+  };
+
+  const preflightDomainVaultOutflow = async (params: {
+    reserveDomainAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    recipientTokenAccountAddress: PublicKeyish;
+    vaultTokenAccountAddress?: PublicKeyish | null;
+    recipientOwnerAddress?: PublicKeyish | null;
+    recipientLabel?: string;
+  }): Promise<void> => {
+    const assetMint = toPublicKey(params.assetMint);
+    const vaultTokenAccount = domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    });
+    const domainAssetVault = domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: vaultTokenAccount,
+      mintAddress: assetMint,
+      ownerAddress: domainAssetVault,
+      label: 'domain vault token account',
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: params.recipientTokenAccountAddress,
+      mintAddress: assetMint,
+      ownerAddress: params.recipientOwnerAddress,
+      label: params.recipientLabel ?? 'recipient token account',
+    });
+  };
+
+  return {
+    connection,
+    programId,
+    raw,
+    getProgramId: () => programId,
+    async buildDepositCommitmentTx(
+      params: Omit<Parameters<typeof buildDepositCommitmentTx>[0], 'programId'>,
+    ): Promise<Transaction> {
+      const paymentAssetMint = toPublicKey(params.paymentAssetMint);
+      const vaultTokenAccount = params.vaultTokenAccountAddress
+        ? toPublicKey(params.vaultTokenAccountAddress)
+        : deriveDomainAssetVaultTokenAccountPda({
+            reserveDomain: params.reserveDomainAddress,
+            assetMint: paymentAssetMint,
+            programId,
+          });
+      const domainAssetVault = deriveDomainAssetVaultPda({
+        reserveDomain: params.reserveDomainAddress,
+        assetMint: paymentAssetMint,
+        programId,
+      });
+      await preflightClassicTokenAccount({
+        connection,
+        tokenAccountAddress: params.sourceTokenAccountAddress,
+        mintAddress: paymentAssetMint,
+        ownerAddress: params.depositor,
+        label: 'deposit source token account',
+      });
+      await preflightClassicTokenAccount({
+        connection,
+        tokenAccountAddress: vaultTokenAccount,
+        mintAddress: paymentAssetMint,
+        ownerAddress: domainAssetVault,
+        label: 'domain vault token account',
+      });
+      return buildDepositCommitmentTx({ ...params, programId });
+    },
+    async buildFundSponsorBudgetTx(
+      params: Omit<Parameters<typeof buildFundSponsorBudgetTx>[0], 'programId'>,
+    ): Promise<Transaction> {
+      await preflightDomainVaultInflow({
+        authority: params.authority,
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        sourceTokenAccountAddress: params.sourceTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        sourceLabel: 'sponsor funding source token account',
+      });
+      return buildFundSponsorBudgetTx({ ...params, programId });
+    },
+    async buildRecordPremiumPaymentTx(
+      params: Omit<
+        Parameters<typeof buildRecordPremiumPaymentTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultInflow({
+        authority: params.authority,
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        sourceTokenAccountAddress: params.sourceTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        sourceLabel: 'premium source token account',
+      });
+      return buildRecordPremiumPaymentTx({ ...params, programId });
+    },
+    async buildDepositIntoCapitalClassTx(
+      params: Omit<
+        Parameters<typeof buildDepositIntoCapitalClassTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultInflow({
+        authority: params.owner,
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        sourceTokenAccountAddress: params.sourceTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        sourceLabel: 'LP deposit source token account',
+      });
+      return buildDepositIntoCapitalClassTx({ ...params, programId });
+    },
+    buildRequestRedemptionTx(
+      params: Omit<Parameters<typeof buildRequestRedemptionTx>[0], 'programId'>,
+    ): Transaction {
+      return buildRequestRedemptionTx({ ...params, programId });
+    },
+    async buildProcessRedemptionQueueTx(
+      params: Omit<
+        Parameters<typeof buildProcessRedemptionQueueTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientOwnerAddress: params.lpOwnerAddress,
+        recipientLabel: 'LP redemption recipient token account',
+      });
+      return buildProcessRedemptionQueueTx({ ...params, programId });
+    },
+    async buildWithdrawProtocolFeeSplTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawProtocolFeeSplTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientLabel: 'protocol fee recipient token account',
+      });
+      return buildWithdrawProtocolFeeSplTx({ ...params, programId });
+    },
+    async buildWithdrawPoolTreasurySplTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolTreasurySplTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientLabel: 'pool treasury recipient token account',
+      });
+      return buildWithdrawPoolTreasurySplTx({ ...params, programId });
+    },
+    async buildWithdrawPoolOracleFeeSplTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolOracleFeeSplTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientLabel: 'pool oracle fee recipient token account',
+      });
+      return buildWithdrawPoolOracleFeeSplTx({ ...params, programId });
+    },
+    buildWithdrawProtocolFeeSolTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawProtocolFeeSolTx>[0],
+        'programId'
+      >,
+    ): Transaction {
+      return buildWithdrawProtocolFeeSolTx({ ...params, programId });
+    },
+    buildWithdrawPoolTreasurySolTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolTreasurySolTx>[0],
+        'programId'
+      >,
+    ): Transaction {
+      return buildWithdrawPoolTreasurySolTx({ ...params, programId });
+    },
+    buildWithdrawPoolOracleFeeSolTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolOracleFeeSolTx>[0],
+        'programId'
+      >,
+    ): Transaction {
+      return buildWithdrawPoolOracleFeeSolTx({ ...params, programId });
+    },
+    buildOpenClaimCaseTx(
+      params: Omit<Parameters<typeof buildOpenClaimCaseTx>[0], 'programId'>,
+    ): Transaction {
+      return buildOpenClaimCaseTx({ ...params, programId });
+    },
+    buildReserveObligationTx(
+      params: Omit<Parameters<typeof buildReserveObligationTx>[0], 'programId'>,
+    ): Transaction {
+      return buildReserveObligationTx({ ...params, programId });
+    },
+    buildReleaseReserveTx(
+      params: Omit<Parameters<typeof buildReleaseReserveTx>[0], 'programId'>,
+    ): Transaction {
+      return buildReleaseReserveTx({ ...params, programId });
+    },
+    async buildSettleObligationTx(
+      params: Omit<
+        Parameters<typeof buildSettleObligationTx>[0],
+        'programId'
+      > & {
+        recipientOwnerAddress: PublicKeyish;
+      },
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientOwnerAddress: params.recipientOwnerAddress,
+        recipientLabel: 'settlement recipient token account',
+      });
+      const {
+        recipientOwnerAddress: _recipientOwnerAddress,
+        ...builderParams
+      } = params;
+      void _recipientOwnerAddress;
+      return buildSettleObligationTx({ ...builderParams, programId });
+    },
+    buildMarkImpairmentTx(
+      params: Omit<Parameters<typeof buildMarkImpairmentTx>[0], 'programId'>,
+    ): Transaction {
+      return buildMarkImpairmentTx({ ...params, programId });
+    },
+    buildRegisterOracleTx(
+      params: Omit<Parameters<typeof buildRegisterOracleTx>[0], 'programId'>,
+    ): Transaction {
+      return buildRegisterOracleTx({ ...params, programId });
+    },
+    buildAttestClaimCaseTx(
+      params: Omit<Parameters<typeof buildAttestClaimCaseTx>[0], 'programId'>,
+    ): Transaction {
+      return buildAttestClaimCaseTx({ ...params, programId });
+    },
+  };
+}
+
 export function createProtocolClient(
   connection: Connection,
   programId: PublicKeyish = PROTOCOL_PROGRAM_ID,
+  options?: { unsafeAllowCustomProgramId?: boolean },
 ): ProtocolClient {
-  const resolvedProgramId = toPublicKey(programId);
+  const resolvedProgramId = resolveProgramIdForBuild({
+    programId,
+    unsafeAllowCustomProgramId: options?.unsafeAllowCustomProgramId,
+  });
   const resolveClientProgramId = (inputProgramId?: PublicKeyish): PublicKey => {
     if (inputProgramId === undefined || inputProgramId === null) {
       return resolvedProgramId;
