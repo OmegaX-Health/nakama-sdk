@@ -440,7 +440,8 @@ claim case, optional pool allocation scope, schema key hash, audience, nonce,
 issue time, as-of time, and expiry. Generic `attestOutcome(...)` remains
 available for telemetry and non-settlement event packaging. Use
 `verifyProtocolOracleAttestation(...)` when settlement code needs signature
-validity plus expected program/network/account, audience, nonce, and expiry
+validity plus a trusted expected verifier key (and optional key id), expected
+program/network/account, audience, nonce, and expiry
 checks. Optional policy/pool/class/allocation scope is rejected unless it is
 explicitly expected or `allowUnexpectedOptionalScope` is set for
 telemetry-style wildcard matching.

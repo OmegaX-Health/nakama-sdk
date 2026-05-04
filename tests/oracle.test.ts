@@ -101,7 +101,13 @@ test('protocol-bound oracle attestations include settlement domain and verify lo
     'omegax-protocol-claim-settlement',
   );
   assert.equal(attestation.verifier.publicKeyBase58, signer.publicKeyBase58);
-  assert.equal(verifyOracleAttestation(attestation), true);
+  assert.equal(
+    verifyOracleAttestation(attestation, {
+      expectedVerifierPublicKeyBase58: signer.publicKeyBase58,
+      expectedVerifierKeyId: signer.keyId,
+    }),
+    true,
+  );
   assert.equal(
     verifyProtocolOracleAttestation(attestation, {
       nowIso: '2026-05-04T00:05:00.000Z',
@@ -112,6 +118,8 @@ test('protocol-bound oracle attestations include settlement domain and verify lo
       expectedClaimCase: context.claimCase,
       expectedAudience: context.audience,
       expectedNonce: context.nonce,
+      expectedVerifierPublicKeyBase58: signer.publicKeyBase58,
+      expectedVerifierKeyId: signer.keyId,
     }),
     true,
   );
@@ -125,6 +133,8 @@ test('protocol-bound oracle attestations include settlement domain and verify lo
       expectedClaimCase: context.claimCase,
       expectedAudience: context.audience,
       expectedNonce: context.nonce,
+      expectedVerifierPublicKeyBase58: signer.publicKeyBase58,
+      expectedVerifierKeyId: signer.keyId,
     }),
     false,
   );
@@ -133,7 +143,13 @@ test('protocol-bound oracle attestations include settlement domain and verify lo
     ...attestation,
     context: { ...attestation.context, nonce: 'nonce-2' },
   };
-  assert.equal(verifyOracleAttestation(tampered), false);
+  assert.equal(
+    verifyOracleAttestation(tampered, {
+      expectedVerifierPublicKeyBase58: signer.publicKeyBase58,
+      expectedVerifierKeyId: signer.keyId,
+    }),
+    false,
+  );
 });
 
 test('oracle attestations reject unserializable payloads and bad signer output', async () => {
@@ -225,31 +241,48 @@ test('protocol verifier rejects malformed, partial, and unexpected optional scop
     poolOraclePermissionSet: Keypair.generate().publicKey.toBase58(),
     poolOraclePolicy: Keypair.generate().publicKey.toBase58(),
   };
-  const expected = verifyParams(context);
+  const malformedScopeAttestation = signProtocolAttestation({
+    ...scopedContext,
+    liquidityPool: 'not-a-pubkey',
+  });
 
   assert.equal(
     verifyProtocolOracleAttestation(
-      signProtocolAttestation({
-        ...scopedContext,
-        liquidityPool: 'not-a-pubkey',
-      }),
-      expected,
+      malformedScopeAttestation,
+      {
+        ...verifyParams(context),
+        expectedVerifierPublicKeyBase58:
+          malformedScopeAttestation.verifier.publicKeyBase58,
+        expectedVerifierKeyId: malformedScopeAttestation.verifier.keyId,
+      },
     ),
     false,
   );
 
+  const partialScopeAttestation = signProtocolAttestation({
+    ...context,
+    liquidityPool: scopedContext.liquidityPool,
+  });
   assert.equal(
     verifyProtocolOracleAttestation(
-      signProtocolAttestation({
-        ...context,
-        liquidityPool: scopedContext.liquidityPool,
-      }),
-      expected,
+      partialScopeAttestation,
+      {
+        ...verifyParams(context),
+        expectedVerifierPublicKeyBase58:
+          partialScopeAttestation.verifier.publicKeyBase58,
+        expectedVerifierKeyId: partialScopeAttestation.verifier.keyId,
+      },
     ),
     false,
   );
 
   const scopedAttestation = signProtocolAttestation(scopedContext);
+  const expected = {
+    ...verifyParams(context),
+    expectedVerifierPublicKeyBase58:
+      scopedAttestation.verifier.publicKeyBase58,
+    expectedVerifierKeyId: scopedAttestation.verifier.keyId,
+  };
   assert.equal(
     verifyProtocolOracleAttestation(scopedAttestation, expected),
     false,

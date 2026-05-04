@@ -64,6 +64,8 @@ export type VerifyProtocolOracleAttestationParams = {
   expectedClaimCase: PublicKeyish;
   expectedAudience: string;
   expectedNonce?: string;
+  expectedVerifierPublicKeyBase58: string;
+  expectedVerifierKeyId?: string;
   expectedPolicySeries?: PublicKeyish | null;
   expectedLiquidityPool?: PublicKeyish | null;
   expectedCapitalClass?: PublicKeyish | null;
@@ -72,6 +74,11 @@ export type VerifyProtocolOracleAttestationParams = {
   expectedPoolOraclePermissionSet?: PublicKeyish | null;
   expectedPoolOraclePolicy?: PublicKeyish | null;
   allowUnexpectedOptionalScope?: boolean;
+};
+
+export type VerifyOracleAttestationParams = {
+  expectedVerifierPublicKeyBase58: string;
+  expectedVerifierKeyId?: string;
 };
 
 export function createOracleSignerFromEnv(params?: {
@@ -354,6 +361,7 @@ function signCanonicalAttestation(params: {
 
 export function verifyOracleAttestation(
   attestation: OutcomeAttestation | ProtocolBoundOutcomeAttestation,
+  params: VerifyOracleAttestationParams,
 ): boolean {
   try {
     const {
@@ -364,6 +372,18 @@ export function verifyOracleAttestation(
     assertCanonicalJsonValue(body, 'oracle attestation body');
     const message = new TextEncoder().encode(stableStringify(body));
     if (sha256Hex(message) !== expectedDigestHex) return false;
+    if (
+      attestation.verifier.publicKeyBase58 !==
+      params.expectedVerifierPublicKeyBase58.trim()
+    ) {
+      return false;
+    }
+    if (
+      params.expectedVerifierKeyId !== undefined &&
+      attestation.verifier.keyId !== params.expectedVerifierKeyId.trim()
+    ) {
+      return false;
+    }
     verifySignatureOrThrow({
       message,
       signature: Uint8Array.from(Buffer.from(signatureBase64, 'base64')),
@@ -401,7 +421,7 @@ export function verifyProtocolOracleAttestation(
   params: VerifyProtocolOracleAttestationParams,
 ): boolean {
   try {
-    if (!verifyOracleAttestation(attestation)) return false;
+    if (!verifyOracleAttestation(attestation, params)) return false;
     const context = attestation.context;
     assertProtocolContextShape(context);
     const nowMillis = parseTimeMillis(params.nowIso);

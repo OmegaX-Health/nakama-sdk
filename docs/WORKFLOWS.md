@@ -65,8 +65,9 @@ Use `attestProtocolOutcome(...)` for settlement-grade claim evidence. It binds
 the signed payload to network, program ID, health plan, funding line, claim
 case, schema key hash, audience, nonce, issue time, as-of time, and expiry.
 Use `verifyProtocolOracleAttestation(...)` before settlement intake so the SDK
-checks signature, expiry, expected network/program/account IDs, audience, nonce,
-and optional pool/class/allocation scope together. Generic
+checks signature, trusted expected verifier identity (public key and optional
+key id), expiry, expected network/program/account IDs, audience, nonce, and
+optional pool/class/allocation scope together. Generic
 `attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
 non-settlement telemetry.
 Verifier calls reject unexpected optional policy/pool/class/allocation scope by
