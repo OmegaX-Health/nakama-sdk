@@ -8,9 +8,12 @@ import {
   attestOutcome,
   attestProtocolOutcome,
   PROTOCOL_PROGRAM_ID,
+  sha256Hex,
+  stableStringify,
   verifyOracleAttestation,
   verifyProtocolOracleAttestation,
   type OracleSigner,
+  type ProtocolBoundOutcomeAttestation,
 } from '../src/index.js';
 
 function createTestSigner(): OracleSigner {
@@ -35,6 +38,48 @@ function protocolContext() {
     issuedAtIso: '2026-05-04T00:00:00.000Z',
     asOfIso: '2026-05-04T00:00:00.000Z',
     expiresAtIso: '2026-05-04T00:10:00.000Z',
+  };
+}
+
+function signProtocolAttestation(
+  context: Record<string, unknown>,
+): ProtocolBoundOutcomeAttestation {
+  const keypair = nacl.sign.keyPair();
+  const body = {
+    id: 'att-manual',
+    userId: 'member-1',
+    cycleId: 'cycle-1',
+    outcomeId: 'claim-approved',
+    asOfIso: String(context.asOfIso),
+    issuedAtIso: String(context.issuedAtIso),
+    payload: { decision: 'approve', amountRaw: '1000' },
+    verifier: {
+      keyId: 'manual-oracle',
+      publicKeyBase58: bs58.encode(keypair.publicKey),
+      algorithm: 'ed25519' as const,
+    },
+    context,
+  };
+  const message = new TextEncoder().encode(stableStringify(body));
+  return {
+    ...body,
+    signatureBase64: Buffer.from(
+      nacl.sign.detached(message, keypair.secretKey),
+    ).toString('base64'),
+    digestHex: sha256Hex(message),
+  } as ProtocolBoundOutcomeAttestation;
+}
+
+function verifyParams(context: ReturnType<typeof protocolContext>) {
+  return {
+    nowIso: '2026-05-04T00:05:00.000Z',
+    expectedNetwork: context.network,
+    expectedProgramId: context.programId,
+    expectedHealthPlan: context.healthPlan,
+    expectedFundingLine: context.fundingLine,
+    expectedClaimCase: context.claimCase,
+    expectedAudience: context.audience,
+    expectedNonce: context.nonce,
   };
 }
 
@@ -166,5 +211,66 @@ test('protocol-bound oracle attestations reject partial pool scopes', async () =
         signer: createTestSigner(),
       }),
     /pool scope/,
+  );
+});
+
+test('protocol verifier rejects malformed, partial, and unexpected optional scope', () => {
+  const context = protocolContext();
+  const scopedContext = {
+    ...context,
+    liquidityPool: Keypair.generate().publicKey.toBase58(),
+    capitalClass: Keypair.generate().publicKey.toBase58(),
+    allocationPosition: Keypair.generate().publicKey.toBase58(),
+    poolOracleApproval: Keypair.generate().publicKey.toBase58(),
+    poolOraclePermissionSet: Keypair.generate().publicKey.toBase58(),
+    poolOraclePolicy: Keypair.generate().publicKey.toBase58(),
+  };
+  const expected = verifyParams(context);
+
+  assert.equal(
+    verifyProtocolOracleAttestation(
+      signProtocolAttestation({
+        ...scopedContext,
+        liquidityPool: 'not-a-pubkey',
+      }),
+      expected,
+    ),
+    false,
+  );
+
+  assert.equal(
+    verifyProtocolOracleAttestation(
+      signProtocolAttestation({
+        ...context,
+        liquidityPool: scopedContext.liquidityPool,
+      }),
+      expected,
+    ),
+    false,
+  );
+
+  const scopedAttestation = signProtocolAttestation(scopedContext);
+  assert.equal(
+    verifyProtocolOracleAttestation(scopedAttestation, expected),
+    false,
+  );
+  assert.equal(
+    verifyProtocolOracleAttestation(scopedAttestation, {
+      ...expected,
+      expectedLiquidityPool: scopedContext.liquidityPool,
+      expectedCapitalClass: scopedContext.capitalClass,
+      expectedAllocationPosition: scopedContext.allocationPosition,
+      expectedPoolOracleApproval: scopedContext.poolOracleApproval,
+      expectedPoolOraclePermissionSet: scopedContext.poolOraclePermissionSet,
+      expectedPoolOraclePolicy: scopedContext.poolOraclePolicy,
+    }),
+    true,
+  );
+  assert.equal(
+    verifyProtocolOracleAttestation(scopedAttestation, {
+      ...expected,
+      allowUnexpectedOptionalScope: true,
+    }),
+    true,
   );
 });

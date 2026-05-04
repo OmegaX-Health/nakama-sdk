@@ -2,7 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import BN from 'bn.js';
 import { BorshCoder } from '@coral-xyz/anchor';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import {
+  Keypair,
+  PublicKey,
+  type AccountInfo,
+  type Commitment,
+  type Connection,
+} from '@solana/web3.js';
 
 import idl from '../src/generated/omegax_protocol.idl.json' with { type: 'json' };
 import {
@@ -105,6 +111,43 @@ import { createAccountReaderConnectionStub } from './support/protocol-account-re
 
 const CODER = new BorshCoder(idl as never);
 const ZERO = new PublicKey('11111111111111111111111111111111');
+const SPL_TOKEN_PROGRAM_ID = new PublicKey(
+  'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+);
+
+function createTokenAccountData(params: {
+  mint: PublicKey;
+  owner: PublicKey;
+}): Buffer {
+  const data = Buffer.alloc(72);
+  params.mint.toBuffer().copy(data, 0);
+  params.owner.toBuffer().copy(data, 32);
+  return data;
+}
+
+function createTokenAccountInfo(params: {
+  mint: PublicKey;
+  owner: PublicKey;
+}): AccountInfo<Buffer> {
+  return {
+    data: createTokenAccountData(params),
+    executable: false,
+    lamports: 0,
+    owner: SPL_TOKEN_PROGRAM_ID,
+    rentEpoch: 0,
+  };
+}
+
+function createTokenAccountConnectionStub(
+  accounts: ReadonlyMap<string, AccountInfo<Buffer>>,
+): Connection {
+  return {
+    async getAccountInfo(pubkey: PublicKey, commitment?: Commitment) {
+      void commitment;
+      return accounts.get(pubkey.toBase58()) ?? null;
+    },
+  } as unknown as Connection;
+}
 
 test('canonical surface listings expose the new instruction and account model', () => {
   const instructionNames = listProtocolInstructionNames();
@@ -865,6 +908,99 @@ test('safe client exposes guarded wrappers for canonical money-moving flows', ()
   assert.equal(typeof safe.buildWithdrawPoolTreasurySolTx, 'function');
   assert.equal(typeof safe.buildWithdrawPoolOracleFeeSplTx, 'function');
   assert.equal(typeof safe.buildWithdrawPoolOracleFeeSolTx, 'function');
+});
+
+test('safe settlement builder preflights custody token accounts', async () => {
+  const authority = Keypair.generate().publicKey;
+  const reserveDomainAddress = Keypair.generate().publicKey;
+  const healthPlanAddress = Keypair.generate().publicKey;
+  const fundingLineAddress = Keypair.generate().publicKey;
+  const assetMint = Keypair.generate().publicKey;
+  const obligationAddress = Keypair.generate().publicKey;
+  const memberPositionAddress = Keypair.generate().publicKey;
+  const vaultTokenAccountAddress = Keypair.generate().publicKey;
+  const recipientTokenAccountAddress = Keypair.generate().publicKey;
+  const recipientOwnerAddress = Keypair.generate().publicKey;
+  const domainAssetVault = deriveDomainAssetVaultPda({
+    reserveDomain: reserveDomainAddress,
+    assetMint,
+  });
+  const recentBlockhash = '11111111111111111111111111111111';
+  const validAccounts = new Map<string, AccountInfo<Buffer>>([
+    [
+      vaultTokenAccountAddress.toBase58(),
+      createTokenAccountInfo({
+        mint: assetMint,
+        owner: domainAssetVault,
+      }),
+    ],
+    [
+      recipientTokenAccountAddress.toBase58(),
+      createTokenAccountInfo({
+        mint: assetMint,
+        owner: recipientOwnerAddress,
+      }),
+    ],
+  ]);
+  const params = {
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    fundingLineAddress,
+    assetMint,
+    obligationAddress,
+    recentBlockhash,
+    nextStatus: OBLIGATION_STATUS_SETTLED,
+    amount: 1n,
+    memberPositionAddress,
+    vaultTokenAccountAddress,
+    recipientTokenAccountAddress,
+    tokenProgramId: SPL_TOKEN_PROGRAM_ID,
+    recipientOwnerAddress,
+  };
+
+  await assert.rejects(
+    () =>
+      createSafeProtocolClient(
+        createTokenAccountConnectionStub(
+          new Map([
+            ...validAccounts,
+            [
+              recipientTokenAccountAddress.toBase58(),
+              createTokenAccountInfo({
+                mint: assetMint,
+                owner: Keypair.generate().publicKey,
+              }),
+            ],
+          ]),
+        ),
+      ).buildSettleObligationTx(params),
+    /settlement recipient token account owner mismatch/,
+  );
+
+  await assert.rejects(
+    () =>
+      createSafeProtocolClient(
+        createTokenAccountConnectionStub(
+          new Map([
+            ...validAccounts,
+            [
+              recipientTokenAccountAddress.toBase58(),
+              createTokenAccountInfo({
+                mint: Keypair.generate().publicKey,
+                owner: recipientOwnerAddress,
+              }),
+            ],
+          ]),
+        ),
+      ).buildSettleObligationTx(params),
+    /settlement recipient token account mint mismatch/,
+  );
+
+  const tx = await createSafeProtocolClient(
+    createTokenAccountConnectionStub(validAccounts),
+  ).buildSettleObligationTx(params);
+  assert.equal(tx.instructions.length, 1);
 });
 
 test('buildOpenMemberPositionTx keeps invite authority as an optional signer', () => {

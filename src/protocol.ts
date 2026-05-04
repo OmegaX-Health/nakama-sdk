@@ -4222,10 +4222,28 @@ export function createSafeProtocolClient(
     ): Transaction {
       return buildReleaseReserveTx({ ...params, programId });
     },
-    buildSettleObligationTx(
-      params: Omit<Parameters<typeof buildSettleObligationTx>[0], 'programId'>,
-    ): Transaction {
-      return buildSettleObligationTx({ ...params, programId });
+    async buildSettleObligationTx(
+      params: Omit<
+        Parameters<typeof buildSettleObligationTx>[0],
+        'programId'
+      > & {
+        recipientOwnerAddress: PublicKeyish;
+      },
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientOwnerAddress: params.recipientOwnerAddress,
+        recipientLabel: 'settlement recipient token account',
+      });
+      const {
+        recipientOwnerAddress: _recipientOwnerAddress,
+        ...builderParams
+      } = params;
+      void _recipientOwnerAddress;
+      return buildSettleObligationTx({ ...builderParams, programId });
     },
     buildMarkImpairmentTx(
       params: Omit<Parameters<typeof buildMarkImpairmentTx>[0], 'programId'>,

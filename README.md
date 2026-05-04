@@ -163,6 +163,7 @@ This package exposes the live canonical object model:
 - Oracle operators can register profiles, configure pool policy, attest claim cases on-chain, and use a narrower attestation helper surface for outcome packaging.
 - External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
 - Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client now covers sponsor funding, premium intake, LP deposits/redemptions, redemption processing, settlement, and fee/treasury withdrawals. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
+- Safe settlement calls require `recipientOwnerAddress` alongside the custody accounts so the SDK can preflight payout token-account mint and owner before users sign.
 
 ## What the SDK does not do
 

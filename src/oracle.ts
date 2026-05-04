@@ -71,6 +71,7 @@ export type VerifyProtocolOracleAttestationParams = {
   expectedPoolOracleApproval?: PublicKeyish | null;
   expectedPoolOraclePermissionSet?: PublicKeyish | null;
   expectedPoolOraclePolicy?: PublicKeyish | null;
+  allowUnexpectedOptionalScope?: boolean;
 };
 
 export function createOracleSignerFromEnv(params?: {
@@ -242,6 +243,49 @@ function assertPoolScopeIsComplete(
   }
 }
 
+function assertProtocolContextShape(
+  context: ProtocolBoundAttestationContext,
+): void {
+  if (typeof context.network !== 'string' || context.network.trim() === '') {
+    throw new Error('protocol attestation context network is required');
+  }
+  normalizePubkeyString(context.programId, 'programId');
+  normalizePubkeyString(context.healthPlan, 'healthPlan');
+  normalizePubkeyString(context.fundingLine, 'fundingLine');
+  normalizePubkeyString(context.claimCase, 'claimCase');
+  normalizeOptionalPubkeyString(context.policySeries, 'policySeries');
+  normalizeOptionalPubkeyString(context.liquidityPool, 'liquidityPool');
+  normalizeOptionalPubkeyString(context.capitalClass, 'capitalClass');
+  normalizeOptionalPubkeyString(
+    context.allocationPosition,
+    'allocationPosition',
+  );
+  normalizeOptionalPubkeyString(
+    context.poolOracleApproval,
+    'poolOracleApproval',
+  );
+  normalizeOptionalPubkeyString(
+    context.poolOraclePermissionSet,
+    'poolOraclePermissionSet',
+  );
+  normalizeOptionalPubkeyString(context.poolOraclePolicy, 'poolOraclePolicy');
+  if (
+    typeof context.schemaKeyHashHex !== 'string' ||
+    !/^[0-9a-f]{64}$/.test(context.schemaKeyHashHex.trim().toLowerCase())
+  ) {
+    throw new Error(
+      'protocol attestation context schemaKeyHashHex must be a 32-byte hex string',
+    );
+  }
+  if (typeof context.audience !== 'string' || context.audience.trim() === '') {
+    throw new Error('protocol attestation context audience is required');
+  }
+  if (typeof context.nonce !== 'string' || context.nonce.trim() === '') {
+    throw new Error('protocol attestation context nonce is required');
+  }
+  assertPoolScopeIsComplete(context);
+}
+
 function assertNoJsonNumbers(value: unknown, label: string): void {
   if (value === null) return;
   if (typeof value === 'number') {
@@ -341,8 +385,13 @@ function contextEqualsPubkey(
   actual: string | null | undefined,
   expected: PublicKeyish | null | undefined,
   label: string,
+  allowUnexpectedOptionalScope: boolean,
 ): boolean {
-  if (expected === undefined) return true;
+  if (expected === undefined) {
+    return (
+      allowUnexpectedOptionalScope || actual === null || actual === undefined
+    );
+  }
   if (expected === null) return actual === null || actual === undefined;
   return actual === normalizePubkeyString(expected, label);
 }
@@ -354,8 +403,11 @@ export function verifyProtocolOracleAttestation(
   try {
     if (!verifyOracleAttestation(attestation)) return false;
     const context = attestation.context;
+    assertProtocolContextShape(context);
     const nowMillis = parseTimeMillis(params.nowIso);
     if (Date.parse(context.expiresAtIso) <= nowMillis) return false;
+    const allowUnexpectedOptionalScope =
+      params.allowUnexpectedOptionalScope === true;
     if (context.network !== params.expectedNetwork.trim()) return false;
     if (
       context.programId !==
@@ -393,36 +445,43 @@ export function verifyProtocolOracleAttestation(
         context.policySeries,
         params.expectedPolicySeries,
         'policySeries',
+        allowUnexpectedOptionalScope,
       ) &&
       contextEqualsPubkey(
         context.liquidityPool,
         params.expectedLiquidityPool,
         'liquidityPool',
+        allowUnexpectedOptionalScope,
       ) &&
       contextEqualsPubkey(
         context.capitalClass,
         params.expectedCapitalClass,
         'capitalClass',
+        allowUnexpectedOptionalScope,
       ) &&
       contextEqualsPubkey(
         context.allocationPosition,
         params.expectedAllocationPosition,
         'allocationPosition',
+        allowUnexpectedOptionalScope,
       ) &&
       contextEqualsPubkey(
         context.poolOracleApproval,
         params.expectedPoolOracleApproval,
         'poolOracleApproval',
+        allowUnexpectedOptionalScope,
       ) &&
       contextEqualsPubkey(
         context.poolOraclePermissionSet,
         params.expectedPoolOraclePermissionSet,
         'poolOraclePermissionSet',
+        allowUnexpectedOptionalScope,
       ) &&
       contextEqualsPubkey(
         context.poolOraclePolicy,
         params.expectedPoolOraclePolicy,
         'poolOraclePolicy',
+        allowUnexpectedOptionalScope,
       )
     );
   } catch {

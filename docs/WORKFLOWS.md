@@ -69,6 +69,9 @@ checks signature, expiry, expected network/program/account IDs, audience, nonce,
 and optional pool/class/allocation scope together. Generic
 `attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
 non-settlement telemetry.
+Verifier calls reject unexpected optional policy/pool/class/allocation scope by
+default; pass the expected scope fields for settlement, or set
+`allowUnexpectedOptionalScope` only for non-settlement wildcard consumers.
 
 On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool and capital class so the SDK can derive the allocation and pool-oracle scope accounts together; partial pool scope is rejected.
 
@@ -188,7 +191,8 @@ Product integrations should prefer `createSafeProtocolClient(...)` for sponsor
 funding, premium payment, settlement, fee withdrawal, and treasury withdrawal
 flows. The safe layer derives PDA-owned vaults, enforces classic SPL Token
 accounts, and preflights token-account mint/owner where a `Connection` is
-available.
+available. Safe settlement additionally requires `recipientOwnerAddress` so the
+payout token account owner is checked before signing.
 
 `buildOpenClaimCaseTx(...)` requires an explicit `claimantAddress` or
 `memberWalletAddress`; operator-submitted claims never default the claimant to

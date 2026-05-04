@@ -6,10 +6,11 @@
   are required on `buildSettleObligationTx(...)`, not reserve-only builders.
 - Expanded `createSafeProtocolClient(...)` across sponsor funding, premium
   payment, LP deposit/redemption, redemption queue processing, and
-  fee/treasury/oracle-fee withdrawal flows.
+  fee/treasury/oracle-fee withdrawal flows, with settlement custody preflight
+  requiring `recipientOwnerAddress`.
 - Added `verifyProtocolOracleAttestation(...)` for settlement-grade oracle
   evidence checks covering signature, expiry, expected protocol context,
-  audience, nonce, and scoped pool accounts.
+  audience, nonce, scoped pool accounts, and verifier-side optional-scope shape.
 - Expanded claim-intent replay coverage for tampered signatures, wrong signers,
   malformed base64, v0 transactions, lookup-table mutation, missing fee payer,
   and blockhash-only refresh.

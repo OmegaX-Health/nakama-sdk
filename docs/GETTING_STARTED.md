@@ -157,7 +157,7 @@ Then continue with:
 
 Start here when you need to create settlement boundaries, plan lanes, or LP capital flows on the canonical model.
 
-Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client. Use the safe client for sponsor funding, premium payments, LP deposits, redemption requests, queue processing, and fee/treasury withdrawals so PDA derivation, classic SPL token guards, and token-account preflights stay in one place.
+Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client. Use the safe client for sponsor funding, premium payments, settlement, LP deposits, redemption requests, queue processing, and fee/treasury withdrawals so PDA derivation, classic SPL token guards, and token-account preflights stay in one place. Safe settlement calls also require `recipientOwnerAddress` to preflight payout token-account ownership before signing.
 
 Example: derive canonical addresses for a sponsor-side deployment:
 

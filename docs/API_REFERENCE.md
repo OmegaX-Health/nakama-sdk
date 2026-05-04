@@ -47,6 +47,8 @@ preflights classic SPL token custody accounts when a `Connection` is available.
 The safe layer covers claim and settlement flows plus sponsor funding, premium
 payments, LP deposits, redemption requests, redemption queue processing, and
 protocol/pool/oracle fee-withdrawal builders.
+Safe settlement calls additionally require `recipientOwnerAddress` so the SDK
+can preflight the payout token-account owner, not only the vault and mint.
 `buildProtocolInstruction(...)`, `buildProtocolTransaction(...)`, and the raw
 dynamic builders remain advanced APIs for protocol engineering and tests; they
 reject permissive numeric coercion and fixed-array length drift before Borsh
@@ -439,7 +441,9 @@ issue time, as-of time, and expiry. Generic `attestOutcome(...)` remains
 available for telemetry and non-settlement event packaging. Use
 `verifyProtocolOracleAttestation(...)` when settlement code needs signature
 validity plus expected program/network/account, audience, nonce, and expiry
-checks.
+checks. Optional policy/pool/class/allocation scope is rejected unless it is
+explicitly expected or `allowUnexpectedOptionalScope` is set for
+telemetry-style wildcard matching.
 
 ## Shared utilities
 

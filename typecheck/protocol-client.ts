@@ -21,6 +21,7 @@ declare const obligation: string;
 declare const memberPosition: string;
 declare const vaultTokenAccount: string;
 declare const recipientTokenAccount: string;
+declare const recipientOwner: string;
 declare const tokenProgram: string;
 
 function assertProtocolClient(protocol: ProtocolClient) {
@@ -87,4 +88,20 @@ void safeProtocol.buildWithdrawProtocolFeeSolTx({
   recipient: authority,
   recentBlockhash,
   amount: 1n,
+});
+void safeProtocol.buildSettleObligationTx({
+  authority,
+  healthPlanAddress: healthPlan,
+  reserveDomainAddress: reserveDomain,
+  fundingLineAddress: fundingLine,
+  assetMint,
+  obligationAddress: obligation,
+  recentBlockhash,
+  nextStatus: 5,
+  amount: 1n,
+  memberPositionAddress: memberPosition,
+  vaultTokenAccountAddress: vaultTokenAccount,
+  recipientTokenAccountAddress: recipientTokenAccount,
+  recipientOwnerAddress: recipientOwner,
+  tokenProgramId: tokenProgram,
 });
