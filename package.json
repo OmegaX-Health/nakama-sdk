@@ -107,11 +107,11 @@
   "overrides": {
     "bn.js": "^5.2.3",
     "brace-expansion": "^5.0.5",
-    "picomatch": "^4.0.4"
+    "picomatch": "^4.0.4",
+    "uuid": "14.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@solana/spl-token": "^0.4.14",
     "@types/bn.js": "^5.2.0",
     "@types/node": "^20.19.37",
     "eslint": "^10.1.0",

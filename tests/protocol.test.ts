@@ -666,6 +666,91 @@ test('convenience builders fail closed on privileged and partial account scopes'
       } as Parameters<typeof buildSettleObligationTx>[0]),
     /settle_obligation requires memberPositionAddress/,
   );
+  assert.throws(
+    () =>
+      buildSettleObligationTx({
+        authority,
+        healthPlanAddress: Keypair.generate().publicKey,
+        reserveDomainAddress: Keypair.generate().publicKey,
+        fundingLineAddress: Keypair.generate().publicKey,
+        assetMint,
+        obligationAddress: Keypair.generate().publicKey,
+        recentBlockhash: '11111111111111111111111111111111',
+        nextStatus: OBLIGATION_STATUS_SETTLED,
+        amount: 1n,
+        memberPositionAddress: Keypair.generate().publicKey,
+        vaultTokenAccountAddress: Keypair.generate().publicKey,
+        recipientTokenAccountAddress: Keypair.generate().publicKey,
+        tokenProgramId: SPL_TOKEN_PROGRAM_ID,
+        poolOracleFeeVaultAddress: Keypair.generate().publicKey,
+      }),
+    /settlement oracle fee account scope/,
+  );
+});
+
+test('buildSettleObligationTx includes oracle-fee optional account slots', () => {
+  const authority = Keypair.generate().publicKey;
+  const healthPlanAddress = Keypair.generate().publicKey;
+  const reserveDomainAddress = Keypair.generate().publicKey;
+  const fundingLineAddress = Keypair.generate().publicKey;
+  const assetMint = Keypair.generate().publicKey;
+  const obligationAddress = Keypair.generate().publicKey;
+  const memberPositionAddress = Keypair.generate().publicKey;
+  const vaultTokenAccountAddress = Keypair.generate().publicKey;
+  const recipientTokenAccountAddress = Keypair.generate().publicKey;
+  const claimCaseAddress = Keypair.generate().publicKey;
+  const poolOracleFeeVaultAddress = Keypair.generate().publicKey;
+  const poolOraclePolicyAddress = Keypair.generate().publicKey;
+  const oracleFeeAttestationAddress = Keypair.generate().publicKey;
+  const recentBlockhash = '11111111111111111111111111111111';
+  const baseParams = {
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    fundingLineAddress,
+    assetMint,
+    obligationAddress,
+    recentBlockhash,
+    nextStatus: OBLIGATION_STATUS_SETTLED,
+    amount: 1n,
+    memberPositionAddress,
+    vaultTokenAccountAddress,
+    recipientTokenAccountAddress,
+    tokenProgramId: SPL_TOKEN_PROGRAM_ID,
+  };
+
+  const noFeeKeys =
+    buildSettleObligationTx(baseParams).instructions[0]?.keys ?? [];
+  assert.equal(noFeeKeys.length, 22);
+  assert.equal(noFeeKeys[19]?.pubkey.toBase58(), getProgramId().toBase58());
+  assert.equal(noFeeKeys[19]?.isWritable, false);
+  assert.equal(noFeeKeys[20]?.pubkey.toBase58(), getProgramId().toBase58());
+  assert.equal(noFeeKeys[21]?.pubkey.toBase58(), getProgramId().toBase58());
+
+  const feeKeys =
+    buildSettleObligationTx({
+      ...baseParams,
+      claimCaseAddress,
+      poolOracleFeeVaultAddress,
+      poolOraclePolicyAddress,
+      oracleFeeAttestationAddress,
+    }).instructions[0]?.keys ?? [];
+  assert.equal(feeKeys.length, 22);
+  assert.equal(
+    feeKeys[19]?.pubkey.toBase58(),
+    poolOracleFeeVaultAddress.toBase58(),
+  );
+  assert.equal(feeKeys[19]?.isWritable, true);
+  assert.equal(
+    feeKeys[20]?.pubkey.toBase58(),
+    poolOraclePolicyAddress.toBase58(),
+  );
+  assert.equal(feeKeys[20]?.isWritable, false);
+  assert.equal(
+    feeKeys[21]?.pubkey.toBase58(),
+    oracleFeeAttestationAddress.toBase58(),
+  );
+  assert.equal(feeKeys[21]?.isWritable, false);
 });
 
 test('money-moving safe builders derive custody and fee vault accounts', () => {

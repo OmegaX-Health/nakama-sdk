@@ -922,6 +922,9 @@ export type SettlementOutflowAccounts = {
   vaultTokenAccountAddress: PublicKeyish;
   recipientTokenAccountAddress: PublicKeyish;
   tokenProgramId: PublicKeyish;
+  poolOracleFeeVaultAddress?: PublicKeyish | null;
+  poolOraclePolicyAddress?: PublicKeyish | null;
+  oracleFeeAttestationAddress?: PublicKeyish | null;
 };
 
 type TokenCustodyFlowParams = {
@@ -3027,6 +3030,9 @@ function buildObligationFlowTx(params: {
   vaultTokenAccountAddress?: PublicKeyish | null;
   recipientTokenAccountAddress?: PublicKeyish | null;
   tokenProgramId?: PublicKeyish | null;
+  poolOracleFeeVaultAddress?: PublicKeyish | null;
+  poolOraclePolicyAddress?: PublicKeyish | null;
+  oracleFeeAttestationAddress?: PublicKeyish | null;
   args: Record<string, unknown>;
   includeVault?: boolean;
   programId?: PublicKeyish;
@@ -3051,6 +3057,23 @@ function buildObligationFlowTx(params: {
       );
     }
     classicTokenProgramId(params.tokenProgramId);
+    assertAllOrNoneAccountScope('settlement oracle fee', {
+      poolOracleFeeVaultAddress: params.poolOracleFeeVaultAddress,
+      poolOraclePolicyAddress: params.poolOraclePolicyAddress,
+      oracleFeeAttestationAddress: params.oracleFeeAttestationAddress,
+    });
+    if (
+      hasAnyAccountScopeValue([
+        params.poolOracleFeeVaultAddress,
+        params.poolOraclePolicyAddress,
+        params.oracleFeeAttestationAddress,
+      ]) &&
+      !params.claimCaseAddress
+    ) {
+      throw new Error(
+        'settlement oracle fee account scope requires claimCaseAddress',
+      );
+    }
   }
   return buildOrderedTransaction({
     feePayer: authority,
@@ -3124,6 +3147,9 @@ function buildObligationFlowTx(params: {
             optionalProtocolAccount(params.vaultTokenAccountAddress, true),
             optionalProtocolAccount(params.recipientTokenAccountAddress, true),
             optionalProtocolAccount(params.tokenProgramId),
+            optionalProtocolAccount(params.poolOracleFeeVaultAddress, true),
+            optionalProtocolAccount(params.poolOraclePolicyAddress),
+            optionalProtocolAccount(params.oracleFeeAttestationAddress),
           ]
         : []),
     ],

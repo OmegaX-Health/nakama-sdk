@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Synced the settlement account surface with the active protocol IDL so
+  `settle_obligation` includes the optional `pool_oracle_fee_vault`,
+  `pool_oracle_policy`, and `oracle_fee_attestation` slots, and added
+  fail-closed SDK checks for partial oracle-fee settlement account scope.
 - Fixed the public settle-obligation builder type so settlement outflow accounts
   are required on `buildSettleObligationTx(...)`, not reserve-only builders.
 - Expanded `createSafeProtocolClient(...)` across sponsor funding, premium
@@ -11,6 +15,10 @@
 - Added `verifyProtocolOracleAttestation(...)` for settlement-grade oracle
   evidence checks covering signature, expiry, expected protocol context,
   audience, nonce, scoped pool accounts, and verifier-side optional-scope shape.
+- Removed the SPL/token dev dependency from the localnet smoke by inlining the
+  minimal classic-token setup instructions, pinned the transitive Solana RPC
+  `uuid` path to `14.0.0`, and removed the now-stale production audit
+  allowance so raw and curated npm audits both fail closed.
 - Expanded claim-intent replay coverage for tampered signatures, wrong signers,
   malformed base64, v0 transactions, lookup-table mutation, missing fee payer,
   and blockhash-only refresh.
