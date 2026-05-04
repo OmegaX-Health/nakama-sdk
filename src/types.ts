@@ -116,7 +116,7 @@ export type ValidateSignedClaimTxReason =
 export interface ValidateSignedClaimTxParams {
   signedTxBase64: string;
   requiredSigner: string;
-  expectedUnsignedTxBase64?: string;
+  expectedUnsignedTxBase64: string;
 }
 
 export interface ValidateSignedClaimTxResult {

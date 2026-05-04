@@ -149,7 +149,7 @@ This package exposes the live canonical object model:
 - `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
 - `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveCommitmentCampaignPda(...)`, and `deriveCapitalClassPda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
-- `@omegax/protocol-sdk/claims`: claim and obligation failure normalization helpers such as `normalizeClaimSimulationFailure(...)`
+- `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
 - `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, and `attestOutcome(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
 - `@omegax/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
 - `@omegax/protocol-sdk/utils`: hashing, binary encoding, and misc utilities

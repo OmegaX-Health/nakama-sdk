@@ -1,0 +1,25 @@
+title = "OmegaX SDK secret scanning"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "omegax-oracle-signer-secret-base58"
+description = "OmegaX oracle signer secret key assigned in configuration"
+regex = '''(?i)(?:ORACLE_SIGNER_SECRET_KEY_BASE58|OMEGAX_[A-Z0-9_]*SECRET[A-Z0-9_]*)\s*[:=]\s*['"]?([1-9A-HJ-NP-Za-km-z]{80,})['"]?'''
+secretGroup = 1
+keywords = [
+  "ORACLE_SIGNER_SECRET_KEY_BASE58",
+  "SECRET",
+]
+
+[[rules]]
+id = "omegax-npm-token-assignment"
+description = "npm token assigned in configuration"
+regex = '''(?i)(?:NODE_AUTH_TOKEN|NPM_TOKEN)\s*[:=]\s*['"]?(npm_[A-Za-z0-9]{36,})['"]?'''
+secretGroup = 1
+keywords = [
+  "NODE_AUTH_TOKEN",
+  "NPM_TOKEN",
+  "npm_",
+]

@@ -94,6 +94,8 @@ Failure helpers:
 
 - `normalizeClaimSimulationFailure(...)`
 - `normalizeClaimRpcFailure(...)`
+- `validateSignedClaimTx(...)` for checking the submitted signed transaction
+  against the exact unsigned intent before trusting claim intake.
 
 ### Workflow B2: Member read models
 

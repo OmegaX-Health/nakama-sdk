@@ -77,38 +77,44 @@ export function validateSignedClaimTx(
     };
   }
 
-  if (
-    typeof params.expectedUnsignedTxBase64 === 'string' &&
-    params.expectedUnsignedTxBase64.length > 0
-  ) {
-    try {
-      const expectedUnsignedTx = decodeSolanaTransaction(
-        params.expectedUnsignedTxBase64,
-      );
-      const signedMessageBytes = solanaTransactionMessageBytes(tx);
-      const expectedMessageBytes =
-        solanaTransactionMessageBytes(expectedUnsignedTx);
-      if (!bytesEqual(signedMessageBytes, expectedMessageBytes)) {
-        const signedIntentBytes = solanaTransactionIntentMessageBytes(tx);
-        const expectedIntentBytes =
-          solanaTransactionIntentMessageBytes(expectedUnsignedTx);
-        if (!bytesEqual(signedIntentBytes, expectedIntentBytes)) {
-          return {
-            valid: false,
-            txSignature: solanaTransactionFirstSignature(tx),
-            reason: 'intent_message_mismatch',
-            signer: solanaTransactionRequiredSigner(tx),
-          };
-        }
+  const expectedUnsignedTxBase64 =
+    params.expectedUnsignedTxBase64?.trim() ?? '';
+  if (!expectedUnsignedTxBase64) {
+    return {
+      valid: false,
+      txSignature: solanaTransactionFirstSignature(tx),
+      reason: 'intent_message_mismatch',
+      signer: solanaTransactionRequiredSigner(tx),
+    };
+  }
+
+  try {
+    const expectedUnsignedTx = decodeSolanaTransaction(
+      expectedUnsignedTxBase64,
+    );
+    const signedMessageBytes = solanaTransactionMessageBytes(tx);
+    const expectedMessageBytes =
+      solanaTransactionMessageBytes(expectedUnsignedTx);
+    if (!bytesEqual(signedMessageBytes, expectedMessageBytes)) {
+      const signedIntentBytes = solanaTransactionIntentMessageBytes(tx);
+      const expectedIntentBytes =
+        solanaTransactionIntentMessageBytes(expectedUnsignedTx);
+      if (!bytesEqual(signedIntentBytes, expectedIntentBytes)) {
+        return {
+          valid: false,
+          txSignature: solanaTransactionFirstSignature(tx),
+          reason: 'intent_message_mismatch',
+          signer: solanaTransactionRequiredSigner(tx),
+        };
       }
-    } catch {
-      return {
-        valid: false,
-        txSignature: solanaTransactionFirstSignature(tx),
-        reason: 'intent_message_mismatch',
-        signer: solanaTransactionRequiredSigner(tx),
-      };
     }
+  } catch {
+    return {
+      valid: false,
+      txSignature: solanaTransactionFirstSignature(tx),
+      reason: 'intent_message_mismatch',
+      signer: solanaTransactionRequiredSigner(tx),
+    };
   }
 
   const expectedSigner = params.requiredSigner.trim();

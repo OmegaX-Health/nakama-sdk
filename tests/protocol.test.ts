@@ -14,14 +14,19 @@ import {
   buildCreateCommitmentCampaignTx,
   buildCreateCommitmentPaymentRailTx,
   buildCreateDomainAssetVaultTx,
+  buildCreateObligationTx,
+  buildCreatePolicySeriesTx,
   buildDepositCommitmentTx,
   buildInitializeSeriesReserveLedgerTx,
+  buildMarkImpairmentTx,
   buildOpenClaimCaseTx,
+  buildOpenFundingLineTx,
   buildOpenMemberPositionTx,
   buildPauseCommitmentCampaignTx,
   buildPublishReserveAssetRailPriceTx,
   buildProtocolInstruction,
   buildRefundCommitmentTx,
+  buildUpdateLpPositionCredentialingTx,
   CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE,
   CLAIM_INTAKE_APPROVED,
   CAPITAL_CLASS_RESTRICTION_WRAPPER_ONLY,
@@ -50,19 +55,29 @@ import {
   deriveCommitmentPaymentRailPda,
   deriveCommitmentPositionPda,
   deriveClaimAttestationPda,
+  deriveAllocationLedgerPda,
   deriveAllocationPositionPda,
+  deriveDomainAssetLedgerPda,
+  deriveDomainAssetVaultPda,
+  deriveFundingLineLedgerPda,
+  deriveFundingLinePda,
   deriveDomainAssetVaultTokenAccountPda,
   deriveHealthPlanPda,
   deriveLiquidityPoolPda,
+  deriveLpPositionPda,
   deriveMemberPositionPda,
   deriveMembershipAnchorSeatPda,
   deriveOracleProfilePda,
   derivePoolOracleFeeVaultPda,
   deriveOutcomeSchemaPda,
   derivePoolOraclePolicyPda,
+  derivePoolClassLedgerPda,
   derivePoolTreasuryVaultPda,
   deriveProtocolFeeVaultPda,
   deriveProtocolGovernancePda,
+  deriveObligationPda,
+  derivePlanReserveLedgerPda,
+  derivePolicySeriesPda,
   deriveReserveAssetRailPda,
   deriveReserveDomainPda,
   deriveSeriesReserveLedgerPda,
@@ -236,6 +251,7 @@ test('decodeProtocolAccount normalizes pubkeys and bigints for canonical readers
   const client = createProtocolClient(
     createAccountReaderConnectionStub(
       new Map([[governanceAddress, Buffer.from(encoded)]]),
+      getProgramId(),
     ),
     getProgramId().toBase58(),
   );
@@ -245,6 +261,29 @@ test('decodeProtocolAccount normalizes pubkeys and bigints for canonical readers
   assert.equal(
     (fetched as { governance_authority: string }).governance_authority,
     ZERO.toBase58(),
+  );
+});
+
+test('protocol readers reject decoded accounts owned by another program', async () => {
+  const governanceAddress = deriveProtocolGovernancePda().toBase58();
+  const encoded = await CODER.accounts.encode('ProtocolGovernance', {
+    governance_authority: ZERO,
+    protocol_fee_bps: 25,
+    emergency_pause: false,
+    audit_nonce: new BN(7),
+    bump: 255,
+  });
+
+  const client = createProtocolClient(
+    createAccountReaderConnectionStub(
+      new Map([[governanceAddress, Buffer.from(encoded)]]),
+    ),
+    getProgramId().toBase58(),
+  );
+
+  await assert.rejects(
+    () => client.fetchProtocolGovernance(),
+    /not OmegaX Protocol program/,
   );
 });
 
@@ -484,6 +523,255 @@ test('buildOpenMemberPositionTx derives member anchor accounts with the selected
     assert.equal(keys[index]?.isSigner, false);
     assert.equal(keys[index]?.isWritable, false);
   }
+});
+
+test('policy and funding builders derive PDAs with the selected program id', () => {
+  const authority = Keypair.generate().publicKey;
+  const healthPlanAddress = Keypair.generate().publicKey;
+  const reserveDomainAddress = Keypair.generate().publicKey;
+  const assetMint = Keypair.generate().publicKey;
+  const programId = Keypair.generate().publicKey;
+  const recentBlockhash = '11111111111111111111111111111111';
+  const seriesId = 'custom-series';
+  const lineId = 'custom-line';
+  const policySeries = derivePolicySeriesPda({
+    healthPlan: healthPlanAddress,
+    seriesId,
+    programId,
+  });
+  const fundingLine = deriveFundingLinePda({
+    healthPlan: healthPlanAddress,
+    lineId,
+    programId,
+  });
+
+  const policyTx = buildCreatePolicySeriesTx({
+    authority,
+    healthPlanAddress,
+    assetMint,
+    recentBlockhash,
+    seriesId,
+    displayName: 'Custom Series',
+    metadataUri: 'ipfs://custom-series',
+    mode: SERIES_MODE_PROTECTION,
+    status: 1,
+    adjudicationMode: 0,
+    cycleSeconds: 30n,
+    termsVersion: 1,
+    programId,
+  });
+  const policyKeys = policyTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    policyTx.instructions[0]?.programId.toBase58(),
+    programId.toBase58(),
+  );
+  assert.equal(
+    policyKeys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda(programId).toBase58(),
+  );
+  assert.equal(policyKeys[3]?.pubkey.toBase58(), policySeries.toBase58());
+  assert.equal(
+    policyKeys[4]?.pubkey.toBase58(),
+    deriveSeriesReserveLedgerPda({
+      policySeries,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+
+  const fundingTx = buildOpenFundingLineTx({
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    assetMint,
+    recentBlockhash,
+    lineId,
+    policySeriesAddress: policySeries,
+    lineType: FUNDING_LINE_TYPE_SPONSOR_BUDGET,
+    fundingPriority: 1,
+    committedAmount: 100n,
+    programId,
+  });
+  const fundingKeys = fundingTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    fundingTx.instructions[0]?.programId.toBase58(),
+    programId.toBase58(),
+  );
+  assert.equal(
+    fundingKeys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda(programId).toBase58(),
+  );
+  assert.equal(
+    fundingKeys[3]?.pubkey.toBase58(),
+    deriveDomainAssetVaultPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    fundingKeys[4]?.pubkey.toBase58(),
+    deriveDomainAssetLedgerPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(fundingKeys[5]?.pubkey.toBase58(), fundingLine.toBase58());
+  assert.equal(
+    fundingKeys[6]?.pubkey.toBase58(),
+    deriveFundingLineLedgerPda({
+      fundingLine,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    fundingKeys[7]?.pubkey.toBase58(),
+    derivePlanReserveLedgerPda({
+      healthPlan: healthPlanAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    fundingKeys[8]?.pubkey.toBase58(),
+    deriveSeriesReserveLedgerPda({
+      policySeries,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+});
+
+test('obligation, impairment, and LP builders derive PDAs with the selected program id', () => {
+  const authority = Keypair.generate().publicKey;
+  const healthPlanAddress = Keypair.generate().publicKey;
+  const reserveDomainAddress = Keypair.generate().publicKey;
+  const fundingLineAddress = Keypair.generate().publicKey;
+  const assetMint = Keypair.generate().publicKey;
+  const poolAssetMint = Keypair.generate().publicKey;
+  const policySeriesAddress = Keypair.generate().publicKey;
+  const capitalClassAddress = Keypair.generate().publicKey;
+  const allocationPositionAddress = Keypair.generate().publicKey;
+  const ownerAddress = Keypair.generate().publicKey;
+  const poolAddress = Keypair.generate().publicKey;
+  const programId = Keypair.generate().publicKey;
+  const recentBlockhash = '11111111111111111111111111111111';
+  const obligationId = 'custom-obligation';
+
+  const obligationTx = buildCreateObligationTx({
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    fundingLineAddress,
+    assetMint,
+    recentBlockhash,
+    obligationId,
+    policySeriesAddress,
+    capitalClassAddress,
+    allocationPositionAddress,
+    poolAssetMint,
+    deliveryMode: 0,
+    amount: 50n,
+    programId,
+  });
+  const obligationKeys = obligationTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    obligationKeys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda(programId).toBase58(),
+  );
+  assert.equal(
+    obligationKeys[3]?.pubkey.toBase58(),
+    deriveDomainAssetLedgerPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    obligationKeys[6]?.pubkey.toBase58(),
+    derivePlanReserveLedgerPda({
+      healthPlan: healthPlanAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    obligationKeys[8]?.pubkey.toBase58(),
+    derivePoolClassLedgerPda({
+      capitalClass: capitalClassAddress,
+      assetMint: poolAssetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    obligationKeys[9]?.pubkey.toBase58(),
+    deriveAllocationLedgerPda({
+      allocationPosition: allocationPositionAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+  assert.equal(
+    obligationKeys[10]?.pubkey.toBase58(),
+    deriveObligationPda({
+      fundingLine: fundingLineAddress,
+      obligationId,
+      programId,
+    }).toBase58(),
+  );
+
+  const impairmentTx = buildMarkImpairmentTx({
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    fundingLineAddress,
+    assetMint,
+    recentBlockhash,
+    amount: 5n,
+    policySeriesAddress,
+    capitalClassAddress,
+    allocationPositionAddress,
+    poolAssetMint,
+    programId,
+  });
+  const impairmentKeys = impairmentTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    impairmentKeys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda(programId).toBase58(),
+  );
+  assert.equal(
+    impairmentKeys[10]?.pubkey.toBase58(),
+    deriveAllocationLedgerPda({
+      allocationPosition: allocationPositionAddress,
+      assetMint,
+      programId,
+    }).toBase58(),
+  );
+
+  const lpTx = buildUpdateLpPositionCredentialingTx({
+    authority,
+    poolAddress,
+    capitalClassAddress,
+    ownerAddress,
+    recentBlockhash,
+    credentialed: true,
+    programId,
+  });
+  const lpKeys = lpTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    lpKeys[1]?.pubkey.toBase58(),
+    deriveProtocolGovernancePda(programId).toBase58(),
+  );
+  assert.equal(
+    lpKeys[4]?.pubkey.toBase58(),
+    deriveLpPositionPda({
+      capitalClass: capitalClassAddress,
+      owner: ownerAddress,
+      programId,
+    }).toBase58(),
+  );
 });
 
 test('buildCreateDomainAssetVaultTx derives the protocol-owned vault token account', () => {
