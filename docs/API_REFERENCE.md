@@ -44,6 +44,9 @@ Returned by `createProtocolClient(...)`.
 Use `createSafeProtocolClient(...)` for product and operator flows. It wraps the
 checked convenience builders, pins the canonical program ID by default, and
 preflights classic SPL token custody accounts when a `Connection` is available.
+The safe layer covers claim and settlement flows plus sponsor funding, premium
+payments, LP deposits, redemption requests, redemption queue processing, and
+protocol/pool/oracle fee-withdrawal builders.
 `buildProtocolInstruction(...)`, `buildProtocolTransaction(...)`, and the raw
 dynamic builders remain advanced APIs for protocol engineering and tests; they
 reject permissive numeric coercion and fixed-array length drift before Borsh
@@ -427,12 +430,16 @@ Available from the root package and `@omegax/protocol-sdk/oracle`.
 - `attestOutcome(...)`
 - `attestProtocolOutcome(...)`
 - `verifyOracleAttestation(...)`
+- `verifyProtocolOracleAttestation(...)`
 
 Use `attestProtocolOutcome(...)` for settlement-grade protocol evidence. Its
 context binds the evidence to network, program ID, health plan, funding line,
 claim case, optional pool allocation scope, schema key hash, audience, nonce,
 issue time, as-of time, and expiry. Generic `attestOutcome(...)` remains
-available for telemetry and non-settlement event packaging.
+available for telemetry and non-settlement event packaging. Use
+`verifyProtocolOracleAttestation(...)` when settlement code needs signature
+validity plus expected program/network/account, audience, nonce, and expiry
+checks.
 
 ## Shared utilities
 

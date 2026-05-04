@@ -3,6 +3,8 @@
 import { spawnSync } from 'node:child_process';
 import { readFileSync, statSync } from 'node:fs';
 
+const requireGitleaks =
+  process.env.CI === 'true' || process.env.OMEGAX_REQUIRE_GITLEAKS === '1';
 const gitleaks = spawnSync(
   'gitleaks',
   ['detect', '--config=.gitleaks.toml', '--redact', '--no-banner'],
@@ -13,8 +15,16 @@ const gitleaks = spawnSync(
 if (gitleaks.status === 0) {
   process.exit(0);
 }
-if (gitleaks.error && gitleaks.error.code !== 'ENOENT') {
-  throw gitleaks.error;
+if (gitleaks.error) {
+  if (gitleaks.error.code !== 'ENOENT') {
+    throw gitleaks.error;
+  }
+  if (requireGitleaks) {
+    console.error(
+      'gitleaks is required in CI/release verification but was not found on PATH.',
+    );
+    process.exit(1);
+  }
 }
 if (!gitleaks.error && gitleaks.status !== 0) {
   process.exit(gitleaks.status ?? 1);

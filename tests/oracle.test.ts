@@ -1,12 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { Keypair } from '@solana/web3.js';
 import bs58 from 'bs58';
 import nacl from 'tweetnacl';
 
 import {
   attestOutcome,
   attestProtocolOutcome,
+  PROTOCOL_PROGRAM_ID,
   verifyOracleAttestation,
+  verifyProtocolOracleAttestation,
   type OracleSigner,
 } from '../src/index.js';
 
@@ -22,10 +25,10 @@ function createTestSigner(): OracleSigner {
 function protocolContext() {
   return {
     network: 'devnet',
-    programId: 'OmegaX111111111111111111111111111111111111111',
-    healthPlan: 'HealthPlan111111111111111111111111111111111',
-    fundingLine: 'FundingLine11111111111111111111111111111111',
-    claimCase: 'ClaimCase111111111111111111111111111111111',
+    programId: PROTOCOL_PROGRAM_ID,
+    healthPlan: Keypair.generate().publicKey.toBase58(),
+    fundingLine: Keypair.generate().publicKey.toBase58(),
+    claimCase: Keypair.generate().publicKey.toBase58(),
     schemaKeyHashHex: 'ab'.repeat(32),
     audience: 'omegax-protocol-claim-settlement',
     nonce: 'nonce-1',
@@ -37,12 +40,13 @@ function protocolContext() {
 
 test('protocol-bound oracle attestations include settlement domain and verify locally', async () => {
   const signer = createTestSigner();
+  const context = protocolContext();
   const { attestation } = await attestProtocolOutcome({
     userId: 'member-1',
     cycleId: 'cycle-1',
     outcomeId: 'claim-approved',
     payload: { decision: 'approve', amountRaw: '1000' },
-    context: protocolContext(),
+    context,
     signer,
   });
 
@@ -53,6 +57,32 @@ test('protocol-bound oracle attestations include settlement domain and verify lo
   );
   assert.equal(attestation.verifier.publicKeyBase58, signer.publicKeyBase58);
   assert.equal(verifyOracleAttestation(attestation), true);
+  assert.equal(
+    verifyProtocolOracleAttestation(attestation, {
+      nowIso: '2026-05-04T00:05:00.000Z',
+      expectedNetwork: context.network,
+      expectedProgramId: context.programId,
+      expectedHealthPlan: context.healthPlan,
+      expectedFundingLine: context.fundingLine,
+      expectedClaimCase: context.claimCase,
+      expectedAudience: context.audience,
+      expectedNonce: context.nonce,
+    }),
+    true,
+  );
+  assert.equal(
+    verifyProtocolOracleAttestation(attestation, {
+      nowIso: '2026-05-04T00:11:00.000Z',
+      expectedNetwork: context.network,
+      expectedProgramId: context.programId,
+      expectedHealthPlan: context.healthPlan,
+      expectedFundingLine: context.fundingLine,
+      expectedClaimCase: context.claimCase,
+      expectedAudience: context.audience,
+      expectedNonce: context.nonce,
+    }),
+    false,
+  );
 
   const tampered = {
     ...attestation,
@@ -106,6 +136,19 @@ test('oracle attestations reject unserializable payloads and bad signer output',
       }),
     /64 bytes/,
   );
+
+  await assert.rejects(
+    () =>
+      attestProtocolOutcome({
+        userId: 'member-1',
+        cycleId: 'cycle-1',
+        outcomeId: 'numeric-payload',
+        payload: { amount: 1000 },
+        context: protocolContext(),
+        signer,
+      }),
+    /JSON numbers/,
+  );
 });
 
 test('protocol-bound oracle attestations reject partial pool scopes', async () => {
@@ -118,7 +161,7 @@ test('protocol-bound oracle attestations reject partial pool scopes', async () =
         payload: { decision: 'approve' },
         context: {
           ...protocolContext(),
-          liquidityPool: 'Pool111111111111111111111111111111111111',
+          liquidityPool: Keypair.generate().publicKey.toBase58(),
         },
         signer: createTestSigner(),
       }),

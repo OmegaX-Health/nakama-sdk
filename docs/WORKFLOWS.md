@@ -59,11 +59,16 @@ Helpers:
 - `attestOutcome(...)`
 - `attestProtocolOutcome(...)`
 - `verifyOracleAttestation(...)`
+- `verifyProtocolOracleAttestation(...)`
 
 Use `attestProtocolOutcome(...)` for settlement-grade claim evidence. It binds
 the signed payload to network, program ID, health plan, funding line, claim
 case, schema key hash, audience, nonce, issue time, as-of time, and expiry.
-Generic `attestOutcome(...)` is still available for non-settlement telemetry.
+Use `verifyProtocolOracleAttestation(...)` before settlement intake so the SDK
+checks signature, expiry, expected network/program/account IDs, audience, nonce,
+and optional pool/class/allocation scope together. Generic
+`attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
+non-settlement telemetry.
 
 On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool and capital class so the SDK can derive the allocation and pool-oracle scope accounts together; partial pool scope is rejected.
 
@@ -179,6 +184,12 @@ program alongside the reserve ledgers. Premium and claim-settlement fee flows
 also require the matching protocol or oracle fee-vault accounts when fees are
 configured.
 
+Product integrations should prefer `createSafeProtocolClient(...)` for sponsor
+funding, premium payment, settlement, fee withdrawal, and treasury withdrawal
+flows. The safe layer derives PDA-owned vaults, enforces classic SPL Token
+accounts, and preflights token-account mint/owner where a `Connection` is
+available.
+
 `buildOpenClaimCaseTx(...)` requires an explicit `claimantAddress` or
 `memberWalletAddress`; operator-submitted claims never default the claimant to
 the operator authority.
@@ -232,6 +243,11 @@ Reserve helpers:
 Use this when capital providers enter through canonical liquidity pools and capital classes.
 
 LP deposits now transfer the deposited asset into the configured domain vault before shares are credited. Redemption requests and queue processing pass shares only; the program derives asset payout from class NAV and queued redemption state.
+
+Product integrations should use `createSafeProtocolClient(...)` for LP deposits,
+redemption requests, and redemption queue processing so pool class ledger, LP
+position, vault, and treasury accounts are derived consistently instead of being
+supplied piecemeal.
 
 Builders:
 

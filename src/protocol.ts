@@ -18,6 +18,7 @@ import {
   CLAIM_ATTESTATION_DECISION_REQUEST_REVIEW,
   CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE,
   CLAIM_ATTESTATION_DECISION_SUPPORT_DENY,
+  NATIVE_SOL_MINT,
 } from './protocol_models.js';
 import {
   PROTOCOL_ACCOUNT_DISCRIMINATORS,
@@ -57,9 +58,12 @@ import {
   deriveOutcomeSchemaPda,
   derivePlanReserveLedgerPda,
   derivePoolOracleApprovalPda,
+  derivePoolOracleFeeVaultPda,
   derivePoolOraclePermissionSetPda,
   derivePoolOraclePolicyPda,
+  derivePoolTreasuryVaultPda,
   deriveSchemaDependencyLedgerPda,
+  deriveProtocolFeeVaultPda,
   deriveProtocolGovernancePda,
   derivePoolClassLedgerPda,
   derivePolicySeriesPda,
@@ -911,6 +915,51 @@ function optionalAllocationLedgerAccount(
     }),
     true,
   );
+}
+
+export type SettlementOutflowAccounts = {
+  memberPositionAddress: PublicKeyish;
+  vaultTokenAccountAddress: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  tokenProgramId: PublicKeyish;
+};
+
+type TokenCustodyFlowParams = {
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+};
+
+function domainVaultAddress(params: TokenCustodyFlowParams): PublicKey {
+  return deriveDomainAssetVaultPda({
+    reserveDomain: params.reserveDomainAddress,
+    assetMint: params.assetMint,
+    programId: params.programId,
+  });
+}
+
+function domainVaultTokenAddress(params: TokenCustodyFlowParams): PublicKey {
+  return params.vaultTokenAccountAddress
+    ? toPublicKey(params.vaultTokenAccountAddress)
+    : deriveDomainAssetVaultTokenAccountPda({
+        reserveDomain: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        programId: params.programId,
+      });
+}
+
+function domainAssetLedgerAddress(params: TokenCustodyFlowParams): PublicKey {
+  return deriveDomainAssetLedgerPda({
+    reserveDomain: params.reserveDomainAddress,
+    assetMint: params.assetMint,
+    programId: params.programId,
+  });
+}
+
+function tokenProgramAddress(tokenProgramId?: PublicKeyish | null): PublicKey {
+  return classicTokenProgramId(tokenProgramId);
 }
 
 function commitmentCampaignAddress(params: {
@@ -1990,6 +2039,622 @@ export function buildRefundCommitmentTx(params: {
   });
 }
 
+function buildFundingInflowTx(params: {
+  instructionName: 'fund_sponsor_budget' | 'record_premium_payment';
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  fundingLineAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  policySeriesAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const tokenProgramId = tokenProgramAddress(params.tokenProgramId);
+  const commonAccounts: GenericInstructionAccounts = {
+    authority,
+    protocol_governance: deriveProtocolGovernancePda(programId),
+    health_plan: toPublicKey(params.healthPlanAddress),
+    domain_asset_vault: domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    domain_asset_ledger: domainAssetLedgerAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    funding_line: toPublicKey(params.fundingLineAddress),
+    funding_line_ledger: deriveFundingLineLedgerPda({
+      fundingLine: params.fundingLineAddress,
+      assetMint,
+      programId,
+    }),
+    plan_reserve_ledger: derivePlanReserveLedgerPda({
+      healthPlan: params.healthPlanAddress,
+      assetMint,
+      programId,
+    }),
+    series_reserve_ledger: params.policySeriesAddress
+      ? deriveSeriesReserveLedgerPda({
+          policySeries: params.policySeriesAddress,
+          assetMint,
+          programId,
+        })
+      : undefined,
+    source_token_account: toPublicKey(params.sourceTokenAccountAddress),
+    asset_mint: assetMint,
+    vault_token_account: domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    }),
+    token_program: tokenProgramId,
+  };
+
+  return buildConvenienceTransaction({
+    instructionName: params.instructionName,
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { amount: params.amount },
+    accounts:
+      params.instructionName === 'record_premium_payment'
+        ? {
+            ...commonAccounts,
+            protocol_fee_vault: deriveProtocolFeeVaultPda({
+              reserveDomain: params.reserveDomainAddress,
+              assetMint,
+              programId,
+            }),
+          }
+        : commonAccounts,
+  });
+}
+
+export function buildFundSponsorBudgetTx(params: {
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  fundingLineAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  policySeriesAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFundingInflowTx({
+    ...params,
+    instructionName: 'fund_sponsor_budget',
+  });
+}
+
+export function buildRecordPremiumPaymentTx(params: {
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  fundingLineAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  policySeriesAddress?: PublicKeyish | null;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFundingInflowTx({
+    ...params,
+    instructionName: 'record_premium_payment',
+  });
+}
+
+export function buildDepositIntoCapitalClassTx(params: {
+  owner: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  capitalClassAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  sourceTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  shares: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const owner = toPublicKey(params.owner);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  return buildConvenienceTransaction({
+    instructionName: 'deposit_into_capital_class',
+    feePayer: owner,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: {
+      amount: params.amount,
+      shares: params.shares,
+    },
+    accounts: {
+      owner,
+      protocol_governance: deriveProtocolGovernancePda(programId),
+      domain_asset_vault: domainVaultAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      domain_asset_ledger: domainAssetLedgerAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      liquidity_pool: toPublicKey(params.liquidityPoolAddress),
+      capital_class: toPublicKey(params.capitalClassAddress),
+      pool_class_ledger: derivePoolClassLedgerPda({
+        capitalClass: params.capitalClassAddress,
+        assetMint,
+        programId,
+      }),
+      lp_position: deriveLpPositionPda({
+        capitalClass: params.capitalClassAddress,
+        owner,
+        programId,
+      }),
+      pool_treasury_vault: derivePoolTreasuryVaultPda({
+        liquidityPool: params.liquidityPoolAddress,
+        assetMint,
+        programId,
+      }),
+      source_token_account: toPublicKey(params.sourceTokenAccountAddress),
+      asset_mint: assetMint,
+      vault_token_account: domainVaultTokenAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        programId,
+      }),
+      token_program: tokenProgramAddress(params.tokenProgramId),
+      system_program: SystemProgram.programId,
+    },
+  });
+}
+
+export function buildRequestRedemptionTx(params: {
+  owner: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  capitalClassAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recentBlockhash: string;
+  shares: bigint;
+  programId?: PublicKeyish;
+}): Transaction {
+  const owner = toPublicKey(params.owner);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  return buildConvenienceTransaction({
+    instructionName: 'request_redemption',
+    feePayer: owner,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { shares: params.shares },
+    accounts: {
+      owner,
+      protocol_governance: deriveProtocolGovernancePda(programId),
+      liquidity_pool: toPublicKey(params.liquidityPoolAddress),
+      capital_class: toPublicKey(params.capitalClassAddress),
+      pool_class_ledger: derivePoolClassLedgerPda({
+        capitalClass: params.capitalClassAddress,
+        assetMint,
+        programId,
+      }),
+      domain_asset_ledger: domainAssetLedgerAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      lp_position: deriveLpPositionPda({
+        capitalClass: params.capitalClassAddress,
+        owner,
+        programId,
+      }),
+    },
+  });
+}
+
+export function buildProcessRedemptionQueueTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  capitalClassAddress: PublicKeyish;
+  lpOwnerAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  shares: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const lpPosition = deriveLpPositionPda({
+    capitalClass: params.capitalClassAddress,
+    owner: params.lpOwnerAddress,
+    programId,
+  });
+  return buildConvenienceTransaction({
+    instructionName: 'process_redemption_queue',
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { shares: params.shares },
+    accounts: {
+      authority,
+      protocol_governance: deriveProtocolGovernancePda(programId),
+      domain_asset_vault: domainVaultAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      domain_asset_ledger: domainAssetLedgerAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        programId,
+      }),
+      liquidity_pool: toPublicKey(params.liquidityPoolAddress),
+      capital_class: toPublicKey(params.capitalClassAddress),
+      pool_class_ledger: derivePoolClassLedgerPda({
+        capitalClass: params.capitalClassAddress,
+        assetMint,
+        programId,
+      }),
+      lp_position: lpPosition,
+      pool_treasury_vault: derivePoolTreasuryVaultPda({
+        liquidityPool: params.liquidityPoolAddress,
+        assetMint,
+        programId,
+      }),
+      asset_mint: assetMint,
+      vault_token_account: domainVaultTokenAddress({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        programId,
+      }),
+      recipient_token_account: toPublicKey(params.recipientTokenAccountAddress),
+      token_program: tokenProgramAddress(params.tokenProgramId),
+    },
+  });
+}
+
+function buildFeeWithdrawalSplTx(params: {
+  instructionName:
+    | 'withdraw_protocol_fee_spl'
+    | 'withdraw_pool_treasury_spl'
+    | 'withdraw_pool_oracle_fee_spl';
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  liquidityPoolAddress?: PublicKeyish;
+  oracleAddress?: PublicKeyish;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  const baseAccounts: GenericInstructionAccounts = {
+    authority,
+    protocol_governance: deriveProtocolGovernancePda(programId),
+    domain_asset_vault: domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    domain_asset_ledger: domainAssetLedgerAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    }),
+    asset_mint: assetMint,
+    vault_token_account: domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    }),
+    recipient_token_account: toPublicKey(params.recipientTokenAccountAddress),
+    token_program: tokenProgramAddress(params.tokenProgramId),
+  };
+
+  if (params.instructionName === 'withdraw_protocol_fee_spl') {
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...baseAccounts,
+        reserve_domain: toPublicKey(params.reserveDomainAddress),
+        protocol_fee_vault: deriveProtocolFeeVaultPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.liquidityPoolAddress) {
+    throw new Error(`${params.instructionName} requires liquidityPoolAddress`);
+  }
+  const liquidityPool = toPublicKey(params.liquidityPoolAddress);
+  const commonPoolAccounts = {
+    ...baseAccounts,
+    liquidity_pool: liquidityPool,
+  };
+
+  if (params.instructionName === 'withdraw_pool_treasury_spl') {
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...commonPoolAccounts,
+        pool_treasury_vault: derivePoolTreasuryVaultPda({
+          liquidityPool,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.oracleAddress) {
+    throw new Error('withdraw_pool_oracle_fee_spl requires oracleAddress');
+  }
+  const oracleProfile = deriveOracleProfilePda({
+    oracle: params.oracleAddress,
+    programId,
+  });
+  return buildConvenienceTransaction({
+    instructionName: params.instructionName,
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { amount: params.amount },
+    accounts: {
+      ...commonPoolAccounts,
+      oracle_profile: oracleProfile,
+      pool_oracle_fee_vault: derivePoolOracleFeeVaultPda({
+        liquidityPool,
+        oracle: params.oracleAddress,
+        assetMint,
+        programId,
+      }),
+    },
+  });
+}
+
+export function buildWithdrawProtocolFeeSplTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSplTx({
+    ...params,
+    instructionName: 'withdraw_protocol_fee_spl',
+  });
+}
+
+export function buildWithdrawPoolTreasurySplTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSplTx({
+    ...params,
+    instructionName: 'withdraw_pool_treasury_spl',
+  });
+}
+
+export function buildWithdrawPoolOracleFeeSplTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  oracleAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  vaultTokenAccountAddress?: PublicKeyish | null;
+  tokenProgramId?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSplTx({
+    ...params,
+    instructionName: 'withdraw_pool_oracle_fee_spl',
+  });
+}
+
+function buildFeeWithdrawalSolTx(params: {
+  instructionName:
+    | 'withdraw_protocol_fee_sol'
+    | 'withdraw_pool_treasury_sol'
+    | 'withdraw_pool_oracle_fee_sol';
+  authority: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  reserveDomainAddress?: PublicKeyish;
+  liquidityPoolAddress?: PublicKeyish;
+  oracleAddress?: PublicKeyish;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint ?? NATIVE_SOL_MINT);
+  const programId = params.programId ?? getProgramId();
+  const baseAccounts: GenericInstructionAccounts = {
+    authority,
+    protocol_governance: deriveProtocolGovernancePda(programId),
+    recipient: toPublicKey(params.recipient),
+    system_program: SystemProgram.programId,
+  };
+
+  if (params.instructionName === 'withdraw_protocol_fee_sol') {
+    if (!params.reserveDomainAddress) {
+      throw new Error(
+        'withdraw_protocol_fee_sol requires reserveDomainAddress',
+      );
+    }
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...baseAccounts,
+        reserve_domain: toPublicKey(params.reserveDomainAddress),
+        protocol_fee_vault: deriveProtocolFeeVaultPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.liquidityPoolAddress) {
+    throw new Error(`${params.instructionName} requires liquidityPoolAddress`);
+  }
+  const liquidityPool = toPublicKey(params.liquidityPoolAddress);
+  if (params.instructionName === 'withdraw_pool_treasury_sol') {
+    return buildConvenienceTransaction({
+      instructionName: params.instructionName,
+      feePayer: authority,
+      recentBlockhash: params.recentBlockhash,
+      programId,
+      args: { amount: params.amount },
+      accounts: {
+        ...baseAccounts,
+        liquidity_pool: liquidityPool,
+        pool_treasury_vault: derivePoolTreasuryVaultPda({
+          liquidityPool,
+          assetMint,
+          programId,
+        }),
+      },
+    });
+  }
+
+  if (!params.oracleAddress) {
+    throw new Error('withdraw_pool_oracle_fee_sol requires oracleAddress');
+  }
+  return buildConvenienceTransaction({
+    instructionName: params.instructionName,
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    programId,
+    args: { amount: params.amount },
+    accounts: {
+      ...baseAccounts,
+      liquidity_pool: liquidityPool,
+      oracle_profile: deriveOracleProfilePda({
+        oracle: params.oracleAddress,
+        programId,
+      }),
+      pool_oracle_fee_vault: derivePoolOracleFeeVaultPda({
+        liquidityPool,
+        oracle: params.oracleAddress,
+        assetMint,
+        programId,
+      }),
+    },
+  });
+}
+
+export function buildWithdrawProtocolFeeSolTx(params: {
+  authority: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSolTx({
+    ...params,
+    instructionName: 'withdraw_protocol_fee_sol',
+  });
+}
+
+export function buildWithdrawPoolTreasurySolTx(params: {
+  authority: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSolTx({
+    ...params,
+    instructionName: 'withdraw_pool_treasury_sol',
+  });
+}
+
+export function buildWithdrawPoolOracleFeeSolTx(params: {
+  authority: PublicKeyish;
+  liquidityPoolAddress: PublicKeyish;
+  oracleAddress: PublicKeyish;
+  recipient: PublicKeyish;
+  recentBlockhash: string;
+  amount: bigint;
+  assetMint?: PublicKeyish;
+  programId?: PublicKeyish;
+}): Transaction {
+  return buildFeeWithdrawalSolTx({
+    ...params,
+    instructionName: 'withdraw_pool_oracle_fee_sol',
+  });
+}
+
 export function buildPauseCommitmentCampaignTx(params: {
   authority: PublicKeyish;
   healthPlanAddress: PublicKeyish;
@@ -2479,10 +3144,6 @@ export function buildReserveObligationTx(params: {
   capitalClassAddress?: PublicKeyish | null;
   allocationPositionAddress?: PublicKeyish | null;
   poolAssetMint?: PublicKeyish | null;
-  memberPositionAddress: PublicKeyish;
-  vaultTokenAccountAddress: PublicKeyish;
-  recipientTokenAccountAddress: PublicKeyish;
-  tokenProgramId?: PublicKeyish | null;
   programId?: PublicKeyish;
 }): Transaction {
   return buildObligationFlowTx({
@@ -2515,24 +3176,26 @@ export function buildReleaseReserveTx(params: {
   });
 }
 
-export function buildSettleObligationTx(params: {
-  authority: PublicKeyish;
-  healthPlanAddress: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  fundingLineAddress: PublicKeyish;
-  assetMint: PublicKeyish;
-  obligationAddress: PublicKeyish;
-  recentBlockhash: string;
-  nextStatus: number;
-  amount: bigint;
-  settlementReasonHashHex?: string | null;
-  claimCaseAddress?: PublicKeyish | null;
-  policySeriesAddress?: PublicKeyish | null;
-  capitalClassAddress?: PublicKeyish | null;
-  allocationPositionAddress?: PublicKeyish | null;
-  poolAssetMint?: PublicKeyish | null;
-  programId?: PublicKeyish;
-}): Transaction {
+export function buildSettleObligationTx(
+  params: {
+    authority: PublicKeyish;
+    healthPlanAddress: PublicKeyish;
+    reserveDomainAddress: PublicKeyish;
+    fundingLineAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    obligationAddress: PublicKeyish;
+    recentBlockhash: string;
+    nextStatus: number;
+    amount: bigint;
+    settlementReasonHashHex?: string | null;
+    claimCaseAddress?: PublicKeyish | null;
+    policySeriesAddress?: PublicKeyish | null;
+    capitalClassAddress?: PublicKeyish | null;
+    allocationPositionAddress?: PublicKeyish | null;
+    poolAssetMint?: PublicKeyish | null;
+    programId?: PublicKeyish;
+  } & SettlementOutflowAccounts,
+): Transaction {
   return buildObligationFlowTx({
     ...params,
     instructionName: 'settle_obligation',
@@ -3300,6 +3963,78 @@ export function createSafeProtocolClient(
     unsafeAllowCustomProgramId: options?.unsafeAllowCustomProgramId,
   });
 
+  const preflightDomainVaultInflow = async (params: {
+    authority: PublicKeyish;
+    reserveDomainAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    sourceTokenAccountAddress: PublicKeyish;
+    vaultTokenAccountAddress?: PublicKeyish | null;
+    sourceLabel: string;
+  }): Promise<void> => {
+    const assetMint = toPublicKey(params.assetMint);
+    const vaultTokenAccount = domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    });
+    const domainAssetVault = domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: params.sourceTokenAccountAddress,
+      mintAddress: assetMint,
+      ownerAddress: params.authority,
+      label: params.sourceLabel,
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: vaultTokenAccount,
+      mintAddress: assetMint,
+      ownerAddress: domainAssetVault,
+      label: 'domain vault token account',
+    });
+  };
+
+  const preflightDomainVaultOutflow = async (params: {
+    reserveDomainAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    recipientTokenAccountAddress: PublicKeyish;
+    vaultTokenAccountAddress?: PublicKeyish | null;
+    recipientOwnerAddress?: PublicKeyish | null;
+    recipientLabel?: string;
+  }): Promise<void> => {
+    const assetMint = toPublicKey(params.assetMint);
+    const vaultTokenAccount = domainVaultTokenAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+      programId,
+    });
+    const domainAssetVault = domainVaultAddress({
+      reserveDomainAddress: params.reserveDomainAddress,
+      assetMint,
+      programId,
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: vaultTokenAccount,
+      mintAddress: assetMint,
+      ownerAddress: domainAssetVault,
+      label: 'domain vault token account',
+    });
+    await preflightClassicTokenAccount({
+      connection,
+      tokenAccountAddress: params.recipientTokenAccountAddress,
+      mintAddress: assetMint,
+      ownerAddress: params.recipientOwnerAddress,
+      label: params.recipientLabel ?? 'recipient token account',
+    });
+  };
+
   return {
     connection,
     programId,
@@ -3336,6 +4071,141 @@ export function createSafeProtocolClient(
         label: 'domain vault token account',
       });
       return buildDepositCommitmentTx({ ...params, programId });
+    },
+    async buildFundSponsorBudgetTx(
+      params: Omit<Parameters<typeof buildFundSponsorBudgetTx>[0], 'programId'>,
+    ): Promise<Transaction> {
+      await preflightDomainVaultInflow({
+        authority: params.authority,
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        sourceTokenAccountAddress: params.sourceTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        sourceLabel: 'sponsor funding source token account',
+      });
+      return buildFundSponsorBudgetTx({ ...params, programId });
+    },
+    async buildRecordPremiumPaymentTx(
+      params: Omit<
+        Parameters<typeof buildRecordPremiumPaymentTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultInflow({
+        authority: params.authority,
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        sourceTokenAccountAddress: params.sourceTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        sourceLabel: 'premium source token account',
+      });
+      return buildRecordPremiumPaymentTx({ ...params, programId });
+    },
+    async buildDepositIntoCapitalClassTx(
+      params: Omit<
+        Parameters<typeof buildDepositIntoCapitalClassTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultInflow({
+        authority: params.owner,
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        sourceTokenAccountAddress: params.sourceTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        sourceLabel: 'LP deposit source token account',
+      });
+      return buildDepositIntoCapitalClassTx({ ...params, programId });
+    },
+    buildRequestRedemptionTx(
+      params: Omit<Parameters<typeof buildRequestRedemptionTx>[0], 'programId'>,
+    ): Transaction {
+      return buildRequestRedemptionTx({ ...params, programId });
+    },
+    async buildProcessRedemptionQueueTx(
+      params: Omit<
+        Parameters<typeof buildProcessRedemptionQueueTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientOwnerAddress: params.lpOwnerAddress,
+        recipientLabel: 'LP redemption recipient token account',
+      });
+      return buildProcessRedemptionQueueTx({ ...params, programId });
+    },
+    async buildWithdrawProtocolFeeSplTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawProtocolFeeSplTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientLabel: 'protocol fee recipient token account',
+      });
+      return buildWithdrawProtocolFeeSplTx({ ...params, programId });
+    },
+    async buildWithdrawPoolTreasurySplTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolTreasurySplTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientLabel: 'pool treasury recipient token account',
+      });
+      return buildWithdrawPoolTreasurySplTx({ ...params, programId });
+    },
+    async buildWithdrawPoolOracleFeeSplTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolOracleFeeSplTx>[0],
+        'programId'
+      >,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientLabel: 'pool oracle fee recipient token account',
+      });
+      return buildWithdrawPoolOracleFeeSplTx({ ...params, programId });
+    },
+    buildWithdrawProtocolFeeSolTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawProtocolFeeSolTx>[0],
+        'programId'
+      >,
+    ): Transaction {
+      return buildWithdrawProtocolFeeSolTx({ ...params, programId });
+    },
+    buildWithdrawPoolTreasurySolTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolTreasurySolTx>[0],
+        'programId'
+      >,
+    ): Transaction {
+      return buildWithdrawPoolTreasurySolTx({ ...params, programId });
+    },
+    buildWithdrawPoolOracleFeeSolTx(
+      params: Omit<
+        Parameters<typeof buildWithdrawPoolOracleFeeSolTx>[0],
+        'programId'
+      >,
+    ): Transaction {
+      return buildWithdrawPoolOracleFeeSolTx({ ...params, programId });
     },
     buildOpenClaimCaseTx(
       params: Omit<Parameters<typeof buildOpenClaimCaseTx>[0], 'programId'>,

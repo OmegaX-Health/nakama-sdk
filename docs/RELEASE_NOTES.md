@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Fixed the public settle-obligation builder type so settlement outflow accounts
+  are required on `buildSettleObligationTx(...)`, not reserve-only builders.
+- Expanded `createSafeProtocolClient(...)` across sponsor funding, premium
+  payment, LP deposit/redemption, redemption queue processing, and
+  fee/treasury/oracle-fee withdrawal flows.
+- Added `verifyProtocolOracleAttestation(...)` for settlement-grade oracle
+  evidence checks covering signature, expiry, expected protocol context,
+  audience, nonce, and scoped pool accounts.
+- Expanded claim-intent replay coverage for tampered signatures, wrong signers,
+  malformed base64, v0 transactions, lookup-table mutation, missing fee payer,
+  and blockhash-only refresh.
+- Pinned gitleaks installation in CI/release secret scans and made CI fail
+  closed if the scanner cannot run.
+
 ## `0.8.5`
 
 - Refreshed generated IDL, contract, and type bindings against the local `omegax-protocol` surface at commit `2326371`, covering 67 instructions, 35 accounts, and 134 types.

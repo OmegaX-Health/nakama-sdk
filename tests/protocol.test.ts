@@ -16,7 +16,9 @@ import {
   buildCreateDomainAssetVaultTx,
   buildCreateObligationTx,
   buildCreatePolicySeriesTx,
+  buildDepositIntoCapitalClassTx,
   buildDepositCommitmentTx,
+  buildFundSponsorBudgetTx,
   buildInitializeSeriesReserveLedgerTx,
   buildMarkImpairmentTx,
   buildOpenClaimCaseTx,
@@ -28,8 +30,17 @@ import {
   buildRegisterOracleTx,
   buildReserveObligationTx,
   buildRefundCommitmentTx,
+  buildRequestRedemptionTx,
+  buildProcessRedemptionQueueTx,
+  buildRecordPremiumPaymentTx,
   buildSettleObligationTx,
   buildUpdateLpPositionCredentialingTx,
+  buildWithdrawPoolOracleFeeSplTx,
+  buildWithdrawPoolOracleFeeSolTx,
+  buildWithdrawPoolTreasurySplTx,
+  buildWithdrawPoolTreasurySolTx,
+  buildWithdrawProtocolFeeSplTx,
+  buildWithdrawProtocolFeeSolTx,
   CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE,
   CLAIM_INTAKE_APPROVED,
   CAPITAL_CLASS_RESTRICTION_WRAPPER_ONLY,
@@ -51,6 +62,7 @@ import {
   buildMemberReadModel,
   buildSponsorReadModel,
   createProtocolClient,
+  createSafeProtocolClient,
   decodeProtocolAccount,
   deriveClaimCasePda,
   deriveCommitmentCampaignPda,
@@ -611,6 +623,248 @@ test('convenience builders fail closed on privileged and partial account scopes'
       } as Parameters<typeof buildSettleObligationTx>[0]),
     /settle_obligation requires memberPositionAddress/,
   );
+});
+
+test('money-moving safe builders derive custody and fee vault accounts', () => {
+  const authority = Keypair.generate().publicKey;
+  const reserveDomainAddress = Keypair.generate().publicKey;
+  const healthPlanAddress = Keypair.generate().publicKey;
+  const fundingLineAddress = Keypair.generate().publicKey;
+  const assetMint = Keypair.generate().publicKey;
+  const liquidityPoolAddress = Keypair.generate().publicKey;
+  const capitalClassAddress = Keypair.generate().publicKey;
+  const sourceTokenAccountAddress = Keypair.generate().publicKey;
+  const recipientTokenAccountAddress = Keypair.generate().publicKey;
+  const oracleAddress = Keypair.generate().publicKey;
+  const recentBlockhash = '11111111111111111111111111111111';
+
+  const sponsorTx = buildFundSponsorBudgetTx({
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    fundingLineAddress,
+    assetMint,
+    sourceTokenAccountAddress,
+    recentBlockhash,
+    amount: 1n,
+  });
+  let keys = sponsorTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[3]?.pubkey.toBase58(),
+    deriveDomainAssetVaultPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+    }).toBase58(),
+  );
+  assert.equal(
+    keys[4]?.pubkey.toBase58(),
+    deriveDomainAssetLedgerPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+    }).toBase58(),
+  );
+  assert.equal(
+    keys[11]?.pubkey.toBase58(),
+    deriveDomainAssetVaultTokenAccountPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  const premiumTx = buildRecordPremiumPaymentTx({
+    authority,
+    healthPlanAddress,
+    reserveDomainAddress,
+    fundingLineAddress,
+    assetMint,
+    sourceTokenAccountAddress,
+    recentBlockhash,
+    amount: 1n,
+  });
+  keys = premiumTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[9]?.pubkey.toBase58(),
+    deriveProtocolFeeVaultPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  const lpDepositTx = buildDepositIntoCapitalClassTx({
+    owner: authority,
+    reserveDomainAddress,
+    liquidityPoolAddress,
+    capitalClassAddress,
+    assetMint,
+    sourceTokenAccountAddress,
+    recentBlockhash,
+    amount: 1n,
+    shares: 1n,
+  });
+  keys = lpDepositTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[6]?.pubkey.toBase58(),
+    derivePoolClassLedgerPda({
+      capitalClass: capitalClassAddress,
+      assetMint,
+    }).toBase58(),
+  );
+  assert.equal(
+    keys[7]?.pubkey.toBase58(),
+    deriveLpPositionPda({
+      capitalClass: capitalClassAddress,
+      owner: authority,
+    }).toBase58(),
+  );
+  assert.equal(
+    keys[8]?.pubkey.toBase58(),
+    derivePoolTreasuryVaultPda({
+      liquidityPool: liquidityPoolAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  const requestTx = buildRequestRedemptionTx({
+    owner: authority,
+    reserveDomainAddress,
+    liquidityPoolAddress,
+    capitalClassAddress,
+    assetMint,
+    recentBlockhash,
+    shares: 1n,
+  });
+  keys = requestTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[6]?.pubkey.toBase58(),
+    deriveLpPositionPda({
+      capitalClass: capitalClassAddress,
+      owner: authority,
+    }).toBase58(),
+  );
+
+  const processTx = buildProcessRedemptionQueueTx({
+    authority,
+    reserveDomainAddress,
+    liquidityPoolAddress,
+    capitalClassAddress,
+    lpOwnerAddress: authority,
+    assetMint,
+    recipientTokenAccountAddress,
+    recentBlockhash,
+    shares: 1n,
+  });
+  keys = processTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[8]?.pubkey.toBase58(),
+    derivePoolTreasuryVaultPda({
+      liquidityPool: liquidityPoolAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  const protocolFeeTx = buildWithdrawProtocolFeeSplTx({
+    authority,
+    reserveDomainAddress,
+    assetMint,
+    recipientTokenAccountAddress,
+    recentBlockhash,
+    amount: 1n,
+  });
+  keys = protocolFeeTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[3]?.pubkey.toBase58(),
+    deriveProtocolFeeVaultPda({
+      reserveDomain: reserveDomainAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  const poolTreasuryTx = buildWithdrawPoolTreasurySplTx({
+    authority,
+    reserveDomainAddress,
+    liquidityPoolAddress,
+    assetMint,
+    recipientTokenAccountAddress,
+    recentBlockhash,
+    amount: 1n,
+  });
+  keys = poolTreasuryTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[3]?.pubkey.toBase58(),
+    derivePoolTreasuryVaultPda({
+      liquidityPool: liquidityPoolAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  const oracleFeeTx = buildWithdrawPoolOracleFeeSplTx({
+    authority,
+    reserveDomainAddress,
+    liquidityPoolAddress,
+    oracleAddress,
+    assetMint,
+    recipientTokenAccountAddress,
+    recentBlockhash,
+    amount: 1n,
+  });
+  keys = oracleFeeTx.instructions[0]?.keys ?? [];
+  assert.equal(
+    keys[4]?.pubkey.toBase58(),
+    derivePoolOracleFeeVaultPda({
+      liquidityPool: liquidityPoolAddress,
+      oracle: oracleAddress,
+      assetMint,
+    }).toBase58(),
+  );
+
+  assert.equal(
+    buildWithdrawProtocolFeeSolTx({
+      authority,
+      reserveDomainAddress,
+      recipient: authority,
+      recentBlockhash,
+      amount: 1n,
+    }).instructions.length,
+    1,
+  );
+  assert.equal(
+    buildWithdrawPoolTreasurySolTx({
+      authority,
+      liquidityPoolAddress,
+      recipient: authority,
+      recentBlockhash,
+      amount: 1n,
+    }).instructions.length,
+    1,
+  );
+  assert.equal(
+    buildWithdrawPoolOracleFeeSolTx({
+      authority,
+      liquidityPoolAddress,
+      oracleAddress,
+      recipient: authority,
+      recentBlockhash,
+      amount: 1n,
+    }).instructions.length,
+    1,
+  );
+});
+
+test('safe client exposes guarded wrappers for canonical money-moving flows', () => {
+  const safe = createSafeProtocolClient(
+    createAccountReaderConnectionStub(new Map(), getProgramId()),
+  );
+  assert.equal(typeof safe.buildFundSponsorBudgetTx, 'function');
+  assert.equal(typeof safe.buildRecordPremiumPaymentTx, 'function');
+  assert.equal(typeof safe.buildDepositIntoCapitalClassTx, 'function');
+  assert.equal(typeof safe.buildRequestRedemptionTx, 'function');
+  assert.equal(typeof safe.buildProcessRedemptionQueueTx, 'function');
+  assert.equal(typeof safe.buildWithdrawProtocolFeeSplTx, 'function');
+  assert.equal(typeof safe.buildWithdrawProtocolFeeSolTx, 'function');
+  assert.equal(typeof safe.buildWithdrawPoolTreasurySplTx, 'function');
+  assert.equal(typeof safe.buildWithdrawPoolTreasurySolTx, 'function');
+  assert.equal(typeof safe.buildWithdrawPoolOracleFeeSplTx, 'function');
+  assert.equal(typeof safe.buildWithdrawPoolOracleFeeSolTx, 'function');
 });
 
 test('buildOpenMemberPositionTx keeps invite authority as an optional signer', () => {

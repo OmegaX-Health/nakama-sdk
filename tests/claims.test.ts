@@ -1,10 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  AddressLookupTableAccount,
   Keypair,
   type PublicKey,
   SystemProgram,
   Transaction,
+  TransactionMessage,
+  VersionedTransaction,
 } from '@solana/web3.js';
 
 import {
@@ -14,6 +17,7 @@ import {
   describeObligationStatus,
   normalizeClaimRpcFailure,
   normalizeClaimSimulationFailure,
+  serializeSolanaTransactionBase64,
   validateSignedClaimTx,
 } from '../src/index.js';
 
@@ -219,4 +223,117 @@ test('validateSignedClaimTx allows blockhash-only refresh unless exact mode is r
   });
   assert.equal(exact.valid, false);
   assert.equal(exact.reason, 'intent_message_mismatch');
+});
+
+test('validateSignedClaimTx rejects tampered signatures, wrong signer, and malformed input', () => {
+  const payer = Keypair.generate();
+  const recipient = Keypair.generate().publicKey;
+  const unsignedTx = buildTransferTransaction({
+    payer,
+    recipient,
+    lamports: 1,
+  });
+  const signedTx = buildTransferTransaction({ payer, recipient, lamports: 1 });
+  signedTx.sign(payer);
+  const signature = signedTx.signatures[0]?.signature;
+  assert(signature);
+  signature[0] = (signature[0] ?? 0) ^ 1;
+
+  const tampered = validateSignedClaimTx({
+    signedTxBase64: serializeTransactionBase64(signedTx),
+    expectedUnsignedTxBase64: serializeTransactionBase64(unsignedTx),
+    requiredSigner: payer.publicKey.toBase58(),
+  });
+  assert.equal(tampered.valid, false);
+  assert.equal(tampered.reason, 'invalid_required_signature');
+
+  const wrongSigner = validateSignedClaimTx({
+    signedTxBase64: serializeTransactionBase64(unsignedTx),
+    expectedUnsignedTxBase64: serializeTransactionBase64(unsignedTx),
+    requiredSigner: Keypair.generate().publicKey.toBase58(),
+  });
+  assert.equal(wrongSigner.valid, false);
+  assert.equal(wrongSigner.reason, 'required_signer_mismatch');
+
+  const malformed = validateSignedClaimTx({
+    signedTxBase64: 'not-base64',
+    expectedUnsignedTxBase64: serializeTransactionBase64(unsignedTx),
+    requiredSigner: payer.publicKey.toBase58(),
+  });
+  assert.equal(malformed.valid, false);
+  assert.equal(malformed.reason, 'invalid_transaction_base64');
+});
+
+test('validateSignedClaimTx handles v0 lookup table intents and detects lookup mutation', () => {
+  const payer = Keypair.generate();
+  const recipient = Keypair.generate().publicKey;
+  const lookupTable = new AddressLookupTableAccount({
+    key: Keypair.generate().publicKey,
+    state: {
+      deactivationSlot: BigInt('18446744073709551615'),
+      lastExtendedSlot: 1,
+      lastExtendedSlotStartIndex: 0,
+      authority: null,
+      addresses: [recipient],
+    },
+  });
+  const buildV0 = (recentBlockhash: string, table = lookupTable) => {
+    const message = new TransactionMessage({
+      payerKey: payer.publicKey,
+      recentBlockhash,
+      instructions: [
+        SystemProgram.transfer({
+          fromPubkey: payer.publicKey,
+          toPubkey: recipient,
+          lamports: 1,
+        }),
+      ],
+    }).compileToV0Message([table]);
+    return new VersionedTransaction(message);
+  };
+
+  const expectedUnsignedTx = buildV0(RECENT_BLOCKHASH);
+  const refreshedTx = buildV0(Keypair.generate().publicKey.toBase58());
+  refreshedTx.sign([payer]);
+
+  const refreshed = validateSignedClaimTx({
+    signedTxBase64: serializeSolanaTransactionBase64(refreshedTx),
+    expectedUnsignedTxBase64:
+      serializeSolanaTransactionBase64(expectedUnsignedTx),
+    requiredSigner: payer.publicKey.toBase58(),
+  });
+  assert.equal(refreshed.valid, true);
+
+  const changedLookupTable = new AddressLookupTableAccount({
+    key: Keypair.generate().publicKey,
+    state: {
+      ...lookupTable.state,
+      addresses: [recipient],
+    },
+  });
+  const mutatedExpected = validateSignedClaimTx({
+    signedTxBase64: serializeSolanaTransactionBase64(refreshedTx),
+    expectedUnsignedTxBase64: serializeSolanaTransactionBase64(
+      buildV0(RECENT_BLOCKHASH, changedLookupTable),
+    ),
+    requiredSigner: payer.publicKey.toBase58(),
+  });
+  assert.equal(mutatedExpected.valid, false);
+  assert.equal(mutatedExpected.reason, 'intent_message_mismatch');
+});
+
+test('validateSignedClaimTx rejects transactions with no required signer', () => {
+  const signerlessV0 = Buffer.concat([
+    Buffer.from([0, 0x80, 0, 0, 0, 0]),
+    Buffer.alloc(32),
+    Buffer.from([0, 0]),
+  ]).toString('base64');
+
+  const result = validateSignedClaimTx({
+    signedTxBase64: signerlessV0,
+    expectedUnsignedTxBase64: signerlessV0,
+    requiredSigner: Keypair.generate().publicKey.toBase58(),
+  });
+  assert.equal(result.valid, false);
+  assert.equal(result.reason, 'missing_fee_payer');
 });

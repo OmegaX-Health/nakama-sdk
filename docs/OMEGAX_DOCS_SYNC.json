@@ -7,27 +7,27 @@
   "pages": [
     {
       "sdkDoc": "README.md",
-      "sdkDocSha256": "f773eefdaa1dc314d7eb5071a9ddfd1784ce5d74d3415eba293c731cbab147ae",
+      "sdkDocSha256": "dbd2dcfb7922bea6df0e9b51767a14ba46f05cc2b0608124b541e8bea46a7fc6",
       "omegaxDocsPath": "website/docs/sdk/overview.md"
     },
     {
       "sdkDoc": "docs/GETTING_STARTED.md",
-      "sdkDocSha256": "e3b3eb07670b373d585fded0c5e05cdde67dcb9bcbb56d7595ee60084d8dd898",
+      "sdkDocSha256": "c73d221f014dd9958d39924bac4c055d3edb925b5367502a63c709d07116ea72",
       "omegaxDocsPath": "website/docs/sdk/getting-started.md"
     },
     {
       "sdkDoc": "docs/WORKFLOWS.md",
-      "sdkDocSha256": "d8e0218ef734272bad8ec0381ecf0cc90f1aeb9a53742cde3cc3e22aff2cc918",
+      "sdkDocSha256": "375ef0c006396926ca6a0111e8719da7465432c08aad6b882cd0d5d8dc85e227",
       "omegaxDocsPath": "website/docs/sdk/workflows.md"
     },
     {
       "sdkDoc": "docs/API_REFERENCE.md",
-      "sdkDocSha256": "cf907e90edf8fbb60770d29906ec84b47e474cedda7cb71cea04b6cd835da071",
+      "sdkDocSha256": "b7ed7c5e9845b5ae0f2aa76d019471f7fb67e6b66ce8aad65bf1a1a14da9d368",
       "omegaxDocsPath": "website/docs/sdk/api-reference.md"
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
-      "sdkDocSha256": "ce504135d287b424fcc8450a3e209e770082bbace39bd4152066ff759aaf3652",
+      "sdkDocSha256": "657c83da970371eb0fc0c48485bdc9d814e68b42a3905a83160027186f083c53",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {

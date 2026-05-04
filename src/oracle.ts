@@ -1,5 +1,6 @@
 import bs58 from 'bs58';
 import nacl from 'tweetnacl';
+import { PublicKey } from '@solana/web3.js';
 
 import {
   assertCanonicalJsonValue,
@@ -16,6 +17,7 @@ import type {
   ProtocolBoundAttestationContext,
   ProtocolBoundOutcomeAttestation,
 } from './types.js';
+import type { PublicKeyish } from './generated/protocol_types.js';
 
 export type AttestOutcomeParams = {
   userId: string;
@@ -51,6 +53,24 @@ export type AttestProtocolOutcomeParams = {
 export type AttestProtocolOutcomeResult = {
   attestation: ProtocolBoundOutcomeAttestation;
   txSignature: string | null;
+};
+
+export type VerifyProtocolOracleAttestationParams = {
+  nowIso?: string | Date;
+  expectedNetwork: string;
+  expectedProgramId: PublicKeyish;
+  expectedHealthPlan: PublicKeyish;
+  expectedFundingLine: PublicKeyish;
+  expectedClaimCase: PublicKeyish;
+  expectedAudience: string;
+  expectedNonce?: string;
+  expectedPolicySeries?: PublicKeyish | null;
+  expectedLiquidityPool?: PublicKeyish | null;
+  expectedCapitalClass?: PublicKeyish | null;
+  expectedAllocationPosition?: PublicKeyish | null;
+  expectedPoolOracleApproval?: PublicKeyish | null;
+  expectedPoolOraclePermissionSet?: PublicKeyish | null;
+  expectedPoolOraclePolicy?: PublicKeyish | null;
 };
 
 export function createOracleSignerFromEnv(params?: {
@@ -124,17 +144,38 @@ function normalizeProtocolContext(
 ): ProtocolBoundAttestationContext {
   const normalized: ProtocolBoundAttestationContext = {
     network: context.network.trim(),
-    programId: context.programId.trim(),
-    healthPlan: context.healthPlan.trim(),
-    fundingLine: context.fundingLine.trim(),
-    claimCase: context.claimCase.trim(),
-    policySeries: context.policySeries?.trim() || null,
-    liquidityPool: context.liquidityPool?.trim() || null,
-    capitalClass: context.capitalClass?.trim() || null,
-    allocationPosition: context.allocationPosition?.trim() || null,
-    poolOracleApproval: context.poolOracleApproval?.trim() || null,
-    poolOraclePermissionSet: context.poolOraclePermissionSet?.trim() || null,
-    poolOraclePolicy: context.poolOraclePolicy?.trim() || null,
+    programId: normalizePubkeyString(context.programId, 'programId'),
+    healthPlan: normalizePubkeyString(context.healthPlan, 'healthPlan'),
+    fundingLine: normalizePubkeyString(context.fundingLine, 'fundingLine'),
+    claimCase: normalizePubkeyString(context.claimCase, 'claimCase'),
+    policySeries: normalizeOptionalPubkeyString(
+      context.policySeries,
+      'policySeries',
+    ),
+    liquidityPool: normalizeOptionalPubkeyString(
+      context.liquidityPool,
+      'liquidityPool',
+    ),
+    capitalClass: normalizeOptionalPubkeyString(
+      context.capitalClass,
+      'capitalClass',
+    ),
+    allocationPosition: normalizeOptionalPubkeyString(
+      context.allocationPosition,
+      'allocationPosition',
+    ),
+    poolOracleApproval: normalizeOptionalPubkeyString(
+      context.poolOracleApproval,
+      'poolOracleApproval',
+    ),
+    poolOraclePermissionSet: normalizeOptionalPubkeyString(
+      context.poolOraclePermissionSet,
+      'poolOraclePermissionSet',
+    ),
+    poolOraclePolicy: normalizeOptionalPubkeyString(
+      context.poolOraclePolicy,
+      'poolOraclePolicy',
+    ),
     schemaKeyHashHex: context.schemaKeyHashHex.trim().toLowerCase(),
     audience: context.audience.trim(),
     nonce: context.nonce.trim(),
@@ -162,6 +203,26 @@ function normalizeProtocolContext(
   return normalized;
 }
 
+function normalizePubkeyString(value: PublicKeyish, label: string): string {
+  try {
+    return new PublicKey(value).toBase58();
+  } catch {
+    throw new Error(
+      `protocol attestation context ${label} must be a valid Solana public key`,
+    );
+  }
+}
+
+function normalizeOptionalPubkeyString(
+  value: PublicKeyish | null | undefined,
+  label: string,
+): string | null {
+  if (value === null || value === undefined || String(value).trim() === '') {
+    return null;
+  }
+  return normalizePubkeyString(value, label);
+}
+
 function assertPoolScopeIsComplete(
   context: ProtocolBoundAttestationContext,
 ): void {
@@ -177,6 +238,26 @@ function assertPoolScopeIsComplete(
   if (present > 0 && present !== values.length) {
     throw new Error(
       'protocol attestation pool scope must include liquidity pool, capital class, allocation position, oracle approval, permission set, and policy together',
+    );
+  }
+}
+
+function assertNoJsonNumbers(value: unknown, label: string): void {
+  if (value === null) return;
+  if (typeof value === 'number') {
+    throw new Error(
+      `${label} must encode settlement numbers as strings, not JSON numbers`,
+    );
+  }
+  if (Array.isArray(value)) {
+    value.forEach((entry, index) =>
+      assertNoJsonNumbers(entry, `${label}[${index}]`),
+    );
+    return;
+  }
+  if (typeof value === 'object') {
+    Object.entries(value as Record<string, unknown>).forEach(([key, entry]) =>
+      assertNoJsonNumbers(entry, `${label}.${key}`),
     );
   }
 }
@@ -250,6 +331,105 @@ export function verifyOracleAttestation(
   }
 }
 
+function parseTimeMillis(value: string | Date | undefined): number {
+  const parsed =
+    value instanceof Date ? value.getTime() : Date.parse(value ?? '');
+  return Number.isFinite(parsed) ? parsed : Date.now();
+}
+
+function contextEqualsPubkey(
+  actual: string | null | undefined,
+  expected: PublicKeyish | null | undefined,
+  label: string,
+): boolean {
+  if (expected === undefined) return true;
+  if (expected === null) return actual === null || actual === undefined;
+  return actual === normalizePubkeyString(expected, label);
+}
+
+export function verifyProtocolOracleAttestation(
+  attestation: ProtocolBoundOutcomeAttestation,
+  params: VerifyProtocolOracleAttestationParams,
+): boolean {
+  try {
+    if (!verifyOracleAttestation(attestation)) return false;
+    const context = attestation.context;
+    const nowMillis = parseTimeMillis(params.nowIso);
+    if (Date.parse(context.expiresAtIso) <= nowMillis) return false;
+    if (context.network !== params.expectedNetwork.trim()) return false;
+    if (
+      context.programId !==
+      normalizePubkeyString(params.expectedProgramId, 'programId')
+    ) {
+      return false;
+    }
+    if (
+      context.healthPlan !==
+      normalizePubkeyString(params.expectedHealthPlan, 'healthPlan')
+    ) {
+      return false;
+    }
+    if (
+      context.fundingLine !==
+      normalizePubkeyString(params.expectedFundingLine, 'fundingLine')
+    ) {
+      return false;
+    }
+    if (
+      context.claimCase !==
+      normalizePubkeyString(params.expectedClaimCase, 'claimCase')
+    ) {
+      return false;
+    }
+    if (context.audience !== params.expectedAudience.trim()) return false;
+    if (
+      params.expectedNonce !== undefined &&
+      context.nonce !== params.expectedNonce.trim()
+    ) {
+      return false;
+    }
+    return (
+      contextEqualsPubkey(
+        context.policySeries,
+        params.expectedPolicySeries,
+        'policySeries',
+      ) &&
+      contextEqualsPubkey(
+        context.liquidityPool,
+        params.expectedLiquidityPool,
+        'liquidityPool',
+      ) &&
+      contextEqualsPubkey(
+        context.capitalClass,
+        params.expectedCapitalClass,
+        'capitalClass',
+      ) &&
+      contextEqualsPubkey(
+        context.allocationPosition,
+        params.expectedAllocationPosition,
+        'allocationPosition',
+      ) &&
+      contextEqualsPubkey(
+        context.poolOracleApproval,
+        params.expectedPoolOracleApproval,
+        'poolOracleApproval',
+      ) &&
+      contextEqualsPubkey(
+        context.poolOraclePermissionSet,
+        params.expectedPoolOraclePermissionSet,
+        'poolOraclePermissionSet',
+      ) &&
+      contextEqualsPubkey(
+        context.poolOraclePolicy,
+        params.expectedPoolOraclePolicy,
+        'poolOraclePolicy',
+      )
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function attestOutcome(
   params: AttestOutcomeParams,
 ): Promise<AttestOutcomeResult> {
@@ -296,6 +476,7 @@ export async function attestProtocolOutcome(
   const issuedAtIso = nowIso();
   const context = normalizeProtocolContext(params.context, issuedAtIso);
   assertPoolScopeIsComplete(context);
+  assertNoJsonNumbers(params.payload, 'protocol attestation payload');
   const body = {
     ...canonicalAttestationBody({
       id,
