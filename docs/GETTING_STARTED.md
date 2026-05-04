@@ -95,7 +95,8 @@ if (!simulation.signatureVerified) {
 
 Simulation is preflight feedback, not authentication. Claim and intake services
 that accept user-submitted transactions should call `validateSignedClaimTx(...)`
-before trusting the signer or intent.
+with the exact `expectedUnsignedTxBase64` intent before trusting the signer or
+intent.
 
 ## Path A: Oracle and event producers
 

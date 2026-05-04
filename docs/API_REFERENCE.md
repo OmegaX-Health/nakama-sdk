@@ -391,6 +391,10 @@ Available from the root package and `@omegax/protocol-sdk/claims`.
 
 - `normalizeClaimSimulationFailure(...)`
 - `normalizeClaimRpcFailure(...)`
+- `validateSignedClaimTx(...)`
+
+`validateSignedClaimTx(...)` requires `expectedUnsignedTxBase64` and fails closed
+when the signed transaction does not match that intent.
 
 The claims module also re-exports:
 
