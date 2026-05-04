@@ -3,7 +3,6 @@
 import { readFile } from 'node:fs/promises';
 
 const allowedInstallScriptPackages = new Set([
-  'node_modules/bigint-buffer',
   'node_modules/bufferutil',
   'node_modules/esbuild',
   'node_modules/fsevents',

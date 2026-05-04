@@ -1957,6 +1957,9 @@ export interface SettleObligationAccounts {
   vault_token_account?: PublicKeyish;
   recipient_token_account?: PublicKeyish;
   token_program?: PublicKeyish;
+  pool_oracle_fee_vault?: PublicKeyish;
+  pool_oracle_policy?: PublicKeyish;
+  oracle_fee_attestation?: PublicKeyish;
 }
 
 export interface UpdateAllocationCapsAccounts {

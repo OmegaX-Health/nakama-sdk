@@ -9,16 +9,7 @@ const severityRank = new Map([
   ['critical', 4],
 ]);
 const minimumSeverity = severityRank.get('moderate');
-const allowedAdvisories = new Map([
-  [
-    'GHSA-w5hq-g745-h8pq',
-    'uuid v3/v5/v6 buffer-bound advisory through @solana/web3.js; npm reports no fix available for the current Solana dependency chain.',
-  ],
-  [
-    '1116970',
-    'uuid v3/v5/v6 buffer-bound advisory through @solana/web3.js; npm reports no fix available for the current Solana dependency chain.',
-  ],
-]);
+const allowedAdvisories = new Map();
 
 const audit = spawnSync('npm', ['audit', '--omit=dev', '--json'], {
   encoding: 'utf8',

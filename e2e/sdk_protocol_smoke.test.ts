@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Keypair } from '@solana/web3.js';
 import {
-  TOKEN_PROGRAM_ID,
-  createAccount,
-  createMint,
-  mintTo,
-} from '@solana/spl-token';
+  Keypair,
+  PublicKey,
+  SYSVAR_RENT_PUBKEY,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+  sendAndConfirmTransaction,
+} from '@solana/web3.js';
 
 import {
   CAPITAL_CLASS_RESTRICTION_OPEN,
@@ -43,6 +45,12 @@ import {
   recomputeReserveBalanceSheet,
   type ProtocolClient,
 } from '../src/index.js';
+
+const TOKEN_PROGRAM_ID = new PublicKey(
+  'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+);
+const MINT_ACCOUNT_SIZE = 82;
+const TOKEN_ACCOUNT_SIZE = 165;
 
 function requiredEnv(name: string): string {
   const value = process.env[name]?.trim();
@@ -132,6 +140,175 @@ function signToBase64(
   ).toString('base64');
 }
 
+function coptionPublicKeyBytes(value: PublicKey | null): Buffer {
+  if (!value) return Buffer.from([0]);
+  return Buffer.concat([Buffer.from([1]), Buffer.from(value.toBytes())]);
+}
+
+function u64Bytes(value: bigint): Buffer {
+  const data = Buffer.alloc(8);
+  data.writeBigUInt64LE(value);
+  return data;
+}
+
+function createInitializeMintInstruction(params: {
+  mint: PublicKey;
+  decimals: number;
+  mintAuthority: PublicKey;
+  freezeAuthority: PublicKey | null;
+}): TransactionInstruction {
+  return new TransactionInstruction({
+    programId: TOKEN_PROGRAM_ID,
+    keys: [
+      { pubkey: params.mint, isSigner: false, isWritable: true },
+      { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
+    ],
+    data: Buffer.concat([
+      Buffer.from([0, params.decimals]),
+      Buffer.from(params.mintAuthority.toBytes()),
+      coptionPublicKeyBytes(params.freezeAuthority),
+    ]),
+  });
+}
+
+function createInitializeAccountInstruction(params: {
+  account: PublicKey;
+  mint: PublicKey;
+  owner: PublicKey;
+}): TransactionInstruction {
+  return new TransactionInstruction({
+    programId: TOKEN_PROGRAM_ID,
+    keys: [
+      { pubkey: params.account, isSigner: false, isWritable: true },
+      { pubkey: params.mint, isSigner: false, isWritable: false },
+      { pubkey: params.owner, isSigner: false, isWritable: false },
+      { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
+    ],
+    data: Buffer.from([1]),
+  });
+}
+
+function createMintToInstruction(params: {
+  mint: PublicKey;
+  destination: PublicKey;
+  authority: PublicKey;
+  amount: bigint;
+}): TransactionInstruction {
+  return new TransactionInstruction({
+    programId: TOKEN_PROGRAM_ID,
+    keys: [
+      { pubkey: params.mint, isSigner: false, isWritable: true },
+      { pubkey: params.destination, isSigner: false, isWritable: true },
+      { pubkey: params.authority, isSigner: true, isWritable: false },
+    ],
+    data: Buffer.concat([Buffer.from([7]), u64Bytes(params.amount)]),
+  });
+}
+
+async function sendTokenSetupTransaction(params: {
+  connection: ReturnType<typeof createConnection>;
+  payer: Keypair;
+  signers: Keypair[];
+  instructions: TransactionInstruction[];
+}) {
+  await sendAndConfirmTransaction(
+    params.connection,
+    new Transaction().add(...params.instructions),
+    [params.payer, ...params.signers],
+    { commitment: 'confirmed' },
+  );
+}
+
+async function createClassicMint(params: {
+  connection: ReturnType<typeof createConnection>;
+  payer: Keypair;
+  mintAuthority: PublicKey;
+  decimals: number;
+}): Promise<PublicKey> {
+  const mint = Keypair.generate();
+  const lamports =
+    await params.connection.getMinimumBalanceForRentExemption(
+      MINT_ACCOUNT_SIZE,
+    );
+  await sendTokenSetupTransaction({
+    connection: params.connection,
+    payer: params.payer,
+    signers: [mint],
+    instructions: [
+      SystemProgram.createAccount({
+        fromPubkey: params.payer.publicKey,
+        newAccountPubkey: mint.publicKey,
+        lamports,
+        space: MINT_ACCOUNT_SIZE,
+        programId: TOKEN_PROGRAM_ID,
+      }),
+      createInitializeMintInstruction({
+        mint: mint.publicKey,
+        decimals: params.decimals,
+        mintAuthority: params.mintAuthority,
+        freezeAuthority: null,
+      }),
+    ],
+  });
+  return mint.publicKey;
+}
+
+async function createClassicTokenAccount(params: {
+  connection: ReturnType<typeof createConnection>;
+  payer: Keypair;
+  mint: PublicKey;
+  owner: PublicKey;
+}): Promise<PublicKey> {
+  const account = Keypair.generate();
+  const lamports =
+    await params.connection.getMinimumBalanceForRentExemption(
+      TOKEN_ACCOUNT_SIZE,
+    );
+  await sendTokenSetupTransaction({
+    connection: params.connection,
+    payer: params.payer,
+    signers: [account],
+    instructions: [
+      SystemProgram.createAccount({
+        fromPubkey: params.payer.publicKey,
+        newAccountPubkey: account.publicKey,
+        lamports,
+        space: TOKEN_ACCOUNT_SIZE,
+        programId: TOKEN_PROGRAM_ID,
+      }),
+      createInitializeAccountInstruction({
+        account: account.publicKey,
+        mint: params.mint,
+        owner: params.owner,
+      }),
+    ],
+  });
+  return account.publicKey;
+}
+
+async function mintClassicTokens(params: {
+  connection: ReturnType<typeof createConnection>;
+  payer: Keypair;
+  mint: PublicKey;
+  destination: PublicKey;
+  authority: Keypair;
+  amount: bigint;
+}) {
+  await sendTokenSetupTransaction({
+    connection: params.connection,
+    payer: params.payer,
+    signers: [params.authority],
+    instructions: [
+      createMintToInstruction({
+        mint: params.mint,
+        destination: params.destination,
+        authority: params.authority.publicKey,
+        amount: params.amount,
+      }),
+    ],
+  });
+}
+
 async function simulateAndBroadcast(params: {
   label: string;
   rpc: ReturnType<typeof createRpcClient>;
@@ -210,13 +387,12 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     await airdrop(connection, member.publicKey, 5_000_000_000);
   }
 
-  const assetMintKey = await createMint(
+  const assetMintKey = await createClassicMint({
     connection,
-    admin,
-    admin.publicKey,
-    null,
-    6,
-  );
+    payer: admin,
+    mintAuthority: admin.publicKey,
+    decimals: 6,
+  });
   const reserveDomain = deriveReserveDomainPda({
     domainId: 'sdk-open-domain',
     programId,
@@ -231,36 +407,34 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     assetMint: assetMintKey,
     programId,
   });
-  const adminSourceTokenAccountKey = await createAccount(
+  const adminSourceTokenAccountKey = await createClassicTokenAccount({
     connection,
-    admin,
-    assetMintKey,
-    admin.publicKey,
-    Keypair.generate(),
-  );
-  const memberSourceTokenAccountKey = await createAccount(
+    payer: admin,
+    mint: assetMintKey,
+    owner: admin.publicKey,
+  });
+  const memberSourceTokenAccountKey = await createClassicTokenAccount({
     connection,
-    admin,
-    assetMintKey,
-    member.publicKey,
-    Keypair.generate(),
-  );
-  await mintTo(
+    payer: admin,
+    mint: assetMintKey,
+    owner: member.publicKey,
+  });
+  await mintClassicTokens({
     connection,
-    admin,
-    assetMintKey,
-    adminSourceTokenAccountKey,
-    admin,
-    500_000n,
-  );
-  await mintTo(
+    payer: admin,
+    mint: assetMintKey,
+    destination: adminSourceTokenAccountKey,
+    authority: admin,
+    amount: 500_000n,
+  });
+  await mintClassicTokens({
     connection,
-    admin,
-    assetMintKey,
-    memberSourceTokenAccountKey,
-    admin,
-    200_000n,
-  );
+    payer: admin,
+    mint: assetMintKey,
+    destination: memberSourceTokenAccountKey,
+    authority: admin,
+    amount: 200_000n,
+  });
 
   const assetMint = assetMintKey.toBase58();
   const vaultTokenAccount = vaultTokenAccountKey.toBase58();
