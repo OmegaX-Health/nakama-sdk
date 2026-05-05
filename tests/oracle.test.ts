@@ -70,9 +70,14 @@ function signProtocolAttestation(
   } as ProtocolBoundOutcomeAttestation;
 }
 
-function verifyParams(context: ReturnType<typeof protocolContext>) {
+function verifyParams(
+  context: ReturnType<typeof protocolContext>,
+  trustedOracle: Pick<OracleSigner, 'publicKeyBase58' | 'keyId'>,
+) {
   return {
     nowIso: '2026-05-04T00:05:00.000Z',
+    expectedVerifierPublicKeyBase58: trustedOracle.publicKeyBase58,
+    expectedVerifierKeyId: trustedOracle.keyId,
     expectedNetwork: context.network,
     expectedProgramId: context.programId,
     expectedHealthPlan: context.healthPlan,
@@ -104,27 +109,14 @@ test('protocol-bound oracle attestations include settlement domain and verify lo
   assert.equal(verifyOracleAttestation(attestation), true);
   assert.equal(
     verifyProtocolOracleAttestation(attestation, {
-      nowIso: '2026-05-04T00:05:00.000Z',
-      expectedNetwork: context.network,
-      expectedProgramId: context.programId,
-      expectedHealthPlan: context.healthPlan,
-      expectedFundingLine: context.fundingLine,
-      expectedClaimCase: context.claimCase,
-      expectedAudience: context.audience,
-      expectedNonce: context.nonce,
+      ...verifyParams(context, signer),
     }),
     true,
   );
   assert.equal(
     verifyProtocolOracleAttestation(attestation, {
+      ...verifyParams(context, signer),
       nowIso: '2026-05-04T00:11:00.000Z',
-      expectedNetwork: context.network,
-      expectedProgramId: context.programId,
-      expectedHealthPlan: context.healthPlan,
-      expectedFundingLine: context.fundingLine,
-      expectedClaimCase: context.claimCase,
-      expectedAudience: context.audience,
-      expectedNonce: context.nonce,
     }),
     false,
   );
@@ -225,31 +217,33 @@ test('protocol verifier rejects malformed, partial, and unexpected optional scop
     poolOraclePermissionSet: Keypair.generate().publicKey.toBase58(),
     poolOraclePolicy: Keypair.generate().publicKey.toBase58(),
   };
-  const expected = verifyParams(context);
+  const malformedScopeAttestation = signProtocolAttestation({
+    ...scopedContext,
+    liquidityPool: 'not-a-pubkey',
+  });
 
   assert.equal(
     verifyProtocolOracleAttestation(
-      signProtocolAttestation({
-        ...scopedContext,
-        liquidityPool: 'not-a-pubkey',
-      }),
-      expected,
+      malformedScopeAttestation,
+      verifyParams(context, malformedScopeAttestation.verifier),
     ),
     false,
   );
 
+  const partialScopeAttestation = signProtocolAttestation({
+    ...context,
+    liquidityPool: scopedContext.liquidityPool,
+  });
   assert.equal(
     verifyProtocolOracleAttestation(
-      signProtocolAttestation({
-        ...context,
-        liquidityPool: scopedContext.liquidityPool,
-      }),
-      expected,
+      partialScopeAttestation,
+      verifyParams(context, partialScopeAttestation.verifier),
     ),
     false,
   );
 
   const scopedAttestation = signProtocolAttestation(scopedContext);
+  const expected = verifyParams(context, scopedAttestation.verifier);
   assert.equal(
     verifyProtocolOracleAttestation(scopedAttestation, expected),
     false,
@@ -272,5 +266,26 @@ test('protocol verifier rejects malformed, partial, and unexpected optional scop
       allowUnexpectedOptionalScope: true,
     }),
     true,
+  );
+});
+
+test('protocol verifier rejects attestations from unexpected oracle signer', () => {
+  const context = protocolContext();
+  const attestation = signProtocolAttestation(context);
+
+  assert.equal(verifyOracleAttestation(attestation), true);
+  assert.equal(
+    verifyProtocolOracleAttestation(attestation, {
+      ...verifyParams(context, attestation.verifier),
+      expectedVerifierPublicKeyBase58: Keypair.generate().publicKey.toBase58(),
+    }),
+    false,
+  );
+  assert.equal(
+    verifyProtocolOracleAttestation(attestation, {
+      ...verifyParams(context, attestation.verifier),
+      expectedVerifierKeyId: 'other-oracle-key',
+    }),
+    false,
   );
 });

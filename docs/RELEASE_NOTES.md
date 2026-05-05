@@ -14,7 +14,8 @@
   requiring `recipientOwnerAddress`.
 - Added `verifyProtocolOracleAttestation(...)` for settlement-grade oracle
   evidence checks covering signature, expiry, expected protocol context,
-  audience, nonce, scoped pool accounts, and verifier-side optional-scope shape.
+  trusted verifier identity, audience, nonce, scoped pool accounts, and
+  verifier-side optional-scope shape.
 - Removed the SPL/token dev dependency from the localnet smoke by inlining the
   minimal classic-token setup instructions, pinned the transitive Solana RPC
   `uuid` path to `14.0.0`, and removed the now-stale production audit

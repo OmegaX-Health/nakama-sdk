@@ -57,6 +57,8 @@ export type AttestProtocolOutcomeResult = {
 
 export type VerifyProtocolOracleAttestationParams = {
   nowIso?: string | Date;
+  expectedVerifierPublicKeyBase58: PublicKeyish;
+  expectedVerifierKeyId?: string;
   expectedNetwork: string;
   expectedProgramId: PublicKeyish;
   expectedHealthPlan: PublicKeyish;
@@ -402,6 +404,24 @@ export function verifyProtocolOracleAttestation(
 ): boolean {
   try {
     if (!verifyOracleAttestation(attestation)) return false;
+    if (
+      normalizePubkeyString(
+        attestation.verifier.publicKeyBase58,
+        'verifierPublicKeyBase58',
+      ) !==
+      normalizePubkeyString(
+        params.expectedVerifierPublicKeyBase58,
+        'expectedVerifierPublicKeyBase58',
+      )
+    ) {
+      return false;
+    }
+    if (
+      params.expectedVerifierKeyId !== undefined &&
+      attestation.verifier.keyId !== params.expectedVerifierKeyId.trim()
+    ) {
+      return false;
+    }
     const context = attestation.context;
     assertProtocolContextShape(context);
     const nowMillis = parseTimeMillis(params.nowIso);
