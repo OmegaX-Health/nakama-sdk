@@ -29,7 +29,30 @@ try {
   process.exit(1);
 }
 
-const vulnerabilities = report.vulnerabilities ?? {};
+if (audit.status !== 0) {
+  process.stderr.write(audit.stderr || '');
+  process.stderr.write(
+    `npm audit exited with status ${audit.status} while producing JSON output.\n`,
+  );
+  process.stderr.write(`${JSON.stringify(report, null, 2)}\n`);
+  process.exit(audit.status);
+}
+
+if (report.error) {
+  process.stderr.write('npm audit returned an error response:\n');
+  process.stderr.write(`${JSON.stringify(report.error, null, 2)}\n`);
+  process.exit(1);
+}
+
+if (!report.vulnerabilities || typeof report.vulnerabilities !== 'object') {
+  process.stderr.write(
+    'npm audit report is missing a valid vulnerabilities object.\n',
+  );
+  process.stderr.write(`${JSON.stringify(report, null, 2)}\n`);
+  process.exit(1);
+}
+
+const vulnerabilities = report.vulnerabilities;
 const allowedCache = new Map();
 
 function advisoryId(entry) {
