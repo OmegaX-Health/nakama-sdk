@@ -1,0 +1,18 @@
+{
+  "name": "omegax-node-backend-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.json",
+    "smoke": "node dist/index.js",
+    "start": "RUN_SERVER=1 node dist/index.js"
+  },
+  "dependencies": {
+    "@omegax/protocol-sdk": "^0.8.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "typescript": "^5.9.3"
+  }
+}

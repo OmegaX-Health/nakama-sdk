@@ -74,6 +74,13 @@ import {
   toPublicKey,
   ZERO_PUBKEY_KEY,
 } from './protocol_seeds.js';
+import {
+  OmegaXAccountNotFoundError,
+  OmegaXAccountOwnerMismatchError,
+  OmegaXInstructionBuildError,
+  OmegaXProgramMismatchError,
+  OmegaXTokenAccountPreflightError,
+} from './errors.js';
 
 type IdlField = { name: string; type: IdlType };
 type IdlType =
@@ -128,8 +135,14 @@ function classicTokenProgramId(
 ): PublicKey {
   const candidate = toPublicKey(tokenProgramId ?? SPL_TOKEN_PROGRAM_ID);
   if (!candidate.equals(SPL_TOKEN_PROGRAM_ID)) {
-    throw new Error(
+    throw new OmegaXProgramMismatchError(
       'OmegaX Protocol v1 supports only the classic SPL Token program.',
+      {
+        details: {
+          expectedProgramId: SPL_TOKEN_PROGRAM_ID.toBase58(),
+          actualProgramId: candidate.toBase58(),
+        },
+      },
     );
   }
   return candidate;
@@ -157,8 +170,17 @@ function resolveProgramIdForBuild(params: {
     !resolved.equals(canonical) &&
     !unsafeCustomProgramIdAllowed(params.unsafeAllowCustomProgramId)
   ) {
-    throw new Error(
+    throw new OmegaXProgramMismatchError(
       `custom programId ${resolved.toBase58()} is unsafe for production SDK flows; set unsafeAllowCustomProgramId or ${UNSAFE_CUSTOM_PROGRAM_ID_ENV}=1 only for devnet/localnet/test workflows`,
+      {
+        details: {
+          expectedProgramId: canonical.toBase58(),
+          actualProgramId: resolved.toBase58(),
+          unsafeAllowCustomProgramId:
+            params.unsafeAllowCustomProgramId === true,
+          unsafeCustomProgramIdEnv: UNSAFE_CUSTOM_PROGRAM_ID_ENV,
+        },
+      },
     );
   }
   return resolved;
@@ -546,8 +568,11 @@ function resolveInstructionAccounts(
             },
           ];
         }
-        throw new Error(
+        throw new OmegaXInstructionBuildError(
           `Missing required account "${account.name}" for instruction ${instructionName}`,
+          {
+            details: { instructionName, accountName: account.name },
+          },
         );
       }
 
@@ -570,15 +595,21 @@ function inferFeePayer(
     (account) => account.signer && !account.address,
   );
   if (!signer) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       `Unable to infer fee payer for ${instructionName}. Pass feePayer explicitly.`,
+      {
+        details: { instructionName },
+      },
     );
   }
 
   const signerAddress = accounts[signer.name];
   if (!signerAddress) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       `Unable to infer fee payer for ${instructionName}: signer account "${signer.name}" is missing.`,
+      {
+        details: { instructionName, signerAccountName: signer.name },
+      },
     );
   }
 
@@ -640,8 +671,16 @@ function decodeFetchedProtocolAccount<T = Record<string, unknown>>(
   programId: PublicKey,
 ): T {
   if (!info.owner.equals(programId)) {
-    throw new Error(
+    throw new OmegaXAccountOwnerMismatchError(
       `Account ${address.toBase58()} for ${accountName} is owned by ${info.owner.toBase58()}, not OmegaX Protocol program ${programId.toBase58()}.`,
+      {
+        details: {
+          accountName,
+          address: address.toBase58(),
+          expectedOwner: programId.toBase58(),
+          actualOwner: info.owner.toBase58(),
+        },
+      },
     );
   }
   return decodeProtocolAccount<T>(accountName, info.data);
@@ -3914,12 +3953,12 @@ export function compileTransactionToV0(
   lookupTableAccounts: AddressLookupTableAccount[],
 ): VersionedTransaction {
   if (!transaction.feePayer) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       'transaction fee payer is required to compile a v0 transaction',
     );
   }
   if (!transaction.recentBlockhash) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       'transaction recentBlockhash is required to compile a v0 transaction',
     );
   }
@@ -3951,36 +3990,207 @@ export async function preflightClassicTokenAccount(params: {
     'confirmed',
   );
   if (!info) {
-    throw new Error(`${label} ${tokenAccount.toBase58()} does not exist`);
+    throw new OmegaXAccountNotFoundError(
+      `${label} ${tokenAccount.toBase58()} does not exist`,
+      {
+        details: { label, tokenAccount: tokenAccount.toBase58() },
+      },
+    );
   }
   if (!info.owner.equals(SPL_TOKEN_PROGRAM_ID)) {
-    throw new Error(`${label} must be owned by the classic SPL Token program`);
+    throw new OmegaXAccountOwnerMismatchError(
+      `${label} must be owned by the classic SPL Token program`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          expectedOwner: SPL_TOKEN_PROGRAM_ID.toBase58(),
+          actualOwner: info.owner.toBase58(),
+        },
+      },
+    );
   }
   if (info.data.length < 72) {
-    throw new Error(`${label} has invalid SPL Token account data`);
+    throw new OmegaXTokenAccountPreflightError(
+      `${label} has invalid SPL Token account data`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          dataLength: info.data.length,
+        },
+      },
+    );
   }
 
   const actualMint = new PublicKey(info.data.subarray(0, 32));
   const actualOwner = new PublicKey(info.data.subarray(32, 64));
   if (!actualMint.equals(expectedMint)) {
-    throw new Error(
+    throw new OmegaXTokenAccountPreflightError(
       `${label} mint mismatch: expected ${expectedMint.toBase58()}, got ${actualMint.toBase58()}`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          expectedMint: expectedMint.toBase58(),
+          actualMint: actualMint.toBase58(),
+        },
+      },
     );
   }
   if (expectedOwner && !actualOwner.equals(expectedOwner)) {
-    throw new Error(
+    throw new OmegaXTokenAccountPreflightError(
       `${label} owner mismatch: expected ${expectedOwner.toBase58()}, got ${actualOwner.toBase58()}`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          expectedOwner: expectedOwner.toBase58(),
+          actualOwner: actualOwner.toBase58(),
+        },
+      },
     );
   }
 }
 
+export interface SafeProtocolClientOptions {
+  programId?: PublicKeyish;
+  unsafeAllowCustomProgramId?: boolean;
+}
+
+export type SafeDepositCommitmentTxParams = Omit<
+  Parameters<typeof buildDepositCommitmentTx>[0],
+  'programId'
+>;
+export type SafeFundSponsorBudgetTxParams = Omit<
+  Parameters<typeof buildFundSponsorBudgetTx>[0],
+  'programId'
+>;
+export type SafeRecordPremiumPaymentTxParams = Omit<
+  Parameters<typeof buildRecordPremiumPaymentTx>[0],
+  'programId'
+>;
+export type SafeDepositIntoCapitalClassTxParams = Omit<
+  Parameters<typeof buildDepositIntoCapitalClassTx>[0],
+  'programId'
+>;
+export type SafeRequestRedemptionTxParams = Omit<
+  Parameters<typeof buildRequestRedemptionTx>[0],
+  'programId'
+>;
+export type SafeProcessRedemptionQueueTxParams = Omit<
+  Parameters<typeof buildProcessRedemptionQueueTx>[0],
+  'programId'
+>;
+export type SafeWithdrawProtocolFeeSplTxParams = Omit<
+  Parameters<typeof buildWithdrawProtocolFeeSplTx>[0],
+  'programId'
+>;
+export type SafeWithdrawPoolTreasurySplTxParams = Omit<
+  Parameters<typeof buildWithdrawPoolTreasurySplTx>[0],
+  'programId'
+>;
+export type SafeWithdrawPoolOracleFeeSplTxParams = Omit<
+  Parameters<typeof buildWithdrawPoolOracleFeeSplTx>[0],
+  'programId'
+>;
+export type SafeWithdrawProtocolFeeSolTxParams = Omit<
+  Parameters<typeof buildWithdrawProtocolFeeSolTx>[0],
+  'programId'
+>;
+export type SafeWithdrawPoolTreasurySolTxParams = Omit<
+  Parameters<typeof buildWithdrawPoolTreasurySolTx>[0],
+  'programId'
+>;
+export type SafeWithdrawPoolOracleFeeSolTxParams = Omit<
+  Parameters<typeof buildWithdrawPoolOracleFeeSolTx>[0],
+  'programId'
+>;
+export type SafeOpenClaimCaseTxParams = Omit<
+  Parameters<typeof buildOpenClaimCaseTx>[0],
+  'programId'
+>;
+export type SafeReserveObligationTxParams = Omit<
+  Parameters<typeof buildReserveObligationTx>[0],
+  'programId'
+>;
+export type SafeReleaseReserveTxParams = Omit<
+  Parameters<typeof buildReleaseReserveTx>[0],
+  'programId'
+>;
+export type SafeSettleObligationTxParams = Omit<
+  Parameters<typeof buildSettleObligationTx>[0],
+  'programId'
+> & {
+  recipientOwnerAddress: PublicKeyish;
+};
+export type SafeMarkImpairmentTxParams = Omit<
+  Parameters<typeof buildMarkImpairmentTx>[0],
+  'programId'
+>;
+export type SafeRegisterOracleTxParams = Omit<
+  Parameters<typeof buildRegisterOracleTx>[0],
+  'programId'
+>;
+export type SafeAttestClaimCaseTxParams = Omit<
+  Parameters<typeof buildAttestClaimCaseTx>[0],
+  'programId'
+>;
+
+export interface SafeProtocolClient {
+  connection: Connection;
+  programId: PublicKey;
+  raw: ProtocolClient;
+  getProgramId(): PublicKey;
+  buildDepositCommitmentTx(
+    params: SafeDepositCommitmentTxParams,
+  ): Promise<Transaction>;
+  buildFundSponsorBudgetTx(
+    params: SafeFundSponsorBudgetTxParams,
+  ): Promise<Transaction>;
+  buildRecordPremiumPaymentTx(
+    params: SafeRecordPremiumPaymentTxParams,
+  ): Promise<Transaction>;
+  buildDepositIntoCapitalClassTx(
+    params: SafeDepositIntoCapitalClassTxParams,
+  ): Promise<Transaction>;
+  buildRequestRedemptionTx(params: SafeRequestRedemptionTxParams): Transaction;
+  buildProcessRedemptionQueueTx(
+    params: SafeProcessRedemptionQueueTxParams,
+  ): Promise<Transaction>;
+  buildWithdrawProtocolFeeSplTx(
+    params: SafeWithdrawProtocolFeeSplTxParams,
+  ): Promise<Transaction>;
+  buildWithdrawPoolTreasurySplTx(
+    params: SafeWithdrawPoolTreasurySplTxParams,
+  ): Promise<Transaction>;
+  buildWithdrawPoolOracleFeeSplTx(
+    params: SafeWithdrawPoolOracleFeeSplTxParams,
+  ): Promise<Transaction>;
+  buildWithdrawProtocolFeeSolTx(
+    params: SafeWithdrawProtocolFeeSolTxParams,
+  ): Transaction;
+  buildWithdrawPoolTreasurySolTx(
+    params: SafeWithdrawPoolTreasurySolTxParams,
+  ): Transaction;
+  buildWithdrawPoolOracleFeeSolTx(
+    params: SafeWithdrawPoolOracleFeeSolTxParams,
+  ): Transaction;
+  buildOpenClaimCaseTx(params: SafeOpenClaimCaseTxParams): Transaction;
+  buildReserveObligationTx(params: SafeReserveObligationTxParams): Transaction;
+  buildReleaseReserveTx(params: SafeReleaseReserveTxParams): Transaction;
+  buildSettleObligationTx(
+    params: SafeSettleObligationTxParams,
+  ): Promise<Transaction>;
+  buildMarkImpairmentTx(params: SafeMarkImpairmentTxParams): Transaction;
+  buildRegisterOracleTx(params: SafeRegisterOracleTxParams): Transaction;
+  buildAttestClaimCaseTx(params: SafeAttestClaimCaseTxParams): Transaction;
+}
+
 export function createSafeProtocolClient(
   connection: Connection,
-  options?: {
-    programId?: PublicKeyish;
-    unsafeAllowCustomProgramId?: boolean;
-  },
-) {
+  options?: SafeProtocolClientOptions,
+): SafeProtocolClient {
   const programId = resolveProgramIdForBuild({
     programId: options?.programId,
     unsafeAllowCustomProgramId: options?.unsafeAllowCustomProgramId,
@@ -4067,7 +4277,7 @@ export function createSafeProtocolClient(
     raw,
     getProgramId: () => programId,
     async buildDepositCommitmentTx(
-      params: Omit<Parameters<typeof buildDepositCommitmentTx>[0], 'programId'>,
+      params: SafeDepositCommitmentTxParams,
     ): Promise<Transaction> {
       const paymentAssetMint = toPublicKey(params.paymentAssetMint);
       const vaultTokenAccount = params.vaultTokenAccountAddress
@@ -4099,7 +4309,7 @@ export function createSafeProtocolClient(
       return buildDepositCommitmentTx({ ...params, programId });
     },
     async buildFundSponsorBudgetTx(
-      params: Omit<Parameters<typeof buildFundSponsorBudgetTx>[0], 'programId'>,
+      params: SafeFundSponsorBudgetTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultInflow({
         authority: params.authority,
@@ -4112,10 +4322,7 @@ export function createSafeProtocolClient(
       return buildFundSponsorBudgetTx({ ...params, programId });
     },
     async buildRecordPremiumPaymentTx(
-      params: Omit<
-        Parameters<typeof buildRecordPremiumPaymentTx>[0],
-        'programId'
-      >,
+      params: SafeRecordPremiumPaymentTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultInflow({
         authority: params.authority,
@@ -4128,10 +4335,7 @@ export function createSafeProtocolClient(
       return buildRecordPremiumPaymentTx({ ...params, programId });
     },
     async buildDepositIntoCapitalClassTx(
-      params: Omit<
-        Parameters<typeof buildDepositIntoCapitalClassTx>[0],
-        'programId'
-      >,
+      params: SafeDepositIntoCapitalClassTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultInflow({
         authority: params.owner,
@@ -4144,15 +4348,12 @@ export function createSafeProtocolClient(
       return buildDepositIntoCapitalClassTx({ ...params, programId });
     },
     buildRequestRedemptionTx(
-      params: Omit<Parameters<typeof buildRequestRedemptionTx>[0], 'programId'>,
+      params: SafeRequestRedemptionTxParams,
     ): Transaction {
       return buildRequestRedemptionTx({ ...params, programId });
     },
     async buildProcessRedemptionQueueTx(
-      params: Omit<
-        Parameters<typeof buildProcessRedemptionQueueTx>[0],
-        'programId'
-      >,
+      params: SafeProcessRedemptionQueueTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
@@ -4165,10 +4366,7 @@ export function createSafeProtocolClient(
       return buildProcessRedemptionQueueTx({ ...params, programId });
     },
     async buildWithdrawProtocolFeeSplTx(
-      params: Omit<
-        Parameters<typeof buildWithdrawProtocolFeeSplTx>[0],
-        'programId'
-      >,
+      params: SafeWithdrawProtocolFeeSplTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
@@ -4180,10 +4378,7 @@ export function createSafeProtocolClient(
       return buildWithdrawProtocolFeeSplTx({ ...params, programId });
     },
     async buildWithdrawPoolTreasurySplTx(
-      params: Omit<
-        Parameters<typeof buildWithdrawPoolTreasurySplTx>[0],
-        'programId'
-      >,
+      params: SafeWithdrawPoolTreasurySplTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
@@ -4195,10 +4390,7 @@ export function createSafeProtocolClient(
       return buildWithdrawPoolTreasurySplTx({ ...params, programId });
     },
     async buildWithdrawPoolOracleFeeSplTx(
-      params: Omit<
-        Parameters<typeof buildWithdrawPoolOracleFeeSplTx>[0],
-        'programId'
-      >,
+      params: SafeWithdrawPoolOracleFeeSplTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
@@ -4210,51 +4402,33 @@ export function createSafeProtocolClient(
       return buildWithdrawPoolOracleFeeSplTx({ ...params, programId });
     },
     buildWithdrawProtocolFeeSolTx(
-      params: Omit<
-        Parameters<typeof buildWithdrawProtocolFeeSolTx>[0],
-        'programId'
-      >,
+      params: SafeWithdrawProtocolFeeSolTxParams,
     ): Transaction {
       return buildWithdrawProtocolFeeSolTx({ ...params, programId });
     },
     buildWithdrawPoolTreasurySolTx(
-      params: Omit<
-        Parameters<typeof buildWithdrawPoolTreasurySolTx>[0],
-        'programId'
-      >,
+      params: SafeWithdrawPoolTreasurySolTxParams,
     ): Transaction {
       return buildWithdrawPoolTreasurySolTx({ ...params, programId });
     },
     buildWithdrawPoolOracleFeeSolTx(
-      params: Omit<
-        Parameters<typeof buildWithdrawPoolOracleFeeSolTx>[0],
-        'programId'
-      >,
+      params: SafeWithdrawPoolOracleFeeSolTxParams,
     ): Transaction {
       return buildWithdrawPoolOracleFeeSolTx({ ...params, programId });
     },
-    buildOpenClaimCaseTx(
-      params: Omit<Parameters<typeof buildOpenClaimCaseTx>[0], 'programId'>,
-    ): Transaction {
+    buildOpenClaimCaseTx(params: SafeOpenClaimCaseTxParams): Transaction {
       return buildOpenClaimCaseTx({ ...params, programId });
     },
     buildReserveObligationTx(
-      params: Omit<Parameters<typeof buildReserveObligationTx>[0], 'programId'>,
+      params: SafeReserveObligationTxParams,
     ): Transaction {
       return buildReserveObligationTx({ ...params, programId });
     },
-    buildReleaseReserveTx(
-      params: Omit<Parameters<typeof buildReleaseReserveTx>[0], 'programId'>,
-    ): Transaction {
+    buildReleaseReserveTx(params: SafeReleaseReserveTxParams): Transaction {
       return buildReleaseReserveTx({ ...params, programId });
     },
     async buildSettleObligationTx(
-      params: Omit<
-        Parameters<typeof buildSettleObligationTx>[0],
-        'programId'
-      > & {
-        recipientOwnerAddress: PublicKeyish;
-      },
+      params: SafeSettleObligationTxParams,
     ): Promise<Transaction> {
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
@@ -4271,19 +4445,13 @@ export function createSafeProtocolClient(
       void _recipientOwnerAddress;
       return buildSettleObligationTx({ ...builderParams, programId });
     },
-    buildMarkImpairmentTx(
-      params: Omit<Parameters<typeof buildMarkImpairmentTx>[0], 'programId'>,
-    ): Transaction {
+    buildMarkImpairmentTx(params: SafeMarkImpairmentTxParams): Transaction {
       return buildMarkImpairmentTx({ ...params, programId });
     },
-    buildRegisterOracleTx(
-      params: Omit<Parameters<typeof buildRegisterOracleTx>[0], 'programId'>,
-    ): Transaction {
+    buildRegisterOracleTx(params: SafeRegisterOracleTxParams): Transaction {
       return buildRegisterOracleTx({ ...params, programId });
     },
-    buildAttestClaimCaseTx(
-      params: Omit<Parameters<typeof buildAttestClaimCaseTx>[0], 'programId'>,
-    ): Transaction {
+    buildAttestClaimCaseTx(params: SafeAttestClaimCaseTxParams): Transaction {
       return buildAttestClaimCaseTx({ ...params, programId });
     },
   };
@@ -4305,8 +4473,14 @@ export function createProtocolClient(
 
     const requestedProgramId = toPublicKey(inputProgramId);
     if (!requestedProgramId.equals(resolvedProgramId)) {
-      throw new Error(
+      throw new OmegaXProgramMismatchError(
         `programId mismatch: expected ${resolvedProgramId.toBase58()}, received ${requestedProgramId.toBase58()}`,
+        {
+          details: {
+            expectedProgramId: resolvedProgramId.toBase58(),
+            actualProgramId: requestedProgramId.toBase58(),
+          },
+        },
       );
     }
 

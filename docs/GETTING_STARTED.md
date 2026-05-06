@@ -15,6 +15,33 @@ Public integrations should target devnet beta until OmegaX announces public main
 
 ```bash
 npm install @omegax/protocol-sdk
+npm install --save-dev tsx
+```
+
+## Check Your Environment
+
+```bash
+npx @omegax/protocol-sdk doctor
+```
+
+`doctor` checks Node, ESM, package imports, network metadata, the canonical
+program ID, typed errors, and protocol instruction/account listings. Add
+`--rpc-url <url>` when you want it to check RPC connectivity too.
+
+## First success smoke
+
+Run this before choosing a deeper workflow. It verifies package imports, network
+metadata, safe client creation, deterministic PDA derivation, and the public
+instruction/account surface without funded signers or a live transaction.
+
+```bash
+npm run example:smoke
+```
+
+In a separate integration project, copy `examples/devnet-smoke.ts` and run:
+
+```bash
+npx tsx devnet-smoke.ts
 ```
 
 ## Choose your builder path
@@ -29,7 +56,6 @@ npm install @omegax/protocol-sdk
 import {
   PROTOCOL_PROGRAM_ID,
   createConnection,
-  createProtocolClient,
   createSafeProtocolClient,
   createRpcClient,
   getOmegaXNetworkInfo,
@@ -48,7 +74,6 @@ const connection = createConnection({
 const protocol = createSafeProtocolClient(connection, {
   programId: PROTOCOL_PROGRAM_ID,
 });
-const rawProtocol = createProtocolClient(connection, PROTOCOL_PROGRAM_ID);
 const rpc = createRpcClient(connection);
 ```
 
@@ -56,6 +81,11 @@ Production clients default to the canonical OmegaX program. Custom program IDs
 are rejected unless `unsafeAllowCustomProgramId: true` or
 `OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` is used for devnet, localnet, or
 tests.
+
+Use `createProtocolClient(...)` only for protocol engineering, generated-surface
+tests, or advanced flows that need raw IDL-backed builders.
+
+For framework-specific snippets, see `docs/RECIPES.md`.
 
 ## Inspect the current public surface
 
@@ -129,9 +159,9 @@ Relevant builders and helpers:
 
 Then continue with:
 
-- `WORKFLOWS.md`
-- `API_REFERENCE.md`
-- `https://docs.omegax.health/docs/oracle/event-production`
+- [SDK Workflows](WORKFLOWS.md)
+- [API Reference](API_REFERENCE.md)
+- [Oracle Event Production](https://docs.omegax.health/docs/oracle/event-production)
 
 ## Path B: Health / wallet / app builders
 
@@ -149,9 +179,9 @@ Relevant builders and helpers:
 
 Then continue with:
 
-- `WORKFLOWS.md`
-- `API_REFERENCE.md`
-- `TROUBLESHOOTING.md`
+- [SDK Workflows](WORKFLOWS.md)
+- [API Reference](API_REFERENCE.md)
+- [Troubleshooting](TROUBLESHOOTING.md)
 
 ## Path C: Sponsor and capital integrators
 
@@ -218,14 +248,14 @@ Relevant builders and helpers:
 
 Then continue with:
 
-- `WORKFLOWS.md`
-- `API_REFERENCE.md`
-- `RELEASE_NOTES.md`
+- [SDK Workflows](WORKFLOWS.md)
+- [API Reference](API_REFERENCE.md)
+- [Release Notes](RELEASE_NOTES.md)
 
 ## Next steps
 
-1. Use `WORKFLOWS.md` to map your builder path to the right canonical builders and readers.
-2. Use `API_REFERENCE.md` to inspect the exported reader, helper, and builder surface in detail.
-3. Use `RELEASE_NOTES.md` to confirm the current SDK version and newly added modules.
+1. Use [SDK Workflows](WORKFLOWS.md) to map your builder path to the right canonical builders and readers.
+2. Use [API Reference](API_REFERENCE.md) to inspect the exported reader, helper, and builder surface in detail.
+3. Use [Release Notes](RELEASE_NOTES.md) to confirm the current SDK version and newly added modules.
 4. Run `npm run generate:protocol-bindings` whenever the sibling protocol repo changes.
 5. Run `npm run verify:protocol:local` before shipping SDK changes that affect runtime parity.

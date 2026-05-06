@@ -1,4 +1,5 @@
 export * from './types.js';
+export * from './errors.js';
 export * from './utils.js';
 export * from './claims.js';
 export * from './oracle.js';

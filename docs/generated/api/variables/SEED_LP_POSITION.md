@@ -1,0 +1,11 @@
+[**@omegax/protocol-sdk**](../README.md)
+
+***
+
+[@omegax/protocol-sdk](../README.md) / SEED\_LP\_POSITION
+
+# Variable: SEED\_LP\_POSITION
+
+> `const` **SEED\_LP\_POSITION**: `"lp_position"` = `'lp_position'`
+
+Defined in: [src/protocol\_seeds.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L37)

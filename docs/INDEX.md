@@ -21,8 +21,13 @@ Use this page as the navigation hub for builders and release maintainers.
 
 - `GETTING_STARTED.md` for client setup, path selection, and the shared unsigned transaction pattern
 - `WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
+- `TOP_APIS.md` for the shortest API list by builder lane
+- `RECIPES.md` for Node, Next.js, oracle-worker, and read-only frontend snippets
+- `ERROR_CATALOG.md` for stable `OMEGAX_*` error codes, causes, and fixes
 - `API_REFERENCE.md` for public builders, readers, PDA helpers, and reserve-model helpers
+- `generated/api/README.md` for generated TypeDoc markdown from the exported SDK surface
 - `TROUBLESHOOTING.md` for canonical failure modes and remediation
+- `../examples/README.md` for runnable smoke, app-builder, and oracle examples
 - `RELEASE_NOTES.md` for versioned SDK changes and rollout notes
 - `RELEASE.md` for local release gates and tag/publish steps
 - `DOCS_SYNC_WORKFLOW.md` for SDK to `omegax-docs` parity
@@ -40,6 +45,9 @@ Use this page as the navigation hub for builders and release maintainers.
 
 1. `GETTING_STARTED.md`
 2. `WORKFLOWS.md`
-3. `API_REFERENCE.md`
-4. `RELEASE_NOTES.md`
-5. `TROUBLESHOOTING.md`
+3. `TOP_APIS.md`
+4. `RECIPES.md`
+5. `ERROR_CATALOG.md`
+6. `API_REFERENCE.md`
+7. `RELEASE_NOTES.md`
+8. `TROUBLESHOOTING.md`

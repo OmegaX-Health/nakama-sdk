@@ -1,7 +1,24 @@
 # Release Notes — `@omegax/protocol-sdk`
 
-## Unreleased
+## `0.8.6`
 
+- Added the full onboarding DX pass for external app/backend and oracle-service
+  builders, including safe-client-first docs, runnable smoke/app/oracle
+  examples, and a packed consumer import smoke.
+- Exported `@omegax/protocol-sdk/protocol_models` and
+  `@omegax/protocol-sdk/transactions` as documented public subpaths.
+- Added public typed SDK errors through `@omegax/protocol-sdk/errors`.
+- Added named safe-client public types such as `SafeProtocolClient`,
+  `SafeProtocolClientOptions`, and safe builder parameter aliases so IDE hover
+  output exposes stable SDK concepts instead of anonymous inferred types.
+- Added a tracked external consumer dogfood app, generated TypeDoc markdown, and
+  a single release verifier script.
+- Added the public `omegax-sdk` CLI with `doctor`, `scaffold`, and `examples`,
+  plus shipped node-backend, Next.js route, and oracle-worker templates.
+- Added curated top-API and error-catalog docs for health app, hospital/backend,
+  oracle, and sponsor/capital builder lanes.
+- Hardened `npm run docs:check` so docs that mention package subpaths fail if
+  `package.json#exports` does not expose them.
 - Synced the settlement account surface with the active protocol IDL so
   `settle_obligation` includes the optional `pool_oracle_fee_vault`,
   `pool_oracle_policy`, and `oracle_fee_attestation` slots, and added

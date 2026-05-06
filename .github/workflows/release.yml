@@ -76,6 +76,9 @@ jobs:
       - name: Docs consistency
         run: npm run docs:check
 
+      - name: Generated API docs consistency
+        run: npm run docs:api:check
+
       - name: Clone docs repo for strict ancestry check
         run: git clone --filter=blob:none --no-checkout --depth 200 https://github.com/OmegaX-Health/omegax-docs.git ../omegax-docs
 
@@ -92,6 +95,20 @@ jobs:
 
       - name: Package manifest allowlist
         run: npm run security:package
+
+      - name: Developer experience smoke
+        run: npm run dx:smoke
+
+      - name: Consumer dogfood smoke
+        env:
+          OMEGAX_DOGFOOD_SKIP_TEMPLATES: '1'
+        run: npm run dogfood:consumer
+
+      - name: CLI smoke
+        run: npm run cli:check
+
+      - name: Template smoke
+        run: npm run templates:check
 
   publish:
     runs-on: ubuntu-latest

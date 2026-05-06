@@ -1,6 +1,8 @@
 import bs58 from 'bs58';
 import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
 
+import { OmegaXTransactionDecodeError } from './errors.js';
+
 export type SolanaTransaction = Transaction | VersionedTransaction;
 
 function decodeShortVecLength(
@@ -22,7 +24,9 @@ function decodeShortVecLength(
       return { length, bytesRead: size };
     }
   }
-  throw new Error('invalid shortvec length');
+  throw new OmegaXTransactionDecodeError('invalid shortvec length', {
+    details: { offset },
+  });
 }
 
 function versionedStaticAccountKeys(
@@ -56,14 +60,36 @@ export function decodeSolanaTransaction(
   const { length: signatureCount, bytesRead } = decodeShortVecLength(bytes);
   const messageOffset = bytesRead + signatureCount * 64;
   if (messageOffset >= bytes.length) {
-    throw new Error('invalid serialized transaction');
+    throw new OmegaXTransactionDecodeError('invalid serialized transaction', {
+      details: { byteLength: bytes.length, signatureCount, messageOffset },
+    });
   }
 
   const messagePrefix = bytes[messageOffset] ?? 0;
   if ((messagePrefix & 0x80) !== 0) {
-    return VersionedTransaction.deserialize(bytes);
+    try {
+      return VersionedTransaction.deserialize(bytes);
+    } catch (error) {
+      throw new OmegaXTransactionDecodeError(
+        'invalid serialized versioned transaction',
+        {
+          details: { byteLength: bytes.length },
+          cause: error,
+        },
+      );
+    }
   }
-  return Transaction.from(bytes);
+  try {
+    return Transaction.from(bytes);
+  } catch (error) {
+    throw new OmegaXTransactionDecodeError(
+      'invalid serialized legacy transaction',
+      {
+        details: { byteLength: bytes.length },
+        cause: error,
+      },
+    );
+  }
 }
 
 export function serializeSolanaTransaction(
@@ -110,7 +136,12 @@ function normalizeSolanaMessageBytesIgnoringRecentBlockhash(
   cursor += bytesRead + accountKeyCount * 32;
 
   if (cursor + 32 > normalized.length) {
-    throw new Error('invalid serialized transaction message');
+    throw new OmegaXTransactionDecodeError(
+      'invalid serialized transaction message',
+      {
+        details: { byteLength: normalized.length, accountKeyCount, cursor },
+      },
+    );
   }
 
   normalized.fill(0, cursor, cursor + 32);

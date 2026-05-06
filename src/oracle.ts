@@ -10,6 +10,11 @@ import {
   stableStringify,
   toIsoString,
 } from './utils.js';
+import {
+  OmegaXConfigError,
+  OmegaXInvalidPublicKeyError,
+  OmegaXInstructionBuildError,
+} from './errors.js';
 import type {
   OracleKmsSignerAdapter,
   OracleSigner,
@@ -86,15 +91,28 @@ export function createOracleSignerFromEnv(params?: {
   const keyId = String(process.env[keyIdEnv] || '').trim();
   const secretKeyBase58 = String(process.env[secretKeyEnv] || '').trim();
   if (!keyId) {
-    throw new Error(`Missing ${keyIdEnv}`);
+    throw new OmegaXConfigError(`Missing ${keyIdEnv}`, {
+      details: { keyIdEnv },
+    });
   }
   if (!secretKeyBase58) {
-    throw new Error(`Missing ${secretKeyEnv}`);
+    throw new OmegaXConfigError(`Missing ${secretKeyEnv}`, {
+      details: { secretKeyEnv },
+    });
   }
 
   const secretKeyBytes = bs58.decode(secretKeyBase58);
   if (secretKeyBytes.length !== nacl.sign.secretKeyLength) {
-    throw new Error(`Invalid secret key length for ${secretKeyEnv}`);
+    throw new OmegaXConfigError(
+      `Invalid secret key length for ${secretKeyEnv}`,
+      {
+        details: {
+          secretKeyEnv,
+          expectedLength: nacl.sign.secretKeyLength,
+          actualLength: secretKeyBytes.length,
+        },
+      },
+    );
   }
   const publicKeyBytes = secretKeyBytes.slice(32);
   return {
@@ -209,9 +227,13 @@ function normalizeProtocolContext(
 function normalizePubkeyString(value: PublicKeyish, label: string): string {
   try {
     return new PublicKey(value).toBase58();
-  } catch {
-    throw new Error(
+  } catch (error) {
+    throw new OmegaXInvalidPublicKeyError(
       `protocol attestation context ${label} must be a valid Solana public key`,
+      {
+        details: { label, value: String(value) },
+        cause: error,
+      },
     );
   }
 }
@@ -239,8 +261,11 @@ function assertPoolScopeIsComplete(
   ];
   const present = values.filter((value) => value && value.length > 0).length;
   if (present > 0 && present !== values.length) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       'protocol attestation pool scope must include liquidity pool, capital class, allocation position, oracle approval, permission set, and policy together',
+      {
+        details: { presentOptionalPoolScopeCount: present },
+      },
     );
   }
 }

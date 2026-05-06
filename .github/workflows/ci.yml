@@ -99,6 +99,9 @@ jobs:
       - name: Docs consistency
         run: npm run docs:check
 
+      - name: Generated API docs consistency
+        run: npm run docs:api:check
+
       - name: Docs sync parity (omegax-docs)
         run: npm run docs:sync:check
 
@@ -107,6 +110,20 @@ jobs:
 
       - name: Package manifest allowlist
         run: npm run security:package
+
+      - name: Developer experience smoke
+        run: npm run dx:smoke
+
+      - name: Consumer dogfood smoke
+        env:
+          OMEGAX_DOGFOOD_SKIP_TEMPLATES: '1'
+        run: npm run dogfood:consumer
+
+      - name: CLI smoke
+        run: npm run cli:check
+
+      - name: Template smoke
+        run: npm run templates:check
 
       - name: Security audit (prod dependencies)
         run: npm run audit:prod

@@ -3,6 +3,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 
 function parseArg(name) {
   const prefix = `--${name}=`;
@@ -22,6 +23,11 @@ function assertCommitSha(value) {
   if (!/^[0-9a-f]{7,40}$/i.test(value)) {
     throw new Error(`Invalid commit SHA: ${value}`);
   }
+}
+
+async function sha256File(path) {
+  const bytes = await readFile(path);
+  return createHash('sha256').update(bytes).digest('hex');
 }
 
 async function main() {
@@ -55,6 +61,11 @@ async function main() {
   manifest.omegaxDocsCommit = docsCommit;
   manifest.syncedAt = new Date().toISOString();
   manifest.syncedBy = syncedBy;
+  for (const page of manifest.pages ?? []) {
+    if (page?.sdkDoc) {
+      page.sdkDocSha256 = await sha256File(resolve(page.sdkDoc));
+    }
+  }
 
   await writeFile(
     manifestPath,

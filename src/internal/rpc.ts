@@ -4,6 +4,7 @@ import {
   serializeSolanaTransaction,
   type SolanaTransaction,
 } from '../transactions.js';
+import { OmegaXRpcError } from '../errors.js';
 
 export interface SignedSimulationOptions {
   commitment: 'processed' | 'confirmed' | 'finalized';
@@ -65,10 +66,20 @@ export async function simulateSignedTransactionViaConnection(
   ]);
 
   if (unsafe?.error) {
-    throw new Error(unsafe.error.message ?? 'failed to simulate transaction');
+    throw new OmegaXRpcError(
+      unsafe.error.message ?? 'failed to simulate transaction',
+      {
+        details: { method: 'simulateTransaction' },
+      },
+    );
   }
   if (!unsafe?.result?.value) {
-    throw new Error('failed to simulate transaction: missing RPC result');
+    throw new OmegaXRpcError(
+      'failed to simulate transaction: missing RPC result',
+      {
+        details: { method: 'simulateTransaction' },
+      },
+    );
   }
 
   return unsafe.result;

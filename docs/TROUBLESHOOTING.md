@@ -7,7 +7,16 @@ This page maps common integration failures to likely causes in the canonical Ome
 1. Confirm Node version is `>=20`.
 2. Confirm your runtime is using ESM imports.
 3. Confirm `programId` and RPC cluster match the deployment you expect.
-4. Regenerate bindings if the sibling protocol workspace changed:
+4. Confirm product/operator flows use `createSafeProtocolClient(...)` unless you
+   are intentionally testing raw protocol builders.
+5. Run the no-signature smoke:
+
+```bash
+npx @omegax/protocol-sdk doctor
+npm run example:smoke
+```
+
+6. Regenerate bindings if the sibling protocol workspace changed:
 
 ```bash
 npm run generate:protocol-bindings
@@ -21,7 +30,40 @@ npm run lint
 npm run format:check
 npm run build
 npm test
+npm run docs:api:check
+npm run examples:check
+npm run dogfood:consumer
 ```
+
+## Typed SDK errors
+
+Public failure paths that app builders can act on now throw typed errors from
+`@omegax/protocol-sdk/errors`. Branch on `instanceof` or the stable `code`
+field instead of parsing message text.
+
+Common codes:
+
+- `OMEGAX_CONFIG_ERROR`
+- `OMEGAX_INVALID_PUBLIC_KEY`
+- `OMEGAX_PROGRAM_MISMATCH`
+- `OMEGAX_ACCOUNT_NOT_FOUND`
+- `OMEGAX_ACCOUNT_OWNER_MISMATCH`
+- `OMEGAX_TOKEN_ACCOUNT_PREFLIGHT`
+- `OMEGAX_INSTRUCTION_BUILD`
+- `OMEGAX_TRANSACTION_DECODE`
+- `OMEGAX_RPC_ERROR`
+
+See `docs/ERROR_CATALOG.md` for causes, fixes, and retry guidance.
+
+## Install warning: `uuid@8.3.2`
+
+Some Solana dependency trees still print an install warning for `uuid@8.3.2`
+when a consumer project installs the packed SDK or a scaffolded template. Treat
+that warning as non-blocking for SDK integration.
+
+Use `npm run audit:prod` as the authoritative production dependency gate for
+this repository. It encodes the current reviewed Solana dependency posture and
+must stay green before release.
 
 ## Transaction and submission issues
 
@@ -170,6 +212,21 @@ Fix:
 - Re-derive the address with the canonical PDA helper.
 - Confirm the `programId` and cluster are correct.
 - Use `fetch...(...)` readers instead of ad hoc decoding where possible.
+
+### `ERR_PACKAGE_PATH_NOT_EXPORTED`
+
+Cause:
+
+- Your import uses a package subpath that is not part of the public export map.
+
+Fix:
+
+- Use one of the documented public subpaths such as
+  `@omegax/protocol-sdk/protocol_models`,
+  `@omegax/protocol-sdk/protocol_seeds`, or
+  `@omegax/protocol-sdk/transactions`.
+- Run `npm run dx:smoke` before release when adding docs that mention a new
+  package subpath.
 
 ## Reserve and capital issues
 
