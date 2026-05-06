@@ -135,7 +135,7 @@ This package exposes the live canonical object model:
 
 ## Release notes
 
-- `0.8.6` adds the full onboarding DX pass: documented `protocol_models` and `transactions` subpath exports, named safe-client types, runnable smoke/app/oracle examples, and a packed consumer import smoke in CI.
+- `0.8.6` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
 - `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
 - `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
@@ -150,7 +150,9 @@ This package exposes the live canonical object model:
 - `/docs/INDEX.md` for the maintainer and builder reading order
 - `/docs/GETTING_STARTED.md` for installation, client setup, and choosing the right builder path
 - `/docs/WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
+- `/docs/RECIPES.md` for Node, Next.js, oracle worker, and read-only frontend snippets
 - `/docs/API_REFERENCE.md` for the exported package surface
+- `/docs/generated/api/README.md` for generated symbol-level API markdown
 - `/docs/TROUBLESHOOTING.md` for common failure modes and remediation
 - `/docs/RELEASE_NOTES.md` for versioned SDK release notes
 - `/docs/RELEASE.md` for the release checklist
@@ -161,6 +163,7 @@ This package exposes the live canonical object model:
 
 - Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
 - `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
+- `@omegax/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
 - `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveCommitmentCampaignPda(...)`, and `deriveCapitalClassPda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
 - `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
@@ -196,10 +199,13 @@ npm run lint
 npm run format:check
 npm run build
 npm test
+npm run docs:api:check
 npm run docs:check
 npm run docs:sync:check:strict
 npm run examples:check
+npm run dogfood:consumer
 npm run dx:smoke
+npm run verify:release
 npm run security:secrets
 npm run security:install-scripts
 npm run security:package

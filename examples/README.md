@@ -42,3 +42,15 @@ npm run example:oracle
 ```bash
 npm run examples:check
 ```
+
+## Consumer Dogfood App
+
+`examples/consumer-app` is a tracked external-consumer dogfood fixture. It does
+not import SDK source files directly.
+
+```bash
+npm run dogfood:consumer
+```
+
+The script packs the SDK, installs the tarball into a temporary copy of the app,
+typechecks, builds, and runs a no-signature smoke.

@@ -40,6 +40,10 @@
       "types": "./dist/claims.d.ts",
       "import": "./dist/claims.js"
     },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "import": "./dist/errors.js"
+    },
     "./oracle": {
       "types": "./dist/oracle.d.ts",
       "import": "./dist/oracle.js"
@@ -92,6 +96,8 @@
     "sync:idl-fixture": "node scripts/sync-idl-fixture.mjs",
     "test:protocol:localnet": "node scripts/run-protocol-localnet.mjs",
     "verify:protocol:local": "node scripts/verify-protocol-local.mjs",
+    "docs:api:generate": "typedoc --options typedoc.json",
+    "docs:api:check": "node scripts/check-generated-api-docs.mjs",
     "docs:check": "node scripts/verify-doc-symbols.mjs",
     "docs:sync:check": "node scripts/check-omegax-docs-sync.mjs",
     "docs:sync:check:strict": "node scripts/check-omegax-docs-sync.mjs --strict",
@@ -101,6 +107,10 @@
     "example:app": "tsx examples/app-builder-read.ts",
     "example:oracle": "tsx examples/oracle-attestation.ts",
     "examples:check": "npm run example:smoke && npm run example:app && npm run example:oracle",
+    "dogfood:consumer": "node scripts/dogfood-consumer-app.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "verify:release:strict": "node scripts/verify-release.mjs --strict",
+    "verify:release:protocol": "node scripts/verify-release.mjs --strict --protocol",
     "audit:prod": "node scripts/audit-prod-dependencies.mjs",
     "security:secrets": "node scripts/check-secrets.mjs",
     "security:install-scripts": "node scripts/check-install-scripts.mjs",
@@ -131,6 +141,8 @@
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
+    "typedoc": "^0.28.19",
+    "typedoc-plugin-markdown": "^4.11.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.2"
   },

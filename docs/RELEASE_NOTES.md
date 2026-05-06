@@ -7,9 +7,12 @@
   examples, and a packed consumer import smoke.
 - Exported `@omegax/protocol-sdk/protocol_models` and
   `@omegax/protocol-sdk/transactions` as documented public subpaths.
+- Added public typed SDK errors through `@omegax/protocol-sdk/errors`.
 - Added named safe-client public types such as `SafeProtocolClient`,
   `SafeProtocolClientOptions`, and safe builder parameter aliases so IDE hover
   output exposes stable SDK concepts instead of anonymous inferred types.
+- Added a tracked external consumer dogfood app, generated TypeDoc markdown, and
+  a single release verifier script.
 - Hardened `npm run docs:check` so docs that mention package subpaths fail if
   `package.json#exports` does not expose them.
 - Synced the settlement account surface with the active protocol IDL so

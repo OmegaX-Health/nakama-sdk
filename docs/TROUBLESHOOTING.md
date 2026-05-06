@@ -29,8 +29,28 @@ npm run lint
 npm run format:check
 npm run build
 npm test
+npm run docs:api:check
 npm run examples:check
+npm run dogfood:consumer
 ```
+
+## Typed SDK errors
+
+Public failure paths that app builders can act on now throw typed errors from
+`@omegax/protocol-sdk/errors`. Branch on `instanceof` or the stable `code`
+field instead of parsing message text.
+
+Common codes:
+
+- `OMEGAX_CONFIG_ERROR`
+- `OMEGAX_INVALID_PUBLIC_KEY`
+- `OMEGAX_PROGRAM_MISMATCH`
+- `OMEGAX_ACCOUNT_NOT_FOUND`
+- `OMEGAX_ACCOUNT_OWNER_MISMATCH`
+- `OMEGAX_TOKEN_ACCOUNT_PREFLIGHT`
+- `OMEGAX_INSTRUCTION_BUILD`
+- `OMEGAX_TRANSACTION_DECODE`
+- `OMEGAX_RPC_ERROR`
 
 ## Transaction and submission issues
 

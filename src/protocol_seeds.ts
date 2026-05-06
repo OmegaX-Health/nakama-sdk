@@ -2,6 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 
 import { PROTOCOL_PROGRAM_ID } from './generated/protocol_contract.js';
 import type { PublicKeyish } from './generated/protocol_types.js';
+import { OmegaXInvalidPublicKeyError } from './errors.js';
 
 const TEXT_ENCODER = new TextEncoder();
 const PROGRAM_ID = new PublicKey(PROTOCOL_PROGRAM_ID);
@@ -81,12 +82,36 @@ export function toPublicKey(value: PublicKeyish): PublicKey {
     return value;
   }
   if (isPublicKeyLike(value)) {
-    return new PublicKey(value.toBase58());
+    let rendered = '[unrenderable public key-like value]';
+    try {
+      rendered = value.toBase58();
+      return new PublicKey(rendered);
+    } catch (error) {
+      throw new OmegaXInvalidPublicKeyError(
+        'public key-like value must produce a valid Solana public key',
+        {
+          details: { value: rendered },
+          cause: error,
+        },
+      );
+    }
   }
   if (value === null || value === undefined) {
-    throw new Error('public key value is required');
+    throw new OmegaXInvalidPublicKeyError('public key value is required', {
+      details: { value: null },
+    });
   }
-  return new PublicKey(value);
+  try {
+    return new PublicKey(value);
+  } catch (error) {
+    throw new OmegaXInvalidPublicKeyError(
+      'public key value must be a valid Solana public key',
+      {
+        details: { value: String(value) },
+        cause: error,
+      },
+    );
+  }
 }
 
 export function normalizeAddress(value: PublicKeyish): string {

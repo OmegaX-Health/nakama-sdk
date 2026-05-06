@@ -75,6 +75,8 @@ tests.
 Use `createProtocolClient(...)` only for protocol engineering, generated-surface
 tests, or advanced flows that need raw IDL-backed builders.
 
+For framework-specific snippets, see `docs/RECIPES.md`.
+
 ## Inspect the current public surface
 
 Use the SDK to inspect the live contract shape before choosing builders.

@@ -21,7 +21,9 @@ Use this page as the navigation hub for builders and release maintainers.
 
 - `GETTING_STARTED.md` for client setup, path selection, and the shared unsigned transaction pattern
 - `WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
+- `RECIPES.md` for Node, Next.js, oracle-worker, and read-only frontend snippets
 - `API_REFERENCE.md` for public builders, readers, PDA helpers, and reserve-model helpers
+- `generated/api/README.md` for generated TypeDoc markdown from the exported SDK surface
 - `TROUBLESHOOTING.md` for canonical failure modes and remediation
 - `../examples/README.md` for runnable smoke, app-builder, and oracle examples
 - `RELEASE_NOTES.md` for versioned SDK changes and rollout notes
@@ -41,6 +43,7 @@ Use this page as the navigation hub for builders and release maintainers.
 
 1. `GETTING_STARTED.md`
 2. `WORKFLOWS.md`
-3. `API_REFERENCE.md`
-4. `RELEASE_NOTES.md`
-5. `TROUBLESHOOTING.md`
+3. `RECIPES.md`
+4. `API_REFERENCE.md`
+5. `RELEASE_NOTES.md`
+6. `TROUBLESHOOTING.md`

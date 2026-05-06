@@ -1,3 +1,4 @@
 artifacts
 dist
+docs/generated/api
 node_modules

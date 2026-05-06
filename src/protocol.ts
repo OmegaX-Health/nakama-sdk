@@ -74,6 +74,13 @@ import {
   toPublicKey,
   ZERO_PUBKEY_KEY,
 } from './protocol_seeds.js';
+import {
+  OmegaXAccountNotFoundError,
+  OmegaXAccountOwnerMismatchError,
+  OmegaXInstructionBuildError,
+  OmegaXProgramMismatchError,
+  OmegaXTokenAccountPreflightError,
+} from './errors.js';
 
 type IdlField = { name: string; type: IdlType };
 type IdlType =
@@ -128,8 +135,14 @@ function classicTokenProgramId(
 ): PublicKey {
   const candidate = toPublicKey(tokenProgramId ?? SPL_TOKEN_PROGRAM_ID);
   if (!candidate.equals(SPL_TOKEN_PROGRAM_ID)) {
-    throw new Error(
+    throw new OmegaXProgramMismatchError(
       'OmegaX Protocol v1 supports only the classic SPL Token program.',
+      {
+        details: {
+          expectedProgramId: SPL_TOKEN_PROGRAM_ID.toBase58(),
+          actualProgramId: candidate.toBase58(),
+        },
+      },
     );
   }
   return candidate;
@@ -157,8 +170,17 @@ function resolveProgramIdForBuild(params: {
     !resolved.equals(canonical) &&
     !unsafeCustomProgramIdAllowed(params.unsafeAllowCustomProgramId)
   ) {
-    throw new Error(
+    throw new OmegaXProgramMismatchError(
       `custom programId ${resolved.toBase58()} is unsafe for production SDK flows; set unsafeAllowCustomProgramId or ${UNSAFE_CUSTOM_PROGRAM_ID_ENV}=1 only for devnet/localnet/test workflows`,
+      {
+        details: {
+          expectedProgramId: canonical.toBase58(),
+          actualProgramId: resolved.toBase58(),
+          unsafeAllowCustomProgramId:
+            params.unsafeAllowCustomProgramId === true,
+          unsafeCustomProgramIdEnv: UNSAFE_CUSTOM_PROGRAM_ID_ENV,
+        },
+      },
     );
   }
   return resolved;
@@ -546,8 +568,11 @@ function resolveInstructionAccounts(
             },
           ];
         }
-        throw new Error(
+        throw new OmegaXInstructionBuildError(
           `Missing required account "${account.name}" for instruction ${instructionName}`,
+          {
+            details: { instructionName, accountName: account.name },
+          },
         );
       }
 
@@ -570,15 +595,21 @@ function inferFeePayer(
     (account) => account.signer && !account.address,
   );
   if (!signer) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       `Unable to infer fee payer for ${instructionName}. Pass feePayer explicitly.`,
+      {
+        details: { instructionName },
+      },
     );
   }
 
   const signerAddress = accounts[signer.name];
   if (!signerAddress) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       `Unable to infer fee payer for ${instructionName}: signer account "${signer.name}" is missing.`,
+      {
+        details: { instructionName, signerAccountName: signer.name },
+      },
     );
   }
 
@@ -640,8 +671,16 @@ function decodeFetchedProtocolAccount<T = Record<string, unknown>>(
   programId: PublicKey,
 ): T {
   if (!info.owner.equals(programId)) {
-    throw new Error(
+    throw new OmegaXAccountOwnerMismatchError(
       `Account ${address.toBase58()} for ${accountName} is owned by ${info.owner.toBase58()}, not OmegaX Protocol program ${programId.toBase58()}.`,
+      {
+        details: {
+          accountName,
+          address: address.toBase58(),
+          expectedOwner: programId.toBase58(),
+          actualOwner: info.owner.toBase58(),
+        },
+      },
     );
   }
   return decodeProtocolAccount<T>(accountName, info.data);
@@ -3914,12 +3953,12 @@ export function compileTransactionToV0(
   lookupTableAccounts: AddressLookupTableAccount[],
 ): VersionedTransaction {
   if (!transaction.feePayer) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       'transaction fee payer is required to compile a v0 transaction',
     );
   }
   if (!transaction.recentBlockhash) {
-    throw new Error(
+    throw new OmegaXInstructionBuildError(
       'transaction recentBlockhash is required to compile a v0 transaction',
     );
   }
@@ -3951,25 +3990,65 @@ export async function preflightClassicTokenAccount(params: {
     'confirmed',
   );
   if (!info) {
-    throw new Error(`${label} ${tokenAccount.toBase58()} does not exist`);
+    throw new OmegaXAccountNotFoundError(
+      `${label} ${tokenAccount.toBase58()} does not exist`,
+      {
+        details: { label, tokenAccount: tokenAccount.toBase58() },
+      },
+    );
   }
   if (!info.owner.equals(SPL_TOKEN_PROGRAM_ID)) {
-    throw new Error(`${label} must be owned by the classic SPL Token program`);
+    throw new OmegaXAccountOwnerMismatchError(
+      `${label} must be owned by the classic SPL Token program`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          expectedOwner: SPL_TOKEN_PROGRAM_ID.toBase58(),
+          actualOwner: info.owner.toBase58(),
+        },
+      },
+    );
   }
   if (info.data.length < 72) {
-    throw new Error(`${label} has invalid SPL Token account data`);
+    throw new OmegaXTokenAccountPreflightError(
+      `${label} has invalid SPL Token account data`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          dataLength: info.data.length,
+        },
+      },
+    );
   }
 
   const actualMint = new PublicKey(info.data.subarray(0, 32));
   const actualOwner = new PublicKey(info.data.subarray(32, 64));
   if (!actualMint.equals(expectedMint)) {
-    throw new Error(
+    throw new OmegaXTokenAccountPreflightError(
       `${label} mint mismatch: expected ${expectedMint.toBase58()}, got ${actualMint.toBase58()}`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          expectedMint: expectedMint.toBase58(),
+          actualMint: actualMint.toBase58(),
+        },
+      },
     );
   }
   if (expectedOwner && !actualOwner.equals(expectedOwner)) {
-    throw new Error(
+    throw new OmegaXTokenAccountPreflightError(
       `${label} owner mismatch: expected ${expectedOwner.toBase58()}, got ${actualOwner.toBase58()}`,
+      {
+        details: {
+          label,
+          tokenAccount: tokenAccount.toBase58(),
+          expectedOwner: expectedOwner.toBase58(),
+          actualOwner: actualOwner.toBase58(),
+        },
+      },
     );
   }
 }
@@ -4394,8 +4473,14 @@ export function createProtocolClient(
 
     const requestedProgramId = toPublicKey(inputProgramId);
     if (!requestedProgramId.equals(resolvedProgramId)) {
-      throw new Error(
+      throw new OmegaXProgramMismatchError(
         `programId mismatch: expected ${resolvedProgramId.toBase58()}, received ${requestedProgramId.toBase58()}`,
+        {
+          details: {
+            expectedProgramId: resolvedProgramId.toBase58(),
+            actualProgramId: requestedProgramId.toBase58(),
+          },
+        },
       );
     }
 

@@ -2,6 +2,8 @@
 
 This page documents the public SDK surface shipped in `0.8.6`.
 
+For generated symbol-level markdown, see `docs/generated/api/README.md`.
+
 ## Core runtime entrypoints
 
 - `createConnection(...)`
@@ -20,6 +22,21 @@ This page documents the public SDK surface shipped in `0.8.6`.
 - `buildProtocolTransaction(...)`
 - `compileTransactionToV0(...)`
 - `preflightClassicTokenAccount(...)`
+
+Typed SDK errors:
+
+Available from the root package and `@omegax/protocol-sdk/errors`.
+
+- `OmegaXError`
+- `OmegaXConfigError`
+- `OmegaXInvalidPublicKeyError`
+- `OmegaXProgramMismatchError`
+- `OmegaXAccountNotFoundError`
+- `OmegaXAccountOwnerMismatchError`
+- `OmegaXTokenAccountPreflightError`
+- `OmegaXInstructionBuildError`
+- `OmegaXTransactionDecodeError`
+- `OmegaXRpcError`
 
 Safe-client public types:
 

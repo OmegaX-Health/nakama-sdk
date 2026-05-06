@@ -99,6 +99,9 @@ jobs:
       - name: Docs consistency
         run: npm run docs:check
 
+      - name: Generated API docs consistency
+        run: npm run docs:api:check
+
       - name: Docs sync parity (omegax-docs)
         run: npm run docs:sync:check
 
@@ -110,6 +113,9 @@ jobs:
 
       - name: Developer experience smoke
         run: npm run dx:smoke
+
+      - name: Consumer dogfood smoke
+        run: npm run dogfood:consumer
 
       - name: Security audit (prod dependencies)
         run: npm run audit:prod

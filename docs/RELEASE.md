@@ -26,10 +26,13 @@ npm run lint
 npm run format:check
 npm run build
 npm test
+npm run docs:api:check
 npm run docs:check
 npm run docs:sync:check:strict
 npm run examples:check
+npm run dogfood:consumer
 npm run dx:smoke
+npm run verify:release
 npm run security:secrets
 npm run security:install-scripts
 npm run security:package
@@ -38,6 +41,10 @@ npm run verify:protocol:local
 npm run test:protocol:localnet
 npm pack --dry-run
 ```
+
+Use `npm run verify:release:strict` after the docs mirror commit is available.
+Use `npm run verify:release:protocol` before tagging or publishing when the
+sibling protocol checkout is part of the release decision.
 
 Production moderate-or-higher dependency advisories are release blockers unless
 `npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current

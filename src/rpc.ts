@@ -1,5 +1,6 @@
 import { Connection, type Commitment } from '@solana/web3.js';
 
+import { OmegaXConfigError } from './errors.js';
 import type {
   BroadcastSignedTxParams,
   BroadcastSignedTxResult,
@@ -110,8 +111,11 @@ function normalizeOmegaXNetwork(
   if (normalized === 'devnet') return 'devnet';
   if (normalized === 'mainnet' || normalized === 'mainnet-beta')
     return 'mainnet';
-  throw new Error(
+  throw new OmegaXConfigError(
     `Unsupported OmegaX network "${String(input)}". Supported networks: "devnet", "mainnet".`,
+    {
+      details: { network: input },
+    },
   );
 }
 

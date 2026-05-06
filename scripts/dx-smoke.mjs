@@ -80,6 +80,7 @@ try {
   type SafeSettleObligationTxParams,
 } from '@omegax/protocol-sdk';
 import { validateSignedClaimTx } from '@omegax/protocol-sdk/claims';
+import { OmegaXError } from '@omegax/protocol-sdk/errors';
 import { createOracleSignerFromKmsAdapter } from '@omegax/protocol-sdk/oracle';
 import { createProtocolClient } from '@omegax/protocol-sdk/protocol';
 import { buildMemberReadModel } from '@omegax/protocol-sdk/protocol_models';
@@ -108,6 +109,7 @@ void rpc;
 void healthPlan;
 void maybeSettleParams;
 void maybeIntent;
+void OmegaXError;
 void validateSignedClaimTx;
 void createOracleSignerFromKmsAdapter;
 void buildMemberReadModel;
@@ -133,6 +135,7 @@ const require = createRequire(import.meta.url);
 const subpaths = [
   '@omegax/protocol-sdk',
   '@omegax/protocol-sdk/claims',
+  '@omegax/protocol-sdk/errors',
   '@omegax/protocol-sdk/oracle',
   '@omegax/protocol-sdk/protocol',
   '@omegax/protocol-sdk/protocol_models',

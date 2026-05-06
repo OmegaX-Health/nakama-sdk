@@ -12,6 +12,7 @@ import {
 import { mkdtemp, mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
 import {
@@ -22,19 +23,60 @@ import {
 
 const sdkRoot = process.cwd();
 const protocolRepo = resolveProtocolRepo(sdkRoot);
-const protocolPaths = ensureProtocolWorkspace(protocolRepo);
 const artifactsRoot = resolve(sdkRoot, 'artifacts');
 const keepArtifacts = process.env.OMEGAX_E2E_KEEP_ARTIFACTS === '1';
 const skipBuild = process.env.OMEGAX_PROTOCOL_SKIP_BUILD === '1';
+const localnetPhaseAttempts = Math.max(
+  1,
+  Math.min(Number(process.env.OMEGAX_LOCALNET_PHASE_ATTEMPTS ?? '2') || 2, 5),
+);
 const protocolProgramId =
   process.env.PROTOCOL_PROGRAM_ID ??
   process.env.NEXT_PUBLIC_PROTOCOL_PROGRAM_ID ??
   'Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B';
 const classicTokenProgramId = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
 const zeroPubkey = new PublicKey('11111111111111111111111111111111');
+let cachedProtocolPaths = null;
+
+function getProtocolPaths() {
+  cachedProtocolPaths ??= ensureProtocolWorkspace(protocolRepo);
+  return cachedProtocolPaths;
+}
 
 function nowStamp() {
   return new Date().toISOString().replace(/[:.]/g, '-');
+}
+
+export function readValidatorLogTail(logPath, maxLines = 80) {
+  if (!existsSync(logPath)) return '';
+  const lines = readFileSync(logPath, 'utf8').trimEnd().split(/\r?\n/);
+  return lines.slice(-maxLines).join('\n');
+}
+
+export function isRetryableLocalnetError(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  return [
+    /Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA is not deployed/i,
+    /Unsupported program id/i,
+    /Timed out waiting for validator RPC/i,
+    /Timed out waiting for program/i,
+    /Blockhash not found/i,
+    /airdrop .*failed/i,
+    /validator .*not ready/i,
+  ].some((pattern) => pattern.test(message));
+}
+
+export function formatLocalnetFailure(params) {
+  const message =
+    params.error instanceof Error ? params.error.message : String(params.error);
+  return [
+    message,
+    params.validatorLogTail
+      ? `\n[omegax-sdk] Validator log tail:\n${params.validatorLogTail}`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 async function freePort(excludedPorts = new Set()) {
@@ -387,7 +429,7 @@ async function runPhase(params) {
   validatorArgs.push(
     '--bpf-program',
     protocolProgramId,
-    protocolPaths.programSoPath,
+    getProtocolPaths().programSoPath,
   );
 
   const validator = spawn('solana-test-validator', validatorArgs, {
@@ -450,6 +492,14 @@ async function runPhase(params) {
       legacySchemaFixture,
       fundedSignerFixtures,
     });
+  } catch (error) {
+    throw new Error(
+      formatLocalnetFailure({
+        error,
+        validatorLogTail: readValidatorLogTail(logPath),
+      }),
+      { cause: error },
+    );
   } finally {
     await stopValidator().catch(() => undefined);
     await preserveArtifacts().catch(() => undefined);
@@ -457,7 +507,31 @@ async function runPhase(params) {
   }
 }
 
+async function runPhaseWithRetry(params) {
+  for (let attempt = 1; attempt <= localnetPhaseAttempts; attempt += 1) {
+    try {
+      if (localnetPhaseAttempts > 1) {
+        console.log(
+          `[omegax-sdk] ${params.name} attempt ${attempt}/${localnetPhaseAttempts}`,
+        );
+      }
+      await runPhase(params);
+      return;
+    } catch (error) {
+      const retryable = isRetryableLocalnetError(error);
+      if (!retryable || attempt === localnetPhaseAttempts) {
+        throw error;
+      }
+      console.warn(
+        `[omegax-sdk] ${params.name} hit retryable localnet startup failure; retrying (${attempt}/${localnetPhaseAttempts})`,
+      );
+      console.warn(error instanceof Error ? error.message : String(error));
+    }
+  }
+}
+
 async function main() {
+  const protocolPaths = getProtocolPaths();
   if (!existsSync(protocolPaths.e2eTestPath)) {
     throw new Error(
       `Protocol E2E suite not found at ${protocolPaths.e2eTestPath}`,
@@ -479,7 +553,7 @@ async function main() {
     );
   }
 
-  await runPhase({
+  await runPhaseWithRetry({
     name: 'sdk-localnet-smoke',
     preloadFundedSignerFixtures: true,
     run: async (context) => {
@@ -510,7 +584,7 @@ async function main() {
     },
   });
 
-  await runPhase({
+  await runPhaseWithRetry({
     name: 'sdk-protocol-surface',
     preloadLegacySchemaFixture: true,
     run: async (context) => {
@@ -558,7 +632,13 @@ async function main() {
   });
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+const isDirectRun =
+  Boolean(process.argv[1]) &&
+  import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isDirectRun) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  });
+}
