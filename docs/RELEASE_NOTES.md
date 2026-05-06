@@ -1,6 +1,6 @@
 # Release Notes — `@omegax/protocol-sdk`
 
-## `0.8.6`
+## `0.8.7`
 
 - Added the full onboarding DX pass for external app/backend and oracle-service
   builders, including safe-client-first docs, runnable smoke/app/oracle

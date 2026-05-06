@@ -8,7 +8,7 @@
     "smoke": "node dist/smoke.js"
   },
   "dependencies": {
-    "@omegax/protocol-sdk": "^0.8.6"
+    "@omegax/protocol-sdk": "^0.8.7"
   },
   "devDependencies": {
     "@types/node": "^20.19.37",

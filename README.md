@@ -128,14 +128,14 @@ This package exposes the live canonical object model:
 
 ## Release status
 
-- SDK release target: `0.8.6`
+- SDK release target: `0.8.7`
 - Protocol surface target: `omegax-protocol` commit `2326371`
 - Current public network target: Solana devnet beta
 - Public docs: [docs.omegax.health](https://docs.omegax.health)
 
 ## Release notes
 
-- `0.8.6` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
+- `0.8.7` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
 - `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
 - `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
