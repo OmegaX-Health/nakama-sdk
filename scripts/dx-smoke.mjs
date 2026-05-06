@@ -154,7 +154,7 @@ for (const subpath of subpaths) {
 }
 
 const pkg = require('@omegax/protocol-sdk/package.json');
-if (pkg.version !== '0.8.6') {
+if (pkg.version !== '0.8.7') {
   throw new Error(\`unexpected package version \${pkg.version}\`);
 }
 

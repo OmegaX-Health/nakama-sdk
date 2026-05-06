@@ -1,6 +1,6 @@
 {
   "name": "@omegax/protocol-sdk",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "TypeScript SDK for the canonical OmegaX health capital markets protocol surface on Solana devnet.",
   "author": "OMEGAX HEALTH FZCO",
   "contributors": [
