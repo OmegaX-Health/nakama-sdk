@@ -8,7 +8,7 @@
 
 > **accountExists**(`connection`, `address`): `Promise`\<`boolean`\>
 
-Defined in: [src/protocol.ts:641](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L641)
+Defined in: [src/protocol.ts:641](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L641)
 
 ## Parameters
 

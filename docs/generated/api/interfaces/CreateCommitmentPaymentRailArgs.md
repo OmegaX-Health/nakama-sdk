@@ -6,7 +6,7 @@
 
 # Interface: CreateCommitmentPaymentRailArgs
 
-Defined in: [src/generated/protocol\_types.ts:423](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L423)
+Defined in: [src/generated/protocol\_types.ts:423](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L423)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:423](https://github.com/OmegaX-Hea
 
 > **coverage\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:430](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L430)
+Defined in: [src/generated/protocol\_types.ts:430](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L430)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:430](https://github.com/OmegaX-Hea
 
 > **coverage\_asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:425](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L425)
+Defined in: [src/generated/protocol\_types.ts:425](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L425)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:425](https://github.com/OmegaX-Hea
 
 > **coverage\_funding\_line**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:427](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L427)
+Defined in: [src/generated/protocol\_types.ts:427](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L427)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:427](https://github.com/OmegaX-Hea
 
 > **deposit\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:429](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L429)
+Defined in: [src/generated/protocol\_types.ts:429](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L429)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:429](https://github.com/OmegaX-Hea
 
 > **hard\_cap\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:431](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L431)
+Defined in: [src/generated/protocol\_types.ts:431](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L431)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:431](https://github.com/OmegaX-Hea
 
 > **mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:428](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L428)
+Defined in: [src/generated/protocol\_types.ts:428](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L428)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/generated/protocol\_types.ts:428](https://github.com/OmegaX-Hea
 
 > **payment\_asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:424](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L424)
+Defined in: [src/generated/protocol\_types.ts:424](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L424)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: [src/generated/protocol\_types.ts:424](https://github.com/OmegaX-Hea
 
 > **reserve\_asset\_rail**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:426](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L426)
+Defined in: [src/generated/protocol\_types.ts:426](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L426)

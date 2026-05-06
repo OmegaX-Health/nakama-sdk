@@ -8,7 +8,7 @@
 
 > **MemberPositionSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:194](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L194)
+Defined in: [src/protocol\_models.ts:194](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L194)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:194](https://github.com/OmegaX-Health/omega
 
 > **active**: `boolean`
 
-Defined in: [src/protocol\_models.ts:201](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L201)
+Defined in: [src/protocol\_models.ts:201](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L201)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:201](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:195](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L195)
+Defined in: [src/protocol\_models.ts:195](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L195)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:195](https://github.com/OmegaX-Health/omega
 
 > **delegatedRights**: `string`[]
 
-Defined in: [src/protocol\_models.ts:200](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L200)
+Defined in: [src/protocol\_models.ts:200](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L200)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol\_models.ts:200](https://github.com/OmegaX-Health/omega
 
 > **eligibilityStatus**: `number`
 
-Defined in: [src/protocol\_models.ts:199](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L199)
+Defined in: [src/protocol\_models.ts:199](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L199)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/protocol\_models.ts:199](https://github.com/OmegaX-Health/omega
 
 > **healthPlan**: `string`
 
-Defined in: [src/protocol\_models.ts:197](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L197)
+Defined in: [src/protocol\_models.ts:197](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L197)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol\_models.ts:197](https://github.com/OmegaX-Health/omega
 
 > **policySeries**: `string`
 
-Defined in: [src/protocol\_models.ts:198](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L198)
+Defined in: [src/protocol\_models.ts:198](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L198)
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: [src/protocol\_models.ts:198](https://github.com/OmegaX-Health/omega
 
 > **wallet**: `string`
 
-Defined in: [src/protocol\_models.ts:196](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L196)
+Defined in: [src/protocol\_models.ts:196](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L196)

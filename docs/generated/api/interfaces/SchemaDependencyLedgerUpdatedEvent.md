@@ -6,7 +6,7 @@
 
 # Interface: SchemaDependencyLedgerUpdatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:1231](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1231)
+Defined in: [src/generated/protocol\_types.ts:1231](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1231)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1231](https://github.com/OmegaX-He
 
 > **dependency\_count**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1235](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1235)
+Defined in: [src/generated/protocol\_types.ts:1235](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1235)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1235](https://github.com/OmegaX-He
 
 > **governance\_authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1233](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1233)
+Defined in: [src/generated/protocol\_types.ts:1233](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1233)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1233](https://github.com/OmegaX-He
 
 > **schema\_dependency\_ledger**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1232](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1232)
+Defined in: [src/generated/protocol\_types.ts:1232](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1232)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1232](https://github.com/OmegaX-He
 
 > **schema\_key\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:1234](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1234)
+Defined in: [src/generated/protocol\_types.ts:1234](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1234)

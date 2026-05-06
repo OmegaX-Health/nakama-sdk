@@ -6,7 +6,7 @@
 
 # Interface: VersionPolicySeriesAccounts
 
-Defined in: [src/generated/protocol\_types.ts:2020](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2020)
+Defined in: [src/generated/protocol\_types.ts:2020](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2020)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:2020](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2021](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2021)
+Defined in: [src/generated/protocol\_types.ts:2021](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2021)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:2021](https://github.com/OmegaX-He
 
 > **current\_policy\_series**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2024](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2024)
+Defined in: [src/generated/protocol\_types.ts:2024](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2024)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:2024](https://github.com/OmegaX-He
 
 > **health\_plan**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2023](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2023)
+Defined in: [src/generated/protocol\_types.ts:2023](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2023)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:2023](https://github.com/OmegaX-He
 
 > **next\_policy\_series**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2025](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2025)
+Defined in: [src/generated/protocol\_types.ts:2025](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2025)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:2025](https://github.com/OmegaX-He
 
 > **next\_series\_reserve\_ledger**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2026](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2026)
+Defined in: [src/generated/protocol\_types.ts:2026](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2026)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:2026](https://github.com/OmegaX-He
 
 > **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2022](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2022)
+Defined in: [src/generated/protocol\_types.ts:2022](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2022)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/generated/protocol\_types.ts:2022](https://github.com/OmegaX-He
 
 > `optional` **system\_program?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2027](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2027)
+Defined in: [src/generated/protocol\_types.ts:2027](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2027)

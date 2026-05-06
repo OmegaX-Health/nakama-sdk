@@ -23,7 +23,8 @@ const allowed = files.filter(
     path === 'README.md' ||
     path === 'LICENSE' ||
     path === 'NOTICE' ||
-    path.startsWith('dist/'),
+    path.startsWith('dist/') ||
+    path.startsWith('templates/'),
 );
 const unexpected = files.filter((path) => !allowed.includes(path));
 

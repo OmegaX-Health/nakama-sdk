@@ -8,7 +8,7 @@
 
 > **ProtocolCycleQuoteFields** = `object`
 
-Defined in: [src/types.ts:168](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L168)
+Defined in: [src/types.ts:168](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L168)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:168](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **bondAmountRaw**: `bigint`
 
-Defined in: [src/types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L177)
+Defined in: [src/types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L177)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **canonicalPremiumAmount**: `bigint`
 
-Defined in: [src/types.ts:174](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L174)
+Defined in: [src/types.ts:174](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L174)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:174](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **cohortHashHex**: `string`
 
-Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L186)
+Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L186)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **commitmentEnabled**: `boolean`
 
-Defined in: [src/types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L176)
+Defined in: [src/types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L176)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expiresAtTs**: `bigint`
 
-Defined in: [src/types.ts:187](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L187)
+Defined in: [src/types.ts:187](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L187)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/types.ts:187](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **includedShieldCount**: `number`
 
-Defined in: [src/types.ts:183](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L183)
+Defined in: [src/types.ts:183](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L183)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/types.ts:183](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **member**: `string`
 
-Defined in: [src/types.ts:170](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L170)
+Defined in: [src/types.ts:170](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L170)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/types.ts:170](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **netPoolPremiumRaw**: `bigint`
 
-Defined in: [src/types.ts:181](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L181)
+Defined in: [src/types.ts:181](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L181)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/types.ts:181](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **nonceHashHex**: `string`
 
-Defined in: [src/types.ts:188](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L188)
+Defined in: [src/types.ts:188](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L188)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/types.ts:188](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **oracleFeeRaw**: `bigint`
 
-Defined in: [src/types.ts:180](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L180)
+Defined in: [src/types.ts:180](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L180)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [src/types.ts:180](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **outcomeThresholdScore**: `number`
 
-Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L185)
+Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L185)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **paymentMint**: `string`
 
-Defined in: [src/types.ts:172](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L172)
+Defined in: [src/types.ts:172](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L172)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [src/types.ts:172](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **periodIndex**: `bigint`
 
-Defined in: [src/types.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L175)
+Defined in: [src/types.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L175)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/types.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **poolAddress**: `string`
 
-Defined in: [src/types.ts:169](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L169)
+Defined in: [src/types.ts:169](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L169)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [src/types.ts:169](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **premiumAmountRaw**: `bigint`
 
-Defined in: [src/types.ts:173](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L173)
+Defined in: [src/types.ts:173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L173)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [src/types.ts:173](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **protocolFeeRaw**: `bigint`
 
-Defined in: [src/types.ts:179](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L179)
+Defined in: [src/types.ts:179](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L179)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: [src/types.ts:179](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **quoteMetaHashHex**: `string`
 
-Defined in: [src/types.ts:189](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L189)
+Defined in: [src/types.ts:189](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L189)
 
 ***
 
@@ -152,7 +152,7 @@ Defined in: [src/types.ts:189](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **seriesRefHashHex**: `string`
 
-Defined in: [src/types.ts:171](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L171)
+Defined in: [src/types.ts:171](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L171)
 
 ***
 
@@ -160,7 +160,7 @@ Defined in: [src/types.ts:171](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **shieldFeeRaw**: `bigint`
 
-Defined in: [src/types.ts:178](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L178)
+Defined in: [src/types.ts:178](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L178)
 
 ***
 
@@ -168,7 +168,7 @@ Defined in: [src/types.ts:178](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **thresholdBps**: `number`
 
-Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L184)
+Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L184)
 
 ***
 
@@ -176,4 +176,4 @@ Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **totalAmountRaw**: `bigint`
 
-Defined in: [src/types.ts:182](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L182)
+Defined in: [src/types.ts:182](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L182)

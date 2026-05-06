@@ -6,7 +6,7 @@
 
 # Interface: AttachClaimEvidenceRefAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1439](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1439)
+Defined in: [src/generated/protocol\_types.ts:1439](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1439)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1439](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1440](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1440)
+Defined in: [src/generated/protocol\_types.ts:1440](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1440)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1440](https://github.com/OmegaX-He
 
 > **claim\_case**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1443](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1443)
+Defined in: [src/generated/protocol\_types.ts:1443](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1443)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1443](https://github.com/OmegaX-He
 
 > **health\_plan**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1442](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1442)
+Defined in: [src/generated/protocol\_types.ts:1442](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1442)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1442](https://github.com/OmegaX-He
 
 > **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1441](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1441)
+Defined in: [src/generated/protocol\_types.ts:1441](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1441)

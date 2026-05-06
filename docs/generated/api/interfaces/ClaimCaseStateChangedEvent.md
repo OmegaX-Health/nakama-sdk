@@ -6,7 +6,7 @@
 
 # Interface: ClaimCaseStateChangedEvent
 
-Defined in: [src/generated/protocol\_types.ts:239](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L239)
+Defined in: [src/generated/protocol\_types.ts:239](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L239)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:239](https://github.com/OmegaX-Hea
 
 > **approved\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:242](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L242)
+Defined in: [src/generated/protocol\_types.ts:242](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L242)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:242](https://github.com/OmegaX-Hea
 
 > **claim\_case**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:240](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L240)
+Defined in: [src/generated/protocol\_types.ts:240](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L240)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:240](https://github.com/OmegaX-Hea
 
 > **intake\_status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:241](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L241)
+Defined in: [src/generated/protocol\_types.ts:241](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L241)

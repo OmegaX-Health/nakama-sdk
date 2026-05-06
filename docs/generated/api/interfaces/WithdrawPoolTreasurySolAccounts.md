@@ -6,7 +6,7 @@
 
 # Interface: WithdrawPoolTreasurySolAccounts
 
-Defined in: [src/generated/protocol\_types.ts:2054](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2054)
+Defined in: [src/generated/protocol\_types.ts:2054](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2054)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:2054](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2055](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2055)
+Defined in: [src/generated/protocol\_types.ts:2055](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2055)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:2055](https://github.com/OmegaX-He
 
 > **liquidity\_pool**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2057](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2057)
+Defined in: [src/generated/protocol\_types.ts:2057](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2057)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:2057](https://github.com/OmegaX-He
 
 > **pool\_treasury\_vault**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2058](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2058)
+Defined in: [src/generated/protocol\_types.ts:2058](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2058)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:2058](https://github.com/OmegaX-He
 
 > **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2056](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2056)
+Defined in: [src/generated/protocol\_types.ts:2056](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2056)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:2056](https://github.com/OmegaX-He
 
 > **recipient**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2059](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2059)
+Defined in: [src/generated/protocol\_types.ts:2059](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2059)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/generated/protocol\_types.ts:2059](https://github.com/OmegaX-He
 
 > `optional` **system\_program?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:2060](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L2060)
+Defined in: [src/generated/protocol\_types.ts:2060](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2060)

@@ -6,7 +6,7 @@
 
 # Interface: UpdateCapitalClassControlsArgs
 
-Defined in: [src/generated/protocol\_types.ts:1294](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1294)
+Defined in: [src/generated/protocol\_types.ts:1294](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1294)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1294](https://github.com/OmegaX-He
 
 > **active**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:1297](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1297)
+Defined in: [src/generated/protocol\_types.ts:1297](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1297)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1297](https://github.com/OmegaX-He
 
 > **pause\_flags**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1295](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1295)
+Defined in: [src/generated/protocol\_types.ts:1295](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1295)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1295](https://github.com/OmegaX-He
 
 > **queue\_only\_redemptions**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:1296](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1296)
+Defined in: [src/generated/protocol\_types.ts:1296](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1296)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1296](https://github.com/OmegaX-He
 
 > **reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:1298](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1298)
+Defined in: [src/generated/protocol\_types.ts:1298](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1298)

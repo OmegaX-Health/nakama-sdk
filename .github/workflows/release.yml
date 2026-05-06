@@ -100,7 +100,15 @@ jobs:
         run: npm run dx:smoke
 
       - name: Consumer dogfood smoke
+        env:
+          OMEGAX_DOGFOOD_SKIP_TEMPLATES: '1'
         run: npm run dogfood:consumer
+
+      - name: CLI smoke
+        run: npm run cli:check
+
+      - name: Template smoke
+        run: npm run templates:check
 
   publish:
     runs-on: ubuntu-latest

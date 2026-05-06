@@ -6,7 +6,7 @@
 
 # Interface: AllocationLedger
 
-Defined in: [src/generated/protocol\_types.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L90)
+Defined in: [src/generated/protocol\_types.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L90)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:90](https://github.com/OmegaX-Heal
 
 > **allocation\_position**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:91](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L91)
+Defined in: [src/generated/protocol\_types.ts:91](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L91)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:91](https://github.com/OmegaX-Heal
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:92](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L92)
+Defined in: [src/generated/protocol\_types.ts:92](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L92)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:92](https://github.com/OmegaX-Heal
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L95)
+Defined in: [src/generated/protocol\_types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L95)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:95](https://github.com/OmegaX-Heal
 
 > **realized\_pnl**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:94](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L94)
+Defined in: [src/generated/protocol\_types.ts:94](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L94)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:94](https://github.com/OmegaX-Heal
 
 > **sheet**: [`ReserveBalanceSheet`](ReserveBalanceSheet.md)
 
-Defined in: [src/generated/protocol\_types.ts:93](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L93)
+Defined in: [src/generated/protocol\_types.ts:93](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L93)

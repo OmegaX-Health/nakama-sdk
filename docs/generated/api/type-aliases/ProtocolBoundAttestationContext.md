@@ -8,7 +8,7 @@
 
 > **ProtocolBoundAttestationContext** = `object`
 
-Defined in: [src/types.ts:99](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L99)
+Defined in: [src/types.ts:99](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L99)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:99](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > `optional` **allocationPosition?**: `string` \| `null`
 
-Defined in: [src/types.ts:108](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L108)
+Defined in: [src/types.ts:108](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L108)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:108](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **asOfIso**: `string`
 
-Defined in: [src/types.ts:116](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L116)
+Defined in: [src/types.ts:116](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L116)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:116](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **audience**: `string`
 
-Defined in: [src/types.ts:113](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L113)
+Defined in: [src/types.ts:113](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L113)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types.ts:113](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **capitalClass?**: `string` \| `null`
 
-Defined in: [src/types.ts:107](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L107)
+Defined in: [src/types.ts:107](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L107)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types.ts:107](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **claimCase**: `string`
 
-Defined in: [src/types.ts:104](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L104)
+Defined in: [src/types.ts:104](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L104)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/types.ts:104](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expiresAtIso**: `string`
 
-Defined in: [src/types.ts:117](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L117)
+Defined in: [src/types.ts:117](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L117)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/types.ts:117](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **fundingLine**: `string`
 
-Defined in: [src/types.ts:103](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L103)
+Defined in: [src/types.ts:103](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L103)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/types.ts:103](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **healthPlan**: `string`
 
-Defined in: [src/types.ts:102](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L102)
+Defined in: [src/types.ts:102](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L102)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/types.ts:102](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **issuedAtIso**: `string`
 
-Defined in: [src/types.ts:115](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L115)
+Defined in: [src/types.ts:115](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L115)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/types.ts:115](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **liquidityPool?**: `string` \| `null`
 
-Defined in: [src/types.ts:106](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L106)
+Defined in: [src/types.ts:106](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L106)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [src/types.ts:106](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **network**: `string`
 
-Defined in: [src/types.ts:100](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L100)
+Defined in: [src/types.ts:100](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L100)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/types.ts:100](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **nonce**: `string`
 
-Defined in: [src/types.ts:114](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L114)
+Defined in: [src/types.ts:114](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L114)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [src/types.ts:114](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **policySeries?**: `string` \| `null`
 
-Defined in: [src/types.ts:105](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L105)
+Defined in: [src/types.ts:105](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L105)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/types.ts:105](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **poolOracleApproval?**: `string` \| `null`
 
-Defined in: [src/types.ts:109](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L109)
+Defined in: [src/types.ts:109](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L109)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [src/types.ts:109](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **poolOraclePermissionSet?**: `string` \| `null`
 
-Defined in: [src/types.ts:110](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L110)
+Defined in: [src/types.ts:110](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L110)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [src/types.ts:110](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **poolOraclePolicy?**: `string` \| `null`
 
-Defined in: [src/types.ts:111](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L111)
+Defined in: [src/types.ts:111](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L111)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: [src/types.ts:111](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **programId**: `string`
 
-Defined in: [src/types.ts:101](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L101)
+Defined in: [src/types.ts:101](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L101)
 
 ***
 
@@ -152,4 +152,4 @@ Defined in: [src/types.ts:101](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **schemaKeyHashHex**: `string`
 
-Defined in: [src/types.ts:112](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L112)
+Defined in: [src/types.ts:112](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L112)

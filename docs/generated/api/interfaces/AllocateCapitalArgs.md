@@ -6,7 +6,7 @@
 
 # Interface: AllocateCapitalArgs
 
-Defined in: [src/generated/protocol\_types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L86)
+Defined in: [src/generated/protocol\_types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L86)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:86](https://github.com/OmegaX-Heal
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L87)
+Defined in: [src/generated/protocol\_types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L87)

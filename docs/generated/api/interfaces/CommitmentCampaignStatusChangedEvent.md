@@ -6,7 +6,7 @@
 
 # Interface: CommitmentCampaignStatusChangedEvent
 
-Defined in: [src/generated/protocol\_types.ts:287](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L287)
+Defined in: [src/generated/protocol\_types.ts:287](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L287)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:287](https://github.com/OmegaX-Hea
 
 > **authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:290](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L290)
+Defined in: [src/generated/protocol\_types.ts:290](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L290)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:290](https://github.com/OmegaX-Hea
 
 > **campaign**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:288](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L288)
+Defined in: [src/generated/protocol\_types.ts:288](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L288)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:288](https://github.com/OmegaX-Hea
 
 > **reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:291](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L291)
+Defined in: [src/generated/protocol\_types.ts:291](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L291)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:291](https://github.com/OmegaX-Hea
 
 > **status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:289](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L289)
+Defined in: [src/generated/protocol\_types.ts:289](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L289)

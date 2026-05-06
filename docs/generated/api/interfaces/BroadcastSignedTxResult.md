@@ -6,7 +6,7 @@
 
 # Interface: BroadcastSignedTxResult
 
-Defined in: [src/types.ts:217](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L217)
+Defined in: [src/types.ts:217](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L217)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:217](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signature**: `string`
 
-Defined in: [src/types.ts:218](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L218)
+Defined in: [src/types.ts:218](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L218)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:218](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **slot**: `number` \| `null`
 
-Defined in: [src/types.ts:220](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L220)
+Defined in: [src/types.ts:220](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L220)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/types.ts:220](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **status**: `"failed"` \| `"confirmed"` \| `"submitted"`
 
-Defined in: [src/types.ts:219](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L219)
+Defined in: [src/types.ts:219](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L219)

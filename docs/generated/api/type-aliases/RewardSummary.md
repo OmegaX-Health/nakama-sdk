@@ -8,7 +8,7 @@
 
 > **RewardSummary** = `object`
 
-Defined in: [src/types.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L57)
+Defined in: [src/types.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L57)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **cycle**: `object`
 
-Defined in: [src/types.ts:63](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L63)
+Defined in: [src/types.ts:63](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L63)
 
 #### endIso
 
@@ -52,7 +52,7 @@ Defined in: [src/types.ts:63](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **rewards**: `object`
 
-Defined in: [src/types.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L72)
+Defined in: [src/types.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L72)
 
 #### asset
 
@@ -84,7 +84,7 @@ Defined in: [src/types.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **wallet**: `object`
 
-Defined in: [src/types.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L58)
+Defined in: [src/types.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L58)
 
 #### address
 

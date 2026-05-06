@@ -8,7 +8,7 @@
 
 > **SponsorReadModel** = `object`
 
-Defined in: [src/protocol\_models.ts:347](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L347)
+Defined in: [src/protocol\_models.ts:347](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L347)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:347](https://github.com/OmegaX-Health/omega
 
 > **accruedRewards**: `bigint`
 
-Defined in: [src/protocol\_models.ts:352](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L352)
+Defined in: [src/protocol\_models.ts:352](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L352)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:352](https://github.com/OmegaX-Health/omega
 
 > **budgetBurn**: `bigint`
 
-Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L356)
+Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L356)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/omega
 
 > **claimCounts**: `Record`\<`string`, `number`\>
 
-Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L355)
+Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L355)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/omega
 
 > **fundedSponsorBudget**: `bigint`
 
-Defined in: [src/protocol\_models.ts:350](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L350)
+Defined in: [src/protocol\_models.ts:350](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L350)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/protocol\_models.ts:350](https://github.com/OmegaX-Health/omega
 
 > **healthPlanAddress**: `string`
 
-Defined in: [src/protocol\_models.ts:348](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L348)
+Defined in: [src/protocol\_models.ts:348](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L348)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol\_models.ts:348](https://github.com/OmegaX-Health/omega
 
 > **paidRewards**: `bigint`
 
-Defined in: [src/protocol\_models.ts:353](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L353)
+Defined in: [src/protocol\_models.ts:353](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L353)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/protocol\_models.ts:353](https://github.com/OmegaX-Health/omega
 
 > **perSeriesPerformance**: `object`[]
 
-Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L357)
+Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L357)
 
 #### approvedClaims
 
@@ -112,7 +112,7 @@ Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/omega
 
 > **planId**: `string`
 
-Defined in: [src/protocol\_models.ts:349](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L349)
+Defined in: [src/protocol\_models.ts:349](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L349)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/protocol\_models.ts:349](https://github.com/OmegaX-Health/omega
 
 > **remainingSponsorBudget**: `bigint`
 
-Defined in: [src/protocol\_models.ts:351](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L351)
+Defined in: [src/protocol\_models.ts:351](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L351)
 
 ***
 
@@ -128,4 +128,4 @@ Defined in: [src/protocol\_models.ts:351](https://github.com/OmegaX-Health/omega
 
 > **reserveCoverageBps**: `bigint` \| `null`
 
-Defined in: [src/protocol\_models.ts:354](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L354)
+Defined in: [src/protocol\_models.ts:354](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L354)

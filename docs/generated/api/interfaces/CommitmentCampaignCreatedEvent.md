@@ -6,7 +6,7 @@
 
 # Interface: CommitmentCampaignCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:278](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L278)
+Defined in: [src/generated/protocol\_types.ts:278](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L278)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:278](https://github.com/OmegaX-Hea
 
 > **campaign**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:279](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L279)
+Defined in: [src/generated/protocol\_types.ts:279](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L279)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:279](https://github.com/OmegaX-Hea
 
 > **coverage\_asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:283](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L283)
+Defined in: [src/generated/protocol\_types.ts:283](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L283)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:283](https://github.com/OmegaX-Hea
 
 > **funding\_line**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:281](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L281)
+Defined in: [src/generated/protocol\_types.ts:281](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L281)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:281](https://github.com/OmegaX-Hea
 
 > **health\_plan**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:280](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L280)
+Defined in: [src/generated/protocol\_types.ts:280](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L280)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:280](https://github.com/OmegaX-Hea
 
 > **mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:284](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L284)
+Defined in: [src/generated/protocol\_types.ts:284](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L284)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/generated/protocol\_types.ts:284](https://github.com/OmegaX-Hea
 
 > **payment\_asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:282](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L282)
+Defined in: [src/generated/protocol\_types.ts:282](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L282)

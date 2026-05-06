@@ -2,7 +2,8 @@
 
 This page documents the public SDK surface shipped in `0.8.6`.
 
-For generated symbol-level markdown, see `docs/generated/api/README.md`.
+Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
+`docs/generated/api/README.md` for generated symbol-level markdown.
 
 ## Core runtime entrypoints
 
@@ -26,6 +27,7 @@ For generated symbol-level markdown, see `docs/generated/api/README.md`.
 Typed SDK errors:
 
 Available from the root package and `@omegax/protocol-sdk/errors`.
+See `docs/ERROR_CATALOG.md` for likely causes and fixes.
 
 - `OmegaXError`
 - `OmegaXConfigError`

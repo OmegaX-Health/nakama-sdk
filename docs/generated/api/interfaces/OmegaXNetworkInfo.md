@@ -6,7 +6,7 @@
 
 # Interface: OmegaXNetworkInfo
 
-Defined in: [src/rpc.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L76)
+Defined in: [src/rpc.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L76)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/rpc.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/18e
 
 > **defaultRpcUrl**: `string`
 
-Defined in: [src/rpc.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L79)
+Defined in: [src/rpc.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L79)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/rpc.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/18e
 
 > **isAvailable**: `boolean`
 
-Defined in: [src/rpc.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L80)
+Defined in: [src/rpc.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L80)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/rpc.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/18e
 
 > **network**: [`OmegaXNetwork`](../type-aliases/OmegaXNetwork.md)
 
-Defined in: [src/rpc.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L77)
+Defined in: [src/rpc.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L77)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/rpc.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/18e
 
 > **solanaCluster**: `"devnet"` \| `"mainnet-beta"`
 
-Defined in: [src/rpc.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L78)
+Defined in: [src/rpc.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L78)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/rpc.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/18e
 
 > **status**: `"live"` \| `"coming_soon"`
 
-Defined in: [src/rpc.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L81)
+Defined in: [src/rpc.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L81)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/rpc.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/18e
 
 > **statusMessage**: `string`
 
-Defined in: [src/rpc.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L82)
+Defined in: [src/rpc.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L82)

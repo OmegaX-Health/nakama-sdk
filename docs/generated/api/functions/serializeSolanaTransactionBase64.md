@@ -8,7 +8,7 @@
 
 > **serializeSolanaTransactionBase64**(`transaction`): `string`
 
-Defined in: [src/transactions.ts:107](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/transactions.ts#L107)
+Defined in: [src/transactions.ts:107](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/transactions.ts#L107)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: GetSignatureStatusResult
 
-Defined in: [src/types.ts:248](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L248)
+Defined in: [src/types.ts:248](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L248)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:248](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **confirmations**: `number` \| `null`
 
-Defined in: [src/types.ts:251](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L251)
+Defined in: [src/types.ts:251](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L251)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:251](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **err**: `unknown`
 
-Defined in: [src/types.ts:253](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L253)
+Defined in: [src/types.ts:253](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L253)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:253](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signature**: `string`
 
-Defined in: [src/types.ts:249](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L249)
+Defined in: [src/types.ts:249](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L249)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:249](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **slot**: `number` \| `null`
 
-Defined in: [src/types.ts:252](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L252)
+Defined in: [src/types.ts:252](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L252)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:252](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **status**: `"unknown"` \| `"failed"` \| `"processed"` \| `"confirmed"` \| `"finalized"`
 
-Defined in: [src/types.ts:250](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L250)
+Defined in: [src/types.ts:250](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L250)

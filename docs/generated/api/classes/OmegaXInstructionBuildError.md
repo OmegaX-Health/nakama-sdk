@@ -6,7 +6,7 @@
 
 # Class: OmegaXInstructionBuildError
 
-Defined in: src/errors.ts:75
+Defined in: [src/errors.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L75)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: src/errors.ts:75
 
 > **new OmegaXInstructionBuildError**(`message`, `options?`): `OmegaXInstructionBuildError`
 
-Defined in: src/errors.ts:76
+Defined in: [src/errors.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L76)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: src/errors.ts:10
+Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: src/errors.ts:10
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: src/errors.ts:11
+Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
 
 #### Inherited from
 

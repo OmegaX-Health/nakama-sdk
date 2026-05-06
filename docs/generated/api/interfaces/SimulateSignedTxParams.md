@@ -6,7 +6,7 @@
 
 # Interface: SimulateSignedTxParams
 
-Defined in: [src/types.ts:223](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L223)
+Defined in: [src/types.ts:223](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L223)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:223](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **allowSigVerifyFallback?**: `boolean`
 
-Defined in: [src/types.ts:228](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L228)
+Defined in: [src/types.ts:228](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L228)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:228](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **commitment?**: `Commitment`
 
-Defined in: [src/types.ts:225](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L225)
+Defined in: [src/types.ts:225](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L225)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:225](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **replaceRecentBlockhash?**: `boolean`
 
-Defined in: [src/types.ts:226](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L226)
+Defined in: [src/types.ts:226](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L226)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:226](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signedTxBase64**: `string`
 
-Defined in: [src/types.ts:224](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L224)
+Defined in: [src/types.ts:224](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L224)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:224](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **sigVerify?**: `boolean`
 
-Defined in: [src/types.ts:227](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L227)
+Defined in: [src/types.ts:227](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L227)

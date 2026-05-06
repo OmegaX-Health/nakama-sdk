@@ -5,6 +5,7 @@
   "readme": "none",
   "excludePrivate": true,
   "excludeInternal": true,
+  "gitRevision": "main",
   "hideGenerator": true,
   "githubPages": false
 }

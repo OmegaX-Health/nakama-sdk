@@ -31,6 +31,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "omegax-sdk": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -80,6 +83,7 @@
   },
   "files": [
     "dist",
+    "templates",
     "NOTICE"
   ],
   "scripts": {
@@ -108,6 +112,8 @@
     "example:oracle": "tsx examples/oracle-attestation.ts",
     "examples:check": "npm run example:smoke && npm run example:app && npm run example:oracle",
     "dogfood:consumer": "node scripts/dogfood-consumer-app.mjs",
+    "cli:check": "node scripts/check-cli.mjs",
+    "templates:check": "node scripts/check-templates.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:release:strict": "node scripts/verify-release.mjs --strict",
     "verify:release:protocol": "node scripts/verify-release.mjs --strict --protocol",

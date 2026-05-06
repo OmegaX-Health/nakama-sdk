@@ -6,7 +6,7 @@
 
 # Interface: ProtocolFeeVault
 
-Defined in: [src/generated/protocol\_types.ts:1052](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1052)
+Defined in: [src/generated/protocol\_types.ts:1052](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1052)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1052](https://github.com/OmegaX-He
 
 > **accrued\_fees**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1056](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1056)
+Defined in: [src/generated/protocol\_types.ts:1056](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1056)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1056](https://github.com/OmegaX-He
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1054](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1054)
+Defined in: [src/generated/protocol\_types.ts:1054](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1054)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1054](https://github.com/OmegaX-He
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1058](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1058)
+Defined in: [src/generated/protocol\_types.ts:1058](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1058)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:1058](https://github.com/OmegaX-He
 
 > **fee\_recipient**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1055](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1055)
+Defined in: [src/generated/protocol\_types.ts:1055](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1055)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:1055](https://github.com/OmegaX-He
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1053](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1053)
+Defined in: [src/generated/protocol\_types.ts:1053](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1053)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/generated/protocol\_types.ts:1053](https://github.com/OmegaX-He
 
 > **withdrawn\_fees**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1057](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1057)
+Defined in: [src/generated/protocol\_types.ts:1057](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1057)

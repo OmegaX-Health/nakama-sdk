@@ -6,7 +6,7 @@
 
 # Interface: OmegaXErrorOptions
 
-Defined in: src/errors.ts:3
+Defined in: [src/errors.ts:3](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/errors.ts:3
 
 > `optional` **cause?**: `unknown`
 
-Defined in: src/errors.ts:6
+Defined in: [src/errors.ts:6](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L6)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/errors.ts:6
 
 > **code**: `string`
 
-Defined in: src/errors.ts:4
+Defined in: [src/errors.ts:4](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L4)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: src/errors.ts:4
 
 > `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: src/errors.ts:5
+Defined in: [src/errors.ts:5](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L5)

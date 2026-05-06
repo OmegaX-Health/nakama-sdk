@@ -6,7 +6,7 @@
 
 # Interface: FundingFlowRecordedEvent
 
-Defined in: [src/generated/protocol\_types.ts:577](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L577)
+Defined in: [src/generated/protocol\_types.ts:577](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L577)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:577](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:579](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L579)
+Defined in: [src/generated/protocol\_types.ts:579](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L579)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:579](https://github.com/OmegaX-Hea
 
 > **flow\_kind**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:580](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L580)
+Defined in: [src/generated/protocol\_types.ts:580](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L580)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:580](https://github.com/OmegaX-Hea
 
 > **funding\_line**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:578](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L578)
+Defined in: [src/generated/protocol\_types.ts:578](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L578)

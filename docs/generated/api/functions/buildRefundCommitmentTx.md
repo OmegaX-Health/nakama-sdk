@@ -8,7 +8,7 @@
 
 > **buildRefundCommitmentTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1999](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L1999)
+Defined in: [src/protocol.ts:1999](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1999)
 
 ## Parameters
 

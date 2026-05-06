@@ -6,7 +6,7 @@
 
 # Class: OmegaXProgramMismatchError
 
-Defined in: src/errors.ts:39
+Defined in: [src/errors.ts:39](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L39)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: src/errors.ts:39
 
 > **new OmegaXProgramMismatchError**(`message`, `options?`): `OmegaXProgramMismatchError`
 
-Defined in: src/errors.ts:40
+Defined in: [src/errors.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L40)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: src/errors.ts:10
+Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: src/errors.ts:10
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: src/errors.ts:11
+Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
 
 #### Inherited from
 

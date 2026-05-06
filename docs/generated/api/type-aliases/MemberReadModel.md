@@ -8,7 +8,7 @@
 
 > **MemberReadModel** = `object`
 
-Defined in: [src/protocol\_models.ts:400](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L400)
+Defined in: [src/protocol\_models.ts:400](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L400)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:400](https://github.com/OmegaX-Health/omega
 
 > **planParticipations**: `object`[]
 
-Defined in: [src/protocol\_models.ts:402](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L402)
+Defined in: [src/protocol\_models.ts:402](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L402)
 
 #### claimableRewards
 
@@ -56,4 +56,4 @@ Defined in: [src/protocol\_models.ts:402](https://github.com/OmegaX-Health/omega
 
 > **wallet**: `string`
 
-Defined in: [src/protocol\_models.ts:401](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L401)
+Defined in: [src/protocol\_models.ts:401](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L401)

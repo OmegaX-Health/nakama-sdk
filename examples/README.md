@@ -53,4 +53,13 @@ npm run dogfood:consumer
 ```
 
 The script packs the SDK, installs the tarball into a temporary copy of the app,
-typechecks, builds, and runs a no-signature smoke.
+typechecks, builds, scaffolds the public templates, and runs no-signature
+smokes.
+
+## Public CLI
+
+```bash
+npx @omegax/protocol-sdk doctor
+npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
+npx @omegax/protocol-sdk examples
+```

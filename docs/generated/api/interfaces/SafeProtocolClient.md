@@ -6,7 +6,7 @@
 
 # Interface: SafeProtocolClient
 
-Defined in: [src/protocol.ts:4140](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4140)
+Defined in: [src/protocol.ts:4140](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4140)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/protocol.ts:4140](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **connection**: `Connection`
 
-Defined in: [src/protocol.ts:4141](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4141)
+Defined in: [src/protocol.ts:4141](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4141)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/protocol.ts:4141](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **programId**: `PublicKey`
 
-Defined in: [src/protocol.ts:4142](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4142)
+Defined in: [src/protocol.ts:4142](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4142)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/protocol.ts:4142](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **raw**: [`ProtocolClient`](ProtocolClient.md)
 
-Defined in: [src/protocol.ts:4143](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4143)
+Defined in: [src/protocol.ts:4143](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4143)
 
 ## Methods
 
@@ -38,7 +38,7 @@ Defined in: [src/protocol.ts:4143](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildAttestClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4187](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4187)
+Defined in: [src/protocol.ts:4187](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4187)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol.ts:4187](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildDepositCommitmentTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4145](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4145)
+Defined in: [src/protocol.ts:4145](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4145)
 
 #### Parameters
 
@@ -74,7 +74,7 @@ Defined in: [src/protocol.ts:4145](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildDepositIntoCapitalClassTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4154](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4154)
+Defined in: [src/protocol.ts:4154](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4154)
 
 #### Parameters
 
@@ -92,7 +92,7 @@ Defined in: [src/protocol.ts:4154](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildFundSponsorBudgetTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4148](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4148)
+Defined in: [src/protocol.ts:4148](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4148)
 
 #### Parameters
 
@@ -110,7 +110,7 @@ Defined in: [src/protocol.ts:4148](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildMarkImpairmentTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4185](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4185)
+Defined in: [src/protocol.ts:4185](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4185)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [src/protocol.ts:4185](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildOpenClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4179](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4179)
+Defined in: [src/protocol.ts:4179](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4179)
 
 #### Parameters
 
@@ -146,7 +146,7 @@ Defined in: [src/protocol.ts:4179](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildProcessRedemptionQueueTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4158](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4158)
+Defined in: [src/protocol.ts:4158](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4158)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ Defined in: [src/protocol.ts:4158](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildRecordPremiumPaymentTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4151](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4151)
+Defined in: [src/protocol.ts:4151](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4151)
 
 #### Parameters
 
@@ -182,7 +182,7 @@ Defined in: [src/protocol.ts:4151](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildRegisterOracleTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4186](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4186)
+Defined in: [src/protocol.ts:4186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4186)
 
 #### Parameters
 
@@ -200,7 +200,7 @@ Defined in: [src/protocol.ts:4186](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildReleaseReserveTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4181](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4181)
+Defined in: [src/protocol.ts:4181](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4181)
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Defined in: [src/protocol.ts:4181](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildRequestRedemptionTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4157](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4157)
+Defined in: [src/protocol.ts:4157](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4157)
 
 #### Parameters
 
@@ -236,7 +236,7 @@ Defined in: [src/protocol.ts:4157](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildReserveObligationTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4180](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4180)
+Defined in: [src/protocol.ts:4180](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4180)
 
 #### Parameters
 
@@ -254,7 +254,7 @@ Defined in: [src/protocol.ts:4180](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildSettleObligationTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4182](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4182)
+Defined in: [src/protocol.ts:4182](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4182)
 
 #### Parameters
 
@@ -272,7 +272,7 @@ Defined in: [src/protocol.ts:4182](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildWithdrawPoolOracleFeeSolTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4176](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4176)
+Defined in: [src/protocol.ts:4176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4176)
 
 #### Parameters
 
@@ -290,7 +290,7 @@ Defined in: [src/protocol.ts:4176](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildWithdrawPoolOracleFeeSplTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4167](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4167)
+Defined in: [src/protocol.ts:4167](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4167)
 
 #### Parameters
 
@@ -308,7 +308,7 @@ Defined in: [src/protocol.ts:4167](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildWithdrawPoolTreasurySolTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4173](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4173)
+Defined in: [src/protocol.ts:4173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4173)
 
 #### Parameters
 
@@ -326,7 +326,7 @@ Defined in: [src/protocol.ts:4173](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildWithdrawPoolTreasurySplTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4164](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4164)
+Defined in: [src/protocol.ts:4164](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4164)
 
 #### Parameters
 
@@ -344,7 +344,7 @@ Defined in: [src/protocol.ts:4164](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildWithdrawProtocolFeeSolTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:4170](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4170)
+Defined in: [src/protocol.ts:4170](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4170)
 
 #### Parameters
 
@@ -362,7 +362,7 @@ Defined in: [src/protocol.ts:4170](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildWithdrawProtocolFeeSplTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:4161](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4161)
+Defined in: [src/protocol.ts:4161](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4161)
 
 #### Parameters
 
@@ -380,7 +380,7 @@ Defined in: [src/protocol.ts:4161](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **getProgramId**(): `PublicKey`
 
-Defined in: [src/protocol.ts:4144](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L4144)
+Defined in: [src/protocol.ts:4144](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4144)
 
 #### Returns
 

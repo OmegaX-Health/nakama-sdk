@@ -6,31 +6,43 @@ const strict = process.argv.includes('--strict');
 const protocol = process.argv.includes('--protocol');
 
 const checks = [
-  ['npm', ['run', 'typecheck']],
-  ['npm', ['run', 'lint']],
-  ['npm', ['run', 'format:check']],
-  ['npm', ['run', 'build']],
-  ['npm', ['test']],
-  ['npm', ['run', 'docs:api:check']],
-  ['npm', ['run', 'docs:check']],
-  ['npm', ['run', strict ? 'docs:sync:check:strict' : 'docs:sync:check']],
-  ['npm', ['run', 'security:package']],
-  ['npm', ['run', 'audit:prod']],
-  ['npm', ['run', 'examples:check']],
-  ['npm', ['run', 'dogfood:consumer']],
-  ['npm', ['run', 'dx:smoke']],
-  ['npm', ['pack', '--dry-run']],
+  { command: 'npm', args: ['run', 'typecheck'] },
+  { command: 'npm', args: ['run', 'lint'] },
+  { command: 'npm', args: ['run', 'format:check'] },
+  { command: 'npm', args: ['run', 'build'] },
+  { command: 'npm', args: ['test'] },
+  { command: 'npm', args: ['run', 'docs:api:check'] },
+  { command: 'npm', args: ['run', 'docs:check'] },
+  {
+    command: 'npm',
+    args: ['run', strict ? 'docs:sync:check:strict' : 'docs:sync:check'],
+  },
+  { command: 'npm', args: ['run', 'security:package'] },
+  { command: 'npm', args: ['run', 'audit:prod'] },
+  { command: 'npm', args: ['run', 'examples:check'] },
+  {
+    command: 'npm',
+    args: ['run', 'dogfood:consumer'],
+    env: { OMEGAX_DOGFOOD_SKIP_TEMPLATES: '1' },
+  },
+  { command: 'npm', args: ['run', 'cli:check'] },
+  { command: 'npm', args: ['run', 'templates:check'] },
+  { command: 'npm', args: ['run', 'dx:smoke'] },
+  { command: 'npm', args: ['pack', '--dry-run'] },
 ];
 
 if (protocol) {
-  checks.push(['npm', ['run', 'verify:protocol:local']]);
+  checks.push({ command: 'npm', args: ['run', 'verify:protocol:local'] });
 }
 
-for (const [command, args] of checks) {
+for (const { command, args, env } of checks) {
   console.log(`[omegax-sdk] ${command} ${args.join(' ')}`);
   const result = spawnSync(command, args, {
     stdio: 'inherit',
-    env: process.env,
+    env: {
+      ...process.env,
+      ...(env ?? {}),
+    },
   });
 
   if (result.status !== 0) {

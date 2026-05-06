@@ -8,7 +8,7 @@
 
 > **ReserveScopedSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:152](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L152)
+Defined in: [src/protocol\_models.ts:152](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L152)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:152](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:153](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L153)
+Defined in: [src/protocol\_models.ts:153](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L153)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:153](https://github.com/OmegaX-Health/omega
 
 > **assetMint**: `string`
 
-Defined in: [src/protocol\_models.ts:155](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L155)
+Defined in: [src/protocol\_models.ts:155](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L155)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:155](https://github.com/OmegaX-Health/omega
 
 > **reserveDomain**: `string`
 
-Defined in: [src/protocol\_models.ts:154](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L154)
+Defined in: [src/protocol\_models.ts:154](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L154)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [src/protocol\_models.ts:154](https://github.com/OmegaX-Health/omega
 
 > `optional` **sheet?**: [`PartialReserveBalanceSheet`](PartialReserveBalanceSheet.md)
 
-Defined in: [src/protocol\_models.ts:156](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_models.ts#L156)
+Defined in: [src/protocol\_models.ts:156](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L156)

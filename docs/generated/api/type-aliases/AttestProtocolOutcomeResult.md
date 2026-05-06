@@ -8,7 +8,7 @@
 
 > **AttestProtocolOutcomeResult** = `object`
 
-Defined in: [src/oracle.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L58)
+Defined in: [src/oracle.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L58)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/oracle.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **attestation**: [`ProtocolBoundOutcomeAttestation`](ProtocolBoundOutcomeAttestation.md)
 
-Defined in: [src/oracle.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L59)
+Defined in: [src/oracle.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L59)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [src/oracle.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **txSignature**: `string` \| `null`
 
-Defined in: [src/oracle.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L60)
+Defined in: [src/oracle.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L60)

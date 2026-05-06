@@ -6,7 +6,7 @@
 
 # Class: OmegaXAccountOwnerMismatchError
 
-Defined in: src/errors.ts:57
+Defined in: [src/errors.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L57)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: src/errors.ts:57
 
 > **new OmegaXAccountOwnerMismatchError**(`message`, `options?`): `OmegaXAccountOwnerMismatchError`
 
-Defined in: src/errors.ts:58
+Defined in: [src/errors.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L58)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: src/errors.ts:10
+Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: src/errors.ts:10
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: src/errors.ts:11
+Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
 
 #### Inherited from
 

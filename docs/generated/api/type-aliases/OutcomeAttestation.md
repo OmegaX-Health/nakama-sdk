@@ -8,7 +8,7 @@
 
 > **OutcomeAttestation** = `object`
 
-Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L82)
+Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L82)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **asOfIso**: `string`
 
-Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L87)
+Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L87)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **cycleId**: `string`
 
-Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L85)
+Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L85)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **digestHex**: `string`
 
-Defined in: [src/types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L96)
+Defined in: [src/types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L96)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **id**: `string`
 
-Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L83)
+Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L83)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **issuedAtIso**: `string`
 
-Defined in: [src/types.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L88)
+Defined in: [src/types.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L88)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/types.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **outcomeId**: `string`
 
-Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L86)
+Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L86)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **payload**: `Record`\<`string`, `unknown`\>
 
-Defined in: [src/types.ts:89](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L89)
+Defined in: [src/types.ts:89](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L89)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/types.ts:89](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **signatureBase64**: `string`
 
-Defined in: [src/types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L95)
+Defined in: [src/types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L95)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **userId**: `string`
 
-Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L84)
+Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L84)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **verifier**: `object`
 
-Defined in: [src/types.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L90)
+Defined in: [src/types.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L90)
 
 #### algorithm
 

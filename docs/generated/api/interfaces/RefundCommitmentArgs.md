@@ -6,7 +6,7 @@
 
 # Interface: RefundCommitmentArgs
 
-Defined in: [src/generated/protocol\_types.ts:1100](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1100)
+Defined in: [src/generated/protocol\_types.ts:1100](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1100)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:1100](https://github.com/OmegaX-He
 
 > **refund\_reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:1101](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L1101)
+Defined in: [src/generated/protocol\_types.ts:1101](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1101)

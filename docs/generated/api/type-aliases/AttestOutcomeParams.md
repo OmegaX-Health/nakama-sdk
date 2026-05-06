@@ -8,7 +8,7 @@
 
 > **AttestOutcomeParams** = `object`
 
-Defined in: [src/oracle.ts:27](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L27)
+Defined in: [src/oracle.ts:27](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L27)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/oracle.ts:27](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **asOfIso**: `string`
 
-Defined in: [src/oracle.ts:31](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L31)
+Defined in: [src/oracle.ts:31](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L31)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/oracle.ts:31](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **cycleId**: `string`
 
-Defined in: [src/oracle.ts:29](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L29)
+Defined in: [src/oracle.ts:29](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L29)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/oracle.ts:29](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **outcomeId**: `string`
 
-Defined in: [src/oracle.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L30)
+Defined in: [src/oracle.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L30)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/oracle.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **payload**: `Record`\<`string`, `unknown`\>
 
-Defined in: [src/oracle.ts:32](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L32)
+Defined in: [src/oracle.ts:32](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L32)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/oracle.ts:32](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signer**: [`OracleSigner`](OracleSigner.md)
 
-Defined in: [src/oracle.ts:33](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L33)
+Defined in: [src/oracle.ts:33](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L33)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/oracle.ts:33](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **submitAttestation?**: (`attestation`) => `Promise`\<\{ `txSignature?`: `string`; \}\>
 
-Defined in: [src/oracle.ts:34](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L34)
+Defined in: [src/oracle.ts:34](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L34)
 
 #### Parameters
 
@@ -74,4 +74,4 @@ Defined in: [src/oracle.ts:34](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **userId**: `string`
 
-Defined in: [src/oracle.ts:28](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/oracle.ts#L28)
+Defined in: [src/oracle.ts:28](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L28)

@@ -6,7 +6,7 @@
 
 # Interface: SimulateSignedTxResult
 
-Defined in: [src/types.ts:231](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L231)
+Defined in: [src/types.ts:231](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L231)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:231](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **err**: `unknown`
 
-Defined in: [src/types.ts:235](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L235)
+Defined in: [src/types.ts:235](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L235)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:235](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **failure**: [`ClaimFailureDetail`](ClaimFailureDetail.md) \| `null`
 
-Defined in: [src/types.ts:236](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L236)
+Defined in: [src/types.ts:236](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L236)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:236](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **logs**: `string`[]
 
-Defined in: [src/types.ts:233](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L233)
+Defined in: [src/types.ts:233](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L233)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:233](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **ok**: `boolean`
 
-Defined in: [src/types.ts:232](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L232)
+Defined in: [src/types.ts:232](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L232)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/types.ts:232](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signatureVerified**: `boolean`
 
-Defined in: [src/types.ts:239](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L239)
+Defined in: [src/types.ts:239](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L239)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/types.ts:239](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **sigVerifyRequested**: `boolean`
 
-Defined in: [src/types.ts:237](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L237)
+Defined in: [src/types.ts:237](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L237)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/types.ts:237](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **sigVerifyUsed**: `boolean`
 
-Defined in: [src/types.ts:238](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L238)
+Defined in: [src/types.ts:238](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L238)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/types.ts:238](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **unitsConsumed**: `number` \| `null`
 
-Defined in: [src/types.ts:234](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L234)
+Defined in: [src/types.ts:234](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L234)
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: [src/types.ts:234](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **verificationDowngraded**: `boolean`
 
-Defined in: [src/types.ts:240](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L240)
+Defined in: [src/types.ts:240](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L240)

@@ -13,6 +13,10 @@
   output exposes stable SDK concepts instead of anonymous inferred types.
 - Added a tracked external consumer dogfood app, generated TypeDoc markdown, and
   a single release verifier script.
+- Added the public `omegax-sdk` CLI with `doctor`, `scaffold`, and `examples`,
+  plus shipped node-backend, Next.js route, and oracle-worker templates.
+- Added curated top-API and error-catalog docs for health app, hospital/backend,
+  oracle, and sponsor/capital builder lanes.
 - Hardened `npm run docs:check` so docs that mention package subpaths fail if
   `package.json#exports` does not expose them.
 - Synced the settlement account surface with the active protocol IDL so

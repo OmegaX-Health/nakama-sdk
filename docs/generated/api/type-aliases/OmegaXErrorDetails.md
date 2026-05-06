@@ -8,4 +8,4 @@
 
 > **OmegaXErrorDetails** = `Record`\<`string`, `unknown`\>
 
-Defined in: src/errors.ts:1
+Defined in: [src/errors.ts:1](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L1)

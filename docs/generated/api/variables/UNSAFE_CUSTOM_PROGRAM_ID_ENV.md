@@ -8,4 +8,4 @@
 
 > `const` **UNSAFE\_CUSTOM\_PROGRAM\_ID\_ENV**: `"OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID"` = `'OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID'`
 
-Defined in: [src/protocol.ts:116](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol.ts#L116)
+Defined in: [src/protocol.ts:116](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L116)

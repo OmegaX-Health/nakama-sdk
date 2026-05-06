@@ -8,7 +8,7 @@
 
 > **ClaimIntent** = `object`
 
-Defined in: [src/types.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L48)
+Defined in: [src/types.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L48)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **attestationRefs**: `string`[]
 
-Defined in: [src/types.ts:54](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L54)
+Defined in: [src/types.ts:54](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L54)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:54](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **expiresAtIso**: `string`
 
-Defined in: [src/types.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L53)
+Defined in: [src/types.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L53)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **intentId**: `string`
 
-Defined in: [src/types.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L49)
+Defined in: [src/types.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L49)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **nonce**: `string`
 
-Defined in: [src/types.ts:50](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L50)
+Defined in: [src/types.ts:50](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L50)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types.ts:50](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **requiredSigner**: `string`
 
-Defined in: [src/types.ts:52](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L52)
+Defined in: [src/types.ts:52](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L52)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [src/types.ts:52](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **unsignedTxBase64**: `string`
 
-Defined in: [src/types.ts:51](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L51)
+Defined in: [src/types.ts:51](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L51)

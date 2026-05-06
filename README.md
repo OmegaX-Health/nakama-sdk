@@ -150,7 +150,9 @@ This package exposes the live canonical object model:
 - `/docs/INDEX.md` for the maintainer and builder reading order
 - `/docs/GETTING_STARTED.md` for installation, client setup, and choosing the right builder path
 - `/docs/WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
+- `/docs/TOP_APIS.md` for the shortest public API list by builder lane
 - `/docs/RECIPES.md` for Node, Next.js, oracle worker, and read-only frontend snippets
+- `/docs/ERROR_CATALOG.md` for stable SDK error codes and fixes
 - `/docs/API_REFERENCE.md` for the exported package surface
 - `/docs/generated/api/README.md` for generated symbol-level API markdown
 - `/docs/TROUBLESHOOTING.md` for common failure modes and remediation
@@ -172,6 +174,18 @@ This package exposes the live canonical object model:
 - `@omegax/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
 - `@omegax/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
 - `@omegax/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
+
+## CLI
+
+```bash
+npx @omegax/protocol-sdk doctor
+npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
+npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
+npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
+```
+
+The CLI is no-signature by default. It does not require funded wallets, private
+keys, or live transaction submission for first success.
 
 ## What the SDK is for
 
@@ -204,6 +218,8 @@ npm run docs:check
 npm run docs:sync:check:strict
 npm run examples:check
 npm run dogfood:consumer
+npm run cli:check
+npm run templates:check
 npm run dx:smoke
 npm run verify:release
 npm run security:secrets

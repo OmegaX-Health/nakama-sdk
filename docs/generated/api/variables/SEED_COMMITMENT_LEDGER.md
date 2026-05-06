@@ -8,4 +8,4 @@
 
 > `const` **SEED\_COMMITMENT\_LEDGER**: `"commitment_ledger"` = `'commitment_ledger'`
 
-Defined in: [src/protocol\_seeds.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/protocol_seeds.ts#L30)
+Defined in: [src/protocol\_seeds.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L30)

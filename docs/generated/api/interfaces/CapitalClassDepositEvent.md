@@ -6,7 +6,7 @@
 
 # Interface: CapitalClassDepositEvent
 
-Defined in: [src/generated/protocol\_types.ts:173](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L173)
+Defined in: [src/generated/protocol\_types.ts:173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L173)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:173](https://github.com/OmegaX-Hea
 
 > **asset\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L176)
+Defined in: [src/generated/protocol\_types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L176)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:176](https://github.com/OmegaX-Hea
 
 > **capital\_class**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:174](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L174)
+Defined in: [src/generated/protocol\_types.ts:174](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L174)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:174](https://github.com/OmegaX-Hea
 
 > **owner**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L175)
+Defined in: [src/generated/protocol\_types.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L175)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:175](https://github.com/OmegaX-Hea
 
 > **shares**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L177)
+Defined in: [src/generated/protocol\_types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L177)

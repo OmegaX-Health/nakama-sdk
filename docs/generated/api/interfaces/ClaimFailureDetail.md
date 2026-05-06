@@ -6,7 +6,7 @@
 
 # Interface: ClaimFailureDetail
 
-Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L40)
+Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L40)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **code**: [`ClaimFailureCode`](../type-aliases/ClaimFailureCode.md)
 
-Defined in: [src/types.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L41)
+Defined in: [src/types.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L41)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **logs**: `string`[]
 
-Defined in: [src/types.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L44)
+Defined in: [src/types.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L44)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **message**: `string`
 
-Defined in: [src/types.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L42)
+Defined in: [src/types.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L42)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **reason**: `string`
 
-Defined in: [src/types.ts:43](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L43)
+Defined in: [src/types.ts:43](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L43)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:43](https://github.com/OmegaX-Health/omegax-sdk/blob/1
 
 > **retryable**: `boolean`
 
-Defined in: [src/types.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L45)
+Defined in: [src/types.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L45)

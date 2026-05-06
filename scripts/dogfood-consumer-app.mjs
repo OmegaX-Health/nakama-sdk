@@ -6,6 +6,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { runTemplateChecks } from './check-templates.mjs';
+
 const scriptPath = fileURLToPath(import.meta.url);
 const sdkRoot = resolve(dirname(scriptPath), '..');
 const fixtureRoot = resolve(sdkRoot, 'examples/consumer-app');
@@ -67,6 +69,10 @@ async function main() {
   } finally {
     await rm(tarballPath, { force: true });
     await rm(tempRoot, { recursive: true, force: true });
+  }
+
+  if (process.env.OMEGAX_DOGFOOD_SKIP_TEMPLATES !== '1') {
+    await runTemplateChecks();
   }
 }
 

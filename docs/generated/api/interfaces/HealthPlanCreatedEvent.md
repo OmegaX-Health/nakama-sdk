@@ -6,7 +6,7 @@
 
 # Interface: HealthPlanCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:643](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L643)
+Defined in: [src/generated/protocol\_types.ts:643](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L643)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:643](https://github.com/OmegaX-Hea
 
 > **health\_plan**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:645](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L645)
+Defined in: [src/generated/protocol\_types.ts:645](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L645)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:645](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:644](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L644)
+Defined in: [src/generated/protocol\_types.ts:644](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L644)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:644](https://github.com/OmegaX-Hea
 
 > **sponsor**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:646](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L646)
+Defined in: [src/generated/protocol\_types.ts:646](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L646)

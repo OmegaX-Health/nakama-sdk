@@ -6,7 +6,7 @@
 
 # Interface: ProtocolMemberCycleAccount
 
-Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L192)
+Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L192)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **address?**: `string`
 
-Defined in: [src/types.ts:193](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L193)
+Defined in: [src/types.ts:193](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L193)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:193](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **cohortHashHex**: `string`
 
-Defined in: [src/types.ts:196](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L196)
+Defined in: [src/types.ts:196](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L196)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:196](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **commitmentEnabled**: `boolean`
 
-Defined in: [src/types.ts:194](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L194)
+Defined in: [src/types.ts:194](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L194)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:194](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **outcomeThresholdScore**: `number`
 
-Defined in: [src/types.ts:195](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L195)
+Defined in: [src/types.ts:195](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L195)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:195](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **settledHealthAlphaScore**: `number` \| `bigint`
 
-Defined in: [src/types.ts:197](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/types.ts#L197)
+Defined in: [src/types.ts:197](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L197)

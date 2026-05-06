@@ -10,7 +10,7 @@
 
 > **createConnection**(`rpcUrl`, `commitment?`): `Connection`
 
-Defined in: [src/rpc.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L129)
+Defined in: [src/rpc.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L129)
 
 ### Parameters
 
@@ -30,7 +30,7 @@ Defined in: [src/rpc.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/18
 
 > **createConnection**(`options?`): `Connection`
 
-Defined in: [src/rpc.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/rpc.ts#L133)
+Defined in: [src/rpc.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L133)
 
 ### Parameters
 

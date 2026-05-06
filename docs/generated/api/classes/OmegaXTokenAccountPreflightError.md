@@ -6,7 +6,7 @@
 
 # Class: OmegaXTokenAccountPreflightError
 
-Defined in: src/errors.ts:66
+Defined in: [src/errors.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L66)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: src/errors.ts:66
 
 > **new OmegaXTokenAccountPreflightError**(`message`, `options?`): `OmegaXTokenAccountPreflightError`
 
-Defined in: src/errors.ts:67
+Defined in: [src/errors.ts:67](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L67)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: src/errors.ts:10
+Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: src/errors.ts:10
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: src/errors.ts:11
+Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
 
 #### Inherited from
 

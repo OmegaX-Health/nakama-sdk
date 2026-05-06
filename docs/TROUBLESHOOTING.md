@@ -12,6 +12,7 @@ This page maps common integration failures to likely causes in the canonical Ome
 5. Run the no-signature smoke:
 
 ```bash
+npx @omegax/protocol-sdk doctor
 npm run example:smoke
 ```
 
@@ -51,6 +52,18 @@ Common codes:
 - `OMEGAX_INSTRUCTION_BUILD`
 - `OMEGAX_TRANSACTION_DECODE`
 - `OMEGAX_RPC_ERROR`
+
+See `docs/ERROR_CATALOG.md` for causes, fixes, and retry guidance.
+
+## Install warning: `uuid@8.3.2`
+
+Some Solana dependency trees still print an install warning for `uuid@8.3.2`
+when a consumer project installs the packed SDK or a scaffolded template. Treat
+that warning as non-blocking for SDK integration.
+
+Use `npm run audit:prod` as the authoritative production dependency gate for
+this repository. It encodes the current reviewed Solana dependency posture and
+must stay green before release.
 
 ## Transaction and submission issues
 

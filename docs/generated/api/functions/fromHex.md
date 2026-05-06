@@ -8,7 +8,7 @@
 
 > **fromHex**(`value`, `expectedLength?`): `Uint8Array`
 
-Defined in: [src/utils.ts:167](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/utils.ts#L167)
+Defined in: [src/utils.ts:167](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/utils.ts#L167)
 
 ## Parameters
 

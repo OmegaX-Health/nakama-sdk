@@ -5,7 +5,30 @@ Use `createSafeProtocolClient(...)` by default. Use raw builders, dynamic
 instruction construction, or custom program IDs only for protocol-maintainer,
 localnet, or test workflows.
 
+## Start With The CLI
+
+```bash
+npx @omegax/protocol-sdk doctor
+npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
+npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
+npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
+```
+
+Expected output: `doctor` should report passing checks without requiring a
+funded wallet, private key, or transaction submission.
+
+Next step: choose one scaffold and run `npm install`, `npm run typecheck`,
+`npm run build`, and `npm run smoke` inside it.
+
 ## Node Backend
+
+Install:
+
+```bash
+npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
+cd omegax-provider-backend
+npm install
+```
 
 ```ts
 import {
@@ -34,7 +57,19 @@ export function reserveDomainAddress(domainId: string) {
 }
 ```
 
+Expected output: a JSON status payload with `network`, `programId`,
+`reserveDomain`, `healthPlan`, instruction count, and account count.
+
+Next step: wire the status helper into your backend route and keep all
+signing/funded flows behind explicit product review.
+
 ## Next.js Server Route
+
+Install:
+
+```bash
+npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
+```
 
 ```ts
 import { NextResponse } from 'next/server';
@@ -63,7 +98,20 @@ export async function GET() {
 }
 ```
 
+Expected output: the GET route returns protocol metadata without any signer.
+
+Next step: move the generated route into `app/api/omegax/status/route.ts` and
+swap demo IDs for your product IDs.
+
 ## Oracle Worker
+
+Install:
+
+```bash
+npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
+cd omegax-oracle-worker
+npm install
+```
 
 ```ts
 import {
@@ -105,7 +153,19 @@ export async function attestClaimOutcome(params: {
 }
 ```
 
+Expected output: a protocol-bound attestation verifies locally and prints an
+attestation ID plus digest.
+
+Next step: replace the in-memory demo signer with KMS or secret-manager wiring
+and keep signer material out of tracked files.
+
 ## Read-Only Frontend
+
+Install:
+
+```bash
+npm install @omegax/protocol-sdk
+```
 
 ```ts
 import {
@@ -134,6 +194,12 @@ console.log({
   accountTypes: listProtocolAccountNames(),
 });
 ```
+
+Expected output: a read-only status object with an RPC endpoint, derived health
+plan PDA, and known account types.
+
+Next step: move RPC calls that need secrets, signing, or privileged context into
+a backend route.
 
 ## Typed Error Handling
 

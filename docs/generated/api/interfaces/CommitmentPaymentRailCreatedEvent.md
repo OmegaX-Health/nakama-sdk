@@ -6,7 +6,7 @@
 
 # Interface: CommitmentPaymentRailCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:331](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L331)
+Defined in: [src/generated/protocol\_types.ts:331](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L331)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:331](https://github.com/OmegaX-Hea
 
 > **campaign**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:332](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L332)
+Defined in: [src/generated/protocol\_types.ts:332](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L332)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:332](https://github.com/OmegaX-Hea
 
 > **coverage\_asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:335](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L335)
+Defined in: [src/generated/protocol\_types.ts:335](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L335)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:335](https://github.com/OmegaX-Hea
 
 > **mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:337](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L337)
+Defined in: [src/generated/protocol\_types.ts:337](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L337)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:337](https://github.com/OmegaX-Hea
 
 > **payment\_asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:334](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L334)
+Defined in: [src/generated/protocol\_types.ts:334](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L334)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:334](https://github.com/OmegaX-Hea
 
 > **payment\_rail**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:333](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L333)
+Defined in: [src/generated/protocol\_types.ts:333](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L333)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/generated/protocol\_types.ts:333](https://github.com/OmegaX-Hea
 
 > **reserve\_asset\_rail**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:336](https://github.com/OmegaX-Health/omegax-sdk/blob/18eba6eebb5b732fec0b45b896a6b09b9c0e3cbc/src/generated/protocol_types.ts#L336)
+Defined in: [src/generated/protocol\_types.ts:336](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L336)
