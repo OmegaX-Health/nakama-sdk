@@ -144,6 +144,9 @@ jobs:
       - name: Validate release tag and npm availability
         env:
           TAG_NAME: ${{ github.ref_name }}
+          # Historical SDK releases use annotated tags without local GPG signatures.
+          # The release guard still requires an annotated tag and an unpublished npm version.
+          ALLOW_UNSIGNED_RELEASE_TAG: '1'
         run: npm run security:release-tag
 
       - name: Publish to npm
