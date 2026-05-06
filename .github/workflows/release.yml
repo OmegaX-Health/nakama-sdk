@@ -152,7 +152,9 @@ jobs:
           # Historical SDK releases use annotated tags without local GPG signatures.
           # The release guard still requires an annotated tag and an unpublished npm version.
           ALLOW_UNSIGNED_RELEASE_TAG: '1'
-        run: npm run security:release-tag
+        run: |
+          git fetch --force origin "refs/tags/${TAG_NAME}:refs/tags/${TAG_NAME}"
+          npm run security:release-tag
 
       - name: Publish to npm
         run: npm publish --ignore-scripts --access public --provenance
