@@ -169,5 +169,13 @@ jobs:
           smoke_dir="$(mktemp -d)"
           cd "${smoke_dir}"
           npm init -y >/dev/null
-          npm install "@omegax/protocol-sdk@${version}" --ignore-scripts
+          for attempt in 1 2 3 4 5; do
+            if npm install "@omegax/protocol-sdk@${version}" --ignore-scripts; then
+              break
+            fi
+            if [[ "${attempt}" == "5" ]]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
           node --input-type=module -e "const sdk = await import('@omegax/protocol-sdk'); if (!sdk.PROTOCOL_PROGRAM_ID || !sdk.createSafeProtocolClient) throw new Error('SDK import smoke failed');"
