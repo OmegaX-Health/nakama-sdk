@@ -57,6 +57,7 @@ export function isRetryableLocalnetError(error) {
   const message = error instanceof Error ? error.message : String(error);
   return [
     /Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA is not deployed/i,
+    /Program is not deployed/i,
     /Unsupported program id/i,
     /Timed out waiting for validator RPC/i,
     /Timed out waiting for program/i,
@@ -334,12 +335,29 @@ async function waitForProgram(rpcUrl, programId) {
 
 async function runCommand(params) {
   await new Promise((resolveRun, rejectRun) => {
+    const outputTail = [];
+    const rememberOutput = (chunk) => {
+      const lines = String(chunk).split(/\r?\n/);
+      for (const line of lines) {
+        if (!line) continue;
+        outputTail.push(line);
+      }
+      outputTail.splice(0, Math.max(0, outputTail.length - 80));
+    };
     const child = spawn(params.command, params.args, {
       cwd: params.cwd,
       env: params.env ?? process.env,
-      stdio: 'inherit',
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
 
+    child.stdout.on('data', (chunk) => {
+      process.stdout.write(chunk);
+      rememberOutput(chunk);
+    });
+    child.stderr.on('data', (chunk) => {
+      process.stderr.write(chunk);
+      rememberOutput(chunk);
+    });
     child.once('error', rejectRun);
     child.once('exit', (code, signal) => {
       if (code === 0) {
@@ -348,7 +366,12 @@ async function runCommand(params) {
       }
       rejectRun(
         new Error(
-          `${params.command} ${params.args.join(' ')} failed with code=${code ?? 'null'} signal=${signal ?? 'null'}`,
+          [
+            `${params.command} ${params.args.join(' ')} failed with code=${code ?? 'null'} signal=${signal ?? 'null'}`,
+            outputTail.length ? `Recent output:\n${outputTail.join('\n')}` : '',
+          ]
+            .filter(Boolean)
+            .join('\n'),
         ),
       );
     });

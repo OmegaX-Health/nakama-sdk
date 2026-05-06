@@ -21,6 +21,19 @@ test('localnet retry classifier recognizes validator startup races', () => {
   );
   assert.equal(
     isRetryableLocalnetError(
+      new Error(
+        [
+          'node --import tsx --test e2e/sdk_protocol_smoke.test.ts failed with code=1 signal=null',
+          'Recent output:',
+          'Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]',
+          'Program is not deployed',
+        ].join('\n'),
+      ),
+    ),
+    true,
+  );
+  assert.equal(
+    isRetryableLocalnetError(
       new Error('Timed out waiting for validator RPC at http://127.0.0.1:8899'),
     ),
     true,
