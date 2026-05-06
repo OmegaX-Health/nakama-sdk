@@ -79,7 +79,17 @@ jobs:
       - name: Generated API docs consistency
         run: npm run docs:api:check
 
+      - name: Clone docs repo for strict ancestry check
+        env:
+          OMEGAX_DOCS_TOKEN: ${{ secrets.OMEGAX_DOCS_READ_TOKEN || github.token }}
+        run: |
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: bearer ${OMEGAX_DOCS_TOKEN}" \
+            clone --filter=blob:none --no-checkout --depth 200 \
+            https://github.com/OmegaX-Health/omegax-docs.git ../omegax-docs
+
       - name: Docs sync parity (strict)
+        env:
+          OMEGAX_DOCS_REPO_DIR: ../omegax-docs
         run: npm run docs:sync:check:strict
 
       - name: Security audit (prod dependencies)
