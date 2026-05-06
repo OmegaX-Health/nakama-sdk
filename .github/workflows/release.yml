@@ -93,6 +93,9 @@ jobs:
       - name: Package manifest allowlist
         run: npm run security:package
 
+      - name: Developer experience smoke
+        run: npm run dx:smoke
+
   publish:
     runs-on: ubuntu-latest
     needs: verify

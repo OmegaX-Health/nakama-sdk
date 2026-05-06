@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.5`.
+This page documents the public SDK surface shipped in `0.8.6`.
 
 ## Core runtime entrypoints
 
@@ -21,6 +21,20 @@ This page documents the public SDK surface shipped in `0.8.5`.
 - `compileTransactionToV0(...)`
 - `preflightClassicTokenAccount(...)`
 
+Safe-client public types:
+
+- `SafeProtocolClientOptions`
+- `SafeProtocolClient`
+- `SafeDepositCommitmentTxParams`
+- `SafeFundSponsorBudgetTxParams`
+- `SafeRecordPremiumPaymentTxParams`
+- `SafeDepositIntoCapitalClassTxParams`
+- `SafeRequestRedemptionTxParams`
+- `SafeProcessRedemptionQueueTxParams`
+- `SafeSettleObligationTxParams`
+- `SafeRegisterOracleTxParams`
+- `SafeAttestClaimCaseTxParams`
+
 ## RPC client
 
 Returned by `createRpcClient(...)`.
@@ -39,7 +53,8 @@ results.
 
 ## Canonical instruction builders
 
-Returned by `createProtocolClient(...)`.
+Product and operator flows should start with `createSafeProtocolClient(...)`.
+Raw generated builders are returned by `createProtocolClient(...)`.
 
 Use `createSafeProtocolClient(...)` for product and operator flows. It wraps the
 checked convenience builders, pins the canonical program ID by default, and
@@ -470,3 +485,17 @@ Available from the root package and `@omegax/protocol-sdk/utils`.
 - `toHex(...)`
 - `fromHex(...)`
 - `hashStringTo32(...)`
+
+## Transaction helpers
+
+Available from the root package and `@omegax/protocol-sdk/transactions`.
+
+- `decodeSolanaTransaction(...)`
+- `serializeSolanaTransaction(...)`
+- `serializeSolanaTransactionBase64(...)`
+- `solanaTransactionMessageBytes(...)`
+- `solanaTransactionIntentMessageBytes(...)`
+- `solanaTransactionMessageBase64(...)`
+- `solanaTransactionRequiredSigner(...)`
+- `solanaTransactionFirstSignature(...)`
+- `solanaTransactionSignerSignature(...)`

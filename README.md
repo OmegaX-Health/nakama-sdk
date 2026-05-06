@@ -70,7 +70,7 @@ Create clients once, then branch into the workflow that matches your product.
 import {
   PROTOCOL_PROGRAM_ID,
   createConnection,
-  createProtocolClient,
+  createSafeProtocolClient,
   createRpcClient,
   getOmegaXNetworkInfo,
   listProtocolInstructionNames,
@@ -87,7 +87,7 @@ const connection = createConnection({
 });
 
 const programId = process.env.OMEGAX_PROGRAM_ID ?? PROTOCOL_PROGRAM_ID;
-const protocol = createProtocolClient(connection, programId);
+const protocol = createSafeProtocolClient(connection, { programId });
 const rpc = createRpcClient(connection);
 const instructions = listProtocolInstructionNames();
 ```
@@ -96,7 +96,20 @@ From there:
 
 - oracle and event producers usually move into `buildRegisterOracleTx(...)`, `buildClaimOracleTx(...)`, `buildSetPoolOraclePolicyTx(...)`, `buildAttestClaimCaseTx(...)`, and `attestOutcome(...)`
 - health and wallet builders usually move into member / claim reads plus `buildOpenMemberPositionTx(...)` and `buildOpenClaimCaseTx(...)`
-- sponsor and capital integrators usually move into reserve-domain, plan, pool, class, allocation, and redemption builders from `/docs/WORKFLOWS.md`
+- sponsor and capital integrators usually move into safe reserve-domain, plan, pool, class, allocation, and redemption builders from `/docs/WORKFLOWS.md`
+
+## First success smoke
+
+Run the smoke before choosing a deeper workflow. It verifies package imports,
+network metadata, safe client creation, deterministic PDA derivation, and the
+public protocol surface without requiring funded signers or a live transaction.
+
+```bash
+npm run example:smoke
+```
+
+For a clean external project, copy the same pattern from
+`examples/devnet-smoke.ts`.
 
 ## Public surface coverage
 
@@ -115,13 +128,14 @@ This package exposes the live canonical object model:
 
 ## Release status
 
-- SDK release target: `0.8.5`
+- SDK release target: `0.8.6`
 - Protocol surface target: `omegax-protocol` commit `2326371`
 - Current public network target: Solana devnet beta
 - Public docs: [docs.omegax.health](https://docs.omegax.health)
 
 ## Release notes
 
+- `0.8.6` adds the full onboarding DX pass: documented `protocol_models` and `transactions` subpath exports, named safe-client types, runnable smoke/app/oracle examples, and a packed consumer import smoke in CI.
 - `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
 - `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
@@ -146,12 +160,13 @@ This package exposes the live canonical object model:
 ## Canonical module map
 
 - Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
-- `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
+- `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
 - `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveCommitmentCampaignPda(...)`, and `deriveCapitalClassPda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
 - `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
 - `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
 - `@omegax/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
+- `@omegax/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
 - `@omegax/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
 - `@omegax/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
 
@@ -183,6 +198,8 @@ npm run build
 npm test
 npm run docs:check
 npm run docs:sync:check:strict
+npm run examples:check
+npm run dx:smoke
 npm run security:secrets
 npm run security:install-scripts
 npm run security:package

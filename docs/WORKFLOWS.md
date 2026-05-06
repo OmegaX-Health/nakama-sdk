@@ -18,6 +18,12 @@ Use `createSafeProtocolClient(...)` for product and operator flows. Raw
 tests, but production flows should stay on the safe layer unless an explicit
 unsafe custom-program override is part of a devnet or localnet workflow.
 
+Runnable starting points:
+
+- `npm run example:smoke` for a no-signature safe-client import and PDA smoke.
+- `npm run example:app` for member, claim, and obligation read-model shaping.
+- `npm run example:oracle` for protocol-bound oracle attestation signing and verification.
+
 ## Path A: Oracle and event producers
 
 Use this path when your service needs to normalize private inputs into OmegaX-compatible outcome events and policy-bound oracle actions.
@@ -74,6 +80,9 @@ Verifier calls reject unexpected optional policy/pool/class/allocation scope by
 default; pass the expected scope fields for settlement, or set
 `allowUnexpectedOptionalScope` only for non-settlement wildcard consumers.
 
+See `examples/oracle-attestation.ts` for an offline KMS-adapter example that
+does not require secrets or a funded signer.
+
 On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool and capital class so the SDK can derive the allocation and pool-oracle scope accounts together; partial pool scope is rejected.
 
 Useful constants:
@@ -117,6 +126,9 @@ Failure helpers:
 - `normalizeClaimRpcFailure(...)`
 - `validateSignedClaimTx(...)` for checking the submitted signed transaction
   against a nonce-bearing, expiring `ClaimIntent` before trusting claim intake.
+
+See `examples/app-builder-read.ts` for deterministic app-facing read-model
+shaping from member, claim, and obligation snapshots.
 
 ### Workflow B2: Member read models
 

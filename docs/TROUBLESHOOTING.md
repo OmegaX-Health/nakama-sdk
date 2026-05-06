@@ -7,7 +7,15 @@ This page maps common integration failures to likely causes in the canonical Ome
 1. Confirm Node version is `>=20`.
 2. Confirm your runtime is using ESM imports.
 3. Confirm `programId` and RPC cluster match the deployment you expect.
-4. Regenerate bindings if the sibling protocol workspace changed:
+4. Confirm product/operator flows use `createSafeProtocolClient(...)` unless you
+   are intentionally testing raw protocol builders.
+5. Run the no-signature smoke:
+
+```bash
+npm run example:smoke
+```
+
+6. Regenerate bindings if the sibling protocol workspace changed:
 
 ```bash
 npm run generate:protocol-bindings
@@ -21,6 +29,7 @@ npm run lint
 npm run format:check
 npm run build
 npm test
+npm run examples:check
 ```
 
 ## Transaction and submission issues
@@ -170,6 +179,21 @@ Fix:
 - Re-derive the address with the canonical PDA helper.
 - Confirm the `programId` and cluster are correct.
 - Use `fetch...(...)` readers instead of ad hoc decoding where possible.
+
+### `ERR_PACKAGE_PATH_NOT_EXPORTED`
+
+Cause:
+
+- Your import uses a package subpath that is not part of the public export map.
+
+Fix:
+
+- Use one of the documented public subpaths such as
+  `@omegax/protocol-sdk/protocol_models`,
+  `@omegax/protocol-sdk/protocol_seeds`, or
+  `@omegax/protocol-sdk/transactions`.
+- Run `npm run dx:smoke` before release when adding docs that mention a new
+  package subpath.
 
 ## Reserve and capital issues
 

@@ -15,6 +15,23 @@ Public integrations should target devnet beta until OmegaX announces public main
 
 ```bash
 npm install @omegax/protocol-sdk
+npm install --save-dev tsx
+```
+
+## First success smoke
+
+Run this before choosing a deeper workflow. It verifies package imports, network
+metadata, safe client creation, deterministic PDA derivation, and the public
+instruction/account surface without funded signers or a live transaction.
+
+```bash
+npm run example:smoke
+```
+
+In a separate integration project, copy `examples/devnet-smoke.ts` and run:
+
+```bash
+npx tsx devnet-smoke.ts
 ```
 
 ## Choose your builder path
@@ -29,7 +46,6 @@ npm install @omegax/protocol-sdk
 import {
   PROTOCOL_PROGRAM_ID,
   createConnection,
-  createProtocolClient,
   createSafeProtocolClient,
   createRpcClient,
   getOmegaXNetworkInfo,
@@ -48,7 +64,6 @@ const connection = createConnection({
 const protocol = createSafeProtocolClient(connection, {
   programId: PROTOCOL_PROGRAM_ID,
 });
-const rawProtocol = createProtocolClient(connection, PROTOCOL_PROGRAM_ID);
 const rpc = createRpcClient(connection);
 ```
 
@@ -56,6 +71,9 @@ Production clients default to the canonical OmegaX program. Custom program IDs
 are rejected unless `unsafeAllowCustomProgramId: true` or
 `OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` is used for devnet, localnet, or
 tests.
+
+Use `createProtocolClient(...)` only for protocol engineering, generated-surface
+tests, or advanced flows that need raw IDL-backed builders.
 
 ## Inspect the current public surface
 

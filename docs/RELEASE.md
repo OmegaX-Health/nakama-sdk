@@ -5,7 +5,7 @@ This is the maintainer flow for publishing the canonical SDK release.
 ## Release targets
 
 - Protocol: `omegax-protocol` commit `2326371`
-- SDK: `@omegax/protocol-sdk v0.8.5`
+- SDK: `@omegax/protocol-sdk v0.8.6`
 - Docs portal: `docs.omegax.health` content synced to the matching SDK surface
 
 ## Preconditions
@@ -28,6 +28,8 @@ npm run build
 npm test
 npm run docs:check
 npm run docs:sync:check:strict
+npm run examples:check
+npm run dx:smoke
 npm run security:secrets
 npm run security:install-scripts
 npm run security:package
@@ -58,7 +60,7 @@ Commit regenerated artifacts with the source change. Do not hand-edit generated 
 2. Finalize and push `omegax-docs` `main`.
 3. Update `docs/OMEGAX_DOCS_SYNC.json` with the merged docs commit.
 4. Finalize and push `omegax-sdk` `main`.
-5. Tag SDK `v0.8.5`.
+5. Tag SDK `v0.8.6`.
 6. Let the release workflow complete the uncredentialed `verify` job.
 7. Approve the protected `npm-production` publish job only after verify is green.
 8. Confirm `npm publish` and clean import smoke pass.
@@ -76,6 +78,6 @@ Then run a clean install/import smoke test:
 
 ```bash
 npm init -y
-npm install @omegax/protocol-sdk@0.8.5
+npm install @omegax/protocol-sdk@0.8.6
 node --input-type=module -e "const m = await import('@omegax/protocol-sdk'); console.log(Object.keys(m).length)"
 ```
