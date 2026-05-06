@@ -79,8 +79,8 @@ jobs:
       - name: Generated API docs consistency
         run: npm run docs:api:check
 
-      - name: Docs sync parity
-        run: npm run docs:sync:check
+      - name: Docs sync parity (strict)
+        run: npm run docs:sync:check:strict
 
       - name: Security audit (prod dependencies)
         run: npm run audit:prod
