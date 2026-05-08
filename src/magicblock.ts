@@ -18,7 +18,7 @@ import {
 import { toPublicKey } from './protocol_seeds.js';
 
 export const OMEGAX_PRIVATE_CLAIM_REVIEW_PROGRAM_ID =
-  '5eMhMgdweRhrucbxkFgw1FijRQEHqv8fxhriHBttf9xU';
+  'FADqaRcJHERauzMo3BRzXZVY2qvrpPqg1ie2FGqACCVn';
 export const PRIVATE_CLAIM_REVIEW_SESSION_SEED = 'private_claim_review';
 
 export const MAGICBLOCK_DELEGATION_PROGRAM_ID =
