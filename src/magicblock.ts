@@ -193,7 +193,9 @@ export async function waitForMagicBlockCommitmentSignature(
     maxSupportedTransactionVersion: 0,
   });
   if (!scheduledTx?.meta) {
-    throw new Error('MagicBlock ER transaction was not found or has no metadata');
+    throw new Error(
+      'MagicBlock ER transaction was not found or has no metadata',
+    );
   }
   const scheduledCommitSignature = parseMagicBlockLogSignature(
     scheduledTx.meta.logMessages ?? [],
