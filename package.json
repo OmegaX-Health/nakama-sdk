@@ -55,6 +55,10 @@
       "types": "./dist/protocol.d.ts",
       "import": "./dist/protocol.js"
     },
+    "./magicblock": {
+      "types": "./dist/magicblock.d.ts",
+      "import": "./dist/magicblock.js"
+    },
     "./protocol_models": {
       "types": "./dist/protocol_models.d.ts",
       "import": "./dist/protocol_models.js"
