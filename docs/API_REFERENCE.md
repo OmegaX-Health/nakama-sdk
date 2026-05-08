@@ -70,6 +70,29 @@ the caller explicitly passes `allowSigVerifyFallback: true`. Results include
 `verificationDowngraded` so intake services can reject unverified preflight
 results.
 
+## MagicBlock adjunct helpers
+
+Available from `@omegax/protocol-sdk/magicblock`; intentionally not exported
+from the root package.
+
+- `derivePrivateReviewRegistryPda(...)`
+- `derivePrivateReviewOperatorPda(...)`
+- `derivePrivateClaimReviewSessionPda(...)`
+- `buildInitializeReviewRegistryTx(...)`
+- `buildUpsertReviewOperatorTx(...)`
+- `buildOpenReviewSessionTx(...)`
+- `buildDelegateReviewSessionTx(...)`
+- `buildRecordPrivateReviewTx(...)`
+- `buildRecordPrivatePaymentRefTx(...)`
+- `buildCommitAndCloseReviewSessionTx(...)`
+- `buildMarkReviewFailedTx(...)`
+- `verifyActivePrivateReviewOperator(...)`
+- `verifyCommittedApprovedReviewSession(...)`
+
+The hardened claim-room helpers bind session PDAs to session authority, claim
+case, and session id; reviews to a registered operator; and payment references
+to a payment attestor.
+
 ## Canonical instruction builders
 
 Product and operator flows should start with `createSafeProtocolClient(...)`.
