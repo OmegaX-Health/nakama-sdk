@@ -189,8 +189,40 @@ export async function waitForMagicBlockCommitmentSignature(
   erSignature: string,
   erConnection: Connection,
 ): Promise<string> {
-  const sdk = await import('@magicblock-labs/ephemeral-rollups-sdk');
-  return sdk.GetCommitmentSignature(erSignature, erConnection);
+  const scheduledTx = await erConnection.getTransaction(erSignature, {
+    maxSupportedTransactionVersion: 0,
+  });
+  if (!scheduledTx?.meta) {
+    throw new Error('MagicBlock ER transaction was not found or has no metadata');
+  }
+  const scheduledCommitSignature = parseMagicBlockLogSignature(
+    scheduledTx.meta.logMessages ?? [],
+    'ScheduledCommitSent signature: ',
+  );
+  if (!scheduledCommitSignature) {
+    throw new Error('MagicBlock scheduled commit signature was not found');
+  }
+
+  const latestBlockhash = await erConnection.getLatestBlockhash();
+  await erConnection.confirmTransaction({
+    signature: scheduledCommitSignature,
+    ...latestBlockhash,
+  });
+  const committedTx = await erConnection.getTransaction(
+    scheduledCommitSignature,
+    { maxSupportedTransactionVersion: 0 },
+  );
+  if (!committedTx?.meta) {
+    throw new Error('MagicBlock scheduled commit transaction was not found');
+  }
+  const commitmentSignature = parseMagicBlockLogSignature(
+    committedTx.meta.logMessages ?? [],
+    'ScheduledCommitSent signature[0]: ',
+  );
+  if (!commitmentSignature) {
+    throw new Error('MagicBlock base commitment signature was not found');
+  }
+  return commitmentSignature;
 }
 
 export function buildMagicBlockExplorerLink(
@@ -474,6 +506,18 @@ function privateReviewProgramId(programId?: PublicKeyish): PublicKey {
 
 function ix(name: string): Buffer {
   return anchorDiscriminator('global', name);
+}
+
+function parseMagicBlockLogSignature(
+  logMessages: string[],
+  prefix: string,
+): string | null {
+  for (const message of logMessages) {
+    if (message.includes(prefix)) {
+      return message.split(prefix)[1]?.trim() || null;
+    }
+  }
+  return null;
 }
 
 function key(value: PublicKeyish): Buffer {
