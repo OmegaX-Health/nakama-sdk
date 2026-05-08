@@ -481,7 +481,11 @@ function key(value: PublicKeyish): Buffer {
 }
 
 function hash(value: string, label: string): Buffer {
-  return Buffer.from(fromHex(value, 32));
+  try {
+    return Buffer.from(fromHex(value, 32));
+  } catch (cause) {
+    throw new Error(`${label} must be a 32-byte hex string`, { cause });
+  }
 }
 
 function tx(
