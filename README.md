@@ -129,13 +129,13 @@ This package exposes the live canonical object model:
 ## Release status
 
 - SDK release target: `0.8.8`
-- Protocol surface target: `omegax-protocol` commit `96f3f48`
+- Protocol surface target: `omegax-protocol` commit `763c7da`
 - Current public network target: Solana devnet beta
 - Public docs: [docs.omegax.health](https://docs.omegax.health)
 
 ## Release notes
 
-- `0.8.8` refreshes generated bindings for the 62-instruction / 31-account local protocol surface, removes the retired commitment-campaign API from current exports, adds governance authority accept/cancel builders, updates reserve-asset rail confidence inputs, and adds direct plus selected-asset claim-case settlement helpers.
+- `0.8.8` refreshes generated bindings for the 62-instruction / 31-account local protocol surface, removes the retired commitment-campaign API from current exports, adds governance authority accept/cancel builders, updates reserve-asset rail confidence inputs, adds direct plus selected-asset claim-case settlement helpers, and reflects inactive pool/allocation guard errors.
 - `0.8.7` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
 - `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.

@@ -3,8 +3,10 @@
 ## `0.8.8`
 
 - Refreshed generated IDL, contract, and type bindings against the current local
-  `omegax-protocol` surface at commit `96f3f48`, covering 62 instructions, 31
+  `omegax-protocol` surface at commit `763c7da`, covering 62 instructions, 31
   accounts, and 122 types.
+- Reflected the latest allocation guard errors, including inactive liquidity
+  pools and inactive or deallocation-only allocation positions.
 - Removed the retired commitment-campaign builders, readers, PDA helpers, seed
   constants, and public model constants from the current SDK surface.
 - Added checked governance authority accept and cancellation builders for the

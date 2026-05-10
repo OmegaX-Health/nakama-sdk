@@ -4,7 +4,7 @@ This is the maintainer flow for publishing the canonical SDK release.
 
 ## Release targets
 
-- Protocol: `omegax-protocol` commit `37440df`
+- Protocol: `omegax-protocol` commit `763c7da`
 - SDK: `@omegax/protocol-sdk v0.8.8`
 - Docs portal: `docs.omegax.health` content synced to the matching SDK surface
 

@@ -1,13 +1,13 @@
 {
   "sdkVersion": "0.8.8",
   "omegaxDocsRepo": "https://github.com/OmegaX-Health/omegax-docs",
-  "omegaxDocsCommit": "dcf78add897601690e51d90b33a09f6c0ab454c0",
-  "syncedAt": "2026-05-10T18:11:29.676Z",
+  "omegaxDocsCommit": "60461173ef7eed2aa45ae5d53e8385bc26250b9a",
+  "syncedAt": "2026-05-10T19:15:17.548Z",
   "syncedBy": "dr_sabijan",
   "pages": [
     {
       "sdkDoc": "README.md",
-      "sdkDocSha256": "49366d2fa78e5efc69ca99702d657797d3df117a6dafbc7a3dc0cbe47f091e50",
+      "sdkDocSha256": "894efce10ec5f6de140851d9e9c9ff82d1eaf781fe9c4eac57979eea4e1ce691",
       "omegaxDocsPath": "website/docs/sdk/overview.mdx"
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
-      "sdkDocSha256": "983e3caaddad42f4cc1222e1ecc55b842224442c889abac57d1b57c68b5d9102",
+      "sdkDocSha256": "c8d15428e2b3e133632b9d6dbfde81b95a8559d17c84c4e03e2da7825fc5bf1c",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {
