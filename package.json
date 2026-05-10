@@ -32,7 +32,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "omegax-sdk": "./dist/cli.js"
+    "omegax-sdk": "dist/cli.js"
   },
   "exports": {
     ".": {
