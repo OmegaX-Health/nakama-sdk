@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -83,6 +83,15 @@ async function main() {
 
   const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-cli-check-'));
   try {
+    const binPath = join(tempRoot, 'omegax-sdk');
+    symlinkSync(cliPath, binPath);
+    const symlinkHelp = run(process.execPath, [binPath, 'help'], {
+      capture: true,
+    });
+    if (!symlinkHelp.stdout.includes('omegax-sdk doctor')) {
+      throw new Error('symlinked CLI bin did not print usage output');
+    }
+
     const nonEmptyTarget = join(tempRoot, 'non-empty');
     mkdirSync(nonEmptyTarget, { recursive: true });
     writeFileSync(join(nonEmptyTarget, 'keep.txt'), 'do not overwrite', 'utf8');

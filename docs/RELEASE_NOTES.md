@@ -18,6 +18,9 @@
   aliases and preflight-aware safe-client methods.
 - Realigned funding-line, member-position, obligation, and settlement builders
   with the latest optional account slots and reserve-asset-rail requirements.
+- Fixed the packed `omegax-sdk` CLI entrypoint so installs invoked through
+  `node_modules/.bin` run the CLI instead of exiting quietly through symlinked
+  bin paths.
 - Regenerated TypeDoc markdown and refreshed authored docs, release notes, and
   release coordination material for the `0.8.8` publish train.
 
