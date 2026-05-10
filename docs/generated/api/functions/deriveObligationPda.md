@@ -8,7 +8,7 @@
 
 > **deriveObligationPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:423](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L423)
+Defined in: [src/protocol\_seeds.ts:357](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L357)
 
 ## Parameters
 

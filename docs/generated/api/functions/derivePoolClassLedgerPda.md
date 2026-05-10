@@ -8,7 +8,7 @@
 
 > **derivePoolClassLedgerPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:468](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L468)
+Defined in: [src/protocol\_seeds.ts:402](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L402)
 
 ## Parameters
 

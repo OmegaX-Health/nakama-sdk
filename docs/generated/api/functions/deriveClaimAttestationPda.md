@@ -8,7 +8,7 @@
 
 > **deriveClaimAttestationPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:657](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L657)
+Defined in: [src/protocol\_seeds.ts:591](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L591)
 
 ## Parameters
 

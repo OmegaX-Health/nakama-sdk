@@ -8,4 +8,4 @@
 
 > `const` **SEED\_CLAIM\_CASE**: `"claim_case"` = `'claim_case'`
 
-Defined in: [src/protocol\_seeds.ts:32](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L32)
+Defined in: [src/protocol\_seeds.ts:28](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L28)

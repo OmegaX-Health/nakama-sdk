@@ -8,7 +8,7 @@
 
 > **buildReleaseReserveTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3221](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3221)
+Defined in: [src/protocol.ts:2931](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2931)
 
 ## Parameters
 

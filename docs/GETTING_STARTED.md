@@ -48,7 +48,7 @@ npx tsx devnet-smoke.ts
 
 - Oracle and event producers: register oracle operators, configure pool policy, and package compatible outcome attestations.
 - Health / wallet / app builders: read member, claim, and payout state, then build user-facing enrollment or claim flows.
-- Sponsor and capital integrators: launch reserve domains, reserve asset rails, plans, funding lines, commitment campaigns, pools, classes, and allocation flows on the canonical surface.
+- Sponsor and capital integrators: launch reserve domains, reserve asset rails, plans, funding lines, pools, classes, allocation flows, and reserve-backed settlement on the canonical surface.
 
 ## Create clients
 
@@ -198,7 +198,8 @@ import {
   deriveReserveAssetRailPda,
   deriveDomainAssetVaultTokenAccountPda,
   deriveHealthPlanPda,
-  deriveCommitmentCampaignPda,
+  derivePolicySeriesPda,
+  deriveFundingLinePda,
 } from '@omegax/protocol-sdk';
 
 const protocolGovernance = deriveProtocolGovernancePda(programId).toBase58();
@@ -221,9 +222,14 @@ const reserveAssetRail = deriveReserveAssetRailPda({
   assetMint: process.env.ASSET_MINT!,
   programId,
 }).toBase58();
-const commitmentCampaign = deriveCommitmentCampaignPda({
+const policySeries = derivePolicySeriesPda({
   healthPlan,
-  campaignId: 'builder-demo-commitment',
+  seriesId: 'builder-demo-protection',
+  programId,
+}).toBase58();
+const fundingLine = deriveFundingLinePda({
+  healthPlan,
+  lineId: 'builder-demo-premium',
   programId,
 }).toBase58();
 ```
@@ -231,16 +237,17 @@ const commitmentCampaign = deriveCommitmentCampaignPda({
 Relevant builders and helpers:
 
 - `buildInitializeProtocolGovernanceTx(...)`
+- `buildAcceptProtocolGovernanceAuthorityTx(...)`
+- `buildCancelProtocolGovernanceAuthorityTransferTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
 - `buildConfigureReserveAssetRailTx(...)`
-- `buildCreateCommitmentCampaignTx(...)`
-- `buildCreateCommitmentPaymentRailTx(...)`
-- `buildDepositCommitmentTx(...)`
 - `buildCreateHealthPlanTx(...)`
 - `buildCreatePolicySeriesTx(...)`
 - `buildInitializeSeriesReserveLedgerTx(...)`
 - `buildOpenFundingLineTx(...)`
+- `buildSettleClaimCaseTx(...)`
+- `buildSettleClaimCaseSelectedAssetTx(...)`
 - `buildCreateLiquidityPoolTx(...)`
 - `buildCreateCapitalClassTx(...)`
 - `buildCreateAllocationPositionTx(...)`

@@ -6,7 +6,7 @@
 
 # Interface: SeriesReserveLedger
 
-Defined in: [src/generated/protocol\_types.ts:1247](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1247)
+Defined in: [src/generated/protocol\_types.ts:1113](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1113)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1247](https://github.com/OmegaX-He
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1249](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1249)
+Defined in: [src/generated/protocol\_types.ts:1115](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1115)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1249](https://github.com/OmegaX-He
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1251](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1251)
+Defined in: [src/generated/protocol\_types.ts:1117](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1117)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1251](https://github.com/OmegaX-He
 
 > **policy\_series**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1248](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1248)
+Defined in: [src/generated/protocol\_types.ts:1114](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1114)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1248](https://github.com/OmegaX-He
 
 > **sheet**: [`ReserveBalanceSheet`](ReserveBalanceSheet.md)
 
-Defined in: [src/generated/protocol\_types.ts:1250](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1250)
+Defined in: [src/generated/protocol\_types.ts:1116](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1116)

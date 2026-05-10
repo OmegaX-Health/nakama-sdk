@@ -8,4 +8,4 @@
 
 > `const` **RESERVE\_ORACLE\_SOURCE\_GOVERNANCE\_ATTESTED**: `3` = `3`
 
-Defined in: [src/protocol\_models.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L49)
+Defined in: [src/protocol\_models.ts:33](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L33)

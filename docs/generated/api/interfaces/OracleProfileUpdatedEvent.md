@@ -6,7 +6,7 @@
 
 # Interface: OracleProfileUpdatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:874](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L874)
+Defined in: [src/generated/protocol\_types.ts:727](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L727)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:874](https://github.com/OmegaX-Hea
 
 > **authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:877](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L877)
+Defined in: [src/generated/protocol\_types.ts:730](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L730)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:877](https://github.com/OmegaX-Hea
 
 > **oracle**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:876](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L876)
+Defined in: [src/generated/protocol\_types.ts:729](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L729)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:876](https://github.com/OmegaX-Hea
 
 > **oracle\_profile**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:875](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L875)
+Defined in: [src/generated/protocol\_types.ts:728](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L728)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:875](https://github.com/OmegaX-Hea
 
 > **oracle\_type**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:878](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L878)
+Defined in: [src/generated/protocol\_types.ts:731](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L731)

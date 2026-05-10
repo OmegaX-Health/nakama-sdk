@@ -8,4 +8,4 @@
 
 > `const` **ELIGIBILITY\_PAUSED**: `2` = `2`
 
-Defined in: [src/protocol\_models.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L53)
+Defined in: [src/protocol\_models.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L37)

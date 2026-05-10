@@ -6,7 +6,7 @@
 
 # Interface: RequestRedemptionArgs
 
-Defined in: [src/generated/protocol\_types.ts:1130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1130)
+Defined in: [src/generated/protocol\_types.ts:995](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L995)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:1130](https://github.com/OmegaX-He
 
 > **shares**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1131)
+Defined in: [src/generated/protocol\_types.ts:996](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L996)

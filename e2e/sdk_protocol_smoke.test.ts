@@ -40,6 +40,7 @@ import {
   derivePoolTreasuryVaultPda,
   deriveProtocolGovernancePda,
   deriveDomainAssetVaultTokenAccountPda,
+  deriveReserveAssetRailPda,
   deriveReserveDomainPda,
   deriveSeriesReserveLedgerPda,
   recomputeReserveBalanceSheet,
@@ -48,6 +49,9 @@ import {
 
 const TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+);
+const BPF_LOADER_UPGRADEABLE_PROGRAM_ID = new PublicKey(
+  'BPFLoaderUpgradeab1e11111111111111111111111',
 );
 const MINT_ACCOUNT_SIZE = 82;
 const TOKEN_ACCOUNT_SIZE = 165;
@@ -70,6 +74,13 @@ function keypairFromEnv(name: string): Keypair | null {
 
 function fixedHash(byte: number): Uint8Array {
   return Uint8Array.from({ length: 32 }, () => byte);
+}
+
+function deriveProgramDataAddress(programId: string): PublicKey {
+  return PublicKey.findProgramAddressSync(
+    [new PublicKey(programId).toBuffer()],
+    BPF_LOADER_UPGRADEABLE_PROGRAM_ID,
+  )[0];
 }
 
 async function sleep(ms: number) {
@@ -443,7 +454,13 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   const tokenProgram = TOKEN_PROGRAM_ID.toBase58();
 
   const protocolGovernance = deriveProtocolGovernancePda(programId).toBase58();
+  const programData = deriveProgramDataAddress(programId).toBase58();
   const domainAssetVault = domainAssetVaultKey.toBase58();
+  const reserveAssetRail = deriveReserveAssetRailPda({
+    reserveDomain,
+    assetMint,
+    programId,
+  }).toBase58();
   const domainAssetLedger = deriveDomainAssetLedgerPda({
     reserveDomain,
     assetMint,
@@ -549,6 +566,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
       accounts: {
         governance_authority: admin.publicKey.toBase58(),
         protocol_governance: protocolGovernance,
+        program_data: programData,
       },
     })) as never,
   });
@@ -593,6 +611,57 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         asset_mint: assetMint,
         vault_token_account: vaultTokenAccount,
         token_program: tokenProgram,
+      },
+    })) as never,
+  });
+
+  await simulateAndBroadcast({
+    label: 'configure_reserve_asset_rail',
+    rpc,
+    signers: [admin],
+    tx: (await buildTx('buildConfigureReserveAssetRailTx', {
+      args: {
+        asset_mint: assetMint,
+        oracle_authority: admin.publicKey.toBase58(),
+        asset_symbol: 'USDC',
+        role: 0,
+        payout_priority: 1,
+        oracle_source: 3,
+        oracle_feed_id: fixedHash(18),
+        max_staleness_seconds: 300n,
+        max_confidence_bps: 100,
+        haircut_bps: 0,
+        max_exposure_bps: 10_000,
+        deposit_enabled: true,
+        payout_enabled: true,
+        capacity_enabled: true,
+        active: true,
+        reason_hash: fixedHash(19),
+      },
+      accounts: {
+        authority: admin.publicKey.toBase58(),
+        protocol_governance: protocolGovernance,
+        reserve_domain: reserveDomain,
+        reserve_asset_rail: reserveAssetRail,
+      },
+    })) as never,
+  });
+
+  await simulateAndBroadcast({
+    label: 'publish_reserve_asset_rail_price',
+    rpc,
+    signers: [admin],
+    tx: (await buildTx('buildPublishReserveAssetRailPriceTx', {
+      args: {
+        price_usd_1e8: 100_000_000n,
+        confidence_bps: 5,
+        published_at_ts: BigInt(Math.floor(Date.now() / 1000)),
+        proof_hash: fixedHash(20),
+      },
+      accounts: {
+        authority: admin.publicKey.toBase58(),
+        protocol_governance: protocolGovernance,
+        reserve_asset_rail: reserveAssetRail,
       },
     })) as never,
   });
@@ -685,6 +754,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         wallet: member.publicKey.toBase58(),
         protocol_governance: protocolGovernance,
         health_plan: healthPlan,
+        policy_series: policySeries,
         member_position: memberPosition,
       },
     })) as never,
@@ -708,6 +778,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         authority: admin.publicKey.toBase58(),
         protocol_governance: protocolGovernance,
         health_plan: healthPlan,
+        policy_series: policySeries,
         domain_asset_vault: domainAssetVault,
         domain_asset_ledger: domainAssetLedger,
         funding_line: fundingLine,
@@ -818,6 +889,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         authority: admin.publicKey.toBase58(),
         protocol_governance: protocolGovernance,
         health_plan: healthPlan,
+        reserve_asset_rail: reserveAssetRail,
         domain_asset_vault: domainAssetVault,
         domain_asset_ledger: domainAssetLedger,
         funding_line: fundingLine,
@@ -848,6 +920,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
         authority: admin.publicKey.toBase58(),
         protocol_governance: protocolGovernance,
         health_plan: healthPlan,
+        reserve_asset_rail: reserveAssetRail,
         domain_asset_vault: domainAssetVault,
         domain_asset_ledger: domainAssetLedger,
         funding_line: fundingLine,

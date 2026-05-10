@@ -6,7 +6,7 @@
 
 # Interface: OracleProfileRegisteredEvent
 
-Defined in: [src/generated/protocol\_types.ts:866](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L866)
+Defined in: [src/generated/protocol\_types.ts:719](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L719)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:866](https://github.com/OmegaX-Hea
 
 > **admin**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:869](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L869)
+Defined in: [src/generated/protocol\_types.ts:722](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L722)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:869](https://github.com/OmegaX-Hea
 
 > **claimed**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:871](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L871)
+Defined in: [src/generated/protocol\_types.ts:724](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L724)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:871](https://github.com/OmegaX-Hea
 
 > **oracle**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:868](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L868)
+Defined in: [src/generated/protocol\_types.ts:721](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L721)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:868](https://github.com/OmegaX-Hea
 
 > **oracle\_profile**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:867](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L867)
+Defined in: [src/generated/protocol\_types.ts:720](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L720)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:867](https://github.com/OmegaX-Hea
 
 > **oracle\_type**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:870](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L870)
+Defined in: [src/generated/protocol\_types.ts:723](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L723)

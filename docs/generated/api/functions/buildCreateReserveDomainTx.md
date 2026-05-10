@@ -8,7 +8,7 @@
 
 > **buildCreateReserveDomainTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1103](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1103)
+Defined in: [src/protocol.ts:1118](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1118)
 
 ## Parameters
 

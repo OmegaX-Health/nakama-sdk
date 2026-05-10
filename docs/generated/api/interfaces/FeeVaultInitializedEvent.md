@@ -6,7 +6,7 @@
 
 # Interface: FeeVaultInitializedEvent
 
-Defined in: [src/generated/protocol\_types.ts:556](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L556)
+Defined in: [src/generated/protocol\_types.ts:407](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L407)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:556](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:559](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L559)
+Defined in: [src/generated/protocol\_types.ts:410](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L410)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:559](https://github.com/OmegaX-Hea
 
 > **fee\_recipient**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:560](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L560)
+Defined in: [src/generated/protocol\_types.ts:411](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L411)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:560](https://github.com/OmegaX-Hea
 
 > **rail**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:561](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L561)
+Defined in: [src/generated/protocol\_types.ts:412](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L412)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:561](https://github.com/OmegaX-Hea
 
 > **scope**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:558](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L558)
+Defined in: [src/generated/protocol\_types.ts:409](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L409)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:558](https://github.com/OmegaX-Hea
 
 > **vault**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:557](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L557)
+Defined in: [src/generated/protocol\_types.ts:408](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L408)

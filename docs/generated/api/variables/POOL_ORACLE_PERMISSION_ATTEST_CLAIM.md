@@ -8,4 +8,4 @@
 
 > `const` **POOL\_ORACLE\_PERMISSION\_ATTEST\_CLAIM**: `number`
 
-Defined in: [src/protocol\_models.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L82)
+Defined in: [src/protocol\_models.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L66)

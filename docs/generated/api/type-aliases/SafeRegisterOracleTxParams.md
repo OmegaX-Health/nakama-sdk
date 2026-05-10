@@ -8,4 +8,4 @@
 
 > **SafeRegisterOracleTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildRegisterOracleTx`](../functions/buildRegisterOracleTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:4131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4131)
+Defined in: [src/protocol.ts:3850](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3850)

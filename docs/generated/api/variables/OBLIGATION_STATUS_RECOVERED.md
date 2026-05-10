@@ -8,4 +8,4 @@
 
 > `const` **OBLIGATION\_STATUS\_RECOVERED**: `6` = `6`
 
-Defined in: [src/protocol\_models.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L90)
+Defined in: [src/protocol\_models.ts:74](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L74)

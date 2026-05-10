@@ -8,4 +8,4 @@
 
 > `const` **MEMBERSHIP\_GATE\_KIND\_NFT\_ANCHOR**: `2` = `2`
 
-Defined in: [src/protocol\_models.ts:62](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L62)
+Defined in: [src/protocol\_models.ts:46](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L46)

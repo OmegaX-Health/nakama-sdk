@@ -25,10 +25,6 @@ export const SEED_MEMBER_POSITION = 'member_position';
 export const SEED_MEMBERSHIP_ANCHOR_SEAT = 'membership_anchor_seat';
 export const SEED_FUNDING_LINE = 'funding_line';
 export const SEED_FUNDING_LINE_LEDGER = 'funding_line_ledger';
-export const SEED_COMMITMENT_CAMPAIGN = 'commitment_campaign';
-export const SEED_COMMITMENT_PAYMENT_RAIL = 'commitment_payment_rail';
-export const SEED_COMMITMENT_LEDGER = 'commitment_ledger';
-export const SEED_COMMITMENT_POSITION = 'commitment_position';
 export const SEED_CLAIM_CASE = 'claim_case';
 export const SEED_OBLIGATION = 'obligation';
 export const SEED_LIQUIDITY_POOL = 'liquidity_pool';
@@ -338,68 +334,6 @@ export function deriveFundingLineLedgerPda(params: {
       TEXT_ENCODER.encode(SEED_FUNDING_LINE_LEDGER),
       toPublicKey(params.fundingLine).toBytes(),
       toPublicKey(params.assetMint).toBytes(),
-    ],
-    params.programId ?? PROGRAM_ID,
-  );
-}
-
-export function deriveCommitmentCampaignPda(params: {
-  healthPlan: PublicKeyish;
-  campaignId: string;
-  programId?: PublicKeyish;
-}): PublicKey {
-  return derivePda(
-    [
-      TEXT_ENCODER.encode(SEED_COMMITMENT_CAMPAIGN),
-      toPublicKey(params.healthPlan).toBytes(),
-      stringSeed(params.campaignId, 'campaign id'),
-    ],
-    params.programId ?? PROGRAM_ID,
-  );
-}
-
-export function deriveCommitmentPaymentRailPda(params: {
-  campaign: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  programId?: PublicKeyish;
-}): PublicKey {
-  return derivePda(
-    [
-      TEXT_ENCODER.encode(SEED_COMMITMENT_PAYMENT_RAIL),
-      toPublicKey(params.campaign).toBytes(),
-      toPublicKey(params.paymentAssetMint).toBytes(),
-    ],
-    params.programId ?? PROGRAM_ID,
-  );
-}
-
-export function deriveCommitmentLedgerPda(params: {
-  campaign: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  programId?: PublicKeyish;
-}): PublicKey {
-  return derivePda(
-    [
-      TEXT_ENCODER.encode(SEED_COMMITMENT_LEDGER),
-      toPublicKey(params.campaign).toBytes(),
-      toPublicKey(params.paymentAssetMint).toBytes(),
-    ],
-    params.programId ?? PROGRAM_ID,
-  );
-}
-
-export function deriveCommitmentPositionPda(params: {
-  campaign: PublicKeyish;
-  depositor: PublicKeyish;
-  beneficiary: PublicKeyish;
-  programId?: PublicKeyish;
-}): PublicKey {
-  return derivePda(
-    [
-      TEXT_ENCODER.encode(SEED_COMMITMENT_POSITION),
-      toPublicKey(params.campaign).toBytes(),
-      toPublicKey(params.depositor).toBytes(),
-      toPublicKey(params.beneficiary).toBytes(),
     ],
     params.programId ?? PROGRAM_ID,
   );

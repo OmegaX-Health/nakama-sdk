@@ -8,7 +8,7 @@
 
 > **describeSeriesMode**(`mode`): `string`
 
-Defined in: [src/protocol\_models.ts:493](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L493)
+Defined in: [src/protocol\_models.ts:477](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L477)
 
 ## Parameters
 

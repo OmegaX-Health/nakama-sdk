@@ -8,4 +8,4 @@
 
 > `const` **CLAIM\_INTAKE\_CLOSED**: `5` = `5`
 
-Defined in: [src/protocol\_models.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L75)
+Defined in: [src/protocol\_models.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L59)

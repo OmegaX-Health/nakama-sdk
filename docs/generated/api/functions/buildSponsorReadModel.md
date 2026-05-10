@@ -8,7 +8,7 @@
 
 > **buildSponsorReadModel**(`params`): [`SponsorReadModel`](../type-aliases/SponsorReadModel.md)
 
-Defined in: [src/protocol\_models.ts:616](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L616)
+Defined in: [src/protocol\_models.ts:600](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L600)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **buildClaimOracleTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3463](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3463)
+Defined in: [src/protocol.ts:3174](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3174)
 
 ## Parameters
 

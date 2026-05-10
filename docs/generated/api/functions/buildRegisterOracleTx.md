@@ -8,7 +8,7 @@
 
 > **buildRegisterOracleTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3413](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3413)
+Defined in: [src/protocol.ts:3124](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3124)
 
 ## Parameters
 

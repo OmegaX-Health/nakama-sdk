@@ -8,4 +8,4 @@
 
 > `const` **LP\_QUEUE\_STATUS\_PENDING**: `1` = `1`
 
-Defined in: [src/protocol\_models.ts:104](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L104)
+Defined in: [src/protocol\_models.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L88)

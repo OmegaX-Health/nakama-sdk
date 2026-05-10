@@ -8,4 +8,4 @@
 
 > `const` **OBLIGATION\_STATUS\_PROPOSED**: `0` = `0`
 
-Defined in: [src/protocol\_models.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L84)
+Defined in: [src/protocol\_models.ts:68](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L68)

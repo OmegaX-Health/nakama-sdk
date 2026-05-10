@@ -8,7 +8,7 @@
 
 > **buildConfigureReserveAssetRailTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1212](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1212)
+Defined in: [src/protocol.ts:1227](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1227)
 
 ## Parameters
 
@@ -39,6 +39,10 @@ Defined in: [src/protocol.ts:1212](https://github.com/OmegaX-Health/omegax-sdk/b
 `boolean`
 
 #### haircutBps
+
+`number`
+
+#### maxConfidenceBps
 
 `number`
 

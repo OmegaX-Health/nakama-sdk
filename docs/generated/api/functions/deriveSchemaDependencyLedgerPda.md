@@ -8,7 +8,7 @@
 
 > **deriveSchemaDependencyLedgerPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:644](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L644)
+Defined in: [src/protocol\_seeds.ts:578](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L578)
 
 ## Parameters
 

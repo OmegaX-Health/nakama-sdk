@@ -6,7 +6,7 @@
 
 # Interface: LPPositionCredentialingUpdatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:696](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L696)
+Defined in: [src/generated/protocol\_types.ts:549](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L549)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:696](https://github.com/OmegaX-Hea
 
 > **authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:699](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L699)
+Defined in: [src/generated/protocol\_types.ts:552](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L552)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:699](https://github.com/OmegaX-Hea
 
 > **capital\_class**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:697](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L697)
+Defined in: [src/generated/protocol\_types.ts:550](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L550)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:697](https://github.com/OmegaX-Hea
 
 > **credentialed**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:700](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L700)
+Defined in: [src/generated/protocol\_types.ts:553](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L553)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:700](https://github.com/OmegaX-Hea
 
 > **owner**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:698](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L698)
+Defined in: [src/generated/protocol\_types.ts:551](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L551)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:698](https://github.com/OmegaX-Hea
 
 > **reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:701](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L701)
+Defined in: [src/generated/protocol\_types.ts:554](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L554)

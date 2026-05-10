@@ -450,9 +450,10 @@ async function runPhase(params) {
   }
 
   validatorArgs.push(
-    '--bpf-program',
+    '--upgradeable-program',
     protocolProgramId,
     getProtocolPaths().programSoPath,
+    adminKeypair.publicKey.toBase58(),
   );
 
   const validator = spawn('solana-test-validator', validatorArgs, {

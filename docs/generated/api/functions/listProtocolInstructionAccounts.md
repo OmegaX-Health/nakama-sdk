@@ -8,7 +8,7 @@
 
 > **listProtocolInstructionAccounts**(`instructionName`): [`ProtocolInstructionAccount`](../type-aliases/ProtocolInstructionAccount.md)[]
 
-Defined in: [src/protocol.ts:629](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L629)
+Defined in: [src/protocol.ts:628](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L628)
 
 ## Parameters
 

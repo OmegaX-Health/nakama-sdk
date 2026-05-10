@@ -8,7 +8,7 @@
 
 > **buildWithdrawPoolTreasurySolTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2669](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2669)
+Defined in: [src/protocol.ts:2158](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2158)
 
 ## Parameters
 

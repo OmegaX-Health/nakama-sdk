@@ -6,7 +6,7 @@
 
 # Interface: FeeAccruedEvent
 
-Defined in: [src/generated/protocol\_types.ts:549](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L549)
+Defined in: [src/generated/protocol\_types.ts:400](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L400)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:549](https://github.com/OmegaX-Hea
 
 > **accrued\_total**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:553](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L553)
+Defined in: [src/generated/protocol\_types.ts:404](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L404)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:553](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:552](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L552)
+Defined in: [src/generated/protocol\_types.ts:403](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L403)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:552](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:551](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L551)
+Defined in: [src/generated/protocol\_types.ts:402](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L402)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:551](https://github.com/OmegaX-Hea
 
 > **vault**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:550](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L550)
+Defined in: [src/generated/protocol\_types.ts:401](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L401)

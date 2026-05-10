@@ -6,7 +6,7 @@
 
 # Interface: BuildInstructionParams\<Args, Accounts\>
 
-Defined in: [src/generated/protocol\_types.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L58)
+Defined in: [src/generated/protocol\_types.ts:54](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L54)
 
 ## Extended by
 
@@ -28,7 +28,7 @@ Defined in: [src/generated/protocol\_types.ts:58](https://github.com/OmegaX-Heal
 
 > **accounts**: `Accounts`
 
-Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L60)
+Defined in: [src/generated/protocol\_types.ts:56](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L56)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Heal
 
 > **args**: `Args`
 
-Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L59)
+Defined in: [src/generated/protocol\_types.ts:55](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L55)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Heal
 
 > `optional` **programId?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:61](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L61)
+Defined in: [src/generated/protocol\_types.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L57)

@@ -8,4 +8,4 @@
 
 > **GenericInstructionAccounts** = `Record`\<`string`, [`PublicKeyish`](PublicKeyish.md) \| `undefined`\>
 
-Defined in: [src/generated/protocol\_types.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L53)
+Defined in: [src/generated/protocol\_types.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L49)

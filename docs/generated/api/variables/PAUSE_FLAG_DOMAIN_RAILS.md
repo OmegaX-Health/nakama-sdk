@@ -8,4 +8,4 @@
 
 > `const` **PAUSE\_FLAG\_DOMAIN\_RAILS**: `number`
 
-Defined in: [src/protocol\_models.ts:108](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L108)
+Defined in: [src/protocol\_models.ts:92](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L92)

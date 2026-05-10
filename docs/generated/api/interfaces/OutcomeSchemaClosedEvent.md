@@ -6,7 +6,7 @@
 
 # Interface: OutcomeSchemaClosedEvent
 
-Defined in: [src/generated/protocol\_types.ts:896](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L896)
+Defined in: [src/generated/protocol\_types.ts:749](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L749)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:896](https://github.com/OmegaX-Hea
 
 > **governance\_authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:898](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L898)
+Defined in: [src/generated/protocol\_types.ts:751](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L751)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:898](https://github.com/OmegaX-Hea
 
 > **outcome\_schema**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:897](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L897)
+Defined in: [src/generated/protocol\_types.ts:750](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L750)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:897](https://github.com/OmegaX-Hea
 
 > **recipient**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:900](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L900)
+Defined in: [src/generated/protocol\_types.ts:753](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L753)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:900](https://github.com/OmegaX-Hea
 
 > **schema\_key\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:899](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L899)
+Defined in: [src/generated/protocol\_types.ts:752](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L752)

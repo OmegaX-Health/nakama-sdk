@@ -6,7 +6,7 @@
 
 # Interface: SafeProtocolClientOptions
 
-Defined in: [src/protocol.ts:4056](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4056)
+Defined in: [src/protocol.ts:3767](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3767)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/protocol.ts:4056](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > `optional` **programId?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/protocol.ts:4057](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4057)
+Defined in: [src/protocol.ts:3768](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3768)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/protocol.ts:4057](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > `optional` **unsafeAllowCustomProgramId?**: `boolean`
 
-Defined in: [src/protocol.ts:4058](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4058)
+Defined in: [src/protocol.ts:3769](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3769)

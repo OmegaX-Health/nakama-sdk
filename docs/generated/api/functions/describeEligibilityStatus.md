@@ -8,7 +8,7 @@
 
 > **describeEligibilityStatus**(`status`): `string`
 
-Defined in: [src/protocol\_models.ts:540](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L540)
+Defined in: [src/protocol\_models.ts:524](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L524)
 
 ## Parameters
 

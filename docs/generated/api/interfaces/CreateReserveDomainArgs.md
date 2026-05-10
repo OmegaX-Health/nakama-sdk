@@ -6,7 +6,7 @@
 
 # Interface: CreateReserveDomainArgs
 
-Defined in: [src/generated/protocol\_types.ts:509](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L509)
+Defined in: [src/generated/protocol\_types.ts:365](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L365)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:509](https://github.com/OmegaX-Hea
 
 > **allowed\_rail\_mask**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:516](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L516)
+Defined in: [src/generated/protocol\_types.ts:372](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L372)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:516](https://github.com/OmegaX-Hea
 
 > **compliance\_baseline\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:515](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L515)
+Defined in: [src/generated/protocol\_types.ts:371](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L371)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:515](https://github.com/OmegaX-Hea
 
 > **display\_name**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:511](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L511)
+Defined in: [src/generated/protocol\_types.ts:367](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L367)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:511](https://github.com/OmegaX-Hea
 
 > **domain\_admin**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:512](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L512)
+Defined in: [src/generated/protocol\_types.ts:368](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L368)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:512](https://github.com/OmegaX-Hea
 
 > **domain\_id**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:510](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L510)
+Defined in: [src/generated/protocol\_types.ts:366](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L366)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:510](https://github.com/OmegaX-Hea
 
 > **legal\_structure\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:514](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L514)
+Defined in: [src/generated/protocol\_types.ts:370](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L370)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/generated/protocol\_types.ts:514](https://github.com/OmegaX-Hea
 
 > **pause\_flags**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:517](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L517)
+Defined in: [src/generated/protocol\_types.ts:373](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L373)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: [src/generated/protocol\_types.ts:517](https://github.com/OmegaX-Hea
 
 > **settlement\_mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:513](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L513)
+Defined in: [src/generated/protocol\_types.ts:369](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L369)

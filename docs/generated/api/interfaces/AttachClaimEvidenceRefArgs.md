@@ -6,7 +6,7 @@
 
 # Interface: AttachClaimEvidenceRefArgs
 
-Defined in: [src/generated/protocol\_types.ts:126](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L126)
+Defined in: [src/generated/protocol\_types.ts:118](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L118)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:126](https://github.com/OmegaX-Hea
 
 > **decision\_support\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:128](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L128)
+Defined in: [src/generated/protocol\_types.ts:120](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L120)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:128](https://github.com/OmegaX-Hea
 
 > **evidence\_ref\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:127](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L127)
+Defined in: [src/generated/protocol\_types.ts:119](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L119)

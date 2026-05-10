@@ -8,7 +8,7 @@
 
 > **createSafeProtocolClient**(`connection`, `options?`): [`SafeProtocolClient`](../interfaces/SafeProtocolClient.md)
 
-Defined in: [src/protocol.ts:4190](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4190)
+Defined in: [src/protocol.ts:3912](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3912)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **listProtocolAccountNames**(): [`ProtocolAccountName`](../type-aliases/ProtocolAccountName.md)[]
 
-Defined in: [src/protocol.ts:635](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L635)
+Defined in: [src/protocol.ts:634](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L634)
 
 ## Returns
 

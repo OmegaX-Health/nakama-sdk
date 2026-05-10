@@ -6,7 +6,7 @@
 
 # Interface: MarkImpairmentArgs
 
-Defined in: [src/generated/protocol\_types.ts:740](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L740)
+Defined in: [src/generated/protocol\_types.ts:593](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L593)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:740](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:741](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L741)
+Defined in: [src/generated/protocol\_types.ts:594](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L594)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:741](https://github.com/OmegaX-Hea
 
 > **reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:742](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L742)
+Defined in: [src/generated/protocol\_types.ts:595](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L595)

@@ -8,7 +8,7 @@
 
 > **buildWithdrawProtocolFeeSolTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2654](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2654)
+Defined in: [src/protocol.ts:2143](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2143)
 
 ## Parameters
 

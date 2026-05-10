@@ -8,4 +8,4 @@
 
 > `const` **SCHEMA\_FAMILY\_KERNEL**: `0` = `0`
 
-Defined in: [src/protocol\_models.ts:122](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L122)
+Defined in: [src/protocol\_models.ts:106](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L106)

@@ -6,7 +6,7 @@
 
 # Interface: SetPoolOraclePermissionsArgs
 
-Defined in: [src/generated/protocol\_types.ts:1258](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1258)
+Defined in: [src/generated/protocol\_types.ts:1124](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1124)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:1258](https://github.com/OmegaX-He
 
 > **permissions**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1259](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1259)
+Defined in: [src/generated/protocol\_types.ts:1125](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1125)

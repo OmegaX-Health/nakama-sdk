@@ -6,7 +6,7 @@
 
 # Interface: PoolOracleApproval
 
-Defined in: [src/generated/protocol\_types.ts:979](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L979)
+Defined in: [src/generated/protocol\_types.ts:827](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L827)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:979](https://github.com/OmegaX-Hea
 
 > **active**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:982](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L982)
+Defined in: [src/generated/protocol\_types.ts:830](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L830)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:982](https://github.com/OmegaX-Hea
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:984](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L984)
+Defined in: [src/generated/protocol\_types.ts:832](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L832)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:984](https://github.com/OmegaX-Hea
 
 > **liquidity\_pool**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:980](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L980)
+Defined in: [src/generated/protocol\_types.ts:828](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L828)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:980](https://github.com/OmegaX-Hea
 
 > **oracle**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:981](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L981)
+Defined in: [src/generated/protocol\_types.ts:829](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L829)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:981](https://github.com/OmegaX-Hea
 
 > **updated\_at\_ts**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:983](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L983)
+Defined in: [src/generated/protocol\_types.ts:831](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L831)

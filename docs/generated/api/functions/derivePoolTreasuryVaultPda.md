@@ -8,7 +8,7 @@
 
 > **derivePoolTreasuryVaultPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:599](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L599)
+Defined in: [src/protocol\_seeds.ts:533](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L533)
 
 ## Parameters
 

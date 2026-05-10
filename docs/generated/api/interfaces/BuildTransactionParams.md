@@ -6,7 +6,7 @@
 
 # Interface: BuildTransactionParams\<Args, Accounts\>
 
-Defined in: [src/generated/protocol\_types.ts:64](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L64)
+Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L60)
 
 ## Extends
 
@@ -28,7 +28,7 @@ Defined in: [src/generated/protocol\_types.ts:64](https://github.com/OmegaX-Heal
 
 > **accounts**: `Accounts`
 
-Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L60)
+Defined in: [src/generated/protocol\_types.ts:56](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L56)
 
 #### Inherited from
 
@@ -40,7 +40,7 @@ Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Heal
 
 > `optional` **appendInstructions?**: `TransactionInstruction`[]
 
-Defined in: [src/generated/protocol\_types.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L71)
+Defined in: [src/generated/protocol\_types.ts:67](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L67)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/generated/protocol\_types.ts:71](https://github.com/OmegaX-Heal
 
 > **args**: `Args`
 
-Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L59)
+Defined in: [src/generated/protocol\_types.ts:55](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L55)
 
 #### Inherited from
 
@@ -60,7 +60,7 @@ Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Heal
 
 > `optional` **feePayer?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L69)
+Defined in: [src/generated/protocol\_types.ts:65](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L65)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [src/generated/protocol\_types.ts:69](https://github.com/OmegaX-Heal
 
 > `optional` **prependInstructions?**: `TransactionInstruction`[]
 
-Defined in: [src/generated/protocol\_types.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L70)
+Defined in: [src/generated/protocol\_types.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L66)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [src/generated/protocol\_types.ts:70](https://github.com/OmegaX-Heal
 
 > `optional` **programId?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:61](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L61)
+Defined in: [src/generated/protocol\_types.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L57)
 
 #### Inherited from
 
@@ -88,4 +88,4 @@ Defined in: [src/generated/protocol\_types.ts:61](https://github.com/OmegaX-Heal
 
 > **recentBlockhash**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:68](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L68)
+Defined in: [src/generated/protocol\_types.ts:64](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L64)

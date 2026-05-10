@@ -8,4 +8,4 @@
 
 > `const` **MEMBERSHIP\_MODE\_TOKEN\_GATE**: `1` = `1`
 
-Defined in: [src/protocol\_models.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L57)
+Defined in: [src/protocol\_models.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L41)

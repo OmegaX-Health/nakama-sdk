@@ -1,23 +1,23 @@
 {
-  "sdkVersion": "0.8.7",
+  "sdkVersion": "0.8.8",
   "omegaxDocsRepo": "https://github.com/OmegaX-Health/omegax-docs",
-  "omegaxDocsCommit": "ad8510827a9ca358e974e9e0c79b0bf78416570a",
-  "syncedAt": "2026-05-06T06:39:32.469Z",
+  "omegaxDocsCommit": "dcf78add897601690e51d90b33a09f6c0ab454c0",
+  "syncedAt": "2026-05-10T18:11:29.676Z",
   "syncedBy": "dr_sabijan",
   "pages": [
     {
       "sdkDoc": "README.md",
-      "sdkDocSha256": "c69d6e932ed10666e24f1586327bd3af6a82287549e6042b209a4a0cb3252256",
+      "sdkDocSha256": "49366d2fa78e5efc69ca99702d657797d3df117a6dafbc7a3dc0cbe47f091e50",
       "omegaxDocsPath": "website/docs/sdk/overview.mdx"
     },
     {
       "sdkDoc": "docs/GETTING_STARTED.md",
-      "sdkDocSha256": "0ac4c429a75e59bd1710b489d0ef7e9407b81d777e99410be5c10a4dc42e7b24",
+      "sdkDocSha256": "46ccb2fd7e1106692f97000463340203340ba91b071a81e18f9667a48206635f",
       "omegaxDocsPath": "website/docs/sdk/getting-started.md"
     },
     {
       "sdkDoc": "docs/WORKFLOWS.md",
-      "sdkDocSha256": "93d9688f75278c9e8689de62c02917b8f33ef1fe71426dd15293cf6d7b866be1",
+      "sdkDocSha256": "bfa0e894d2bd8ec5598471de1a57684728600e61e441c4ebc559b3ad5e75e763",
       "omegaxDocsPath": "website/docs/sdk/workflows.md"
     },
     {
@@ -37,12 +37,12 @@
     },
     {
       "sdkDoc": "docs/API_REFERENCE.md",
-      "sdkDocSha256": "9ff4a062f2f7479c564a4f1711f91d9e51d8908fd4b9f09b0e1c0a2adcd1090f",
+      "sdkDocSha256": "e2cfa186c779235efd33277f29c398144a3a7e16ea0cf115d940030bd3e932aa",
       "omegaxDocsPath": "website/docs/sdk/api-reference.md"
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
-      "sdkDocSha256": "2272d73b9c42ed8b9b31b7b003d281a3310f0e3961001f58724cea818faea917",
+      "sdkDocSha256": "983e3caaddad42f4cc1222e1ecc55b842224442c889abac57d1b57c68b5d9102",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {

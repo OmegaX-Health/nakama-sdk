@@ -8,7 +8,7 @@
 
 > **buildRecordPremiumPaymentTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2186)
+Defined in: [src/protocol.ts:1675](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1675)
 
 ## Parameters
 

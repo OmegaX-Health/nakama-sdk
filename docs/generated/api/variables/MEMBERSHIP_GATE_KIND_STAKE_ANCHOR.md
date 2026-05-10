@@ -8,4 +8,4 @@
 
 > `const` **MEMBERSHIP\_GATE\_KIND\_STAKE\_ANCHOR**: `3` = `3`
 
-Defined in: [src/protocol\_models.ts:63](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L63)
+Defined in: [src/protocol\_models.ts:47](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L47)

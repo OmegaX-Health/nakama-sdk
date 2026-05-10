@@ -8,7 +8,7 @@
 
 > **describeSeriesStatus**(`status`): `string`
 
-Defined in: [src/protocol\_models.ts:508](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L508)
+Defined in: [src/protocol\_models.ts:492](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L492)
 
 ## Parameters
 

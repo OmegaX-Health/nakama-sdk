@@ -8,7 +8,7 @@
 
 > **deriveSeriesReserveLedgerPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:269](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L269)
+Defined in: [src/protocol\_seeds.ts:265](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L265)
 
 ## Parameters
 

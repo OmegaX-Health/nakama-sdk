@@ -8,7 +8,7 @@
 
 > **buildSettleObligationTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3244](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3244)
+Defined in: [src/protocol.ts:2954](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2954)
 
 ## Parameters
 

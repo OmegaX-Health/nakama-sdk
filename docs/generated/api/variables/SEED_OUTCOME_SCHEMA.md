@@ -8,4 +8,4 @@
 
 > `const` **SEED\_OUTCOME\_SCHEMA**: `"outcome_schema"` = `'outcome_schema'`
 
-Defined in: [src/protocol\_seeds.ts:47](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L47)
+Defined in: [src/protocol\_seeds.ts:43](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L43)

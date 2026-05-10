@@ -6,7 +6,7 @@
 
 # Interface: ProtocolClient
 
-Defined in: [src/generated/protocol\_types.ts:2098](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2098)
+Defined in: [src/generated/protocol\_types.ts:1900](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1900)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:2098](https://github.com/OmegaX-He
 
 > `readonly` **connection**: `Connection`
 
-Defined in: [src/generated/protocol\_types.ts:2099](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2099)
+Defined in: [src/generated/protocol\_types.ts:1901](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1901)
 
 ***
 
@@ -22,21 +22,21 @@ Defined in: [src/generated/protocol\_types.ts:2099](https://github.com/OmegaX-He
 
 > `readonly` **programId**: `PublicKey`
 
-Defined in: [src/generated/protocol\_types.ts:2100](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2100)
+Defined in: [src/generated/protocol\_types.ts:1902](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1902)
 
 ## Methods
 
-### buildActivateDirectPremiumCommitmentInstruction()
+### buildAcceptProtocolGovernanceAuthorityInstruction()
 
-> **buildActivateDirectPremiumCommitmentInstruction**(`params`): `TransactionInstruction`
+> **buildAcceptProtocolGovernanceAuthorityInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2126](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2126)
+Defined in: [src/generated/protocol\_types.ts:1928](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1928)
 
 #### Parameters
 
 ##### params
 
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`ActivateCommitmentArgs`](ActivateCommitmentArgs.md), [`ActivateDirectPremiumCommitmentAccounts`](ActivateDirectPremiumCommitmentAccounts.md)\>
+[`BuildInstructionParams`](BuildInstructionParams.md)\<`Record`\<`string`, `unknown`\>, [`AcceptProtocolGovernanceAuthorityAccounts`](AcceptProtocolGovernanceAuthorityAccounts.md)\>
 
 #### Returns
 
@@ -44,89 +44,17 @@ Defined in: [src/generated/protocol\_types.ts:2126](https://github.com/OmegaX-He
 
 ***
 
-### buildActivateDirectPremiumCommitmentTx()
+### buildAcceptProtocolGovernanceAuthorityTx()
 
-> **buildActivateDirectPremiumCommitmentTx**(`params`): `Transaction`
+> **buildAcceptProtocolGovernanceAuthorityTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2132)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`ActivateCommitmentArgs`](ActivateCommitmentArgs.md), [`ActivateDirectPremiumCommitmentAccounts`](ActivateDirectPremiumCommitmentAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
-### buildActivateTreasuryCreditCommitmentInstruction()
-
-> **buildActivateTreasuryCreditCommitmentInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2138](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2138)
+Defined in: [src/generated/protocol\_types.ts:1934](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1934)
 
 #### Parameters
 
 ##### params
 
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`ActivateCommitmentArgs`](ActivateCommitmentArgs.md), [`ActivateTreasuryCreditCommitmentAccounts`](ActivateTreasuryCreditCommitmentAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildActivateTreasuryCreditCommitmentTx()
-
-> **buildActivateTreasuryCreditCommitmentTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2144](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2144)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`ActivateCommitmentArgs`](ActivateCommitmentArgs.md), [`ActivateTreasuryCreditCommitmentAccounts`](ActivateTreasuryCreditCommitmentAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
-### buildActivateWaterfallCommitmentInstruction()
-
-> **buildActivateWaterfallCommitmentInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2150](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2150)
-
-#### Parameters
-
-##### params
-
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`ActivateCommitmentArgs`](ActivateCommitmentArgs.md), [`ActivateWaterfallCommitmentAccounts`](ActivateWaterfallCommitmentAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildActivateWaterfallCommitmentTx()
-
-> **buildActivateWaterfallCommitmentTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2156](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2156)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`ActivateCommitmentArgs`](ActivateCommitmentArgs.md), [`ActivateWaterfallCommitmentAccounts`](ActivateWaterfallCommitmentAccounts.md)\>
+[`BuildTransactionParams`](BuildTransactionParams.md)\<`Record`\<`string`, `unknown`\>, [`AcceptProtocolGovernanceAuthorityAccounts`](AcceptProtocolGovernanceAuthorityAccounts.md)\>
 
 #### Returns
 
@@ -138,7 +66,7 @@ Defined in: [src/generated/protocol\_types.ts:2156](https://github.com/OmegaX-He
 
 > **buildAdjudicateClaimCaseInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2162](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2162)
+Defined in: [src/generated/protocol\_types.ts:1940](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1940)
 
 #### Parameters
 
@@ -156,7 +84,7 @@ Defined in: [src/generated/protocol\_types.ts:2162](https://github.com/OmegaX-He
 
 > **buildAdjudicateClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2168](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2168)
+Defined in: [src/generated/protocol\_types.ts:1946](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1946)
 
 #### Parameters
 
@@ -174,7 +102,7 @@ Defined in: [src/generated/protocol\_types.ts:2168](https://github.com/OmegaX-He
 
 > **buildAllocateCapitalInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2174](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2174)
+Defined in: [src/generated/protocol\_types.ts:1952](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1952)
 
 #### Parameters
 
@@ -192,7 +120,7 @@ Defined in: [src/generated/protocol\_types.ts:2174](https://github.com/OmegaX-He
 
 > **buildAllocateCapitalTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2180](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2180)
+Defined in: [src/generated/protocol\_types.ts:1958](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1958)
 
 #### Parameters
 
@@ -210,7 +138,7 @@ Defined in: [src/generated/protocol\_types.ts:2180](https://github.com/OmegaX-He
 
 > **buildAttachClaimEvidenceRefInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2186)
+Defined in: [src/generated/protocol\_types.ts:1964](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1964)
 
 #### Parameters
 
@@ -228,7 +156,7 @@ Defined in: [src/generated/protocol\_types.ts:2186](https://github.com/OmegaX-He
 
 > **buildAttachClaimEvidenceRefTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2192](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2192)
+Defined in: [src/generated/protocol\_types.ts:1970](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1970)
 
 #### Parameters
 
@@ -246,7 +174,7 @@ Defined in: [src/generated/protocol\_types.ts:2192](https://github.com/OmegaX-He
 
 > **buildAttestClaimCaseInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2198](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2198)
+Defined in: [src/generated/protocol\_types.ts:1976](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1976)
 
 #### Parameters
 
@@ -264,7 +192,7 @@ Defined in: [src/generated/protocol\_types.ts:2198](https://github.com/OmegaX-He
 
 > **buildAttestClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2204](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2204)
+Defined in: [src/generated/protocol\_types.ts:1982](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1982)
 
 #### Parameters
 
@@ -282,7 +210,7 @@ Defined in: [src/generated/protocol\_types.ts:2204](https://github.com/OmegaX-He
 
 > **buildAuthorizeClaimRecipientInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2210](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2210)
+Defined in: [src/generated/protocol\_types.ts:1988](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1988)
 
 #### Parameters
 
@@ -300,7 +228,7 @@ Defined in: [src/generated/protocol\_types.ts:2210](https://github.com/OmegaX-He
 
 > **buildAuthorizeClaimRecipientTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2216](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2216)
+Defined in: [src/generated/protocol\_types.ts:1994](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1994)
 
 #### Parameters
 
@@ -318,7 +246,7 @@ Defined in: [src/generated/protocol\_types.ts:2216](https://github.com/OmegaX-He
 
 > **buildBackfillSchemaDependencyLedgerInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2222](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2222)
+Defined in: [src/generated/protocol\_types.ts:2000](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2000)
 
 #### Parameters
 
@@ -336,7 +264,7 @@ Defined in: [src/generated/protocol\_types.ts:2222](https://github.com/OmegaX-He
 
 > **buildBackfillSchemaDependencyLedgerTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2228](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2228)
+Defined in: [src/generated/protocol\_types.ts:2006](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2006)
 
 #### Parameters
 
@@ -350,11 +278,47 @@ Defined in: [src/generated/protocol\_types.ts:2228](https://github.com/OmegaX-He
 
 ***
 
+### buildCancelProtocolGovernanceAuthorityTransferInstruction()
+
+> **buildCancelProtocolGovernanceAuthorityTransferInstruction**(`params`): `TransactionInstruction`
+
+Defined in: [src/generated/protocol\_types.ts:2012](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2012)
+
+#### Parameters
+
+##### params
+
+[`BuildInstructionParams`](BuildInstructionParams.md)\<`Record`\<`string`, `unknown`\>, [`CancelProtocolGovernanceAuthorityTransferAccounts`](CancelProtocolGovernanceAuthorityTransferAccounts.md)\>
+
+#### Returns
+
+`TransactionInstruction`
+
+***
+
+### buildCancelProtocolGovernanceAuthorityTransferTx()
+
+> **buildCancelProtocolGovernanceAuthorityTransferTx**(`params`): `Transaction`
+
+Defined in: [src/generated/protocol\_types.ts:2018](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2018)
+
+#### Parameters
+
+##### params
+
+[`BuildTransactionParams`](BuildTransactionParams.md)\<`Record`\<`string`, `unknown`\>, [`CancelProtocolGovernanceAuthorityTransferAccounts`](CancelProtocolGovernanceAuthorityTransferAccounts.md)\>
+
+#### Returns
+
+`Transaction`
+
+***
+
 ### buildClaimOracleInstruction()
 
 > **buildClaimOracleInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2234](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2234)
+Defined in: [src/generated/protocol\_types.ts:2024](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2024)
 
 #### Parameters
 
@@ -372,7 +336,7 @@ Defined in: [src/generated/protocol\_types.ts:2234](https://github.com/OmegaX-He
 
 > **buildClaimOracleTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2240](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2240)
+Defined in: [src/generated/protocol\_types.ts:2030](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2030)
 
 #### Parameters
 
@@ -390,7 +354,7 @@ Defined in: [src/generated/protocol\_types.ts:2240](https://github.com/OmegaX-He
 
 > **buildCloseOutcomeSchemaInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2246](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2246)
+Defined in: [src/generated/protocol\_types.ts:2036](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2036)
 
 #### Parameters
 
@@ -408,7 +372,7 @@ Defined in: [src/generated/protocol\_types.ts:2246](https://github.com/OmegaX-He
 
 > **buildCloseOutcomeSchemaTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2252](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2252)
+Defined in: [src/generated/protocol\_types.ts:2042](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2042)
 
 #### Parameters
 
@@ -426,7 +390,7 @@ Defined in: [src/generated/protocol\_types.ts:2252](https://github.com/OmegaX-He
 
 > **buildConfigureReserveAssetRailInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2258](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2258)
+Defined in: [src/generated/protocol\_types.ts:2048](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2048)
 
 #### Parameters
 
@@ -444,7 +408,7 @@ Defined in: [src/generated/protocol\_types.ts:2258](https://github.com/OmegaX-He
 
 > **buildConfigureReserveAssetRailTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2264](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2264)
+Defined in: [src/generated/protocol\_types.ts:2054](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2054)
 
 #### Parameters
 
@@ -462,7 +426,7 @@ Defined in: [src/generated/protocol\_types.ts:2264](https://github.com/OmegaX-He
 
 > **buildCreateAllocationPositionInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2270](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2270)
+Defined in: [src/generated/protocol\_types.ts:2060](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2060)
 
 #### Parameters
 
@@ -480,7 +444,7 @@ Defined in: [src/generated/protocol\_types.ts:2270](https://github.com/OmegaX-He
 
 > **buildCreateAllocationPositionTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2276](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2276)
+Defined in: [src/generated/protocol\_types.ts:2066](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2066)
 
 #### Parameters
 
@@ -498,7 +462,7 @@ Defined in: [src/generated/protocol\_types.ts:2276](https://github.com/OmegaX-He
 
 > **buildCreateCapitalClassInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2282](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2282)
+Defined in: [src/generated/protocol\_types.ts:2072](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2072)
 
 #### Parameters
 
@@ -516,7 +480,7 @@ Defined in: [src/generated/protocol\_types.ts:2282](https://github.com/OmegaX-He
 
 > **buildCreateCapitalClassTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2288](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2288)
+Defined in: [src/generated/protocol\_types.ts:2078](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2078)
 
 #### Parameters
 
@@ -530,83 +494,11 @@ Defined in: [src/generated/protocol\_types.ts:2288](https://github.com/OmegaX-He
 
 ***
 
-### buildCreateCommitmentCampaignInstruction()
-
-> **buildCreateCommitmentCampaignInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2294](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2294)
-
-#### Parameters
-
-##### params
-
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`CreateCommitmentCampaignArgs`](CreateCommitmentCampaignArgs.md), [`CreateCommitmentCampaignAccounts`](CreateCommitmentCampaignAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildCreateCommitmentCampaignTx()
-
-> **buildCreateCommitmentCampaignTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2300](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2300)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`CreateCommitmentCampaignArgs`](CreateCommitmentCampaignArgs.md), [`CreateCommitmentCampaignAccounts`](CreateCommitmentCampaignAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
-### buildCreateCommitmentPaymentRailInstruction()
-
-> **buildCreateCommitmentPaymentRailInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2306](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2306)
-
-#### Parameters
-
-##### params
-
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`CreateCommitmentPaymentRailArgs`](CreateCommitmentPaymentRailArgs.md), [`CreateCommitmentPaymentRailAccounts`](CreateCommitmentPaymentRailAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildCreateCommitmentPaymentRailTx()
-
-> **buildCreateCommitmentPaymentRailTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2312](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2312)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`CreateCommitmentPaymentRailArgs`](CreateCommitmentPaymentRailArgs.md), [`CreateCommitmentPaymentRailAccounts`](CreateCommitmentPaymentRailAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
 ### buildCreateDomainAssetVaultInstruction()
 
 > **buildCreateDomainAssetVaultInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2318](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2318)
+Defined in: [src/generated/protocol\_types.ts:2084](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2084)
 
 #### Parameters
 
@@ -624,7 +516,7 @@ Defined in: [src/generated/protocol\_types.ts:2318](https://github.com/OmegaX-He
 
 > **buildCreateDomainAssetVaultTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2324](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2324)
+Defined in: [src/generated/protocol\_types.ts:2090](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2090)
 
 #### Parameters
 
@@ -642,7 +534,7 @@ Defined in: [src/generated/protocol\_types.ts:2324](https://github.com/OmegaX-He
 
 > **buildCreateHealthPlanInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2330](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2330)
+Defined in: [src/generated/protocol\_types.ts:2096](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2096)
 
 #### Parameters
 
@@ -660,7 +552,7 @@ Defined in: [src/generated/protocol\_types.ts:2330](https://github.com/OmegaX-He
 
 > **buildCreateHealthPlanTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2336](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2336)
+Defined in: [src/generated/protocol\_types.ts:2102](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2102)
 
 #### Parameters
 
@@ -678,7 +570,7 @@ Defined in: [src/generated/protocol\_types.ts:2336](https://github.com/OmegaX-He
 
 > **buildCreateLiquidityPoolInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2342](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2342)
+Defined in: [src/generated/protocol\_types.ts:2108](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2108)
 
 #### Parameters
 
@@ -696,7 +588,7 @@ Defined in: [src/generated/protocol\_types.ts:2342](https://github.com/OmegaX-He
 
 > **buildCreateLiquidityPoolTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2348](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2348)
+Defined in: [src/generated/protocol\_types.ts:2114](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2114)
 
 #### Parameters
 
@@ -714,7 +606,7 @@ Defined in: [src/generated/protocol\_types.ts:2348](https://github.com/OmegaX-He
 
 > **buildCreateObligationInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2354](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2354)
+Defined in: [src/generated/protocol\_types.ts:2120](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2120)
 
 #### Parameters
 
@@ -732,7 +624,7 @@ Defined in: [src/generated/protocol\_types.ts:2354](https://github.com/OmegaX-He
 
 > **buildCreateObligationTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2360](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2360)
+Defined in: [src/generated/protocol\_types.ts:2126](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2126)
 
 #### Parameters
 
@@ -750,7 +642,7 @@ Defined in: [src/generated/protocol\_types.ts:2360](https://github.com/OmegaX-He
 
 > **buildCreatePolicySeriesInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2366](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2366)
+Defined in: [src/generated/protocol\_types.ts:2132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2132)
 
 #### Parameters
 
@@ -768,7 +660,7 @@ Defined in: [src/generated/protocol\_types.ts:2366](https://github.com/OmegaX-He
 
 > **buildCreatePolicySeriesTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2372](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2372)
+Defined in: [src/generated/protocol\_types.ts:2138](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2138)
 
 #### Parameters
 
@@ -786,7 +678,7 @@ Defined in: [src/generated/protocol\_types.ts:2372](https://github.com/OmegaX-He
 
 > **buildCreateReserveDomainInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2378](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2378)
+Defined in: [src/generated/protocol\_types.ts:2144](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2144)
 
 #### Parameters
 
@@ -804,7 +696,7 @@ Defined in: [src/generated/protocol\_types.ts:2378](https://github.com/OmegaX-He
 
 > **buildCreateReserveDomainTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2384](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2384)
+Defined in: [src/generated/protocol\_types.ts:2150](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2150)
 
 #### Parameters
 
@@ -822,7 +714,7 @@ Defined in: [src/generated/protocol\_types.ts:2384](https://github.com/OmegaX-He
 
 > **buildDeallocateCapitalInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2390](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2390)
+Defined in: [src/generated/protocol\_types.ts:2156](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2156)
 
 #### Parameters
 
@@ -840,7 +732,7 @@ Defined in: [src/generated/protocol\_types.ts:2390](https://github.com/OmegaX-He
 
 > **buildDeallocateCapitalTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2396](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2396)
+Defined in: [src/generated/protocol\_types.ts:2162](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2162)
 
 #### Parameters
 
@@ -854,47 +746,11 @@ Defined in: [src/generated/protocol\_types.ts:2396](https://github.com/OmegaX-He
 
 ***
 
-### buildDepositCommitmentInstruction()
-
-> **buildDepositCommitmentInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2402](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2402)
-
-#### Parameters
-
-##### params
-
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`DepositCommitmentArgs`](DepositCommitmentArgs.md), [`DepositCommitmentAccounts`](DepositCommitmentAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildDepositCommitmentTx()
-
-> **buildDepositCommitmentTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2408](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2408)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`DepositCommitmentArgs`](DepositCommitmentArgs.md), [`DepositCommitmentAccounts`](DepositCommitmentAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
 ### buildDepositIntoCapitalClassInstruction()
 
 > **buildDepositIntoCapitalClassInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2414](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2414)
+Defined in: [src/generated/protocol\_types.ts:2168](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2168)
 
 #### Parameters
 
@@ -912,7 +768,7 @@ Defined in: [src/generated/protocol\_types.ts:2414](https://github.com/OmegaX-He
 
 > **buildDepositIntoCapitalClassTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2420](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2420)
+Defined in: [src/generated/protocol\_types.ts:2174](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2174)
 
 #### Parameters
 
@@ -930,7 +786,7 @@ Defined in: [src/generated/protocol\_types.ts:2420](https://github.com/OmegaX-He
 
 > **buildFundSponsorBudgetInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2426](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2426)
+Defined in: [src/generated/protocol\_types.ts:2180](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2180)
 
 #### Parameters
 
@@ -948,7 +804,7 @@ Defined in: [src/generated/protocol\_types.ts:2426](https://github.com/OmegaX-He
 
 > **buildFundSponsorBudgetTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2432](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2432)
+Defined in: [src/generated/protocol\_types.ts:2186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2186)
 
 #### Parameters
 
@@ -966,7 +822,7 @@ Defined in: [src/generated/protocol\_types.ts:2432](https://github.com/OmegaX-He
 
 > **buildInitializeProtocolGovernanceInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2474](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2474)
+Defined in: [src/generated/protocol\_types.ts:2228](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2228)
 
 #### Parameters
 
@@ -984,7 +840,7 @@ Defined in: [src/generated/protocol\_types.ts:2474](https://github.com/OmegaX-He
 
 > **buildInitializeProtocolGovernanceTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2480](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2480)
+Defined in: [src/generated/protocol\_types.ts:2234](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2234)
 
 #### Parameters
 
@@ -1002,7 +858,7 @@ Defined in: [src/generated/protocol\_types.ts:2480](https://github.com/OmegaX-He
 
 > **buildInitializeSeriesReserveLedgerInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2486](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2486)
+Defined in: [src/generated/protocol\_types.ts:2240](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2240)
 
 #### Parameters
 
@@ -1020,7 +876,7 @@ Defined in: [src/generated/protocol\_types.ts:2486](https://github.com/OmegaX-He
 
 > **buildInitializeSeriesReserveLedgerTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2492](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2492)
+Defined in: [src/generated/protocol\_types.ts:2246](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2246)
 
 #### Parameters
 
@@ -1038,7 +894,7 @@ Defined in: [src/generated/protocol\_types.ts:2492](https://github.com/OmegaX-He
 
 > **buildInitPoolOracleFeeVaultInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2438](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2438)
+Defined in: [src/generated/protocol\_types.ts:2192](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2192)
 
 #### Parameters
 
@@ -1056,7 +912,7 @@ Defined in: [src/generated/protocol\_types.ts:2438](https://github.com/OmegaX-He
 
 > **buildInitPoolOracleFeeVaultTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2444](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2444)
+Defined in: [src/generated/protocol\_types.ts:2198](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2198)
 
 #### Parameters
 
@@ -1074,7 +930,7 @@ Defined in: [src/generated/protocol\_types.ts:2444](https://github.com/OmegaX-He
 
 > **buildInitPoolTreasuryVaultInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2450](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2450)
+Defined in: [src/generated/protocol\_types.ts:2204](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2204)
 
 #### Parameters
 
@@ -1092,7 +948,7 @@ Defined in: [src/generated/protocol\_types.ts:2450](https://github.com/OmegaX-He
 
 > **buildInitPoolTreasuryVaultTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2456](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2456)
+Defined in: [src/generated/protocol\_types.ts:2210](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2210)
 
 #### Parameters
 
@@ -1110,7 +966,7 @@ Defined in: [src/generated/protocol\_types.ts:2456](https://github.com/OmegaX-He
 
 > **buildInitProtocolFeeVaultInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2462](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2462)
+Defined in: [src/generated/protocol\_types.ts:2216](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2216)
 
 #### Parameters
 
@@ -1128,7 +984,7 @@ Defined in: [src/generated/protocol\_types.ts:2462](https://github.com/OmegaX-He
 
 > **buildInitProtocolFeeVaultTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2468](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2468)
+Defined in: [src/generated/protocol\_types.ts:2222](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2222)
 
 #### Parameters
 
@@ -1146,7 +1002,7 @@ Defined in: [src/generated/protocol\_types.ts:2468](https://github.com/OmegaX-He
 
 > **buildInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2102](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2102)
+Defined in: [src/generated/protocol\_types.ts:1904](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1904)
 
 #### Parameters
 
@@ -1164,7 +1020,7 @@ Defined in: [src/generated/protocol\_types.ts:2102](https://github.com/OmegaX-He
 
 > **buildMarkImpairmentInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2498](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2498)
+Defined in: [src/generated/protocol\_types.ts:2252](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2252)
 
 #### Parameters
 
@@ -1182,7 +1038,7 @@ Defined in: [src/generated/protocol\_types.ts:2498](https://github.com/OmegaX-He
 
 > **buildMarkImpairmentTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2501](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2501)
+Defined in: [src/generated/protocol\_types.ts:2255](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2255)
 
 #### Parameters
 
@@ -1200,7 +1056,7 @@ Defined in: [src/generated/protocol\_types.ts:2501](https://github.com/OmegaX-He
 
 > **buildOpenClaimCaseInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2504](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2504)
+Defined in: [src/generated/protocol\_types.ts:2258](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2258)
 
 #### Parameters
 
@@ -1218,7 +1074,7 @@ Defined in: [src/generated/protocol\_types.ts:2504](https://github.com/OmegaX-He
 
 > **buildOpenClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2507](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2507)
+Defined in: [src/generated/protocol\_types.ts:2261](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2261)
 
 #### Parameters
 
@@ -1236,7 +1092,7 @@ Defined in: [src/generated/protocol\_types.ts:2507](https://github.com/OmegaX-He
 
 > **buildOpenFundingLineInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2510](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2510)
+Defined in: [src/generated/protocol\_types.ts:2264](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2264)
 
 #### Parameters
 
@@ -1254,7 +1110,7 @@ Defined in: [src/generated/protocol\_types.ts:2510](https://github.com/OmegaX-He
 
 > **buildOpenFundingLineTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2516](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2516)
+Defined in: [src/generated/protocol\_types.ts:2270](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2270)
 
 #### Parameters
 
@@ -1272,7 +1128,7 @@ Defined in: [src/generated/protocol\_types.ts:2516](https://github.com/OmegaX-He
 
 > **buildOpenMemberPositionInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2522](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2522)
+Defined in: [src/generated/protocol\_types.ts:2276](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2276)
 
 #### Parameters
 
@@ -1290,7 +1146,7 @@ Defined in: [src/generated/protocol\_types.ts:2522](https://github.com/OmegaX-He
 
 > **buildOpenMemberPositionTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2528](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2528)
+Defined in: [src/generated/protocol\_types.ts:2282](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2282)
 
 #### Parameters
 
@@ -1304,47 +1160,11 @@ Defined in: [src/generated/protocol\_types.ts:2528](https://github.com/OmegaX-He
 
 ***
 
-### buildPauseCommitmentCampaignInstruction()
-
-> **buildPauseCommitmentCampaignInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2534](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2534)
-
-#### Parameters
-
-##### params
-
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`PauseCommitmentCampaignArgs`](PauseCommitmentCampaignArgs.md), [`PauseCommitmentCampaignAccounts`](PauseCommitmentCampaignAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildPauseCommitmentCampaignTx()
-
-> **buildPauseCommitmentCampaignTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2540](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2540)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`PauseCommitmentCampaignArgs`](PauseCommitmentCampaignArgs.md), [`PauseCommitmentCampaignAccounts`](PauseCommitmentCampaignAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
 ### buildProcessRedemptionQueueInstruction()
 
 > **buildProcessRedemptionQueueInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2546](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2546)
+Defined in: [src/generated/protocol\_types.ts:2288](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2288)
 
 #### Parameters
 
@@ -1362,7 +1182,7 @@ Defined in: [src/generated/protocol\_types.ts:2546](https://github.com/OmegaX-He
 
 > **buildProcessRedemptionQueueTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2552](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2552)
+Defined in: [src/generated/protocol\_types.ts:2294](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2294)
 
 #### Parameters
 
@@ -1380,7 +1200,7 @@ Defined in: [src/generated/protocol\_types.ts:2552](https://github.com/OmegaX-He
 
 > **buildPublishReserveAssetRailPriceInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2558](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2558)
+Defined in: [src/generated/protocol\_types.ts:2300](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2300)
 
 #### Parameters
 
@@ -1398,7 +1218,7 @@ Defined in: [src/generated/protocol\_types.ts:2558](https://github.com/OmegaX-He
 
 > **buildPublishReserveAssetRailPriceTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2564](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2564)
+Defined in: [src/generated/protocol\_types.ts:2306](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2306)
 
 #### Parameters
 
@@ -1416,7 +1236,7 @@ Defined in: [src/generated/protocol\_types.ts:2564](https://github.com/OmegaX-He
 
 > **buildRecordPremiumPaymentInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2570](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2570)
+Defined in: [src/generated/protocol\_types.ts:2312](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2312)
 
 #### Parameters
 
@@ -1434,7 +1254,7 @@ Defined in: [src/generated/protocol\_types.ts:2570](https://github.com/OmegaX-He
 
 > **buildRecordPremiumPaymentTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2576](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2576)
+Defined in: [src/generated/protocol\_types.ts:2318](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2318)
 
 #### Parameters
 
@@ -1448,47 +1268,11 @@ Defined in: [src/generated/protocol\_types.ts:2576](https://github.com/OmegaX-He
 
 ***
 
-### buildRefundCommitmentInstruction()
-
-> **buildRefundCommitmentInstruction**(`params`): `TransactionInstruction`
-
-Defined in: [src/generated/protocol\_types.ts:2582](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2582)
-
-#### Parameters
-
-##### params
-
-[`BuildInstructionParams`](BuildInstructionParams.md)\<[`RefundCommitmentArgs`](RefundCommitmentArgs.md), [`RefundCommitmentAccounts`](RefundCommitmentAccounts.md)\>
-
-#### Returns
-
-`TransactionInstruction`
-
-***
-
-### buildRefundCommitmentTx()
-
-> **buildRefundCommitmentTx**(`params`): `Transaction`
-
-Defined in: [src/generated/protocol\_types.ts:2588](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2588)
-
-#### Parameters
-
-##### params
-
-[`BuildTransactionParams`](BuildTransactionParams.md)\<[`RefundCommitmentArgs`](RefundCommitmentArgs.md), [`RefundCommitmentAccounts`](RefundCommitmentAccounts.md)\>
-
-#### Returns
-
-`Transaction`
-
-***
-
 ### buildRegisterOracleInstruction()
 
 > **buildRegisterOracleInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2594](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2594)
+Defined in: [src/generated/protocol\_types.ts:2324](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2324)
 
 #### Parameters
 
@@ -1506,7 +1290,7 @@ Defined in: [src/generated/protocol\_types.ts:2594](https://github.com/OmegaX-He
 
 > **buildRegisterOracleTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2597](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2597)
+Defined in: [src/generated/protocol\_types.ts:2327](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2327)
 
 #### Parameters
 
@@ -1524,7 +1308,7 @@ Defined in: [src/generated/protocol\_types.ts:2597](https://github.com/OmegaX-He
 
 > **buildRegisterOutcomeSchemaInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2600](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2600)
+Defined in: [src/generated/protocol\_types.ts:2330](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2330)
 
 #### Parameters
 
@@ -1542,7 +1326,7 @@ Defined in: [src/generated/protocol\_types.ts:2600](https://github.com/OmegaX-He
 
 > **buildRegisterOutcomeSchemaTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2606](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2606)
+Defined in: [src/generated/protocol\_types.ts:2336](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2336)
 
 #### Parameters
 
@@ -1560,7 +1344,7 @@ Defined in: [src/generated/protocol\_types.ts:2606](https://github.com/OmegaX-He
 
 > **buildReleaseReserveInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2612](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2612)
+Defined in: [src/generated/protocol\_types.ts:2342](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2342)
 
 #### Parameters
 
@@ -1578,7 +1362,7 @@ Defined in: [src/generated/protocol\_types.ts:2612](https://github.com/OmegaX-He
 
 > **buildReleaseReserveTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2615](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2615)
+Defined in: [src/generated/protocol\_types.ts:2345](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2345)
 
 #### Parameters
 
@@ -1596,7 +1380,7 @@ Defined in: [src/generated/protocol\_types.ts:2615](https://github.com/OmegaX-He
 
 > **buildRequestRedemptionInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2618](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2618)
+Defined in: [src/generated/protocol\_types.ts:2348](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2348)
 
 #### Parameters
 
@@ -1614,7 +1398,7 @@ Defined in: [src/generated/protocol\_types.ts:2618](https://github.com/OmegaX-He
 
 > **buildRequestRedemptionTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2624](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2624)
+Defined in: [src/generated/protocol\_types.ts:2354](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2354)
 
 #### Parameters
 
@@ -1632,7 +1416,7 @@ Defined in: [src/generated/protocol\_types.ts:2624](https://github.com/OmegaX-He
 
 > **buildReserveObligationInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2630](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2630)
+Defined in: [src/generated/protocol\_types.ts:2360](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2360)
 
 #### Parameters
 
@@ -1650,7 +1434,7 @@ Defined in: [src/generated/protocol\_types.ts:2630](https://github.com/OmegaX-He
 
 > **buildReserveObligationTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2636](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2636)
+Defined in: [src/generated/protocol\_types.ts:2366](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2366)
 
 #### Parameters
 
@@ -1668,7 +1452,7 @@ Defined in: [src/generated/protocol\_types.ts:2636](https://github.com/OmegaX-He
 
 > **buildRotateProtocolGovernanceAuthorityInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2642](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2642)
+Defined in: [src/generated/protocol\_types.ts:2372](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2372)
 
 #### Parameters
 
@@ -1686,7 +1470,7 @@ Defined in: [src/generated/protocol\_types.ts:2642](https://github.com/OmegaX-He
 
 > **buildRotateProtocolGovernanceAuthorityTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2648](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2648)
+Defined in: [src/generated/protocol\_types.ts:2378](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2378)
 
 #### Parameters
 
@@ -1704,7 +1488,7 @@ Defined in: [src/generated/protocol\_types.ts:2648](https://github.com/OmegaX-He
 
 > **buildSetPoolOracleInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2654](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2654)
+Defined in: [src/generated/protocol\_types.ts:2384](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2384)
 
 #### Parameters
 
@@ -1722,7 +1506,7 @@ Defined in: [src/generated/protocol\_types.ts:2654](https://github.com/OmegaX-He
 
 > **buildSetPoolOraclePermissionsInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2660](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2660)
+Defined in: [src/generated/protocol\_types.ts:2390](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2390)
 
 #### Parameters
 
@@ -1740,7 +1524,7 @@ Defined in: [src/generated/protocol\_types.ts:2660](https://github.com/OmegaX-He
 
 > **buildSetPoolOraclePermissionsTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2666](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2666)
+Defined in: [src/generated/protocol\_types.ts:2396](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2396)
 
 #### Parameters
 
@@ -1758,7 +1542,7 @@ Defined in: [src/generated/protocol\_types.ts:2666](https://github.com/OmegaX-He
 
 > **buildSetPoolOraclePolicyInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2672](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2672)
+Defined in: [src/generated/protocol\_types.ts:2402](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2402)
 
 #### Parameters
 
@@ -1776,7 +1560,7 @@ Defined in: [src/generated/protocol\_types.ts:2672](https://github.com/OmegaX-He
 
 > **buildSetPoolOraclePolicyTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2678](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2678)
+Defined in: [src/generated/protocol\_types.ts:2408](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2408)
 
 #### Parameters
 
@@ -1794,7 +1578,7 @@ Defined in: [src/generated/protocol\_types.ts:2678](https://github.com/OmegaX-He
 
 > **buildSetPoolOracleTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2657](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2657)
+Defined in: [src/generated/protocol\_types.ts:2387](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2387)
 
 #### Parameters
 
@@ -1812,7 +1596,7 @@ Defined in: [src/generated/protocol\_types.ts:2657](https://github.com/OmegaX-He
 
 > **buildSetProtocolEmergencyPauseInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2684](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2684)
+Defined in: [src/generated/protocol\_types.ts:2414](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2414)
 
 #### Parameters
 
@@ -1830,7 +1614,7 @@ Defined in: [src/generated/protocol\_types.ts:2684](https://github.com/OmegaX-He
 
 > **buildSetProtocolEmergencyPauseTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2690](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2690)
+Defined in: [src/generated/protocol\_types.ts:2420](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2420)
 
 #### Parameters
 
@@ -1848,7 +1632,7 @@ Defined in: [src/generated/protocol\_types.ts:2690](https://github.com/OmegaX-He
 
 > **buildSettleClaimCaseInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2696](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2696)
+Defined in: [src/generated/protocol\_types.ts:2426](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2426)
 
 #### Parameters
 
@@ -1862,11 +1646,47 @@ Defined in: [src/generated/protocol\_types.ts:2696](https://github.com/OmegaX-He
 
 ***
 
+### buildSettleClaimCaseSelectedAssetInstruction()
+
+> **buildSettleClaimCaseSelectedAssetInstruction**(`params`): `TransactionInstruction`
+
+Defined in: [src/generated/protocol\_types.ts:2438](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2438)
+
+#### Parameters
+
+##### params
+
+[`BuildInstructionParams`](BuildInstructionParams.md)\<[`SettleClaimCaseSelectedAssetArgs`](SettleClaimCaseSelectedAssetArgs.md), [`SettleClaimCaseSelectedAssetAccounts`](SettleClaimCaseSelectedAssetAccounts.md)\>
+
+#### Returns
+
+`TransactionInstruction`
+
+***
+
+### buildSettleClaimCaseSelectedAssetTx()
+
+> **buildSettleClaimCaseSelectedAssetTx**(`params`): `Transaction`
+
+Defined in: [src/generated/protocol\_types.ts:2444](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2444)
+
+#### Parameters
+
+##### params
+
+[`BuildTransactionParams`](BuildTransactionParams.md)\<[`SettleClaimCaseSelectedAssetArgs`](SettleClaimCaseSelectedAssetArgs.md), [`SettleClaimCaseSelectedAssetAccounts`](SettleClaimCaseSelectedAssetAccounts.md)\>
+
+#### Returns
+
+`Transaction`
+
+***
+
 ### buildSettleClaimCaseTx()
 
 > **buildSettleClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2702](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2702)
+Defined in: [src/generated/protocol\_types.ts:2432](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2432)
 
 #### Parameters
 
@@ -1884,7 +1704,7 @@ Defined in: [src/generated/protocol\_types.ts:2702](https://github.com/OmegaX-He
 
 > **buildSettleObligationInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2708](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2708)
+Defined in: [src/generated/protocol\_types.ts:2450](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2450)
 
 #### Parameters
 
@@ -1902,7 +1722,7 @@ Defined in: [src/generated/protocol\_types.ts:2708](https://github.com/OmegaX-He
 
 > **buildSettleObligationTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2714](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2714)
+Defined in: [src/generated/protocol\_types.ts:2456](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2456)
 
 #### Parameters
 
@@ -1920,7 +1740,7 @@ Defined in: [src/generated/protocol\_types.ts:2714](https://github.com/OmegaX-He
 
 > **buildTransaction**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2110](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2110)
+Defined in: [src/generated/protocol\_types.ts:1912](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1912)
 
 #### Parameters
 
@@ -1938,7 +1758,7 @@ Defined in: [src/generated/protocol\_types.ts:2110](https://github.com/OmegaX-He
 
 > **buildUpdateAllocationCapsInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2720](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2720)
+Defined in: [src/generated/protocol\_types.ts:2462](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2462)
 
 #### Parameters
 
@@ -1956,7 +1776,7 @@ Defined in: [src/generated/protocol\_types.ts:2720](https://github.com/OmegaX-He
 
 > **buildUpdateAllocationCapsTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2726](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2726)
+Defined in: [src/generated/protocol\_types.ts:2468](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2468)
 
 #### Parameters
 
@@ -1974,7 +1794,7 @@ Defined in: [src/generated/protocol\_types.ts:2726](https://github.com/OmegaX-He
 
 > **buildUpdateCapitalClassControlsInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2732](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2732)
+Defined in: [src/generated/protocol\_types.ts:2474](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2474)
 
 #### Parameters
 
@@ -1992,7 +1812,7 @@ Defined in: [src/generated/protocol\_types.ts:2732](https://github.com/OmegaX-He
 
 > **buildUpdateCapitalClassControlsTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2738](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2738)
+Defined in: [src/generated/protocol\_types.ts:2480](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2480)
 
 #### Parameters
 
@@ -2010,7 +1830,7 @@ Defined in: [src/generated/protocol\_types.ts:2738](https://github.com/OmegaX-He
 
 > **buildUpdateHealthPlanControlsInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2744](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2744)
+Defined in: [src/generated/protocol\_types.ts:2486](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2486)
 
 #### Parameters
 
@@ -2028,7 +1848,7 @@ Defined in: [src/generated/protocol\_types.ts:2744](https://github.com/OmegaX-He
 
 > **buildUpdateHealthPlanControlsTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2750](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2750)
+Defined in: [src/generated/protocol\_types.ts:2492](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2492)
 
 #### Parameters
 
@@ -2046,7 +1866,7 @@ Defined in: [src/generated/protocol\_types.ts:2750](https://github.com/OmegaX-He
 
 > **buildUpdateLpPositionCredentialingInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2756](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2756)
+Defined in: [src/generated/protocol\_types.ts:2498](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2498)
 
 #### Parameters
 
@@ -2064,7 +1884,7 @@ Defined in: [src/generated/protocol\_types.ts:2756](https://github.com/OmegaX-He
 
 > **buildUpdateLpPositionCredentialingTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2762](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2762)
+Defined in: [src/generated/protocol\_types.ts:2504](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2504)
 
 #### Parameters
 
@@ -2082,7 +1902,7 @@ Defined in: [src/generated/protocol\_types.ts:2762](https://github.com/OmegaX-He
 
 > **buildUpdateMemberEligibilityInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2768](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2768)
+Defined in: [src/generated/protocol\_types.ts:2510](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2510)
 
 #### Parameters
 
@@ -2100,7 +1920,7 @@ Defined in: [src/generated/protocol\_types.ts:2768](https://github.com/OmegaX-He
 
 > **buildUpdateMemberEligibilityTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2774](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2774)
+Defined in: [src/generated/protocol\_types.ts:2516](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2516)
 
 #### Parameters
 
@@ -2118,7 +1938,7 @@ Defined in: [src/generated/protocol\_types.ts:2774](https://github.com/OmegaX-He
 
 > **buildUpdateOracleProfileInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2780](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2780)
+Defined in: [src/generated/protocol\_types.ts:2522](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2522)
 
 #### Parameters
 
@@ -2136,7 +1956,7 @@ Defined in: [src/generated/protocol\_types.ts:2780](https://github.com/OmegaX-He
 
 > **buildUpdateOracleProfileTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2786](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2786)
+Defined in: [src/generated/protocol\_types.ts:2528](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2528)
 
 #### Parameters
 
@@ -2154,7 +1974,7 @@ Defined in: [src/generated/protocol\_types.ts:2786](https://github.com/OmegaX-He
 
 > **buildUpdateReserveDomainControlsInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2792](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2792)
+Defined in: [src/generated/protocol\_types.ts:2534](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2534)
 
 #### Parameters
 
@@ -2172,7 +1992,7 @@ Defined in: [src/generated/protocol\_types.ts:2792](https://github.com/OmegaX-He
 
 > **buildUpdateReserveDomainControlsTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2798](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2798)
+Defined in: [src/generated/protocol\_types.ts:2540](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2540)
 
 #### Parameters
 
@@ -2190,7 +2010,7 @@ Defined in: [src/generated/protocol\_types.ts:2798](https://github.com/OmegaX-He
 
 > **buildVerifyOutcomeSchemaInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2804](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2804)
+Defined in: [src/generated/protocol\_types.ts:2546](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2546)
 
 #### Parameters
 
@@ -2208,7 +2028,7 @@ Defined in: [src/generated/protocol\_types.ts:2804](https://github.com/OmegaX-He
 
 > **buildVerifyOutcomeSchemaTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2810](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2810)
+Defined in: [src/generated/protocol\_types.ts:2552](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2552)
 
 #### Parameters
 
@@ -2226,7 +2046,7 @@ Defined in: [src/generated/protocol\_types.ts:2810](https://github.com/OmegaX-He
 
 > **buildVersionPolicySeriesInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2816](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2816)
+Defined in: [src/generated/protocol\_types.ts:2558](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2558)
 
 #### Parameters
 
@@ -2244,7 +2064,7 @@ Defined in: [src/generated/protocol\_types.ts:2816](https://github.com/OmegaX-He
 
 > **buildVersionPolicySeriesTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2822](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2822)
+Defined in: [src/generated/protocol\_types.ts:2564](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2564)
 
 #### Parameters
 
@@ -2262,7 +2082,7 @@ Defined in: [src/generated/protocol\_types.ts:2822](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolOracleFeeSolInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2828](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2828)
+Defined in: [src/generated/protocol\_types.ts:2570](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2570)
 
 #### Parameters
 
@@ -2280,7 +2100,7 @@ Defined in: [src/generated/protocol\_types.ts:2828](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolOracleFeeSolTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2834](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2834)
+Defined in: [src/generated/protocol\_types.ts:2576](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2576)
 
 #### Parameters
 
@@ -2298,7 +2118,7 @@ Defined in: [src/generated/protocol\_types.ts:2834](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolOracleFeeSplInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2840](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2840)
+Defined in: [src/generated/protocol\_types.ts:2582](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2582)
 
 #### Parameters
 
@@ -2316,7 +2136,7 @@ Defined in: [src/generated/protocol\_types.ts:2840](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolOracleFeeSplTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2846](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2846)
+Defined in: [src/generated/protocol\_types.ts:2588](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2588)
 
 #### Parameters
 
@@ -2334,7 +2154,7 @@ Defined in: [src/generated/protocol\_types.ts:2846](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolTreasurySolInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2852](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2852)
+Defined in: [src/generated/protocol\_types.ts:2594](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2594)
 
 #### Parameters
 
@@ -2352,7 +2172,7 @@ Defined in: [src/generated/protocol\_types.ts:2852](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolTreasurySolTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2858](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2858)
+Defined in: [src/generated/protocol\_types.ts:2600](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2600)
 
 #### Parameters
 
@@ -2370,7 +2190,7 @@ Defined in: [src/generated/protocol\_types.ts:2858](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolTreasurySplInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2864](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2864)
+Defined in: [src/generated/protocol\_types.ts:2606](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2606)
 
 #### Parameters
 
@@ -2388,7 +2208,7 @@ Defined in: [src/generated/protocol\_types.ts:2864](https://github.com/OmegaX-He
 
 > **buildWithdrawPoolTreasurySplTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2870](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2870)
+Defined in: [src/generated/protocol\_types.ts:2612](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2612)
 
 #### Parameters
 
@@ -2406,7 +2226,7 @@ Defined in: [src/generated/protocol\_types.ts:2870](https://github.com/OmegaX-He
 
 > **buildWithdrawProtocolFeeSolInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2876](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2876)
+Defined in: [src/generated/protocol\_types.ts:2618](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2618)
 
 #### Parameters
 
@@ -2424,7 +2244,7 @@ Defined in: [src/generated/protocol\_types.ts:2876](https://github.com/OmegaX-He
 
 > **buildWithdrawProtocolFeeSolTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2882](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2882)
+Defined in: [src/generated/protocol\_types.ts:2624](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2624)
 
 #### Parameters
 
@@ -2442,7 +2262,7 @@ Defined in: [src/generated/protocol\_types.ts:2882](https://github.com/OmegaX-He
 
 > **buildWithdrawProtocolFeeSplInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/generated/protocol\_types.ts:2888](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2888)
+Defined in: [src/generated/protocol\_types.ts:2630](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2630)
 
 #### Parameters
 
@@ -2460,7 +2280,7 @@ Defined in: [src/generated/protocol\_types.ts:2888](https://github.com/OmegaX-He
 
 > **buildWithdrawProtocolFeeSplTx**(`params`): `Transaction`
 
-Defined in: [src/generated/protocol\_types.ts:2894](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2894)
+Defined in: [src/generated/protocol\_types.ts:2636](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2636)
 
 #### Parameters
 
@@ -2478,7 +2298,7 @@ Defined in: [src/generated/protocol\_types.ts:2894](https://github.com/OmegaX-He
 
 > **decodeAccount**\<`T`\>(`accountName`, `data`): `T`
 
-Defined in: [src/generated/protocol\_types.ts:2118](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2118)
+Defined in: [src/generated/protocol\_types.ts:1920](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1920)
 
 #### Type Parameters
 
@@ -2506,7 +2326,7 @@ Defined in: [src/generated/protocol\_types.ts:2118](https://github.com/OmegaX-He
 
 > **fetchAccount**\<`T`\>(`accountName`, `address`): `Promise`\<`T` \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2122](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2122)
+Defined in: [src/generated/protocol\_types.ts:1924](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1924)
 
 #### Type Parameters
 
@@ -2534,7 +2354,7 @@ Defined in: [src/generated/protocol\_types.ts:2122](https://github.com/OmegaX-He
 
 > **fetchAllocationLedger**(`address`): `Promise`\<[`AllocationLedger`](AllocationLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2900](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2900)
+Defined in: [src/generated/protocol\_types.ts:2642](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2642)
 
 #### Parameters
 
@@ -2552,7 +2372,7 @@ Defined in: [src/generated/protocol\_types.ts:2900](https://github.com/OmegaX-He
 
 > **fetchAllocationPosition**(`address`): `Promise`\<[`AllocationPosition`](AllocationPosition.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2903](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2903)
+Defined in: [src/generated/protocol\_types.ts:2645](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2645)
 
 #### Parameters
 
@@ -2570,7 +2390,7 @@ Defined in: [src/generated/protocol\_types.ts:2903](https://github.com/OmegaX-He
 
 > **fetchCapitalClass**(`address`): `Promise`\<[`CapitalClass`](CapitalClass.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2906](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2906)
+Defined in: [src/generated/protocol\_types.ts:2648](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2648)
 
 #### Parameters
 
@@ -2588,7 +2408,7 @@ Defined in: [src/generated/protocol\_types.ts:2906](https://github.com/OmegaX-He
 
 > **fetchClaimAttestation**(`address`): `Promise`\<[`ClaimAttestation`](ClaimAttestation.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2907](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2907)
+Defined in: [src/generated/protocol\_types.ts:2649](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2649)
 
 #### Parameters
 
@@ -2606,7 +2426,7 @@ Defined in: [src/generated/protocol\_types.ts:2907](https://github.com/OmegaX-He
 
 > **fetchClaimCase**(`address`): `Promise`\<[`ClaimCase`](ClaimCase.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2910](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2910)
+Defined in: [src/generated/protocol\_types.ts:2652](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2652)
 
 #### Parameters
 
@@ -2620,83 +2440,11 @@ Defined in: [src/generated/protocol\_types.ts:2910](https://github.com/OmegaX-He
 
 ***
 
-### fetchCommitmentCampaign()
-
-> **fetchCommitmentCampaign**(`address`): `Promise`\<[`CommitmentCampaign`](CommitmentCampaign.md) \| `null`\>
-
-Defined in: [src/generated/protocol\_types.ts:2911](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2911)
-
-#### Parameters
-
-##### address
-
-[`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-#### Returns
-
-`Promise`\<[`CommitmentCampaign`](CommitmentCampaign.md) \| `null`\>
-
-***
-
-### fetchCommitmentLedger()
-
-> **fetchCommitmentLedger**(`address`): `Promise`\<[`CommitmentLedger`](CommitmentLedger.md) \| `null`\>
-
-Defined in: [src/generated/protocol\_types.ts:2914](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2914)
-
-#### Parameters
-
-##### address
-
-[`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-#### Returns
-
-`Promise`\<[`CommitmentLedger`](CommitmentLedger.md) \| `null`\>
-
-***
-
-### fetchCommitmentPaymentRail()
-
-> **fetchCommitmentPaymentRail**(`address`): `Promise`\<[`CommitmentPaymentRail`](CommitmentPaymentRail.md) \| `null`\>
-
-Defined in: [src/generated/protocol\_types.ts:2917](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2917)
-
-#### Parameters
-
-##### address
-
-[`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-#### Returns
-
-`Promise`\<[`CommitmentPaymentRail`](CommitmentPaymentRail.md) \| `null`\>
-
-***
-
-### fetchCommitmentPosition()
-
-> **fetchCommitmentPosition**(`address`): `Promise`\<[`CommitmentPosition`](CommitmentPosition.md) \| `null`\>
-
-Defined in: [src/generated/protocol\_types.ts:2920](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2920)
-
-#### Parameters
-
-##### address
-
-[`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-#### Returns
-
-`Promise`\<[`CommitmentPosition`](CommitmentPosition.md) \| `null`\>
-
-***
-
 ### fetchDomainAssetLedger()
 
 > **fetchDomainAssetLedger**(`address`): `Promise`\<[`DomainAssetLedger`](DomainAssetLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2923](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2923)
+Defined in: [src/generated/protocol\_types.ts:2653](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2653)
 
 #### Parameters
 
@@ -2714,7 +2462,7 @@ Defined in: [src/generated/protocol\_types.ts:2923](https://github.com/OmegaX-He
 
 > **fetchDomainAssetVault**(`address`): `Promise`\<[`DomainAssetVault`](DomainAssetVault.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2926](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2926)
+Defined in: [src/generated/protocol\_types.ts:2656](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2656)
 
 #### Parameters
 
@@ -2732,7 +2480,7 @@ Defined in: [src/generated/protocol\_types.ts:2926](https://github.com/OmegaX-He
 
 > **fetchFundingLine**(`address`): `Promise`\<[`FundingLine`](FundingLine.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2929](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2929)
+Defined in: [src/generated/protocol\_types.ts:2659](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2659)
 
 #### Parameters
 
@@ -2750,7 +2498,7 @@ Defined in: [src/generated/protocol\_types.ts:2929](https://github.com/OmegaX-He
 
 > **fetchFundingLineLedger**(`address`): `Promise`\<[`FundingLineLedger`](FundingLineLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2930](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2930)
+Defined in: [src/generated/protocol\_types.ts:2660](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2660)
 
 #### Parameters
 
@@ -2768,7 +2516,7 @@ Defined in: [src/generated/protocol\_types.ts:2930](https://github.com/OmegaX-He
 
 > **fetchHealthPlan**(`address`): `Promise`\<[`HealthPlan`](HealthPlan.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2933](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2933)
+Defined in: [src/generated/protocol\_types.ts:2663](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2663)
 
 #### Parameters
 
@@ -2786,7 +2534,7 @@ Defined in: [src/generated/protocol\_types.ts:2933](https://github.com/OmegaX-He
 
 > **fetchLiquidityPool**(`address`): `Promise`\<[`LiquidityPool`](LiquidityPool.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2935](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2935)
+Defined in: [src/generated/protocol\_types.ts:2665](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2665)
 
 #### Parameters
 
@@ -2804,7 +2552,7 @@ Defined in: [src/generated/protocol\_types.ts:2935](https://github.com/OmegaX-He
 
 > **fetchLPPosition**(`address`): `Promise`\<[`LPPosition`](LPPosition.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2934](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2934)
+Defined in: [src/generated/protocol\_types.ts:2664](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2664)
 
 #### Parameters
 
@@ -2822,7 +2570,7 @@ Defined in: [src/generated/protocol\_types.ts:2934](https://github.com/OmegaX-He
 
 > **fetchMemberPosition**(`address`): `Promise`\<[`MemberPosition`](MemberPosition.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2936](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2936)
+Defined in: [src/generated/protocol\_types.ts:2666](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2666)
 
 #### Parameters
 
@@ -2840,7 +2588,7 @@ Defined in: [src/generated/protocol\_types.ts:2936](https://github.com/OmegaX-He
 
 > **fetchMembershipAnchorSeat**(`address`): `Promise`\<[`MembershipAnchorSeat`](MembershipAnchorSeat.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2937](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2937)
+Defined in: [src/generated/protocol\_types.ts:2667](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2667)
 
 #### Parameters
 
@@ -2858,7 +2606,7 @@ Defined in: [src/generated/protocol\_types.ts:2937](https://github.com/OmegaX-He
 
 > **fetchObligation**(`address`): `Promise`\<[`Obligation`](Obligation.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2940](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2940)
+Defined in: [src/generated/protocol\_types.ts:2670](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2670)
 
 #### Parameters
 
@@ -2876,7 +2624,7 @@ Defined in: [src/generated/protocol\_types.ts:2940](https://github.com/OmegaX-He
 
 > **fetchOracleProfile**(`address`): `Promise`\<[`OracleProfile`](OracleProfile.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2941](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2941)
+Defined in: [src/generated/protocol\_types.ts:2671](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2671)
 
 #### Parameters
 
@@ -2894,7 +2642,7 @@ Defined in: [src/generated/protocol\_types.ts:2941](https://github.com/OmegaX-He
 
 > **fetchOutcomeSchema**(`address`): `Promise`\<[`OutcomeSchema`](OutcomeSchema.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2942](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2942)
+Defined in: [src/generated/protocol\_types.ts:2672](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2672)
 
 #### Parameters
 
@@ -2912,7 +2660,7 @@ Defined in: [src/generated/protocol\_types.ts:2942](https://github.com/OmegaX-He
 
 > **fetchPlanReserveLedger**(`address`): `Promise`\<[`PlanReserveLedger`](PlanReserveLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2943](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2943)
+Defined in: [src/generated/protocol\_types.ts:2673](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2673)
 
 #### Parameters
 
@@ -2930,7 +2678,7 @@ Defined in: [src/generated/protocol\_types.ts:2943](https://github.com/OmegaX-He
 
 > **fetchPolicySeries**(`address`): `Promise`\<[`PolicySeries`](PolicySeries.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2946](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2946)
+Defined in: [src/generated/protocol\_types.ts:2676](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2676)
 
 #### Parameters
 
@@ -2948,7 +2696,7 @@ Defined in: [src/generated/protocol\_types.ts:2946](https://github.com/OmegaX-He
 
 > **fetchPoolClassLedger**(`address`): `Promise`\<[`PoolClassLedger`](PoolClassLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2947](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2947)
+Defined in: [src/generated/protocol\_types.ts:2677](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2677)
 
 #### Parameters
 
@@ -2966,7 +2714,7 @@ Defined in: [src/generated/protocol\_types.ts:2947](https://github.com/OmegaX-He
 
 > **fetchPoolOracleApproval**(`address`): `Promise`\<[`PoolOracleApproval`](PoolOracleApproval.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2948](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2948)
+Defined in: [src/generated/protocol\_types.ts:2678](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2678)
 
 #### Parameters
 
@@ -2984,7 +2732,7 @@ Defined in: [src/generated/protocol\_types.ts:2948](https://github.com/OmegaX-He
 
 > **fetchPoolOracleFeeVault**(`address`): `Promise`\<[`PoolOracleFeeVault`](PoolOracleFeeVault.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2951](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2951)
+Defined in: [src/generated/protocol\_types.ts:2681](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2681)
 
 #### Parameters
 
@@ -3002,7 +2750,7 @@ Defined in: [src/generated/protocol\_types.ts:2951](https://github.com/OmegaX-He
 
 > **fetchPoolOraclePermissionSet**(`address`): `Promise`\<[`PoolOraclePermissionSet`](PoolOraclePermissionSet.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2954](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2954)
+Defined in: [src/generated/protocol\_types.ts:2684](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2684)
 
 #### Parameters
 
@@ -3020,7 +2768,7 @@ Defined in: [src/generated/protocol\_types.ts:2954](https://github.com/OmegaX-He
 
 > **fetchPoolOraclePolicy**(`address`): `Promise`\<[`PoolOraclePolicy`](PoolOraclePolicy.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2957](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2957)
+Defined in: [src/generated/protocol\_types.ts:2687](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2687)
 
 #### Parameters
 
@@ -3038,7 +2786,7 @@ Defined in: [src/generated/protocol\_types.ts:2957](https://github.com/OmegaX-He
 
 > **fetchPoolTreasuryVault**(`address`): `Promise`\<[`PoolTreasuryVault`](PoolTreasuryVault.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2960](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2960)
+Defined in: [src/generated/protocol\_types.ts:2690](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2690)
 
 #### Parameters
 
@@ -3056,7 +2804,7 @@ Defined in: [src/generated/protocol\_types.ts:2960](https://github.com/OmegaX-He
 
 > **fetchProtocolFeeVault**(`address`): `Promise`\<[`ProtocolFeeVault`](ProtocolFeeVault.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2963](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2963)
+Defined in: [src/generated/protocol\_types.ts:2693](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2693)
 
 #### Parameters
 
@@ -3074,7 +2822,7 @@ Defined in: [src/generated/protocol\_types.ts:2963](https://github.com/OmegaX-He
 
 > **fetchProtocolGovernance**(`address?`): `Promise`\<[`ProtocolGovernance`](ProtocolGovernance.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2966](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2966)
+Defined in: [src/generated/protocol\_types.ts:2696](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2696)
 
 #### Parameters
 
@@ -3092,7 +2840,7 @@ Defined in: [src/generated/protocol\_types.ts:2966](https://github.com/OmegaX-He
 
 > **fetchReserveAssetRail**(`address`): `Promise`\<[`ReserveAssetRail`](ReserveAssetRail.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2969](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2969)
+Defined in: [src/generated/protocol\_types.ts:2699](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2699)
 
 #### Parameters
 
@@ -3110,7 +2858,7 @@ Defined in: [src/generated/protocol\_types.ts:2969](https://github.com/OmegaX-He
 
 > **fetchReserveDomain**(`address`): `Promise`\<[`ReserveDomain`](ReserveDomain.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2972](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2972)
+Defined in: [src/generated/protocol\_types.ts:2702](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2702)
 
 #### Parameters
 
@@ -3128,7 +2876,7 @@ Defined in: [src/generated/protocol\_types.ts:2972](https://github.com/OmegaX-He
 
 > **fetchSchemaDependencyLedger**(`address`): `Promise`\<[`SchemaDependencyLedger`](SchemaDependencyLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2973](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2973)
+Defined in: [src/generated/protocol\_types.ts:2703](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2703)
 
 #### Parameters
 
@@ -3146,7 +2894,7 @@ Defined in: [src/generated/protocol\_types.ts:2973](https://github.com/OmegaX-He
 
 > **fetchSeriesReserveLedger**(`address`): `Promise`\<[`SeriesReserveLedger`](SeriesReserveLedger.md) \| `null`\>
 
-Defined in: [src/generated/protocol\_types.ts:2976](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2976)
+Defined in: [src/generated/protocol\_types.ts:2706](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2706)
 
 #### Parameters
 
@@ -3164,7 +2912,7 @@ Defined in: [src/generated/protocol\_types.ts:2976](https://github.com/OmegaX-He
 
 > **getProgramId**(): `PublicKey`
 
-Defined in: [src/generated/protocol\_types.ts:2101](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L2101)
+Defined in: [src/generated/protocol\_types.ts:1903](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1903)
 
 #### Returns
 

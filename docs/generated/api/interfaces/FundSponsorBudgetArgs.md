@@ -6,7 +6,7 @@
 
 # Interface: FundSponsorBudgetArgs
 
-Defined in: [src/generated/protocol\_types.ts:573](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L573)
+Defined in: [src/generated/protocol\_types.ts:424](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L424)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:573](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:574](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L574)
+Defined in: [src/generated/protocol\_types.ts:425](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L425)

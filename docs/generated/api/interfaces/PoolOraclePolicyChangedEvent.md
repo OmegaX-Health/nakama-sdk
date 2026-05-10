@@ -6,7 +6,7 @@
 
 # Interface: PoolOraclePolicyChangedEvent
 
-Defined in: [src/generated/protocol\_types.ts:1031](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1031)
+Defined in: [src/generated/protocol\_types.ts:879](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L879)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1031](https://github.com/OmegaX-He
 
 > **authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1033](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1033)
+Defined in: [src/generated/protocol\_types.ts:881](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L881)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1033](https://github.com/OmegaX-He
 
 > **liquidity\_pool**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1032](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1032)
+Defined in: [src/generated/protocol\_types.ts:880](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L880)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1032](https://github.com/OmegaX-He
 
 > **oracle\_fee\_bps**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1036](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1036)
+Defined in: [src/generated/protocol\_types.ts:884](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L884)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:1036](https://github.com/OmegaX-He
 
 > **quorum\_m**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1034](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1034)
+Defined in: [src/generated/protocol\_types.ts:882](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L882)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:1034](https://github.com/OmegaX-He
 
 > **quorum\_n**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1035](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1035)
+Defined in: [src/generated/protocol\_types.ts:883](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L883)

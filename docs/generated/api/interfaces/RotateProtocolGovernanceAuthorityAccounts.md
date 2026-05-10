@@ -6,7 +6,7 @@
 
 # Interface: RotateProtocolGovernanceAuthorityAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1877](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1877)
+Defined in: [src/generated/protocol\_types.ts:1656](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1656)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1877](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1878](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1878)
+Defined in: [src/generated/protocol\_types.ts:1657](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1657)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:1878](https://github.com/OmegaX-He
 
 > **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1879](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1879)
+Defined in: [src/generated/protocol\_types.ts:1658](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1658)

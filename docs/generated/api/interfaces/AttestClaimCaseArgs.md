@@ -6,7 +6,7 @@
 
 # Interface: AttestClaimCaseArgs
 
-Defined in: [src/generated/protocol\_types.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L131)
+Defined in: [src/generated/protocol\_types.ts:123](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L123)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:131](https://github.com/OmegaX-Hea
 
 > **attestation\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L133)
+Defined in: [src/generated/protocol\_types.ts:125](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L125)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:133](https://github.com/OmegaX-Hea
 
 > **attestation\_ref\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:134](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L134)
+Defined in: [src/generated/protocol\_types.ts:126](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L126)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:134](https://github.com/OmegaX-Hea
 
 > **decision**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L132)
+Defined in: [src/generated/protocol\_types.ts:124](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L124)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:132](https://github.com/OmegaX-Hea
 
 > **schema\_key\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:135](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L135)
+Defined in: [src/generated/protocol\_types.ts:127](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L127)

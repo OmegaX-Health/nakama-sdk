@@ -6,7 +6,7 @@
 
 # Interface: InitPoolTreasuryVaultArgs
 
-Defined in: [src/generated/protocol\_types.ts:662](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L662)
+Defined in: [src/generated/protocol\_types.ts:513](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L513)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:662](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:663](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L663)
+Defined in: [src/generated/protocol\_types.ts:514](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L514)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:663](https://github.com/OmegaX-Hea
 
 > **fee\_recipient**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:664](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L664)
+Defined in: [src/generated/protocol\_types.ts:515](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L515)

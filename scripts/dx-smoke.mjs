@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const root = resolve('.');
 const smokeDir = mkdtempSync(join(tmpdir(), 'omegax-sdk-dx-'));
+const expectedVersion = JSON.parse(
+  readFileSync(resolve(root, 'package.json'), 'utf8'),
+).version;
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -154,7 +157,7 @@ for (const subpath of subpaths) {
 }
 
 const pkg = require('@omegax/protocol-sdk/package.json');
-if (pkg.version !== '0.8.7') {
+if (pkg.version !== ${JSON.stringify(expectedVersion)}) {
   throw new Error(\`unexpected package version \${pkg.version}\`);
 }
 

@@ -8,7 +8,7 @@
 
 > **isSeedIdSafe**(`value`): `boolean`
 
-Defined in: [src/protocol\_seeds.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L59)
+Defined in: [src/protocol\_seeds.ts:55](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L55)
 
 ## Parameters
 

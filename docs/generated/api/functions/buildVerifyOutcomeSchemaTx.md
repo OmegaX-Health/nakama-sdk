@@ -8,7 +8,7 @@
 
 > **buildVerifyOutcomeSchemaTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3702](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3702)
+Defined in: [src/protocol.ts:3413](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3413)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **deriveCapitalClassPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:453](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L453)
+Defined in: [src/protocol\_seeds.ts:387](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L387)
 
 ## Parameters
 

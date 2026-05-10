@@ -8,4 +8,4 @@
 
 > `const` **RESERVE\_ASSET\_ROLE\_TREASURY\_LAST\_RESORT**: `3` = `3`
 
-Defined in: [src/protocol\_models.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L44)
+Defined in: [src/protocol\_models.ts:28](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L28)

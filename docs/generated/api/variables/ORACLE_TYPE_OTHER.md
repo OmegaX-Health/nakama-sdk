@@ -8,4 +8,4 @@
 
 > `const` **ORACLE\_TYPE\_OTHER**: `255` = `255`
 
-Defined in: [src/protocol\_models.ts:120](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L120)
+Defined in: [src/protocol\_models.ts:104](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L104)

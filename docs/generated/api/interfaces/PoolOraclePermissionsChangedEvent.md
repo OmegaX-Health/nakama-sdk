@@ -6,7 +6,7 @@
 
 # Interface: PoolOraclePermissionsChangedEvent
 
-Defined in: [src/generated/protocol\_types.ts:1012](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1012)
+Defined in: [src/generated/protocol\_types.ts:860](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L860)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1012](https://github.com/OmegaX-He
 
 > **authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1015](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1015)
+Defined in: [src/generated/protocol\_types.ts:863](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L863)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1015](https://github.com/OmegaX-He
 
 > **liquidity\_pool**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1013](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1013)
+Defined in: [src/generated/protocol\_types.ts:861](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L861)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1013](https://github.com/OmegaX-He
 
 > **oracle**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1014](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1014)
+Defined in: [src/generated/protocol\_types.ts:862](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L862)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1014](https://github.com/OmegaX-He
 
 > **permissions**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1016](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1016)
+Defined in: [src/generated/protocol\_types.ts:864](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L864)
