@@ -8,15 +8,16 @@
   },
   "instructions": [
     {
-      "name": "activate_direct_premium_commitment",
-      "discriminator": [94, 177, 11, 111, 30, 246, 181, 78],
+      "name": "accept_protocol_governance_authority",
+      "discriminator": [202, 235, 28, 119, 167, 24, 81, 85],
       "accounts": [
         {
-          "name": "activation_authority",
+          "name": "pending_authority",
           "signer": true
         },
         {
           "name": "protocol_governance",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -28,776 +29,9 @@
               }
             ]
           }
-        },
-        {
-          "name": "health_plan",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.health_plan_id",
-                "account": "HealthPlan"
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "position",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 111,
-                  115, 105, 116, 105, 111, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "position.depositor",
-                "account": "CommitmentPosition"
-              },
-              {
-                "kind": "account",
-                "path": "position.beneficiary",
-                "account": "CommitmentPosition"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_domain_asset_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.coverage_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line.line_id",
-                "account": "FundingLine"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.coverage_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_plan_reserve_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 108, 97, 110, 95, 114, 101, 115, 101, 114, 118, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.coverage_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_series_reserve_ledger",
-          "writable": true,
-          "optional": true
         }
       ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "ActivateCommitmentArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "activate_treasury_credit_commitment",
-      "discriminator": [47, 66, 202, 199, 90, 165, 23, 88],
-      "accounts": [
-        {
-          "name": "activation_authority",
-          "signer": true
-        },
-        {
-          "name": "protocol_governance",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
-                  114, 110, 97, 110, 99, 101
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "health_plan",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.health_plan_id",
-                "account": "HealthPlan"
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "position",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 111,
-                  115, 105, 116, 105, 111, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "position.depositor",
-                "account": "CommitmentPosition"
-              },
-              {
-                "kind": "account",
-                "path": "position.beneficiary",
-                "account": "CommitmentPosition"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_domain_asset_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.coverage_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line.line_id",
-                "account": "FundingLine"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.coverage_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_plan_reserve_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 108, 97, 110, 95, 114, 101, 115, 101, 114, 118, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.coverage_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_series_reserve_ledger",
-          "writable": true,
-          "optional": true
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "ActivateCommitmentArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "activate_waterfall_commitment",
-      "discriminator": [233, 25, 21, 234, 148, 136, 235, 119],
-      "accounts": [
-        {
-          "name": "activation_authority",
-          "signer": true
-        },
-        {
-          "name": "protocol_governance",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
-                  114, 110, 97, 110, 99, 101
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "health_plan",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.health_plan_id",
-                "account": "HealthPlan"
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "reserve_asset_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
-                  95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "position",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 111,
-                  115, 105, 116, 105, 111, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "position.depositor",
-                "account": "CommitmentPosition"
-              },
-              {
-                "kind": "account",
-                "path": "position.beneficiary",
-                "account": "CommitmentPosition"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_domain_asset_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line.line_id",
-                "account": "FundingLine"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_plan_reserve_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 108, 97, 110, 95, 114, 101, 115, 101, 114, 118, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_series_reserve_ledger",
-          "writable": true,
-          "optional": true
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "ActivateCommitmentArgs"
-            }
-          }
-        }
-      ]
+      "args": []
     },
     {
       "name": "adjudicate_claim_case",
@@ -1482,6 +716,32 @@
       ]
     },
     {
+      "name": "cancel_protocol_governance_authority_transfer",
+      "discriminator": [113, 25, 246, 12, 38, 35, 223, 114],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "protocol_governance",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
+                  114, 110, 97, 110, 99, 101
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "claim_oracle",
       "discriminator": [1, 252, 166, 132, 45, 24, 23, 233],
       "accounts": [
@@ -1947,471 +1207,6 @@
       ]
     },
     {
-      "name": "create_commitment_campaign",
-      "discriminator": [135, 24, 99, 72, 166, 173, 151, 146],
-      "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "protocol_governance",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
-                  114, 110, 97, 110, 99, 101
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "health_plan",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.health_plan_id",
-                "account": "HealthPlan"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_domain_asset_vault",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  118, 97, 117, 108, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "reserve_asset_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
-                  95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_domain_asset_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.coverage_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line.line_id",
-                "account": "FundingLine"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line"
-              },
-              {
-                "kind": "arg",
-                "path": "args.coverage_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_plan_reserve_ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 108, 97, 110, 95, 114, 101, 115, 101, 114, 118, 101, 95,
-                  108, 101, 100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.coverage_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.campaign_id"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "CreateCommitmentCampaignArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "create_commitment_payment_rail",
-      "discriminator": [8, 243, 90, 162, 5, 117, 130, 8],
-      "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "protocol_governance",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
-                  114, 110, 97, 110, 99, 101
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "health_plan",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.health_plan_id",
-                "account": "HealthPlan"
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_domain_asset_vault",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  118, 97, 117, 108, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "reserve_asset_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
-                  95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "coverage_funding_line",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "coverage_funding_line.line_id",
-                "account": "FundingLine"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "arg",
-                "path": "args.payment_asset_mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "CreateCommitmentPaymentRailArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "create_domain_asset_vault",
       "discriminator": [31, 13, 112, 128, 23, 164, 26, 108],
       "accounts": [
@@ -2870,8 +1665,20 @@
           "optional": true
         },
         {
+          "name": "liquidity_pool",
+          "optional": true
+        },
+        {
+          "name": "capital_class",
+          "optional": true
+        },
+        {
           "name": "pool_class_ledger",
           "writable": true,
+          "optional": true
+        },
+        {
+          "name": "allocation_position",
           "optional": true
         },
         {
@@ -3249,207 +2056,6 @@
           "type": {
             "defined": {
               "name": "DeallocateCapitalArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "deposit_commitment",
-      "discriminator": [147, 105, 226, 224, 111, 39, 63, 78],
-      "accounts": [
-        {
-          "name": "depositor",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "protocol_governance",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
-                  114, 110, 97, 110, 99, 101
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.health_plan",
-                "account": "CommitmentCampaign"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "reserve_asset_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
-                  95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.reserve_domain",
-                "account": "CommitmentCampaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "position",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 111,
-                  115, 105, 116, 105, 111, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "depositor"
-              },
-              {
-                "kind": "arg",
-                "path": "args.beneficiary"
-              }
-            ]
-          }
-        },
-        {
-          "name": "domain_asset_vault",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  118, 97, 117, 108, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.reserve_domain",
-                "account": "CommitmentCampaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "source_token_account",
-          "writable": true
-        },
-        {
-          "name": "asset_mint"
-        },
-        {
-          "name": "vault_token_account",
-          "writable": true
-        },
-        {
-          "name": "token_program"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "DepositCommitmentArgs"
             }
           }
         }
@@ -4287,6 +2893,13 @@
           }
         },
         {
+          "name": "program",
+          "address": "Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B"
+        },
+        {
+          "name": "program_data"
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
@@ -4873,6 +3486,10 @@
           }
         },
         {
+          "name": "policy_series",
+          "optional": true
+        },
+        {
           "name": "series_reserve_ledger",
           "writable": true,
           "optional": true
@@ -4936,6 +3553,10 @@
               }
             ]
           }
+        },
+        {
+          "name": "policy_series",
+          "optional": true
         },
         {
           "name": "member_position",
@@ -5008,85 +3629,6 @@
           "type": {
             "defined": {
               "name": "OpenMemberPositionArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "pause_commitment_campaign",
-      "discriminator": [154, 59, 6, 30, 68, 170, 218, 160],
-      "accounts": [
-        {
-          "name": "authority",
-          "signer": true
-        },
-        {
-          "name": "protocol_governance",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
-                  114, 110, 97, 110, 99, 101
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "health_plan",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.reserve_domain",
-                "account": "HealthPlan"
-              },
-              {
-                "kind": "account",
-                "path": "health_plan.health_plan_id",
-                "account": "HealthPlan"
-              }
-            ]
-          }
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "health_plan"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "PauseCommitmentCampaignArgs"
             }
           }
         }
@@ -5581,167 +4123,6 @@
           "type": {
             "defined": {
               "name": "RecordPremiumPaymentArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "refund_commitment",
-      "discriminator": [134, 124, 13, 105, 86, 177, 150, 100],
-      "accounts": [
-        {
-          "name": "depositor",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 99, 97,
-                  109, 112, 97, 105, 103, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.health_plan",
-                "account": "CommitmentCampaign"
-              },
-              {
-                "kind": "account",
-                "path": "campaign.campaign_id",
-                "account": "CommitmentCampaign"
-              }
-            ]
-          }
-        },
-        {
-          "name": "payment_rail",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 97,
-                  121, 109, 101, 110, 116, 95, 114, 97, 105, 108
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "ledger",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 108, 101,
-                  100, 103, 101, 114
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "position",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99, 111, 109, 109, 105, 116, 109, 101, 110, 116, 95, 112, 111,
-                  115, 105, 116, 105, 111, 110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign"
-              },
-              {
-                "kind": "account",
-                "path": "position.depositor",
-                "account": "CommitmentPosition"
-              },
-              {
-                "kind": "account",
-                "path": "position.beneficiary",
-                "account": "CommitmentPosition"
-              }
-            ]
-          }
-        },
-        {
-          "name": "domain_asset_vault",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
-                  118, 97, 117, 108, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.reserve_domain",
-                "account": "CommitmentCampaign"
-              },
-              {
-                "kind": "account",
-                "path": "payment_rail.payment_asset_mint",
-                "account": "CommitmentPaymentRail"
-              }
-            ]
-          }
-        },
-        {
-          "name": "asset_mint"
-        },
-        {
-          "name": "vault_token_account",
-          "writable": true
-        },
-        {
-          "name": "recipient_token_account",
-          "writable": true
-        },
-        {
-          "name": "token_program"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "RefundCommitmentArgs"
             }
           }
         }
@@ -6864,6 +5245,30 @@
           }
         },
         {
+          "name": "reserve_asset_rail",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
+                  95, 114, 97, 105, 108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "funding_line.asset_mint",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
           "name": "domain_asset_vault",
           "writable": true,
           "pda": {
@@ -7113,6 +5518,276 @@
       ]
     },
     {
+      "name": "settle_claim_case_selected_asset",
+      "discriminator": [21, 218, 248, 73, 41, 97, 47, 212],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "protocol_governance",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 114, 111, 116, 111, 99, 111, 108, 95, 103, 111, 118, 101,
+                  114, 110, 97, 110, 99, 101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "health_plan",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [104, 101, 97, 108, 116, 104, 95, 112, 108, 97, 110]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.health_plan_id",
+                "account": "HealthPlan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "claim_asset_rail",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
+                  95, 114, 97, 105, 108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "claim_case.asset_mint",
+                "account": "ClaimCase"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_asset_rail",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
+                  95, 114, 97, 105, 108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line.asset_mint",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_domain_asset_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
+                  118, 97, 117, 108, 116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line.asset_mint",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_domain_asset_ledger",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100, 111, 109, 97, 105, 110, 95, 97, 115, 115, 101, 116, 95,
+                  108, 101, 100, 103, 101, 114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line.asset_mint",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_funding_line",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan"
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line.line_id",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_funding_line_ledger",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  102, 117, 110, 100, 105, 110, 103, 95, 108, 105, 110, 101, 95,
+                  108, 101, 100, 103, 101, 114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line"
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line.asset_mint",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_plan_reserve_ledger",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 110, 95, 114, 101, 115, 101, 114, 118, 101, 95,
+                  108, 101, 100, 103, 101, 114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan"
+              },
+              {
+                "kind": "account",
+                "path": "payout_funding_line.asset_mint",
+                "account": "FundingLine"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payout_series_reserve_ledger",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "claim_case",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 108, 97, 105, 109, 95, 99, 97, 115, 101]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan"
+              },
+              {
+                "kind": "account",
+                "path": "claim_case.claim_id",
+                "account": "ClaimCase"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member_position"
+        },
+        {
+          "name": "claim_asset_mint"
+        },
+        {
+          "name": "payout_asset_mint"
+        },
+        {
+          "name": "payout_vault_token_account",
+          "writable": true
+        },
+        {
+          "name": "recipient_token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "SettleClaimCaseSelectedAssetArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "settle_obligation",
       "discriminator": [209, 166, 218, 35, 147, 139, 238, 208],
       "accounts": [
@@ -7151,6 +5826,30 @@
                 "kind": "account",
                 "path": "health_plan.health_plan_id",
                 "account": "HealthPlan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "reserve_asset_rail",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114, 101, 115, 101, 114, 118, 101, 95, 97, 115, 115, 101, 116,
+                  95, 114, 97, 105, 108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "health_plan.reserve_domain",
+                "account": "HealthPlan"
+              },
+              {
+                "kind": "account",
+                "path": "obligation.asset_mint",
+                "account": "Obligation"
               }
             ]
           }
@@ -7785,6 +6484,7 @@
         },
         {
           "name": "membership_anchor_seat",
+          "writable": true,
           "optional": true
         }
       ],
@@ -8884,22 +7584,6 @@
       "discriminator": [7, 178, 225, 1, 54, 47, 117, 180]
     },
     {
-      "name": "CommitmentCampaign",
-      "discriminator": [199, 196, 110, 178, 55, 90, 13, 23]
-    },
-    {
-      "name": "CommitmentLedger",
-      "discriminator": [75, 145, 213, 91, 144, 46, 1, 18]
-    },
-    {
-      "name": "CommitmentPaymentRail",
-      "discriminator": [41, 187, 213, 56, 158, 46, 189, 188]
-    },
-    {
-      "name": "CommitmentPosition",
-      "discriminator": [82, 199, 222, 147, 139, 22, 117, 126]
-    },
-    {
       "name": "DomainAssetLedger",
       "discriminator": [82, 42, 164, 106, 70, 160, 154, 99]
     },
@@ -9018,32 +7702,12 @@
       "discriminator": [27, 131, 74, 180, 134, 39, 214, 103]
     },
     {
+      "name": "ClaimCaseSelectedAssetPayoutEvent",
+      "discriminator": [15, 13, 219, 43, 68, 58, 135, 157]
+    },
+    {
       "name": "ClaimCaseStateChangedEvent",
       "discriminator": [162, 195, 160, 236, 219, 18, 240, 208]
-    },
-    {
-      "name": "CommitmentActivatedEvent",
-      "discriminator": [215, 168, 116, 223, 157, 125, 62, 147]
-    },
-    {
-      "name": "CommitmentCampaignCreatedEvent",
-      "discriminator": [187, 122, 195, 26, 55, 16, 97, 173]
-    },
-    {
-      "name": "CommitmentCampaignStatusChangedEvent",
-      "discriminator": [157, 43, 191, 204, 164, 67, 131, 251]
-    },
-    {
-      "name": "CommitmentDepositedEvent",
-      "discriminator": [161, 255, 105, 115, 34, 0, 150, 162]
-    },
-    {
-      "name": "CommitmentPaymentRailCreatedEvent",
-      "discriminator": [227, 22, 232, 244, 187, 174, 235, 227]
-    },
-    {
-      "name": "CommitmentRefundedEvent",
-      "discriminator": [199, 110, 122, 93, 11, 23, 58, 78]
     },
     {
       "name": "FeeAccruedEvent",
@@ -9138,6 +7802,14 @@
       "discriminator": [182, 225, 228, 198, 36, 195, 73, 212]
     },
     {
+      "name": "ProtocolGovernanceAuthorityTransferCanceledEvent",
+      "discriminator": [159, 189, 24, 31, 242, 105, 166, 146]
+    },
+    {
+      "name": "ProtocolGovernanceAuthorityTransferProposedEvent",
+      "discriminator": [255, 93, 25, 129, 137, 23, 184, 130]
+    },
+    {
       "name": "ProtocolGovernanceInitializedEvent",
       "discriminator": [89, 34, 67, 141, 79, 64, 188, 254]
     },
@@ -9179,545 +7851,571 @@
     },
     {
       "code": 6002,
+      "name": "GovernanceAuthorityTransferMissing",
+      "msg": "Governance authority transfer is missing"
+    },
+    {
+      "code": 6003,
+      "name": "GovernanceAuthorityTransferExpired",
+      "msg": "Governance authority transfer has expired"
+    },
+    {
+      "code": 6004,
       "name": "ProtocolEmergencyPaused",
       "msg": "Protocol governance is emergency paused"
     },
     {
-      "code": 6003,
+      "code": 6005,
       "name": "ReserveDomainInactive",
       "msg": "Reserve domain is inactive"
     },
     {
-      "code": 6004,
+      "code": 6006,
       "name": "VaultTokenAccountInvalid",
       "msg": "Domain asset vault token account is missing or invalid"
     },
     {
-      "code": 6005,
+      "code": 6007,
       "name": "HealthPlanPaused",
       "msg": "Health plan is paused"
     },
     {
-      "code": 6006,
+      "code": 6008,
       "name": "ClaimIntakePaused",
       "msg": "Claim intake is paused"
     },
     {
-      "code": 6007,
+      "code": 6009,
       "name": "CapitalSubscriptionsPaused",
       "msg": "Capital subscriptions are paused"
     },
     {
-      "code": 6008,
+      "code": 6010,
       "name": "InvalidBps",
       "msg": "Invalid basis points value"
     },
     {
-      "code": 6009,
+      "code": 6011,
       "name": "IdentifierTooLong",
       "msg": "Identifier length exceeds the canonical maximum"
     },
     {
-      "code": 6010,
+      "code": 6012,
       "name": "HealthPlanMismatch",
       "msg": "Health plan mismatch"
     },
     {
-      "code": 6011,
+      "code": 6013,
       "name": "PolicySeriesMismatch",
       "msg": "Policy series mismatch"
     },
     {
-      "code": 6012,
+      "code": 6014,
       "name": "PolicySeriesMissing",
       "msg": "Policy series is missing where one is required"
     },
     {
-      "code": 6013,
+      "code": 6015,
       "name": "SeriesLedgerUnexpected",
       "msg": "Unexpected series ledger was provided"
     },
     {
-      "code": 6014,
+      "code": 6016,
       "name": "AssetMintMismatch",
       "msg": "Asset mint mismatch"
     },
     {
-      "code": 6015,
+      "code": 6017,
       "name": "TokenAccountOwnerMismatch",
       "msg": "Source token account owner does not match the signer"
     },
     {
-      "code": 6016,
+      "code": 6018,
       "name": "TokenAccountSelfTransferInvalid",
       "msg": "Source and vault token accounts must be different accounts"
     },
     {
-      "code": 6017,
+      "code": 6019,
       "name": "VaultTokenAccountMismatch",
       "msg": "Vault token account does not match the domain asset vault"
     },
     {
-      "code": 6018,
+      "code": 6020,
       "name": "Token2022NotSupported",
       "msg": "Token-2022 custody rails are not supported by this protocol version"
     },
     {
-      "code": 6019,
+      "code": 6021,
       "name": "FeeRecipientInvalid",
       "msg": "Configured fee recipient is missing or invalid"
     },
     {
-      "code": 6020,
+      "code": 6022,
       "name": "FeeRecipientMismatch",
       "msg": "Fee withdrawal recipient does not match the configured fee recipient"
     },
     {
-      "code": 6021,
+      "code": 6023,
       "name": "FundingLineMismatch",
       "msg": "Funding line mismatch"
     },
     {
-      "code": 6022,
+      "code": 6024,
       "name": "FundingLineTypeMismatch",
       "msg": "Funding line type mismatch"
     },
     {
-      "code": 6023,
+      "code": 6025,
+      "name": "ObligationMismatch",
+      "msg": "Obligation account mismatch"
+    },
+    {
+      "code": 6026,
       "name": "InvalidObligationStateTransition",
       "msg": "Invalid obligation state transition"
     },
     {
-      "code": 6024,
+      "code": 6027,
       "name": "AmountExceedsOutstandingObligation",
       "msg": "Amount exceeds outstanding obligation"
     },
     {
-      "code": 6025,
+      "code": 6028,
       "name": "AmountExceedsReservedBalance",
       "msg": "Amount exceeds reserved balance"
     },
     {
-      "code": 6026,
+      "code": 6029,
       "name": "AmountExceedsApprovedClaim",
       "msg": "Amount exceeds approved claim"
     },
     {
-      "code": 6027,
+      "code": 6030,
       "name": "AmountMustBePositive",
       "msg": "Amount must be greater than zero"
     },
     {
-      "code": 6028,
+      "code": 6031,
       "name": "ClaimCaseLinkMismatch",
       "msg": "Claim case linkage mismatch"
     },
     {
-      "code": 6029,
+      "code": 6032,
       "name": "LinkedClaimMustSettleThroughObligation",
       "msg": "Linked claims must settle through the obligation path"
     },
     {
-      "code": 6030,
+      "code": 6033,
       "name": "AmountExceedsAvailableShares",
       "msg": "Amount exceeds available shares"
     },
     {
-      "code": 6031,
+      "code": 6034,
       "name": "AmountExceedsPendingRedemption",
       "msg": "Amount exceeds pending redemption"
     },
     {
-      "code": 6032,
+      "code": 6035,
       "name": "InvalidRedemptionAmount",
       "msg": "Redemption amount cannot be derived from the queued share state"
     },
     {
-      "code": 6033,
+      "code": 6036,
+      "name": "RedemptionQueueOutOfOrder",
+      "msg": "Redemption request is not at the head of the FIFO queue"
+    },
+    {
+      "code": 6037,
       "name": "InvalidCapitalShareState",
       "msg": "Deposit shares cannot be derived from the capital class NAV state"
     },
     {
-      "code": 6034,
+      "code": 6038,
       "name": "InvalidDepositShares",
       "msg": "Deposit would mint zero shares"
     },
     {
-      "code": 6035,
+      "code": 6039,
       "name": "MinimumSharesOutNotMet",
       "msg": "Computed deposit shares are below the requested minimum"
     },
     {
-      "code": 6036,
+      "code": 6040,
       "name": "RestrictedCapitalClass",
       "msg": "Restricted capital class access failed"
     },
     {
-      "code": 6037,
+      "code": 6041,
       "name": "CapitalClassMismatch",
       "msg": "Capital class ledger mismatch"
     },
     {
-      "code": 6038,
+      "code": 6042,
       "name": "LPPositionHasActiveCapital",
       "msg": "LP position with active capital cannot be decredentialed"
     },
     {
-      "code": 6039,
+      "code": 6043,
       "name": "LockupActive",
       "msg": "Capital class lockup is still active"
     },
     {
-      "code": 6040,
+      "code": 6044,
+      "name": "InvalidLockupSeconds",
+      "msg": "Capital class lockup seconds cannot be negative"
+    },
+    {
+      "code": 6045,
       "name": "AllocationCapExceeded",
       "msg": "Allocation cap exceeded"
     },
     {
-      "code": 6041,
+      "code": 6046,
       "name": "AllocationPositionMismatch",
       "msg": "Allocation position mismatch"
     },
     {
-      "code": 6042,
+      "code": 6047,
       "name": "AllocationAssetMismatch",
       "msg": "LP allocation asset mint must match the pool deposit asset mint"
     },
     {
-      "code": 6043,
+      "code": 6048,
       "name": "InsufficientFreeAllocationCapacity",
       "msg": "Insufficient free allocation capacity"
     },
     {
-      "code": 6044,
+      "code": 6049,
       "name": "InsufficientFreeReserveCapacity",
       "msg": "Insufficient free reserve capacity"
     },
     {
-      "code": 6045,
+      "code": 6050,
       "name": "ArithmeticError",
       "msg": "Arithmetic overflow or underflow"
     },
     {
-      "code": 6046,
+      "code": 6051,
       "name": "MembershipGateConfigurationInvalid",
       "msg": "Membership gate configuration is invalid"
     },
     {
-      "code": 6047,
+      "code": 6052,
       "name": "MembershipProofModeMismatch",
       "msg": "Membership proof mode does not match the configured plan posture"
     },
     {
-      "code": 6048,
+      "code": 6053,
       "name": "MembershipInviteAuthorityInvalid",
       "msg": "Invite authority is missing or invalid for this plan"
     },
     {
-      "code": 6049,
+      "code": 6054,
       "name": "MembershipInvitePermitExpired",
       "msg": "Invite permit is expired"
     },
     {
-      "code": 6050,
+      "code": 6055,
       "name": "MembershipTokenGateAccountMissing",
       "msg": "Token-gate proof account is missing"
     },
     {
-      "code": 6051,
+      "code": 6056,
       "name": "MembershipTokenGateOwnerMismatch",
       "msg": "Token-gate proof account owner does not match the enrolling wallet"
     },
     {
-      "code": 6052,
+      "code": 6057,
       "name": "MembershipTokenGateMintMismatch",
       "msg": "Token-gate proof account mint does not match the configured gate mint"
     },
     {
-      "code": 6053,
+      "code": 6058,
       "name": "MembershipTokenGateAmountTooLow",
       "msg": "Token-gate proof amount is below the configured minimum"
     },
     {
-      "code": 6054,
+      "code": 6059,
       "name": "MembershipAnchorSeatRequired",
       "msg": "Anchor-backed membership requires an anchor seat account"
     },
     {
-      "code": 6055,
+      "code": 6060,
       "name": "MembershipAnchorSeatAlreadyActive",
       "msg": "Anchor-backed membership seat is already active"
     },
     {
-      "code": 6056,
+      "code": 6061,
       "name": "MembershipAnchorSeatMismatch",
       "msg": "Anchor-backed membership seat does not match the provided anchor reference"
     },
     {
-      "code": 6057,
+      "code": 6062,
       "name": "MembershipAnchorReferenceMissing",
       "msg": "Anchor-backed membership requires a non-zero anchor reference"
     },
     {
-      "code": 6058,
+      "code": 6063,
       "name": "StringTooLong",
       "msg": "Bounded string field exceeds the canonical maximum"
     },
     {
-      "code": 6059,
+      "code": 6064,
       "name": "InvalidOracleQuorum",
       "msg": "Oracle quorum configuration is invalid"
     },
     {
-      "code": 6060,
+      "code": 6065,
       "name": "TooManyOracleSupportedSchemas",
       "msg": "Too many supported schema hashes were provided for one oracle profile"
     },
     {
-      "code": 6061,
+      "code": 6066,
       "name": "PoolOracleApprovalRequired",
       "msg": "Pool oracle approval is required before permissions can be granted"
     },
     {
-      "code": 6062,
+      "code": 6067,
       "name": "PoolOraclePermissionRequired",
       "msg": "Pool oracle permission is required for this claim attestation"
     },
     {
-      "code": 6063,
+      "code": 6068,
       "name": "OracleProfileInactive",
       "msg": "Oracle profile is inactive"
     },
     {
-      "code": 6064,
+      "code": 6069,
       "name": "OracleProfileUnclaimed",
       "msg": "Oracle profile has not been claimed by its signing key"
     },
     {
-      "code": 6065,
+      "code": 6070,
       "name": "InvalidClaimAttestationDecision",
       "msg": "Claim attestation decision is not a recognized value"
     },
     {
-      "code": 6066,
+      "code": 6071,
       "name": "ClaimAttestationSchemaRequired",
       "msg": "Claim attestation must reference a registered schema key hash"
     },
     {
-      "code": 6067,
+      "code": 6072,
       "name": "ClaimAttestationSchemaUnsupported",
       "msg": "Oracle profile does not advertise support for the selected claim-attestation schema"
     },
     {
-      "code": 6068,
+      "code": 6073,
       "name": "OutcomeSchemaUnverified",
       "msg": "Claim attestation schema must be governance verified"
     },
     {
-      "code": 6069,
+      "code": 6074,
       "name": "ClaimEvidenceRequired",
       "msg": "Claim attestation requires a locked evidence reference"
     },
     {
-      "code": 6070,
+      "code": 6075,
       "name": "ClaimEvidenceMismatch",
       "msg": "Claim attestation evidence reference does not match the claim case"
     },
     {
-      "code": 6071,
+      "code": 6076,
       "name": "ClaimEvidenceLocked",
       "msg": "Claim evidence cannot be changed after attestations begin"
     },
     {
-      "code": 6072,
+      "code": 6077,
       "name": "ClaimRecipientLocked",
       "msg": "Claim settlement recipient is locked after approval or payout"
     },
     {
-      "code": 6073,
+      "code": 6078,
       "name": "OracleFinalityHeld",
       "msg": "Health plan has paused oracle finality"
     },
     {
-      "code": 6074,
+      "code": 6079,
       "name": "TooManySchemaDependencies",
       "msg": "Too many schema dependency addresses were provided"
     },
     {
-      "code": 6075,
+      "code": 6080,
       "name": "DomainAssetVaultRequired",
       "msg": "Fee vault initialization requires the matching domain asset vault to exist"
     },
     {
-      "code": 6076,
+      "code": 6081,
       "name": "LiquidityPoolMismatch",
       "msg": "Liquidity pool reference does not match the supplied account"
     },
     {
-      "code": 6077,
+      "code": 6082,
       "name": "OracleProfileMismatch",
       "msg": "Oracle profile reference does not match the supplied account"
     },
     {
-      "code": 6078,
+      "code": 6083,
       "name": "FeeVaultMismatch",
       "msg": "Fee vault account does not match the expected scope"
     },
     {
-      "code": 6079,
+      "code": 6084,
       "name": "FeeVaultInsufficientBalance",
       "msg": "Fee vault has insufficient accrued balance for this withdrawal"
     },
     {
-      "code": 6080,
+      "code": 6085,
       "name": "FeeVaultRentExemptionBreach",
       "msg": "Fee vault withdrawal would breach the rent-exempt minimum balance"
     },
     {
-      "code": 6081,
+      "code": 6086,
       "name": "FeeVaultRailMismatch",
       "msg": "Fee vault rail and asset mint disagree (SOL vault used on SPL path or vice versa)"
     },
     {
-      "code": 6082,
+      "code": 6087,
       "name": "FeeVaultBpsMisconfigured",
       "msg": "Fee vault basis-points configuration is out of range"
     },
     {
-      "code": 6083,
+      "code": 6088,
       "name": "SettlementOutflowAccountsRequired",
       "msg": "Linked claim settlement requires the member, mint, vault token, recipient token, and token program accounts"
     },
     {
-      "code": 6084,
+      "code": 6089,
       "name": "FeeVaultRequiredForConfiguredFee",
       "msg": "Configured fee basis points require the matching fee vault account"
     },
     {
-      "code": 6085,
+      "code": 6090,
       "name": "ClaimAttestationRequiredForOracleFee",
       "msg": "Oracle fee accrual requires a matching claim attestation account"
     },
     {
-      "code": 6086,
-      "name": "InvalidCommitmentCampaignMode",
-      "msg": "Commitment campaign mode is invalid"
-    },
-    {
-      "code": 6087,
-      "name": "InvalidCommitmentCampaignStatus",
-      "msg": "Commitment campaign status is invalid"
-    },
-    {
-      "code": 6088,
-      "name": "CommitmentCampaignInactive",
-      "msg": "Commitment campaign is not active"
-    },
-    {
-      "code": 6089,
-      "name": "CommitmentNotRefundable",
-      "msg": "Commitment campaign is not refundable yet"
-    },
-    {
-      "code": 6090,
-      "name": "CommitmentPositionNotPending",
-      "msg": "Commitment position is not pending"
-    },
-    {
       "code": 6091,
-      "name": "CommitmentTermsMismatch",
-      "msg": "Commitment terms hash mismatch"
-    },
-    {
-      "code": 6092,
-      "name": "CommitmentCapExceeded",
-      "msg": "Commitment cap exceeded"
-    },
-    {
-      "code": 6093,
-      "name": "CommitmentActivationAuthorityMismatch",
-      "msg": "Commitment activation authority mismatch"
-    },
-    {
-      "code": 6094,
       "name": "InsufficientStableCoverageCapacity",
       "msg": "Stable coverage capacity is insufficient"
     },
     {
-      "code": 6095,
-      "name": "TreasuryCreditAssetMismatch",
-      "msg": "Treasury-credit commitments require distinct payment and coverage assets"
-    },
-    {
-      "code": 6096,
+      "code": 6092,
       "name": "InvalidReserveAssetRole",
       "msg": "Reserve asset role is invalid"
     },
     {
-      "code": 6097,
+      "code": 6093,
       "name": "InvalidReserveOracleSource",
       "msg": "Reserve asset oracle source is invalid"
     },
     {
-      "code": 6098,
+      "code": 6094,
       "name": "ReserveAssetRailMismatch",
       "msg": "Reserve asset rail mismatch"
     },
     {
-      "code": 6099,
+      "code": 6095,
+      "name": "ReserveDomainMismatch",
+      "msg": "Reserve domain mismatch"
+    },
+    {
+      "code": 6096,
       "name": "ReserveAssetRailInactive",
       "msg": "Reserve asset rail is inactive"
     },
     {
-      "code": 6100,
-      "name": "ReserveAssetRailDepositDisabled",
-      "msg": "Reserve asset rail does not allow deposits"
-    },
-    {
-      "code": 6101,
+      "code": 6097,
       "name": "ReserveAssetRailPayoutDisabled",
       "msg": "Reserve asset rail does not allow claims payout"
     },
     {
-      "code": 6102,
+      "code": 6098,
       "name": "ReserveAssetRailCapacityDisabled",
       "msg": "Reserve asset rail cannot count toward claims capacity"
     },
     {
-      "code": 6103,
+      "code": 6099,
       "name": "ReserveAssetPriceStale",
       "msg": "Reserve asset oracle price is stale or missing"
     },
     {
-      "code": 6104,
+      "code": 6100,
       "name": "ReserveAssetPriceInvalid",
       "msg": "Reserve asset oracle price is invalid"
     },
     {
+      "code": 6101,
+      "name": "ReserveAssetPriceConfidenceTooWide",
+      "msg": "Reserve asset oracle price confidence exceeds rail threshold"
+    },
+    {
+      "code": 6102,
+      "name": "PartialObligationTransitionUnsupported",
+      "msg": "Partial obligation lifecycle transitions are not supported"
+    },
+    {
+      "code": 6103,
+      "name": "InvalidObligationDeliveryMode",
+      "msg": "Invalid obligation delivery mode"
+    },
+    {
+      "code": 6104,
+      "name": "ClaimAdjudicationLocked",
+      "msg": "Claim adjudication is locked after payout or terminal state"
+    },
+    {
       "code": 6105,
-      "name": "CommitmentPaymentRailMismatch",
-      "msg": "Commitment payment rail mismatch"
+      "name": "SelectedAssetPayoutSameMint",
+      "msg": "Selected-asset claim payout must use a different mint from the claim denomination"
     },
     {
       "code": 6106,
-      "name": "CommitmentPaymentRailInactive",
-      "msg": "Commitment payment rail is inactive"
+      "name": "SelectedAssetPayoutUnderpaid",
+      "msg": "Selected-asset claim payout value is below the credited claim amount"
+    },
+    {
+      "code": 6107,
+      "name": "SelectedAssetPayoutOverpaid",
+      "msg": "Selected-asset claim payout value exceeds the configured overpay tolerance"
+    },
+    {
+      "code": 6108,
+      "name": "SelectedAssetOverpayBpsTooHigh",
+      "msg": "Selected-asset claim payout overpay bps exceeds the protocol maximum"
+    },
+    {
+      "code": 6109,
+      "name": "ReserveAssetMintDecimalsUnsupported",
+      "msg": "Reserve asset mint decimals are unsupported"
+    },
+    {
+      "code": 6110,
+      "name": "HealthPlanInactive",
+      "msg": "Health plan is inactive"
+    },
+    {
+      "code": 6111,
+      "name": "CapitalClassInactive",
+      "msg": "Capital class is inactive"
+    },
+    {
+      "code": 6112,
+      "name": "DirectClaimReserveUnsupported",
+      "msg": "Direct claim reserves require linked obligation settlement"
+    },
+    {
+      "code": 6113,
+      "name": "LiquidityPoolInactive",
+      "msg": "Liquidity pool is inactive"
+    },
+    {
+      "code": 6114,
+      "name": "AllocationPositionInactive",
+      "msg": "Allocation position is inactive or deallocation-only"
     }
   ],
   "types": [
-    {
-      "name": "ActivateCommitmentArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "activation_reason_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          }
-        ]
-      }
-    },
     {
       "name": "AdjudicateClaimCaseArgs",
       "type": {
@@ -10072,6 +8770,14 @@
             "type": "u64"
           },
           {
+            "name": "next_redemption_sequence",
+            "type": "u64"
+          },
+          {
+            "name": "next_redemption_to_process",
+            "type": "u64"
+          },
+          {
             "name": "active",
             "type": "bool"
           },
@@ -10349,6 +9055,40 @@
       }
     },
     {
+      "name": "ClaimCaseSelectedAssetPayoutEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "claim_case",
+            "type": "pubkey"
+          },
+          {
+            "name": "claim_asset_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "payout_asset_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "claim_credit_amount",
+            "type": "u64"
+          },
+          {
+            "name": "payout_amount",
+            "type": "u64"
+          },
+          {
+            "name": "settlement_reason_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "ClaimCaseStateChangedEvent",
       "type": {
         "kind": "struct",
@@ -10363,452 +9103,6 @@
           },
           {
             "name": "approved_amount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentActivatedEvent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "position",
-            "type": "pubkey"
-          },
-          {
-            "name": "beneficiary",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_amount",
-            "type": "u64"
-          },
-          {
-            "name": "coverage_amount",
-            "type": "u64"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentCampaign",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "reserve_domain",
-            "type": "pubkey"
-          },
-          {
-            "name": "health_plan",
-            "type": "pubkey"
-          },
-          {
-            "name": "policy_series",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_funding_line",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "activation_authority",
-            "type": "pubkey"
-          },
-          {
-            "name": "campaign_id",
-            "type": "string"
-          },
-          {
-            "name": "display_name",
-            "type": "string"
-          },
-          {
-            "name": "metadata_uri",
-            "type": "string"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          },
-          {
-            "name": "status",
-            "type": "u8"
-          },
-          {
-            "name": "deposit_amount",
-            "type": "u64"
-          },
-          {
-            "name": "coverage_amount",
-            "type": "u64"
-          },
-          {
-            "name": "hard_cap_amount",
-            "type": "u64"
-          },
-          {
-            "name": "starts_at_ts",
-            "type": "i64"
-          },
-          {
-            "name": "refund_after_ts",
-            "type": "i64"
-          },
-          {
-            "name": "expires_at_ts",
-            "type": "i64"
-          },
-          {
-            "name": "terms_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          },
-          {
-            "name": "audit_nonce",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentCampaignCreatedEvent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "health_plan",
-            "type": "pubkey"
-          },
-          {
-            "name": "funding_line",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentCampaignStatusChangedEvent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "status",
-            "type": "u8"
-          },
-          {
-            "name": "authority",
-            "type": "pubkey"
-          },
-          {
-            "name": "reason_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentDepositedEvent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "position",
-            "type": "pubkey"
-          },
-          {
-            "name": "depositor",
-            "type": "pubkey"
-          },
-          {
-            "name": "beneficiary",
-            "type": "pubkey"
-          },
-          {
-            "name": "amount",
-            "type": "u64"
-          },
-          {
-            "name": "queue_index",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentLedger",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "pending_amount",
-            "type": "u64"
-          },
-          {
-            "name": "activated_amount",
-            "type": "u64"
-          },
-          {
-            "name": "treasury_locked_amount",
-            "type": "u64"
-          },
-          {
-            "name": "refunded_amount",
-            "type": "u64"
-          },
-          {
-            "name": "canceled_amount",
-            "type": "u64"
-          },
-          {
-            "name": "next_queue_index",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentPaymentRail",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "reserve_domain",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "reserve_asset_rail",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_funding_line",
-            "type": "pubkey"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          },
-          {
-            "name": "status",
-            "type": "u8"
-          },
-          {
-            "name": "deposit_amount",
-            "type": "u64"
-          },
-          {
-            "name": "coverage_amount",
-            "type": "u64"
-          },
-          {
-            "name": "hard_cap_amount",
-            "type": "u64"
-          },
-          {
-            "name": "audit_nonce",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentPaymentRailCreatedEvent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_rail",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "reserve_asset_rail",
-            "type": "pubkey"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentPosition",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "ledger",
-            "type": "pubkey"
-          },
-          {
-            "name": "depositor",
-            "type": "pubkey"
-          },
-          {
-            "name": "beneficiary",
-            "type": "pubkey"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "amount",
-            "type": "u64"
-          },
-          {
-            "name": "coverage_amount",
-            "type": "u64"
-          },
-          {
-            "name": "queue_index",
-            "type": "u64"
-          },
-          {
-            "name": "state",
-            "type": "u8"
-          },
-          {
-            "name": "accepted_terms_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          },
-          {
-            "name": "paid_at",
-            "type": "i64"
-          },
-          {
-            "name": "activated_at",
-            "type": "i64"
-          },
-          {
-            "name": "refunded_at",
-            "type": "i64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CommitmentRefundedEvent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign",
-            "type": "pubkey"
-          },
-          {
-            "name": "position",
-            "type": "pubkey"
-          },
-          {
-            "name": "depositor",
-            "type": "pubkey"
-          },
-          {
-            "name": "amount",
             "type": "u64"
           }
         ]
@@ -10852,6 +9146,10 @@
           {
             "name": "max_staleness_seconds",
             "type": "i64"
+          },
+          {
+            "name": "max_confidence_bps",
+            "type": "u16"
           },
           {
             "name": "haircut_bps",
@@ -10970,112 +9268,6 @@
           {
             "name": "pause_flags",
             "type": "u32"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CreateCommitmentCampaignArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "campaign_id",
-            "type": "string"
-          },
-          {
-            "name": "display_name",
-            "type": "string"
-          },
-          {
-            "name": "metadata_uri",
-            "type": "string"
-          },
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "activation_authority",
-            "type": "pubkey"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          },
-          {
-            "name": "deposit_amount",
-            "type": "u64"
-          },
-          {
-            "name": "coverage_amount",
-            "type": "u64"
-          },
-          {
-            "name": "hard_cap_amount",
-            "type": "u64"
-          },
-          {
-            "name": "starts_at_ts",
-            "type": "i64"
-          },
-          {
-            "name": "refund_after_ts",
-            "type": "i64"
-          },
-          {
-            "name": "expires_at_ts",
-            "type": "i64"
-          },
-          {
-            "name": "terms_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "CreateCommitmentPaymentRailArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "payment_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_asset_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "reserve_asset_rail",
-            "type": "pubkey"
-          },
-          {
-            "name": "coverage_funding_line",
-            "type": "pubkey"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          },
-          {
-            "name": "deposit_amount",
-            "type": "u64"
-          },
-          {
-            "name": "coverage_amount",
-            "type": "u64"
-          },
-          {
-            "name": "hard_cap_amount",
-            "type": "u64"
           }
         ]
       }
@@ -11440,24 +9632,6 @@
           {
             "name": "amount",
             "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "DepositCommitmentArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "beneficiary",
-            "type": "pubkey"
-          },
-          {
-            "name": "accepted_terms_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
           }
         ]
       }
@@ -12085,6 +10259,14 @@
           {
             "name": "queue_status",
             "type": "u8"
+          },
+          {
+            "name": "redemption_sequence",
+            "type": "u64"
+          },
+          {
+            "name": "redemption_requested_at",
+            "type": "i64"
           },
           {
             "name": "bump",
@@ -12941,24 +11123,6 @@
       }
     },
     {
-      "name": "PauseCommitmentCampaignArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "status",
-            "type": "u8"
-          },
-          {
-            "name": "reason_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          }
-        ]
-      }
-    },
-    {
       "name": "PlanReserveLedger",
       "type": {
         "kind": "struct",
@@ -13486,6 +11650,18 @@
             "type": "pubkey"
           },
           {
+            "name": "pending_governance_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_governance_proposed_at",
+            "type": "i64"
+          },
+          {
+            "name": "pending_governance_expires_at",
+            "type": "i64"
+          },
+          {
             "name": "protocol_fee_bps",
             "type": "u16"
           },
@@ -13520,6 +11696,62 @@
           {
             "name": "authority",
             "type": "pubkey"
+          },
+          {
+            "name": "audit_nonce",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolGovernanceAuthorityTransferCanceledEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "governance_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "canceled_governance_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "audit_nonce",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolGovernanceAuthorityTransferProposedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "current_governance_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_governance_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "proposed_at_ts",
+            "type": "i64"
+          },
+          {
+            "name": "expires_at_ts",
+            "type": "i64"
           },
           {
             "name": "audit_nonce",
@@ -13606,20 +11838,14 @@
           {
             "name": "asset_amount",
             "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "RefundCommitmentArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
+          },
           {
-            "name": "refund_reason_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
+            "name": "redemption_sequence",
+            "type": "u64"
+          },
+          {
+            "name": "requested_at_ts",
+            "type": "i64"
           }
         ]
       }
@@ -13778,6 +12004,10 @@
           {
             "name": "max_staleness_seconds",
             "type": "i64"
+          },
+          {
+            "name": "max_confidence_bps",
+            "type": "u16"
           },
           {
             "name": "haircut_bps",
@@ -14274,6 +12504,32 @@
           {
             "name": "amount",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SettleClaimCaseSelectedAssetArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "claim_credit_amount",
+            "type": "u64"
+          },
+          {
+            "name": "payout_amount",
+            "type": "u64"
+          },
+          {
+            "name": "max_overpay_bps",
+            "type": "u16"
+          },
+          {
+            "name": "settlement_reason_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
           }
         ]
       }

@@ -6,7 +6,7 @@
 
 # Interface: SetProtocolEmergencyPauseArgs
 
-Defined in: [src/generated/protocol\_types.ts:1271](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1271)
+Defined in: [src/generated/protocol\_types.ts:1137](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1137)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1271](https://github.com/OmegaX-He
 
 > **emergency\_pause**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:1272](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1272)
+Defined in: [src/generated/protocol\_types.ts:1138](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1138)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:1272](https://github.com/OmegaX-He
 
 > **reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:1273](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1273)
+Defined in: [src/generated/protocol\_types.ts:1139](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1139)

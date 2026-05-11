@@ -8,7 +8,7 @@
 
 > **buildOpenFundingLineTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1468](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1468)
+Defined in: [src/protocol.ts:1485](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1485)
 
 ## Parameters
 

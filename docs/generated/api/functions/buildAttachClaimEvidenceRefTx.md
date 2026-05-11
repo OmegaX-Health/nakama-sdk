@@ -8,7 +8,7 @@
 
 > **buildAttachClaimEvidenceRefTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2970](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2970)
+Defined in: [src/protocol.ts:2427](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2427)
 
 ## Parameters
 

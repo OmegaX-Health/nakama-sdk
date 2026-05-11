@@ -8,4 +8,4 @@
 
 > `const` **MEMBERSHIP\_PROOF\_MODE\_OPEN**: `0` = `0`
 
-Defined in: [src/protocol\_models.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L66)
+Defined in: [src/protocol\_models.ts:50](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L50)

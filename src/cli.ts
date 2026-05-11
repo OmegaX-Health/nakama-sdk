@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { cp, mkdir, readdir, readFile, rm } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, realpathSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -413,10 +413,19 @@ export async function runCli(argv = process.argv.slice(2)): Promise<number> {
   }
 }
 
-const isDirectRun =
-  Boolean(process.argv[1]) &&
-  import.meta.url === new URL(process.argv[1], 'file:').href;
+function isDirectCliRun(): boolean {
+  if (!process.argv[1]) return false;
 
-if (isDirectRun) {
+  try {
+    return (
+      realpathSync(fileURLToPath(import.meta.url)) ===
+      realpathSync(process.argv[1])
+    );
+  } catch {
+    return false;
+  }
+}
+
+if (isDirectCliRun()) {
   process.exitCode = await runCli();
 }

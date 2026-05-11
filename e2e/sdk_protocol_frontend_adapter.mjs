@@ -1,9 +1,21 @@
+import { PublicKey } from '@solana/web3.js';
+
 import * as protocol from '../src/protocol.js';
 import * as models from '../src/protocol_models.js';
 import * as seeds from '../src/protocol_seeds.js';
 
 const CLASSIC_SPL_TOKEN_PROGRAM_ID =
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
+const BPF_LOADER_UPGRADEABLE_PROGRAM_ID = new PublicKey(
+  'BPFLoaderUpgradeab1e11111111111111111111111',
+);
+
+export function deriveProgramDataAddress(programId = protocol.getProgramId()) {
+  return PublicKey.findProgramAddressSync(
+    [seeds.toPublicKey(programId).toBuffer()],
+    BPF_LOADER_UPGRADEABLE_PROGRAM_ID,
+  )[0];
+}
 
 function buildSettleObligationTxForSurfaceAudit(params) {
   return protocol.buildSettleObligationTx({
@@ -21,6 +33,7 @@ const adapter = Object.freeze({
   ...protocol,
   ...models,
   ...seeds,
+  deriveProgramDataAddress,
   buildSettleObligationTx: buildSettleObligationTxForSurfaceAudit,
 });
 

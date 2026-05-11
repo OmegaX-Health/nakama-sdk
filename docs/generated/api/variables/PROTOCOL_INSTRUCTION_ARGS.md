@@ -8,4 +8,4 @@
 
 > `const` **PROTOCOL\_INSTRUCTION\_ARGS**: `Record`\<[`ProtocolInstructionName`](../type-aliases/ProtocolInstructionName.md), [`ProtocolInstructionArg`](../type-aliases/ProtocolInstructionArg.md)[]\>
 
-Defined in: [src/generated/protocol\_contract.ts:242](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L242)
+Defined in: [src/generated/protocol\_contract.ts:226](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L226)

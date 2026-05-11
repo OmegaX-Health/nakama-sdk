@@ -6,7 +6,7 @@
 
 # Interface: SetPoolOraclePolicyArgs
 
-Defined in: [src/generated/protocol\_types.ts:1262](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1262)
+Defined in: [src/generated/protocol\_types.ts:1128](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1128)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1262](https://github.com/OmegaX-He
 
 > **allow\_delegate\_claim**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:1267](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1267)
+Defined in: [src/generated/protocol\_types.ts:1133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1133)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1267](https://github.com/OmegaX-He
 
 > **challenge\_window\_secs**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1268](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1268)
+Defined in: [src/generated/protocol\_types.ts:1134](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1134)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1268](https://github.com/OmegaX-He
 
 > **oracle\_fee\_bps**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1266](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1266)
+Defined in: [src/generated/protocol\_types.ts:1132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1132)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:1266](https://github.com/OmegaX-He
 
 > **quorum\_m**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1263](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1263)
+Defined in: [src/generated/protocol\_types.ts:1129](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1129)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:1263](https://github.com/OmegaX-He
 
 > **quorum\_n**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1264](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1264)
+Defined in: [src/generated/protocol\_types.ts:1130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1130)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/generated/protocol\_types.ts:1264](https://github.com/OmegaX-He
 
 > **require\_verified\_schema**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:1265](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1265)
+Defined in: [src/generated/protocol\_types.ts:1131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1131)

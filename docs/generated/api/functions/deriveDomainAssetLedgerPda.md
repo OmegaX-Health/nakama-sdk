@@ -8,7 +8,7 @@
 
 > **deriveDomainAssetLedgerPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:194](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L194)
+Defined in: [src/protocol\_seeds.ts:190](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L190)
 
 ## Parameters
 

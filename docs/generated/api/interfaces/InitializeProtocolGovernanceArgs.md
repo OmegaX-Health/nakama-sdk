@@ -6,7 +6,7 @@
 
 # Interface: InitializeProtocolGovernanceArgs
 
-Defined in: [src/generated/protocol\_types.ts:672](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L672)
+Defined in: [src/generated/protocol\_types.ts:523](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L523)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:672](https://github.com/OmegaX-Hea
 
 > **emergency\_pause**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:674](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L674)
+Defined in: [src/generated/protocol\_types.ts:525](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L525)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:674](https://github.com/OmegaX-Hea
 
 > **protocol\_fee\_bps**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:673](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L673)
+Defined in: [src/generated/protocol\_types.ts:524](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L524)

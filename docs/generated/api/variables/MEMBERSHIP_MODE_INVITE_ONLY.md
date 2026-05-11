@@ -8,4 +8,4 @@
 
 > `const` **MEMBERSHIP\_MODE\_INVITE\_ONLY**: `2` = `2`
 
-Defined in: [src/protocol\_models.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L58)
+Defined in: [src/protocol\_models.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L42)

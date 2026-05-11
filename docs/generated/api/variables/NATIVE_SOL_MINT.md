@@ -8,4 +8,4 @@
 
 > `const` **NATIVE\_SOL\_MINT**: `"So11111111111111111111111111111111111111112"` = `'So11111111111111111111111111111111111111112'`
 
-Defined in: [src/protocol\_models.ts:130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L130)
+Defined in: [src/protocol\_models.ts:114](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L114)

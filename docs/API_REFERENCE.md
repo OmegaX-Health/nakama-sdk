@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.7`.
+This page documents the public SDK surface shipped in `0.8.8`.
 
 Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
 `docs/generated/api/README.md` for generated symbol-level markdown.
@@ -44,13 +44,14 @@ Safe-client public types:
 
 - `SafeProtocolClientOptions`
 - `SafeProtocolClient`
-- `SafeDepositCommitmentTxParams`
 - `SafeFundSponsorBudgetTxParams`
 - `SafeRecordPremiumPaymentTxParams`
 - `SafeDepositIntoCapitalClassTxParams`
 - `SafeRequestRedemptionTxParams`
 - `SafeProcessRedemptionQueueTxParams`
 - `SafeSettleObligationTxParams`
+- `SafeSettleClaimCaseTxParams`
+- `SafeSettleClaimCaseSelectedAssetTxParams`
 - `SafeRegisterOracleTxParams`
 - `SafeAttestClaimCaseTxParams`
 
@@ -69,6 +70,29 @@ the caller explicitly passes `allowSigVerifyFallback: true`. Results include
 `sigVerifyRequested`, `sigVerifyUsed`, `signatureVerified`, and
 `verificationDowngraded` so intake services can reject unverified preflight
 results.
+
+## MagicBlock adjunct helpers
+
+Available from `@omegax/protocol-sdk/magicblock`; intentionally not exported
+from the root package.
+
+- `derivePrivateReviewRegistryPda(...)`
+- `derivePrivateReviewOperatorPda(...)`
+- `derivePrivateClaimReviewSessionPda(...)`
+- `buildInitializeReviewRegistryTx(...)`
+- `buildUpsertReviewOperatorTx(...)`
+- `buildOpenReviewSessionTx(...)`
+- `buildDelegateReviewSessionTx(...)`
+- `buildRecordPrivateReviewTx(...)`
+- `buildRecordPrivatePaymentRefTx(...)`
+- `buildCommitAndCloseReviewSessionTx(...)`
+- `buildMarkReviewFailedTx(...)`
+- `verifyActivePrivateReviewOperator(...)`
+- `verifyCommittedApprovedReviewSession(...)`
+
+The hardened claim-room helpers bind session PDAs to session authority, claim
+case, and session id; reviews to a registered operator; and payment references
+to a payment attestor.
 
 ## Canonical instruction builders
 
@@ -92,6 +116,8 @@ encoding.
 
 - `buildInitializeProtocolGovernanceTx(...)`
 - `buildRotateProtocolGovernanceAuthorityTx(...)`
+- `buildAcceptProtocolGovernanceAuthorityTx(...)`
+- `buildCancelProtocolGovernanceAuthorityTransferTx(...)`
 - `buildSetProtocolEmergencyPauseTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
@@ -115,14 +141,6 @@ encoding.
 - `buildOpenFundingLineTx(...)`
 - `buildFundSponsorBudgetTx(...)`
 - `buildRecordPremiumPaymentTx(...)`
-- `buildCreateCommitmentCampaignTx(...)`
-- `buildCreateCommitmentPaymentRailTx(...)`
-- `buildDepositCommitmentTx(...)`
-- `buildActivateDirectPremiumCommitmentTx(...)`
-- `buildActivateTreasuryCreditCommitmentTx(...)`
-- `buildActivateWaterfallCommitmentTx(...)`
-- `buildRefundCommitmentTx(...)`
-- `buildPauseCommitmentCampaignTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
 - `buildSettleObligationTx(...)`
@@ -134,6 +152,7 @@ encoding.
 - `buildAttachClaimEvidenceRefTx(...)`
 - `buildAdjudicateClaimCaseTx(...)`
 - `buildSettleClaimCaseTx(...)`
+- `buildSettleClaimCaseSelectedAssetTx(...)`
 - `buildAttestClaimCaseTx(...)`
 
 ### LP capital and class lifecycle
@@ -194,10 +213,6 @@ Returned by `createProtocolClient(...)`.
 - `fetchMembershipAnchorSeat(...)`
 - `fetchFundingLine(...)`
 - `fetchFundingLineLedger(...)`
-- `fetchCommitmentCampaign(...)`
-- `fetchCommitmentPaymentRail(...)`
-- `fetchCommitmentLedger(...)`
-- `fetchCommitmentPosition(...)`
 - `fetchClaimCase(...)`
 - `fetchClaimAttestation(...)`
 - `fetchObligation(...)`
@@ -241,10 +256,6 @@ Available from the root package and `@omegax/protocol-sdk/protocol_seeds`.
 - `deriveMembershipAnchorSeatPda(...)`
 - `deriveFundingLinePda(...)`
 - `deriveFundingLineLedgerPda(...)`
-- `deriveCommitmentCampaignPda(...)`
-- `deriveCommitmentPaymentRailPda(...)`
-- `deriveCommitmentLedgerPda(...)`
-- `deriveCommitmentPositionPda(...)`
 - `deriveClaimCasePda(...)`
 - `deriveClaimAttestationPda(...)`
 - `deriveObligationPda(...)`
@@ -280,10 +291,6 @@ Seed constants:
 - `SEED_MEMBERSHIP_ANCHOR_SEAT`
 - `SEED_FUNDING_LINE`
 - `SEED_FUNDING_LINE_LEDGER`
-- `SEED_COMMITMENT_CAMPAIGN`
-- `SEED_COMMITMENT_PAYMENT_RAIL`
-- `SEED_COMMITMENT_LEDGER`
-- `SEED_COMMITMENT_POSITION`
 - `SEED_CLAIM_CASE`
 - `SEED_CLAIM_ATTESTATION`
 - `SEED_OBLIGATION`
@@ -348,19 +355,6 @@ Constants:
 - `FUNDING_LINE_STATUS_OPEN`
 - `FUNDING_LINE_STATUS_PAUSED`
 - `FUNDING_LINE_STATUS_CLOSED`
-- `COMMITMENT_MODE_DIRECT_PREMIUM`
-- `COMMITMENT_MODE_TREASURY_CREDIT`
-- `COMMITMENT_MODE_WATERFALL_RESERVE`
-- `COMMITMENT_CAMPAIGN_STATUS_DRAFT`
-- `COMMITMENT_CAMPAIGN_STATUS_ACTIVE`
-- `COMMITMENT_CAMPAIGN_STATUS_PAUSED`
-- `COMMITMENT_CAMPAIGN_STATUS_CANCELED`
-- `COMMITMENT_CAMPAIGN_STATUS_CLOSED`
-- `COMMITMENT_POSITION_PENDING`
-- `COMMITMENT_POSITION_DIRECT_PREMIUM_ACTIVATED`
-- `COMMITMENT_POSITION_TREASURY_LOCKED`
-- `COMMITMENT_POSITION_REFUNDED`
-- `COMMITMENT_POSITION_WATERFALL_RESERVE_ACTIVATED`
 - `RESERVE_ASSET_ROLE_PRIMARY_STABLE`
 - `RESERVE_ASSET_ROLE_SECONDARY_STABLE`
 - `RESERVE_ASSET_ROLE_VOLATILE_COLLATERAL`

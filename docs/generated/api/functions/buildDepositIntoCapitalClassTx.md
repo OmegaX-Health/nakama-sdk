@@ -8,7 +8,7 @@
 
 > **buildDepositIntoCapitalClassTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2206](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2206)
+Defined in: [src/protocol.ts:1695](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1695)
 
 ## Parameters
 

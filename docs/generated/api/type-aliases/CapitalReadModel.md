@@ -8,7 +8,7 @@
 
 > **CapitalReadModel** = `object`
 
-Defined in: [src/protocol\_models.ts:371](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L371)
+Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L355)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:371](https://github.com/OmegaX-Health/omega
 
 > **classes**: `object`[]
 
-Defined in: [src/protocol\_models.ts:378](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L378)
+Defined in: [src/protocol\_models.ts:362](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L362)
 
 #### allocated
 
@@ -68,7 +68,7 @@ Defined in: [src/protocol\_models.ts:378](https://github.com/OmegaX-Health/omega
 
 > **liquidityPoolAddress**: `string`
 
-Defined in: [src/protocol\_models.ts:372](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L372)
+Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L356)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [src/protocol\_models.ts:372](https://github.com/OmegaX-Health/omega
 
 > **poolId**: `string`
 
-Defined in: [src/protocol\_models.ts:373](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L373)
+Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L357)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [src/protocol\_models.ts:373](https://github.com/OmegaX-Health/omega
 
 > **totalAllocated**: `bigint`
 
-Defined in: [src/protocol\_models.ts:375](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L375)
+Defined in: [src/protocol\_models.ts:359](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L359)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [src/protocol\_models.ts:375](https://github.com/OmegaX-Health/omega
 
 > **totalNav**: `bigint`
 
-Defined in: [src/protocol\_models.ts:374](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L374)
+Defined in: [src/protocol\_models.ts:358](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L358)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [src/protocol\_models.ts:374](https://github.com/OmegaX-Health/omega
 
 > **totalPendingRedemptions**: `bigint`
 
-Defined in: [src/protocol\_models.ts:377](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L377)
+Defined in: [src/protocol\_models.ts:361](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L361)
 
 ***
 
@@ -108,4 +108,4 @@ Defined in: [src/protocol\_models.ts:377](https://github.com/OmegaX-Health/omega
 
 > **totalUnallocated**: `bigint`
 
-Defined in: [src/protocol\_models.ts:376](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L376)
+Defined in: [src/protocol\_models.ts:360](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L360)

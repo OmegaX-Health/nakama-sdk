@@ -6,7 +6,7 @@
 
 # Interface: OracleProfileClaimedEvent
 
-Defined in: [src/generated/protocol\_types.ts:860](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L860)
+Defined in: [src/generated/protocol\_types.ts:713](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L713)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:860](https://github.com/OmegaX-Hea
 
 > **admin**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:863](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L863)
+Defined in: [src/generated/protocol\_types.ts:716](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L716)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:863](https://github.com/OmegaX-Hea
 
 > **oracle**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:862](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L862)
+Defined in: [src/generated/protocol\_types.ts:715](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L715)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:862](https://github.com/OmegaX-Hea
 
 > **oracle\_profile**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:861](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L861)
+Defined in: [src/generated/protocol\_types.ts:714](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L714)

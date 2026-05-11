@@ -8,7 +8,7 @@
 
 > **ReserveDomainSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:159](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L159)
+Defined in: [src/protocol\_models.ts:143](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L143)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:159](https://github.com/OmegaX-Health/omega
 
 > **active**: `boolean`
 
-Defined in: [src/protocol\_models.ts:164](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L164)
+Defined in: [src/protocol\_models.ts:148](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L148)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:164](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:160](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L160)
+Defined in: [src/protocol\_models.ts:144](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L144)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:160](https://github.com/OmegaX-Health/omega
 
 > **displayName**: `string`
 
-Defined in: [src/protocol\_models.ts:162](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L162)
+Defined in: [src/protocol\_models.ts:146](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L146)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol\_models.ts:162](https://github.com/OmegaX-Health/omega
 
 > **domainId**: `string`
 
-Defined in: [src/protocol\_models.ts:161](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L161)
+Defined in: [src/protocol\_models.ts:145](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L145)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/protocol\_models.ts:161](https://github.com/OmegaX-Health/omega
 
 > `optional` **pauseFlags?**: `number`
 
-Defined in: [src/protocol\_models.ts:165](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L165)
+Defined in: [src/protocol\_models.ts:149](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L149)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [src/protocol\_models.ts:165](https://github.com/OmegaX-Health/omega
 
 > **settlementMode**: `number`
 
-Defined in: [src/protocol\_models.ts:163](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L163)
+Defined in: [src/protocol\_models.ts:147](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L147)

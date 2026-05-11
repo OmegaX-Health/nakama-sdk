@@ -6,7 +6,7 @@
 
 # Interface: DepositIntoCapitalClassArgs
 
-Defined in: [src/generated/protocol\_types.ts:529](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L529)
+Defined in: [src/generated/protocol\_types.ts:380](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L380)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:529](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:530](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L530)
+Defined in: [src/generated/protocol\_types.ts:381](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L381)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:530](https://github.com/OmegaX-Hea
 
 > **shares**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:531](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L531)
+Defined in: [src/generated/protocol\_types.ts:382](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L382)

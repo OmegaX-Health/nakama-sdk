@@ -8,7 +8,7 @@
 
 > **buildProtocolTransaction**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:751](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L751)
+Defined in: [src/protocol.ts:750](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L750)
 
 ## Parameters
 

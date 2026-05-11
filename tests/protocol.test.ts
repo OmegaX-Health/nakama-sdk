@@ -5,6 +5,7 @@ import { BorshCoder } from '@coral-xyz/anchor';
 import {
   Keypair,
   PublicKey,
+  SystemProgram,
   type AccountInfo,
   type Commitment,
   type Connection,
@@ -12,33 +13,30 @@ import {
 
 import idl from '../src/generated/omegax_protocol.idl.json' with { type: 'json' };
 import {
-  buildActivateDirectPremiumCommitmentTx,
-  buildActivateTreasuryCreditCommitmentTx,
-  buildActivateWaterfallCommitmentTx,
+  buildAcceptProtocolGovernanceAuthorityTx,
   buildAttestClaimCaseTx,
+  buildCancelProtocolGovernanceAuthorityTransferTx,
   buildConfigureReserveAssetRailTx,
-  buildCreateCommitmentCampaignTx,
-  buildCreateCommitmentPaymentRailTx,
   buildCreateDomainAssetVaultTx,
   buildCreateObligationTx,
   buildCreatePolicySeriesTx,
   buildDepositIntoCapitalClassTx,
-  buildDepositCommitmentTx,
   buildFundSponsorBudgetTx,
+  buildInitializeProtocolGovernanceTx,
   buildInitializeSeriesReserveLedgerTx,
   buildMarkImpairmentTx,
   buildOpenClaimCaseTx,
   buildOpenFundingLineTx,
   buildOpenMemberPositionTx,
-  buildPauseCommitmentCampaignTx,
   buildPublishReserveAssetRailPriceTx,
   buildProtocolInstruction,
   buildRegisterOracleTx,
   buildReserveObligationTx,
-  buildRefundCommitmentTx,
   buildRequestRedemptionTx,
   buildProcessRedemptionQueueTx,
   buildRecordPremiumPaymentTx,
+  buildSettleClaimCaseSelectedAssetTx,
+  buildSettleClaimCaseTx,
   buildSettleObligationTx,
   buildUpdateLpPositionCredentialingTx,
   buildWithdrawPoolOracleFeeSplTx,
@@ -50,9 +48,6 @@ import {
   CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE,
   CLAIM_INTAKE_APPROVED,
   CAPITAL_CLASS_RESTRICTION_WRAPPER_ONLY,
-  COMMITMENT_CAMPAIGN_STATUS_ACTIVE,
-  COMMITMENT_MODE_WATERFALL_RESERVE,
-  COMMITMENT_POSITION_WATERFALL_RESERVE_ACTIVATED,
   FUNDING_LINE_TYPE_SPONSOR_BUDGET,
   MEMBERSHIP_MODE_INVITE_ONLY,
   NATIVE_SOL_MINT,
@@ -71,10 +66,6 @@ import {
   createSafeProtocolClient,
   decodeProtocolAccount,
   deriveClaimCasePda,
-  deriveCommitmentCampaignPda,
-  deriveCommitmentLedgerPda,
-  deriveCommitmentPaymentRailPda,
-  deriveCommitmentPositionPda,
   deriveClaimAttestationPda,
   deriveAllocationLedgerPda,
   deriveAllocationPositionPda,
@@ -156,17 +147,20 @@ test('canonical surface listings expose the new instruction and account model', 
   assert(instructionNames.includes('create_reserve_domain'));
   assert(instructionNames.includes('create_health_plan'));
   assert(instructionNames.includes('configure_reserve_asset_rail'));
-  assert(instructionNames.includes('create_commitment_campaign'));
-  assert(instructionNames.includes('deposit_commitment'));
+  assert(instructionNames.includes('accept_protocol_governance_authority'));
+  assert(
+    instructionNames.includes('cancel_protocol_governance_authority_transfer'),
+  );
+  assert(instructionNames.includes('settle_claim_case_selected_asset'));
   assert(instructionNames.includes('create_liquidity_pool'));
   assert(!instructionNames.includes('create_pool' as never));
+  assert(!instructionNames.includes('create_commitment_campaign' as never));
 
   assert(accountNames.includes('ReserveDomain'));
   assert(accountNames.includes('HealthPlan'));
   assert(accountNames.includes('ReserveAssetRail'));
-  assert(accountNames.includes('CommitmentCampaign'));
-  assert(accountNames.includes('CommitmentPosition'));
   assert(accountNames.includes('LiquidityPool'));
+  assert(!accountNames.includes('CommitmentCampaign' as never));
 });
 
 test('PDA helpers match manual derivation under canonical seeds', () => {
@@ -183,8 +177,6 @@ test('PDA helpers match manual derivation under canonical seeds', () => {
     poolId: 'omega-health-income',
   });
   const assetMint = Keypair.generate().publicKey;
-  const depositor = Keypair.generate().publicKey;
-  const beneficiary = Keypair.generate().publicKey;
   const domainAssetVaultToken = deriveDomainAssetVaultTokenAccountPda({
     reserveDomain,
     assetMint,
@@ -225,23 +217,6 @@ test('PDA helpers match manual derivation under canonical seeds', () => {
     capitalClass: Keypair.generate().publicKey,
     fundingLine: Keypair.generate().publicKey,
   });
-  const commitmentCampaign = deriveCommitmentCampaignPda({
-    healthPlan,
-    campaignId: 'founder-travel30',
-  });
-  const commitmentPaymentRail = deriveCommitmentPaymentRailPda({
-    campaign: commitmentCampaign,
-    paymentAssetMint: assetMint,
-  });
-  const commitmentLedger = deriveCommitmentLedgerPda({
-    campaign: commitmentCampaign,
-    paymentAssetMint: assetMint,
-  });
-  const commitmentPosition = deriveCommitmentPositionPda({
-    campaign: commitmentCampaign,
-    depositor,
-    beneficiary,
-  });
 
   const [manualGovernance] = PublicKey.findProgramAddressSync(
     [Buffer.from('protocol_governance')],
@@ -275,13 +250,6 @@ test('PDA helpers match manual derivation under canonical seeds', () => {
   assert.match(poolOraclePolicy.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
   assert.match(outcomeSchema.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
   assert.match(allocation.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
-  assert.match(commitmentCampaign.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
-  assert.match(
-    commitmentPaymentRail.toBase58(),
-    /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
-  );
-  assert.match(commitmentLedger.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
-  assert.match(commitmentPosition.toBase58(), /^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
 });
 
 test('decodeProtocolAccount normalizes pubkeys and bigints for canonical readers', async () => {
@@ -453,10 +421,7 @@ test('buildOpenClaimCaseTx includes protocol governance and derived claim case a
   assert.equal(keys[5]?.isWritable, true);
 });
 
-test('protocol model constants expose commitment, reserve rail, membership, oracle, and schema values', () => {
-  assert.equal(COMMITMENT_MODE_WATERFALL_RESERVE, 2);
-  assert.equal(COMMITMENT_CAMPAIGN_STATUS_ACTIVE, 1);
-  assert.equal(COMMITMENT_POSITION_WATERFALL_RESERVE_ACTIVATED, 4);
+test('protocol model constants expose reserve rail, membership, oracle, and schema values', () => {
   assert.equal(RESERVE_ASSET_ROLE_VOLATILE_COLLATERAL, 2);
   assert.equal(RESERVE_ORACLE_SOURCE_GOVERNANCE_ATTESTED, 3);
   assert.equal(MEMBERSHIP_MODE_INVITE_ONLY, 2);
@@ -721,11 +686,11 @@ test('buildSettleObligationTx includes oracle-fee optional account slots', () =>
 
   const noFeeKeys =
     buildSettleObligationTx(baseParams).instructions[0]?.keys ?? [];
-  assert.equal(noFeeKeys.length, 22);
-  assert.equal(noFeeKeys[19]?.pubkey.toBase58(), getProgramId().toBase58());
-  assert.equal(noFeeKeys[19]?.isWritable, false);
+  assert.equal(noFeeKeys.length, 23);
   assert.equal(noFeeKeys[20]?.pubkey.toBase58(), getProgramId().toBase58());
+  assert.equal(noFeeKeys[20]?.isWritable, false);
   assert.equal(noFeeKeys[21]?.pubkey.toBase58(), getProgramId().toBase58());
+  assert.equal(noFeeKeys[22]?.pubkey.toBase58(), getProgramId().toBase58());
 
   const feeKeys =
     buildSettleObligationTx({
@@ -735,19 +700,19 @@ test('buildSettleObligationTx includes oracle-fee optional account slots', () =>
       poolOraclePolicyAddress,
       oracleFeeAttestationAddress,
     }).instructions[0]?.keys ?? [];
-  assert.equal(feeKeys.length, 22);
-  assert.equal(
-    feeKeys[19]?.pubkey.toBase58(),
-    poolOracleFeeVaultAddress.toBase58(),
-  );
-  assert.equal(feeKeys[19]?.isWritable, true);
+  assert.equal(feeKeys.length, 23);
   assert.equal(
     feeKeys[20]?.pubkey.toBase58(),
-    poolOraclePolicyAddress.toBase58(),
+    poolOracleFeeVaultAddress.toBase58(),
   );
-  assert.equal(feeKeys[20]?.isWritable, false);
+  assert.equal(feeKeys[20]?.isWritable, true);
   assert.equal(
     feeKeys[21]?.pubkey.toBase58(),
+    poolOraclePolicyAddress.toBase58(),
+  );
+  assert.equal(feeKeys[21]?.isWritable, false);
+  assert.equal(
+    feeKeys[22]?.pubkey.toBase58(),
     oracleFeeAttestationAddress.toBase58(),
   );
   assert.equal(feeKeys[21]?.isWritable, false);
@@ -1107,7 +1072,7 @@ test('buildOpenMemberPositionTx keeps invite authority as an optional signer', (
   });
 
   const keys = tx.instructions[0]?.keys ?? [];
-  const inviteAuthority = keys[6];
+  const inviteAuthority = keys[7];
   assert.equal(
     inviteAuthority?.pubkey.toBase58(),
     inviteAuthorityAddress.toBase58(),
@@ -1142,7 +1107,7 @@ test('buildOpenMemberPositionTx derives member anchor accounts with the selected
     deriveProtocolGovernancePda(programId).toBase58(),
   );
   assert.equal(
-    keys[3]?.pubkey.toBase58(),
+    keys[4]?.pubkey.toBase58(),
     deriveMemberPositionPda({
       healthPlan: healthPlanAddress,
       wallet,
@@ -1150,14 +1115,14 @@ test('buildOpenMemberPositionTx derives member anchor accounts with the selected
     }).toBase58(),
   );
   assert.equal(
-    keys[4]?.pubkey.toBase58(),
+    keys[5]?.pubkey.toBase58(),
     deriveMembershipAnchorSeatPda({
       healthPlan: healthPlanAddress,
       anchorRef: anchorRefAddress,
       programId,
     }).toBase58(),
   );
-  for (const index of [5, 6]) {
+  for (const index of [3, 6, 7]) {
     assert.equal(keys[index]?.pubkey.toBase58(), programId.toBase58());
     assert.equal(keys[index]?.isSigner, false);
     assert.equal(keys[index]?.isWritable, false);
@@ -1273,8 +1238,9 @@ test('policy and funding builders derive PDAs with the selected program id', () 
       programId,
     }).toBase58(),
   );
+  assert.equal(fundingKeys[8]?.pubkey.toBase58(), policySeries.toBase58());
   assert.equal(
-    fundingKeys[8]?.pubkey.toBase58(),
+    fundingKeys[9]?.pubkey.toBase58(),
     deriveSeriesReserveLedgerPda({
       policySeries,
       assetMint,
@@ -1337,7 +1303,7 @@ test('obligation, impairment, and LP builders derive PDAs with the selected prog
     }).toBase58(),
   );
   assert.equal(
-    obligationKeys[8]?.pubkey.toBase58(),
+    obligationKeys[10]?.pubkey.toBase58(),
     derivePoolClassLedgerPda({
       capitalClass: capitalClassAddress,
       assetMint: poolAssetMint,
@@ -1345,7 +1311,7 @@ test('obligation, impairment, and LP builders derive PDAs with the selected prog
     }).toBase58(),
   );
   assert.equal(
-    obligationKeys[9]?.pubkey.toBase58(),
+    obligationKeys[12]?.pubkey.toBase58(),
     deriveAllocationLedgerPda({
       allocationPosition: allocationPositionAddress,
       assetMint,
@@ -1353,7 +1319,7 @@ test('obligation, impairment, and LP builders derive PDAs with the selected prog
     }).toBase58(),
   );
   assert.equal(
-    obligationKeys[10]?.pubkey.toBase58(),
+    obligationKeys[13]?.pubkey.toBase58(),
     deriveObligationPda({
       fundingLine: fundingLineAddress,
       obligationId,
@@ -1463,54 +1429,87 @@ test('buildCreateDomainAssetVaultTx derives the protocol-owned vault token accou
   );
 });
 
-test('reserve rail and commitment builders derive canonical rail and campaign accounts', () => {
+test('reserve rail, governance, and claim settlement builders derive canonical accounts', () => {
   assert.equal(typeof buildPublishReserveAssetRailPriceTx, 'function');
   assert.equal(typeof buildInitializeSeriesReserveLedgerTx, 'function');
-  assert.equal(typeof buildCreateCommitmentPaymentRailTx, 'function');
-  assert.equal(typeof buildActivateDirectPremiumCommitmentTx, 'function');
-  assert.equal(typeof buildActivateTreasuryCreditCommitmentTx, 'function');
-  assert.equal(typeof buildRefundCommitmentTx, 'function');
-  assert.equal(typeof buildPauseCommitmentCampaignTx, 'function');
+  assert.equal(typeof buildSettleClaimCaseTx, 'function');
+  assert.equal(typeof buildSettleClaimCaseSelectedAssetTx, 'function');
+  assert.equal(typeof buildAcceptProtocolGovernanceAuthorityTx, 'function');
+  assert.equal(
+    typeof buildCancelProtocolGovernanceAuthorityTransferTx,
+    'function',
+  );
 
   const authority = Keypair.generate().publicKey;
-  const depositor = Keypair.generate().publicKey;
-  const beneficiary = Keypair.generate().publicKey;
+  const pendingAuthority = Keypair.generate().publicKey;
   const reserveDomainAddress = Keypair.generate().publicKey;
   const healthPlanAddress = Keypair.generate().publicKey;
-  const coverageFundingLineAddress = Keypair.generate().publicKey;
+  const fundingLineAddress = Keypair.generate().publicKey;
   const policySeriesAddress = Keypair.generate().publicKey;
-  const paymentAssetMint = Keypair.generate().publicKey;
-  const coverageAssetMint = Keypair.generate().publicKey;
-  const sourceTokenAccountAddress = Keypair.generate().publicKey;
-  const campaignId = 'founder-travel30';
+  const claimAssetMint = Keypair.generate().publicKey;
+  const payoutAssetMint = Keypair.generate().publicKey;
+  const claimCaseAddress = Keypair.generate().publicKey;
+  const memberPositionAddress = Keypair.generate().publicKey;
+  const obligationAddress = Keypair.generate().publicKey;
+  const vaultTokenAccountAddress = Keypair.generate().publicKey;
+  const payoutVaultTokenAccountAddress = Keypair.generate().publicKey;
+  const recipientTokenAccountAddress = Keypair.generate().publicKey;
   const recentBlockhash = '11111111111111111111111111111111';
-  const campaign = deriveCommitmentCampaignPda({
-    healthPlan: healthPlanAddress,
-    campaignId,
+
+  const initializeTx = buildInitializeProtocolGovernanceTx({
+    governanceAuthority: authority,
+    protocolFeeBps: 25,
+    emergencyPaused: false,
+    recentBlockhash,
   });
-  const paymentRail = deriveCommitmentPaymentRailPda({
-    campaign,
-    paymentAssetMint,
+  assert.equal(
+    initializeTx.instructions[0]?.keys[2]?.pubkey.toBase58(),
+    getProgramId().toBase58(),
+  );
+  assert.equal(
+    initializeTx.instructions[0]?.keys[4]?.pubkey.toBase58(),
+    SystemProgram.programId.toBase58(),
+  );
+
+  const acceptTx = buildAcceptProtocolGovernanceAuthorityTx({
+    pendingAuthority,
+    recentBlockhash,
   });
-  const ledger = deriveCommitmentLedgerPda({
-    campaign,
-    paymentAssetMint,
+  assert.equal(
+    acceptTx.instructions[0]?.keys[0]?.pubkey.toBase58(),
+    pendingAuthority.toBase58(),
+  );
+  assert.equal(acceptTx.instructions[0]?.keys[1]?.isWritable, true);
+
+  const cancelTx = buildCancelProtocolGovernanceAuthorityTransferTx({
+    authority,
+    recentBlockhash,
   });
-  const position = deriveCommitmentPositionPda({
-    campaign,
-    depositor,
-    beneficiary,
+  assert.equal(
+    cancelTx.instructions[0]?.keys[0]?.pubkey.toBase58(),
+    authority.toBase58(),
+  );
+  assert.equal(cancelTx.instructions[0]?.keys[1]?.isWritable, true);
+
+  const claimRail = deriveReserveAssetRailPda({
+    reserveDomain: reserveDomainAddress,
+    assetMint: claimAssetMint,
+  });
+  const payoutRail = deriveReserveAssetRailPda({
+    reserveDomain: reserveDomainAddress,
+    assetMint: payoutAssetMint,
   });
 
   const configureTx = buildConfigureReserveAssetRailTx({
     authority,
     reserveDomainAddress,
-    assetMint: paymentAssetMint,
+    assetMint: claimAssetMint,
     assetSymbol: 'USDC',
     role: 0,
     payoutPriority: 1,
     oracleSource: 3,
     maxStalenessSeconds: 300n,
+    maxConfidenceBps: 100,
     haircutBps: 0,
     maxExposureBps: 10_000,
     depositEnabled: true,
@@ -1521,100 +1520,96 @@ test('reserve rail and commitment builders derive canonical rail and campaign ac
   });
   assert.equal(
     configureTx.instructions[0]?.keys[3]?.pubkey.toBase58(),
-    deriveReserveAssetRailPda({
-      reserveDomain: reserveDomainAddress,
-      assetMint: paymentAssetMint,
-    }).toBase58(),
-  );
-
-  const createCampaignTx = buildCreateCommitmentCampaignTx({
-    authority,
-    healthPlanAddress,
-    reserveDomainAddress,
-    coverageFundingLineAddress,
-    paymentAssetMint,
-    coverageAssetMint,
-    activationAuthority: authority,
-    campaignId,
-    displayName: 'Founder Travel30',
-    metadataUri: 'ipfs://campaign',
-    mode: 2,
-    depositAmount: 100n,
-    coverageAmount: 1_000n,
-    hardCapAmount: 10_000n,
-    startsAtTs: 1n,
-    refundAfterTs: 2n,
-    expiresAtTs: 3n,
-    recentBlockhash,
-  });
-  assert.equal(
-    createCampaignTx.instructions[0]?.keys[9]?.pubkey.toBase58(),
-    campaign.toBase58(),
-  );
-  assert.equal(
-    createCampaignTx.instructions[0]?.keys[10]?.pubkey.toBase58(),
-    paymentRail.toBase58(),
-  );
-  assert.equal(
-    createCampaignTx.instructions[0]?.keys[11]?.pubkey.toBase58(),
-    ledger.toBase58(),
+    claimRail.toBase58(),
   );
 
   const seriesLedgerTx = buildInitializeSeriesReserveLedgerTx({
     authority,
     healthPlanAddress,
     policySeriesAddress,
-    assetMint: paymentAssetMint,
+    assetMint: claimAssetMint,
     recentBlockhash,
   });
   assert.equal(
     seriesLedgerTx.instructions[0]?.keys[4]?.pubkey.toBase58(),
     deriveSeriesReserveLedgerPda({
       policySeries: policySeriesAddress,
-      assetMint: paymentAssetMint,
+      assetMint: claimAssetMint,
     }).toBase58(),
   );
 
-  const depositTx = buildDepositCommitmentTx({
-    depositor,
+  const settleTx = buildSettleClaimCaseTx({
+    authority,
     reserveDomainAddress,
-    paymentAssetMint,
-    sourceTokenAccountAddress,
-    beneficiary,
     healthPlanAddress,
-    campaignId,
+    fundingLineAddress,
+    assetMint: claimAssetMint,
+    claimCaseAddress,
+    memberPositionAddress,
+    obligationAddress,
+    policySeriesAddress,
+    vaultTokenAccountAddress,
+    recipientTokenAccountAddress,
+    tokenProgramId: SPL_TOKEN_PROGRAM_ID,
+    amount: 1_000n,
     recentBlockhash,
   });
   assert.equal(
-    depositTx.instructions[0]?.keys[1]?.pubkey.toBase58(),
-    deriveProtocolGovernancePda().toBase58(),
+    settleTx.instructions[0]?.keys[3]?.pubkey.toBase58(),
+    claimRail.toBase58(),
   );
   assert.equal(
-    depositTx.instructions[0]?.keys[6]?.pubkey.toBase58(),
-    position.toBase58(),
-  );
-
-  const activateTx = buildActivateWaterfallCommitmentTx({
-    activationAuthority: authority,
-    healthPlanAddress,
-    reserveDomainAddress,
-    coverageFundingLineAddress,
-    paymentAssetMint,
-    coverageAssetMint,
-    positionAddress: position,
-    campaignId,
-    recentBlockhash,
-  });
-  assert.equal(
-    activateTx.instructions[0]?.keys[3]?.pubkey.toBase58(),
-    campaign.toBase58(),
+    settleTx.instructions[0]?.keys[13]?.pubkey.toBase58(),
+    claimCaseAddress.toBase58(),
   );
   assert.equal(
-    activateTx.instructions[0]?.keys[5]?.pubkey.toBase58(),
-    deriveReserveAssetRailPda({
+    settleTx.instructions[0]?.keys[15]?.pubkey.toBase58(),
+    deriveProtocolFeeVaultPda({
       reserveDomain: reserveDomainAddress,
-      assetMint: paymentAssetMint,
+      assetMint: claimAssetMint,
     }).toBase58(),
+  );
+  assert.equal(
+    settleTx.instructions[0]?.keys[19]?.pubkey.toBase58(),
+    memberPositionAddress.toBase58(),
+  );
+
+  const selectedAssetTx = buildSettleClaimCaseSelectedAssetTx({
+    authority,
+    reserveDomainAddress,
+    healthPlanAddress,
+    claimCaseAddress,
+    memberPositionAddress,
+    claimAssetMint,
+    payoutAssetMint,
+    payoutFundingLineAddress: fundingLineAddress,
+    payoutVaultTokenAccountAddress,
+    recipientTokenAccountAddress,
+    tokenProgramId: SPL_TOKEN_PROGRAM_ID,
+    policySeriesAddress,
+    claimCreditAmount: 1_000n,
+    payoutAmount: 990n,
+    maxOverpayBps: 50,
+    recentBlockhash,
+  });
+  assert.equal(
+    selectedAssetTx.instructions[0]?.keys[3]?.pubkey.toBase58(),
+    claimRail.toBase58(),
+  );
+  assert.equal(
+    selectedAssetTx.instructions[0]?.keys[4]?.pubkey.toBase58(),
+    payoutRail.toBase58(),
+  );
+  assert.equal(
+    selectedAssetTx.instructions[0]?.keys[10]?.pubkey.toBase58(),
+    deriveSeriesReserveLedgerPda({
+      policySeries: policySeriesAddress,
+      assetMint: payoutAssetMint,
+    }).toBase58(),
+  );
+  assert.equal(
+    selectedAssetTx.instructions[0]?.keys[15]?.pubkey.toBase58(),
+    payoutVaultTokenAccountAddress.toBase58(),
   );
 });
 

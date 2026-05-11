@@ -8,4 +8,4 @@
 
 > `const` **RESERVE\_ORACLE\_SOURCE\_CHAINLINK\_DATA\_STREAM**: `1` = `1`
 
-Defined in: [src/protocol\_models.ts:47](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L47)
+Defined in: [src/protocol\_models.ts:31](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L31)

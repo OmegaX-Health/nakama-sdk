@@ -8,7 +8,7 @@
 
 > **buildProcessRedemptionQueueTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2319](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2319)
+Defined in: [src/protocol.ts:1808](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1808)
 
 ## Parameters
 

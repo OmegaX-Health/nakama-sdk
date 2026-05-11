@@ -8,7 +8,7 @@
 
 > **deriveLiquidityPoolPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:438](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L438)
+Defined in: [src/protocol\_seeds.ts:372](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L372)
 
 ## Parameters
 

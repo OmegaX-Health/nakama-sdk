@@ -8,4 +8,4 @@
 
 > `const` **OBLIGATION\_STATUS\_SETTLED**: `3` = `3`
 
-Defined in: [src/protocol\_models.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L87)
+Defined in: [src/protocol\_models.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L71)

@@ -8,4 +8,4 @@
 
 > `const` **PAUSE\_FLAG\_ALLOCATION\_FREEZE**: `number`
 
-Defined in: [src/protocol\_models.ts:114](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L114)
+Defined in: [src/protocol\_models.ts:98](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L98)

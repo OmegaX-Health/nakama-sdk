@@ -8,4 +8,4 @@
 
 > `const` **PAUSE\_FLAG\_ORACLE\_FINALITY\_HOLD**: `number`
 
-Defined in: [src/protocol\_models.ts:113](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L113)
+Defined in: [src/protocol\_models.ts:97](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L97)

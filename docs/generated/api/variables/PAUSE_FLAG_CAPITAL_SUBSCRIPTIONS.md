@@ -8,4 +8,4 @@
 
 > `const` **PAUSE\_FLAG\_CAPITAL\_SUBSCRIPTIONS**: `number`
 
-Defined in: [src/protocol\_models.ts:111](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L111)
+Defined in: [src/protocol\_models.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L95)

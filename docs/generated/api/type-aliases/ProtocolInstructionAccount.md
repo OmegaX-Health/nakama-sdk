@@ -8,7 +8,7 @@
 
 > **ProtocolInstructionAccount** = `object`
 
-Defined in: [src/generated/protocol\_contract.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L79)
+Defined in: [src/generated/protocol\_contract.ts:74](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L74)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/generated/protocol\_contract.ts:79](https://github.com/OmegaX-H
 
 > `optional` **address?**: `string`
 
-Defined in: [src/generated/protocol\_contract.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L84)
+Defined in: [src/generated/protocol\_contract.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L79)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/generated/protocol\_contract.ts:84](https://github.com/OmegaX-H
 
 > **name**: `string`
 
-Defined in: [src/generated/protocol\_contract.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L80)
+Defined in: [src/generated/protocol\_contract.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L75)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/generated/protocol\_contract.ts:80](https://github.com/OmegaX-H
 
 > **optional**: `boolean`
 
-Defined in: [src/generated/protocol\_contract.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L83)
+Defined in: [src/generated/protocol\_contract.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L78)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/generated/protocol\_contract.ts:83](https://github.com/OmegaX-H
 
 > `optional` **pdaSeeds?**: `object`[]
 
-Defined in: [src/generated/protocol\_contract.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L85)
+Defined in: [src/generated/protocol\_contract.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L80)
 
 #### kind
 
@@ -60,7 +60,7 @@ Defined in: [src/generated/protocol\_contract.ts:85](https://github.com/OmegaX-H
 
 > **signer**: `boolean`
 
-Defined in: [src/generated/protocol\_contract.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L82)
+Defined in: [src/generated/protocol\_contract.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L77)
 
 ***
 
@@ -68,4 +68,4 @@ Defined in: [src/generated/protocol\_contract.ts:82](https://github.com/OmegaX-H
 
 > **writable**: `boolean`
 
-Defined in: [src/generated/protocol\_contract.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L81)
+Defined in: [src/generated/protocol\_contract.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L76)

@@ -8,7 +8,7 @@
 
 > **PartialReserveBalanceSheet** = `Partial`\<[`NormalizedReserveBalanceSheet`](NormalizedReserveBalanceSheet.md)\> & `object`
 
-Defined in: [src/protocol\_models.ts:147](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L147)
+Defined in: [src/protocol\_models.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L131)
 
 ## Type Declaration
 

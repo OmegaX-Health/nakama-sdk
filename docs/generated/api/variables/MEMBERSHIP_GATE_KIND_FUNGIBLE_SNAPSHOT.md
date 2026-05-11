@@ -8,4 +8,4 @@
 
 > `const` **MEMBERSHIP\_GATE\_KIND\_FUNGIBLE\_SNAPSHOT**: `4` = `4`
 
-Defined in: [src/protocol\_models.ts:64](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L64)
+Defined in: [src/protocol\_models.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L48)

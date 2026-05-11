@@ -6,7 +6,7 @@
 
 # Interface: PolicySeriesCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:955](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L955)
+Defined in: [src/generated/protocol\_types.ts:803](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L803)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:955](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:958](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L958)
+Defined in: [src/generated/protocol\_types.ts:806](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L806)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:958](https://github.com/OmegaX-Hea
 
 > **health\_plan**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:956](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L956)
+Defined in: [src/generated/protocol\_types.ts:804](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L804)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:956](https://github.com/OmegaX-Hea
 
 > **mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:959](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L959)
+Defined in: [src/generated/protocol\_types.ts:807](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L807)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:959](https://github.com/OmegaX-Hea
 
 > **policy\_series**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:957](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L957)
+Defined in: [src/generated/protocol\_types.ts:805](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L805)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:957](https://github.com/OmegaX-Hea
 
 > **terms\_version**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:960](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L960)
+Defined in: [src/generated/protocol\_types.ts:808](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L808)

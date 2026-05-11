@@ -8,7 +8,7 @@
 
 > **deriveOutcomeSchemaPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:631](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L631)
+Defined in: [src/protocol\_seeds.ts:565](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L565)
 
 ## Parameters
 

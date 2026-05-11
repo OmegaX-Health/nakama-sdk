@@ -8,7 +8,7 @@
 
 > **shortenAddress**(`address`, `size?`): `string`
 
-Defined in: [src/protocol\_models.ts:864](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L864)
+Defined in: [src/protocol\_models.ts:848](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L848)
 
 ## Parameters
 

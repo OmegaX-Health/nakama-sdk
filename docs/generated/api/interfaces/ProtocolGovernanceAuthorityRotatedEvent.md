@@ -6,7 +6,7 @@
 
 # Interface: ProtocolGovernanceAuthorityRotatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:1069](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1069)
+Defined in: [src/generated/protocol\_types.ts:920](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L920)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1069](https://github.com/OmegaX-He
 
 > **audit\_nonce**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1073](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1073)
+Defined in: [src/generated/protocol\_types.ts:924](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L924)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1073](https://github.com/OmegaX-He
 
 > **authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1072](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1072)
+Defined in: [src/generated/protocol\_types.ts:923](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L923)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1072](https://github.com/OmegaX-He
 
 > **new\_governance\_authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1071](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1071)
+Defined in: [src/generated/protocol\_types.ts:922](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L922)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1071](https://github.com/OmegaX-He
 
 > **previous\_governance\_authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1070](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1070)
+Defined in: [src/generated/protocol\_types.ts:921](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L921)

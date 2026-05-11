@@ -41,10 +41,6 @@ import {
   deriveAllocationPositionPda,
   deriveClaimAttestationPda,
   deriveClaimCasePda,
-  deriveCommitmentCampaignPda,
-  deriveCommitmentLedgerPda,
-  deriveCommitmentPaymentRailPda,
-  deriveCommitmentPositionPda,
   deriveDomainAssetLedgerPda,
   deriveDomainAssetVaultTokenAccountPda,
   deriveDomainAssetVaultPda,
@@ -112,6 +108,9 @@ const CODER = new BorshCoder(protocolIdl as never);
 const ZERO_HASH_HEX = '00'.repeat(32);
 const SPL_TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+);
+const BPF_LOADER_UPGRADEABLE_PROGRAM_ID = new PublicKey(
+  'BPFLoaderUpgradeab1e11111111111111111111111',
 );
 export const UNSAFE_CUSTOM_PROGRAM_ID_ENV =
   'OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID';
@@ -907,15 +906,36 @@ function optionalProtocolAccount(
     : { pubkey: undefined, isWritable: false };
 }
 
+function nonZeroProtocolAccount(
+  pubkey?: PublicKeyish | null,
+): PublicKey | undefined {
+  if (!pubkey) return undefined;
+  const key = toPublicKey(pubkey);
+  return key.equals(ZERO_PUBKEY_KEY) ? undefined : key;
+}
+
+function optionalNonZeroProtocolAccount(
+  pubkey?: PublicKeyish | null,
+  isWritable = false,
+  isSigner = false,
+): ProtocolInstructionAccountInput {
+  return optionalProtocolAccount(
+    nonZeroProtocolAccount(pubkey),
+    isWritable,
+    isSigner,
+  );
+}
+
 function optionalSeriesReserveLedgerAccount(
   policySeriesAddress: PublicKeyish | null | undefined,
   assetMint: PublicKeyish | null | undefined,
   programId?: PublicKeyish,
 ): ProtocolInstructionAccountInput {
-  if (!policySeriesAddress || !assetMint) return optionalProtocolAccount();
+  const policySeries = nonZeroProtocolAccount(policySeriesAddress);
+  if (!policySeries || !assetMint) return optionalProtocolAccount();
   return optionalProtocolAccount(
     deriveSeriesReserveLedgerPda({
-      policySeries: policySeriesAddress,
+      policySeries,
       assetMint,
       programId,
     }),
@@ -958,6 +978,7 @@ function optionalAllocationLedgerAccount(
 
 export type SettlementOutflowAccounts = {
   memberPositionAddress: PublicKeyish;
+  reserveAssetRailAddress?: PublicKeyish | null;
   vaultTokenAccountAddress: PublicKeyish;
   recipientTokenAccountAddress: PublicKeyish;
   tokenProgramId: PublicKeyish;
@@ -1004,74 +1025,26 @@ function tokenProgramAddress(tokenProgramId?: PublicKeyish | null): PublicKey {
   return classicTokenProgramId(tokenProgramId);
 }
 
-function commitmentCampaignAddress(params: {
-  campaignAddress?: PublicKeyish | null;
-  healthPlanAddress?: PublicKeyish | null;
-  campaignId?: string | null;
+function reserveAssetRailAddress(params: {
+  reserveDomainAddress: PublicKeyish;
+  assetMint: PublicKeyish;
+  reserveAssetRailAddress?: PublicKeyish | null;
   programId?: PublicKeyish;
 }): PublicKey {
-  if (params.campaignAddress) return toPublicKey(params.campaignAddress);
-  if (params.healthPlanAddress && params.campaignId) {
-    return deriveCommitmentCampaignPda({
-      healthPlan: params.healthPlanAddress,
-      campaignId: params.campaignId,
-      programId: params.programId,
-    });
-  }
-  throw new Error(
-    'commitment campaign builder requires campaignAddress or healthPlanAddress + campaignId',
-  );
-}
-
-function commitmentLedgerAddress(params: {
-  ledgerAddress?: PublicKeyish | null;
-  campaignAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  programId?: PublicKeyish;
-}): PublicKey {
-  return params.ledgerAddress
-    ? toPublicKey(params.ledgerAddress)
-    : deriveCommitmentLedgerPda({
-        campaign: params.campaignAddress,
-        paymentAssetMint: params.paymentAssetMint,
+  return params.reserveAssetRailAddress
+    ? toPublicKey(params.reserveAssetRailAddress)
+    : deriveReserveAssetRailPda({
+        reserveDomain: params.reserveDomainAddress,
+        assetMint: params.assetMint,
         programId: params.programId,
       });
 }
 
-function commitmentPaymentRailAddress(params: {
-  paymentRailAddress?: PublicKeyish | null;
-  campaignAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  programId?: PublicKeyish;
-}): PublicKey {
-  return params.paymentRailAddress
-    ? toPublicKey(params.paymentRailAddress)
-    : deriveCommitmentPaymentRailPda({
-        campaign: params.campaignAddress,
-        paymentAssetMint: params.paymentAssetMint,
-        programId: params.programId,
-      });
-}
-
-function commitmentPositionAddress(params: {
-  positionAddress?: PublicKeyish | null;
-  campaignAddress: PublicKeyish;
-  depositor?: PublicKeyish | null;
-  beneficiary?: PublicKeyish | null;
-  programId?: PublicKeyish;
-}): PublicKey {
-  if (params.positionAddress) return toPublicKey(params.positionAddress);
-  if (params.depositor && params.beneficiary) {
-    return deriveCommitmentPositionPda({
-      campaign: params.campaignAddress,
-      depositor: params.depositor,
-      beneficiary: params.beneficiary,
-      programId: params.programId,
-    });
-  }
-  throw new Error(
-    'commitment position builder requires positionAddress or depositor + beneficiary',
-  );
+function deriveProgramDataAddress(programId: PublicKeyish): PublicKey {
+  return PublicKey.findProgramAddressSync(
+    [toPublicKey(programId).toBuffer()],
+    BPF_LOADER_UPGRADEABLE_PROGRAM_ID,
+  )[0];
 }
 
 export function buildInitializeProtocolGovernanceTx(params: {
@@ -1095,7 +1068,49 @@ export function buildInitializeProtocolGovernanceTx(params: {
     accounts: [
       { pubkey: governanceAuthority, isSigner: true, isWritable: true },
       { pubkey: deriveProtocolGovernancePda(programId), isWritable: true },
+      { pubkey: programId },
+      { pubkey: deriveProgramDataAddress(programId) },
       { pubkey: SystemProgram.programId },
+    ],
+  });
+}
+
+export function buildAcceptProtocolGovernanceAuthorityTx(params: {
+  pendingAuthority: PublicKeyish;
+  recentBlockhash: string;
+  programId?: PublicKeyish;
+}): Transaction {
+  const pendingAuthority = toPublicKey(params.pendingAuthority);
+  const programId = params.programId ?? getProgramId();
+  return buildOrderedTransaction({
+    feePayer: pendingAuthority,
+    recentBlockhash: params.recentBlockhash,
+    instructionName: 'accept_protocol_governance_authority',
+    programId,
+    args: {},
+    accounts: [
+      { pubkey: pendingAuthority, isSigner: true },
+      { pubkey: deriveProtocolGovernancePda(programId), isWritable: true },
+    ],
+  });
+}
+
+export function buildCancelProtocolGovernanceAuthorityTransferTx(params: {
+  authority: PublicKeyish;
+  recentBlockhash: string;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const programId = params.programId ?? getProgramId();
+  return buildOrderedTransaction({
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    instructionName: 'cancel_protocol_governance_authority_transfer',
+    programId,
+    args: {},
+    accounts: [
+      { pubkey: authority, isSigner: true },
+      { pubkey: deriveProtocolGovernancePda(programId), isWritable: true },
     ],
   });
 }
@@ -1220,6 +1235,7 @@ export function buildConfigureReserveAssetRailTx(params: {
   oracleSource: number;
   oracleFeedIdHex?: string | null;
   maxStalenessSeconds: bigint;
+  maxConfidenceBps: number;
   haircutBps: number;
   maxExposureBps: number;
   depositEnabled: boolean;
@@ -1252,6 +1268,7 @@ export function buildConfigureReserveAssetRailTx(params: {
         ),
       ),
       max_staleness_seconds: params.maxStalenessSeconds,
+      max_confidence_bps: params.maxConfidenceBps,
       haircut_bps: params.haircutBps,
       max_exposure_bps: params.maxExposureBps,
       deposit_enabled: params.depositEnabled,
@@ -1542,541 +1559,13 @@ export function buildOpenFundingLineTx(params: {
         }),
         isWritable: true,
       },
+      optionalNonZeroProtocolAccount(params.policySeriesAddress),
       optionalSeriesReserveLedgerAccount(
         params.policySeriesAddress,
         assetMint,
         programId,
       ),
       { pubkey: SystemProgram.programId },
-    ],
-  });
-}
-
-export function buildCreateCommitmentCampaignTx(params: {
-  authority: PublicKeyish;
-  healthPlanAddress: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  coverageFundingLineAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  coverageAssetMint: PublicKeyish;
-  reserveAssetRailAddress?: PublicKeyish | null;
-  activationAuthority: PublicKeyish;
-  recentBlockhash: string;
-  campaignId: string;
-  displayName: string;
-  metadataUri: string;
-  mode: number;
-  depositAmount: bigint;
-  coverageAmount: bigint;
-  hardCapAmount: bigint;
-  startsAtTs: bigint;
-  refundAfterTs: bigint;
-  expiresAtTs: bigint;
-  termsHashHex?: string | null;
-  programId?: PublicKeyish;
-}): Transaction {
-  const authority = toPublicKey(params.authority);
-  const paymentAssetMint = toPublicKey(params.paymentAssetMint);
-  const coverageAssetMint = toPublicKey(params.coverageAssetMint);
-  const programId = params.programId ?? getProgramId();
-  const campaign = deriveCommitmentCampaignPda({
-    healthPlan: params.healthPlanAddress,
-    campaignId: params.campaignId,
-    programId,
-  });
-  const paymentRail = deriveCommitmentPaymentRailPda({
-    campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const ledger = deriveCommitmentLedgerPda({
-    campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const reserveAssetRail = params.reserveAssetRailAddress
-    ? toPublicKey(params.reserveAssetRailAddress)
-    : deriveReserveAssetRailPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-
-  return buildOrderedTransaction({
-    feePayer: authority,
-    recentBlockhash: params.recentBlockhash,
-    instructionName: 'create_commitment_campaign',
-    programId,
-    args: {
-      campaign_id: params.campaignId,
-      display_name: params.displayName,
-      metadata_uri: params.metadataUri,
-      payment_asset_mint: paymentAssetMint,
-      coverage_asset_mint: coverageAssetMint,
-      activation_authority: toPublicKey(params.activationAuthority),
-      mode: params.mode,
-      deposit_amount: params.depositAmount,
-      coverage_amount: params.coverageAmount,
-      hard_cap_amount: params.hardCapAmount,
-      starts_at_ts: params.startsAtTs,
-      refund_after_ts: params.refundAfterTs,
-      expires_at_ts: params.expiresAtTs,
-      terms_hash: Array.from(
-        hexToFixedBytes(
-          normalizeOptionalHex32(params.termsHashHex),
-          'terms hash',
-        ),
-      ),
-    },
-    accounts: [
-      { pubkey: authority, isSigner: true, isWritable: true },
-      { pubkey: deriveProtocolGovernancePda(programId) },
-      { pubkey: params.healthPlanAddress },
-      {
-        pubkey: deriveDomainAssetVaultPda({
-          reserveDomain: params.reserveDomainAddress,
-          assetMint: paymentAssetMint,
-          programId,
-        }),
-      },
-      { pubkey: reserveAssetRail },
-      {
-        pubkey: deriveDomainAssetLedgerPda({
-          reserveDomain: params.reserveDomainAddress,
-          assetMint: coverageAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      { pubkey: params.coverageFundingLineAddress },
-      {
-        pubkey: deriveFundingLineLedgerPda({
-          fundingLine: params.coverageFundingLineAddress,
-          assetMint: coverageAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      {
-        pubkey: derivePlanReserveLedgerPda({
-          healthPlan: params.healthPlanAddress,
-          assetMint: coverageAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      { pubkey: campaign, isWritable: true },
-      { pubkey: paymentRail, isWritable: true },
-      { pubkey: ledger, isWritable: true },
-      { pubkey: SystemProgram.programId },
-    ],
-  });
-}
-
-export function buildCreateCommitmentPaymentRailTx(params: {
-  authority: PublicKeyish;
-  healthPlanAddress: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  campaignAddress?: PublicKeyish | null;
-  campaignId?: string | null;
-  coverageFundingLineAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  coverageAssetMint: PublicKeyish;
-  reserveAssetRailAddress?: PublicKeyish | null;
-  recentBlockhash: string;
-  mode: number;
-  depositAmount: bigint;
-  coverageAmount: bigint;
-  hardCapAmount: bigint;
-  programId?: PublicKeyish;
-}): Transaction {
-  const authority = toPublicKey(params.authority);
-  const paymentAssetMint = toPublicKey(params.paymentAssetMint);
-  const coverageAssetMint = toPublicKey(params.coverageAssetMint);
-  const programId = params.programId ?? getProgramId();
-  const campaign = commitmentCampaignAddress({ ...params, programId });
-  const reserveAssetRail = params.reserveAssetRailAddress
-    ? toPublicKey(params.reserveAssetRailAddress)
-    : deriveReserveAssetRailPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-
-  return buildOrderedTransaction({
-    feePayer: authority,
-    recentBlockhash: params.recentBlockhash,
-    instructionName: 'create_commitment_payment_rail',
-    programId,
-    args: {
-      payment_asset_mint: paymentAssetMint,
-      coverage_asset_mint: coverageAssetMint,
-      reserve_asset_rail: reserveAssetRail,
-      coverage_funding_line: toPublicKey(params.coverageFundingLineAddress),
-      mode: params.mode,
-      deposit_amount: params.depositAmount,
-      coverage_amount: params.coverageAmount,
-      hard_cap_amount: params.hardCapAmount,
-    },
-    accounts: [
-      { pubkey: authority, isSigner: true, isWritable: true },
-      { pubkey: deriveProtocolGovernancePda(programId) },
-      { pubkey: params.healthPlanAddress },
-      { pubkey: campaign, isWritable: true },
-      {
-        pubkey: deriveDomainAssetVaultPda({
-          reserveDomain: params.reserveDomainAddress,
-          assetMint: paymentAssetMint,
-          programId,
-        }),
-      },
-      { pubkey: reserveAssetRail },
-      { pubkey: params.coverageFundingLineAddress },
-      {
-        pubkey: deriveCommitmentPaymentRailPda({
-          campaign,
-          paymentAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      {
-        pubkey: deriveCommitmentLedgerPda({
-          campaign,
-          paymentAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      { pubkey: SystemProgram.programId },
-    ],
-  });
-}
-
-export function buildDepositCommitmentTx(params: {
-  depositor: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  sourceTokenAccountAddress: PublicKeyish;
-  beneficiary: PublicKeyish;
-  recentBlockhash: string;
-  campaignAddress?: PublicKeyish | null;
-  healthPlanAddress?: PublicKeyish | null;
-  campaignId?: string | null;
-  paymentRailAddress?: PublicKeyish | null;
-  reserveAssetRailAddress?: PublicKeyish | null;
-  ledgerAddress?: PublicKeyish | null;
-  positionAddress?: PublicKeyish | null;
-  vaultTokenAccountAddress?: PublicKeyish | null;
-  acceptedTermsHashHex?: string | null;
-  tokenProgramId?: PublicKeyish | null;
-  programId?: PublicKeyish;
-}): Transaction {
-  const depositor = toPublicKey(params.depositor);
-  const paymentAssetMint = toPublicKey(params.paymentAssetMint);
-  const beneficiary = toPublicKey(params.beneficiary);
-  const programId = params.programId ?? getProgramId();
-  const campaign = commitmentCampaignAddress({ ...params, programId });
-  const paymentRail = commitmentPaymentRailAddress({
-    paymentRailAddress: params.paymentRailAddress,
-    campaignAddress: campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const reserveAssetRail = params.reserveAssetRailAddress
-    ? toPublicKey(params.reserveAssetRailAddress)
-    : deriveReserveAssetRailPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-  const ledger = commitmentLedgerAddress({
-    ledgerAddress: params.ledgerAddress,
-    campaignAddress: campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const position = commitmentPositionAddress({
-    positionAddress: params.positionAddress,
-    campaignAddress: campaign,
-    depositor,
-    beneficiary,
-    programId,
-  });
-  const tokenProgramId = classicTokenProgramId(params.tokenProgramId);
-  const vaultTokenAccount = params.vaultTokenAccountAddress
-    ? toPublicKey(params.vaultTokenAccountAddress)
-    : deriveDomainAssetVaultTokenAccountPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-
-  return buildOrderedTransaction({
-    feePayer: depositor,
-    recentBlockhash: params.recentBlockhash,
-    instructionName: 'deposit_commitment',
-    programId,
-    args: {
-      beneficiary,
-      accepted_terms_hash: Array.from(
-        hexToFixedBytes(
-          normalizeOptionalHex32(params.acceptedTermsHashHex),
-          'accepted terms hash',
-        ),
-      ),
-    },
-    accounts: [
-      { pubkey: depositor, isSigner: true, isWritable: true },
-      { pubkey: deriveProtocolGovernancePda(programId) },
-      { pubkey: campaign, isWritable: true },
-      { pubkey: paymentRail },
-      { pubkey: reserveAssetRail },
-      { pubkey: ledger, isWritable: true },
-      { pubkey: position, isWritable: true },
-      {
-        pubkey: deriveDomainAssetVaultPda({
-          reserveDomain: params.reserveDomainAddress,
-          assetMint: paymentAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      { pubkey: params.sourceTokenAccountAddress, isWritable: true },
-      { pubkey: paymentAssetMint },
-      { pubkey: vaultTokenAccount, isWritable: true },
-      { pubkey: tokenProgramId },
-      { pubkey: SystemProgram.programId },
-    ],
-  });
-}
-
-function buildActivateCommitmentTx(params: {
-  instructionName:
-    | 'activate_direct_premium_commitment'
-    | 'activate_treasury_credit_commitment'
-    | 'activate_waterfall_commitment';
-  activationAuthority: PublicKeyish;
-  healthPlanAddress: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  coverageFundingLineAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  coverageAssetMint: PublicKeyish;
-  positionAddress: PublicKeyish;
-  recentBlockhash: string;
-  campaignAddress?: PublicKeyish | null;
-  campaignId?: string | null;
-  paymentRailAddress?: PublicKeyish | null;
-  reserveAssetRailAddress?: PublicKeyish | null;
-  ledgerAddress?: PublicKeyish | null;
-  policySeriesAddress?: PublicKeyish | null;
-  activationReasonHashHex?: string | null;
-  programId?: PublicKeyish;
-}): Transaction {
-  const activationAuthority = toPublicKey(params.activationAuthority);
-  const paymentAssetMint = toPublicKey(params.paymentAssetMint);
-  const coverageAssetMint = toPublicKey(params.coverageAssetMint);
-  const programId = params.programId ?? getProgramId();
-  const campaign = commitmentCampaignAddress({ ...params, programId });
-  const paymentRail = commitmentPaymentRailAddress({
-    paymentRailAddress: params.paymentRailAddress,
-    campaignAddress: campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const reserveAssetRail = params.reserveAssetRailAddress
-    ? toPublicKey(params.reserveAssetRailAddress)
-    : deriveReserveAssetRailPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-  const ledger = commitmentLedgerAddress({
-    ledgerAddress: params.ledgerAddress,
-    campaignAddress: campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const coverageLedgerAssetMint =
-    params.instructionName === 'activate_waterfall_commitment'
-      ? paymentAssetMint
-      : coverageAssetMint;
-
-  return buildOrderedTransaction({
-    feePayer: activationAuthority,
-    recentBlockhash: params.recentBlockhash,
-    instructionName: params.instructionName,
-    programId,
-    args: {
-      activation_reason_hash: Array.from(
-        hexToFixedBytes(
-          normalizeOptionalHex32(params.activationReasonHashHex),
-          'activation reason hash',
-        ),
-      ),
-    },
-    accounts: [
-      { pubkey: activationAuthority, isSigner: true },
-      { pubkey: deriveProtocolGovernancePda(programId) },
-      { pubkey: params.healthPlanAddress },
-      { pubkey: campaign, isWritable: true },
-      { pubkey: paymentRail },
-      ...(params.instructionName === 'activate_waterfall_commitment'
-        ? [{ pubkey: reserveAssetRail }]
-        : []),
-      { pubkey: ledger, isWritable: true },
-      { pubkey: params.positionAddress, isWritable: true },
-      {
-        pubkey: deriveDomainAssetLedgerPda({
-          reserveDomain: params.reserveDomainAddress,
-          assetMint: coverageLedgerAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      { pubkey: params.coverageFundingLineAddress, isWritable: true },
-      {
-        pubkey: deriveFundingLineLedgerPda({
-          fundingLine: params.coverageFundingLineAddress,
-          assetMint: coverageLedgerAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      {
-        pubkey: derivePlanReserveLedgerPda({
-          healthPlan: params.healthPlanAddress,
-          assetMint: coverageLedgerAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      optionalSeriesReserveLedgerAccount(
-        params.policySeriesAddress,
-        coverageLedgerAssetMint,
-        programId,
-      ),
-    ],
-  });
-}
-
-export function buildActivateDirectPremiumCommitmentTx(
-  params: Omit<
-    Parameters<typeof buildActivateCommitmentTx>[0],
-    'instructionName'
-  >,
-): Transaction {
-  return buildActivateCommitmentTx({
-    ...params,
-    instructionName: 'activate_direct_premium_commitment',
-  });
-}
-
-export function buildActivateTreasuryCreditCommitmentTx(
-  params: Omit<
-    Parameters<typeof buildActivateCommitmentTx>[0],
-    'instructionName'
-  >,
-): Transaction {
-  return buildActivateCommitmentTx({
-    ...params,
-    instructionName: 'activate_treasury_credit_commitment',
-  });
-}
-
-export function buildActivateWaterfallCommitmentTx(
-  params: Omit<
-    Parameters<typeof buildActivateCommitmentTx>[0],
-    'instructionName'
-  >,
-): Transaction {
-  return buildActivateCommitmentTx({
-    ...params,
-    instructionName: 'activate_waterfall_commitment',
-  });
-}
-
-export function buildRefundCommitmentTx(params: {
-  depositor: PublicKeyish;
-  reserveDomainAddress: PublicKeyish;
-  paymentAssetMint: PublicKeyish;
-  recipientTokenAccountAddress: PublicKeyish;
-  recentBlockhash: string;
-  campaignAddress?: PublicKeyish | null;
-  healthPlanAddress?: PublicKeyish | null;
-  campaignId?: string | null;
-  paymentRailAddress?: PublicKeyish | null;
-  ledgerAddress?: PublicKeyish | null;
-  positionAddress?: PublicKeyish | null;
-  beneficiary?: PublicKeyish | null;
-  vaultTokenAccountAddress?: PublicKeyish | null;
-  refundReasonHashHex?: string | null;
-  tokenProgramId?: PublicKeyish | null;
-  programId?: PublicKeyish;
-}): Transaction {
-  const depositor = toPublicKey(params.depositor);
-  const paymentAssetMint = toPublicKey(params.paymentAssetMint);
-  const programId = params.programId ?? getProgramId();
-  const campaign = commitmentCampaignAddress({ ...params, programId });
-  const paymentRail = commitmentPaymentRailAddress({
-    paymentRailAddress: params.paymentRailAddress,
-    campaignAddress: campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const ledger = commitmentLedgerAddress({
-    ledgerAddress: params.ledgerAddress,
-    campaignAddress: campaign,
-    paymentAssetMint,
-    programId,
-  });
-  const position = commitmentPositionAddress({
-    positionAddress: params.positionAddress,
-    campaignAddress: campaign,
-    depositor,
-    beneficiary: params.beneficiary,
-    programId,
-  });
-  const tokenProgramId = classicTokenProgramId(params.tokenProgramId);
-  const vaultTokenAccount = params.vaultTokenAccountAddress
-    ? toPublicKey(params.vaultTokenAccountAddress)
-    : deriveDomainAssetVaultTokenAccountPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-
-  return buildOrderedTransaction({
-    feePayer: depositor,
-    recentBlockhash: params.recentBlockhash,
-    instructionName: 'refund_commitment',
-    programId,
-    args: {
-      refund_reason_hash: Array.from(
-        hexToFixedBytes(
-          normalizeOptionalHex32(params.refundReasonHashHex),
-          'refund reason hash',
-        ),
-      ),
-    },
-    accounts: [
-      { pubkey: depositor, isSigner: true, isWritable: true },
-      { pubkey: campaign, isWritable: true },
-      { pubkey: paymentRail },
-      { pubkey: ledger, isWritable: true },
-      { pubkey: position, isWritable: true },
-      {
-        pubkey: deriveDomainAssetVaultPda({
-          reserveDomain: params.reserveDomainAddress,
-          assetMint: paymentAssetMint,
-          programId,
-        }),
-        isWritable: true,
-      },
-      { pubkey: paymentAssetMint },
-      { pubkey: vaultTokenAccount, isWritable: true },
-      { pubkey: params.recipientTokenAccountAddress, isWritable: true },
-      { pubkey: tokenProgramId },
     ],
   });
 }
@@ -2697,43 +2186,6 @@ export function buildWithdrawPoolOracleFeeSolTx(params: {
   });
 }
 
-export function buildPauseCommitmentCampaignTx(params: {
-  authority: PublicKeyish;
-  healthPlanAddress: PublicKeyish;
-  recentBlockhash: string;
-  status: number;
-  campaignAddress?: PublicKeyish | null;
-  campaignId?: string | null;
-  reasonHashHex?: string | null;
-  programId?: PublicKeyish;
-}): Transaction {
-  const authority = toPublicKey(params.authority);
-  const programId = params.programId ?? getProgramId();
-  const campaign = commitmentCampaignAddress({ ...params, programId });
-
-  return buildOrderedTransaction({
-    feePayer: authority,
-    recentBlockhash: params.recentBlockhash,
-    instructionName: 'pause_commitment_campaign',
-    programId,
-    args: {
-      status: params.status,
-      reason_hash: Array.from(
-        hexToFixedBytes(
-          normalizeOptionalHex32(params.reasonHashHex),
-          'reason hash',
-        ),
-      ),
-    },
-    accounts: [
-      { pubkey: authority, isSigner: true },
-      { pubkey: deriveProtocolGovernancePda(programId) },
-      { pubkey: params.healthPlanAddress },
-      { pubkey: campaign, isWritable: true },
-    ],
-  });
-}
-
 export function buildOpenMemberPositionTx(params: {
   wallet: PublicKeyish;
   healthPlanAddress: PublicKeyish;
@@ -2754,6 +2206,7 @@ export function buildOpenMemberPositionTx(params: {
   const wallet = toPublicKey(params.wallet);
   const seriesScope = toPublicKey(params.seriesScopeAddress ?? ZERO_PUBKEY_KEY);
   const anchorRef = toPublicKey(params.anchorRefAddress ?? ZERO_PUBKEY_KEY);
+  const policySeries = nonZeroProtocolAccount(params.seriesScopeAddress);
   const memberPosition = deriveMemberPositionPda({
     healthPlan: params.healthPlanAddress,
     wallet,
@@ -2798,6 +2251,7 @@ export function buildOpenMemberPositionTx(params: {
       { pubkey: wallet, isSigner: true, isWritable: true },
       { pubkey: deriveProtocolGovernancePda(params.programId) },
       { pubkey: params.healthPlanAddress },
+      optionalProtocolAccount(policySeries),
       { pubkey: memberPosition, isWritable: true },
       optionalProtocolAccount(membershipAnchorSeat, true),
       optionalProtocolAccount(params.tokenGateAccountAddress),
@@ -2897,11 +2351,14 @@ export function buildCreateObligationTx(params: {
         params.assetMint,
         programId,
       ),
+      optionalProtocolAccount(params.liquidityPoolAddress),
+      optionalProtocolAccount(params.capitalClassAddress),
       optionalPoolClassLedgerAccount(
         params.capitalClassAddress,
         params.poolAssetMint,
         programId,
       ),
+      optionalProtocolAccount(params.allocationPositionAddress),
       optionalAllocationLedgerAccount(
         params.allocationPositionAddress,
         params.assetMint,
@@ -3048,6 +2505,254 @@ export function buildAdjudicateClaimCaseTx(params: {
   });
 }
 
+function assertOracleFeeScope(params: {
+  poolOracleFeeVaultAddress?: PublicKeyish | null;
+  poolOraclePolicyAddress?: PublicKeyish | null;
+  oracleFeeAttestationAddress?: PublicKeyish | null;
+}): void {
+  assertAllOrNoneAccountScope('settlement oracle fee', {
+    poolOracleFeeVaultAddress: params.poolOracleFeeVaultAddress,
+    poolOraclePolicyAddress: params.poolOraclePolicyAddress,
+    oracleFeeAttestationAddress: params.oracleFeeAttestationAddress,
+  });
+}
+
+export function buildSettleClaimCaseTx(
+  params: {
+    authority: PublicKeyish;
+    healthPlanAddress: PublicKeyish;
+    reserveDomainAddress: PublicKeyish;
+    fundingLineAddress: PublicKeyish;
+    assetMint: PublicKeyish;
+    claimCaseAddress: PublicKeyish;
+    recentBlockhash: string;
+    amount: bigint;
+    policySeriesAddress?: PublicKeyish | null;
+    obligationAddress?: PublicKeyish | null;
+    capitalClassAddress?: PublicKeyish | null;
+    allocationPositionAddress?: PublicKeyish | null;
+    poolAssetMint?: PublicKeyish | null;
+    protocolFeeVaultAddress?: PublicKeyish | null;
+    programId?: PublicKeyish;
+  } & SettlementOutflowAccounts,
+): Transaction {
+  const authority = toPublicKey(params.authority);
+  const assetMint = toPublicKey(params.assetMint);
+  const programId = params.programId ?? getProgramId();
+  assertAllOrNoneAccountScope('LP allocation', {
+    capitalClassAddress: params.capitalClassAddress,
+    allocationPositionAddress: params.allocationPositionAddress,
+    poolAssetMint: params.poolAssetMint,
+  });
+  classicTokenProgramId(params.tokenProgramId);
+  assertOracleFeeScope(params);
+
+  return buildOrderedTransaction({
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    instructionName: 'settle_claim_case',
+    programId,
+    args: {
+      amount: params.amount,
+    },
+    accounts: [
+      { pubkey: authority, isSigner: true },
+      { pubkey: deriveProtocolGovernancePda(programId) },
+      { pubkey: params.healthPlanAddress },
+      {
+        pubkey: reserveAssetRailAddress({
+          reserveDomainAddress: params.reserveDomainAddress,
+          assetMint,
+          reserveAssetRailAddress: params.reserveAssetRailAddress,
+          programId,
+        }),
+      },
+      {
+        pubkey: deriveDomainAssetVaultPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      {
+        pubkey: deriveDomainAssetLedgerPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      { pubkey: params.fundingLineAddress, isWritable: true },
+      {
+        pubkey: deriveFundingLineLedgerPda({
+          fundingLine: params.fundingLineAddress,
+          assetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      {
+        pubkey: derivePlanReserveLedgerPda({
+          healthPlan: params.healthPlanAddress,
+          assetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      optionalSeriesReserveLedgerAccount(
+        params.policySeriesAddress,
+        assetMint,
+        programId,
+      ),
+      optionalPoolClassLedgerAccount(
+        params.capitalClassAddress,
+        params.poolAssetMint,
+        programId,
+      ),
+      optionalProtocolAccount(params.allocationPositionAddress, true),
+      optionalAllocationLedgerAccount(
+        params.allocationPositionAddress,
+        assetMint,
+        programId,
+      ),
+      { pubkey: params.claimCaseAddress, isWritable: true },
+      optionalProtocolAccount(params.obligationAddress, true),
+      {
+        pubkey:
+          params.protocolFeeVaultAddress ??
+          deriveProtocolFeeVaultPda({
+            reserveDomain: params.reserveDomainAddress,
+            assetMint,
+            programId,
+          }),
+        isWritable: true,
+      },
+      optionalProtocolAccount(params.poolOracleFeeVaultAddress, true),
+      optionalProtocolAccount(params.poolOraclePolicyAddress),
+      optionalProtocolAccount(params.oracleFeeAttestationAddress),
+      { pubkey: params.memberPositionAddress },
+      { pubkey: assetMint },
+      { pubkey: params.vaultTokenAccountAddress, isWritable: true },
+      { pubkey: params.recipientTokenAccountAddress, isWritable: true },
+      { pubkey: params.tokenProgramId },
+    ],
+  });
+}
+
+export function buildSettleClaimCaseSelectedAssetTx(params: {
+  authority: PublicKeyish;
+  healthPlanAddress: PublicKeyish;
+  reserveDomainAddress: PublicKeyish;
+  claimCaseAddress: PublicKeyish;
+  memberPositionAddress: PublicKeyish;
+  claimAssetMint: PublicKeyish;
+  payoutAssetMint: PublicKeyish;
+  payoutFundingLineAddress: PublicKeyish;
+  payoutVaultTokenAccountAddress: PublicKeyish;
+  recipientTokenAccountAddress: PublicKeyish;
+  tokenProgramId: PublicKeyish;
+  recentBlockhash: string;
+  claimCreditAmount: bigint;
+  payoutAmount: bigint;
+  maxOverpayBps: number;
+  settlementReasonHashHex?: string | null;
+  policySeriesAddress?: PublicKeyish | null;
+  claimAssetRailAddress?: PublicKeyish | null;
+  payoutAssetRailAddress?: PublicKeyish | null;
+  programId?: PublicKeyish;
+}): Transaction {
+  const authority = toPublicKey(params.authority);
+  const claimAssetMint = toPublicKey(params.claimAssetMint);
+  const payoutAssetMint = toPublicKey(params.payoutAssetMint);
+  const programId = params.programId ?? getProgramId();
+  classicTokenProgramId(params.tokenProgramId);
+
+  return buildOrderedTransaction({
+    feePayer: authority,
+    recentBlockhash: params.recentBlockhash,
+    instructionName: 'settle_claim_case_selected_asset',
+    programId,
+    args: {
+      claim_credit_amount: params.claimCreditAmount,
+      payout_amount: params.payoutAmount,
+      max_overpay_bps: params.maxOverpayBps,
+      settlement_reason_hash: Array.from(
+        hexToFixedBytes(
+          normalizeOptionalHex32(params.settlementReasonHashHex),
+          'settlement reason hash',
+        ),
+      ),
+    },
+    accounts: [
+      { pubkey: authority, isSigner: true },
+      { pubkey: deriveProtocolGovernancePda(programId) },
+      { pubkey: params.healthPlanAddress },
+      {
+        pubkey: reserveAssetRailAddress({
+          reserveDomainAddress: params.reserveDomainAddress,
+          assetMint: claimAssetMint,
+          reserveAssetRailAddress: params.claimAssetRailAddress,
+          programId,
+        }),
+      },
+      {
+        pubkey: reserveAssetRailAddress({
+          reserveDomainAddress: params.reserveDomainAddress,
+          assetMint: payoutAssetMint,
+          reserveAssetRailAddress: params.payoutAssetRailAddress,
+          programId,
+        }),
+      },
+      {
+        pubkey: deriveDomainAssetVaultPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint: payoutAssetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      {
+        pubkey: deriveDomainAssetLedgerPda({
+          reserveDomain: params.reserveDomainAddress,
+          assetMint: payoutAssetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      { pubkey: params.payoutFundingLineAddress, isWritable: true },
+      {
+        pubkey: deriveFundingLineLedgerPda({
+          fundingLine: params.payoutFundingLineAddress,
+          assetMint: payoutAssetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      {
+        pubkey: derivePlanReserveLedgerPda({
+          healthPlan: params.healthPlanAddress,
+          assetMint: payoutAssetMint,
+          programId,
+        }),
+        isWritable: true,
+      },
+      optionalSeriesReserveLedgerAccount(
+        params.policySeriesAddress,
+        payoutAssetMint,
+        programId,
+      ),
+      { pubkey: params.claimCaseAddress, isWritable: true },
+      { pubkey: params.memberPositionAddress },
+      { pubkey: claimAssetMint },
+      { pubkey: payoutAssetMint },
+      { pubkey: params.payoutVaultTokenAccountAddress, isWritable: true },
+      { pubkey: params.recipientTokenAccountAddress, isWritable: true },
+      { pubkey: params.tokenProgramId },
+    ],
+  });
+}
+
 function buildObligationFlowTx(params: {
   instructionName:
     | 'reserve_obligation'
@@ -3066,6 +2771,7 @@ function buildObligationFlowTx(params: {
   allocationPositionAddress?: PublicKeyish | null;
   poolAssetMint?: PublicKeyish | null;
   memberPositionAddress?: PublicKeyish | null;
+  reserveAssetRailAddress?: PublicKeyish | null;
   vaultTokenAccountAddress?: PublicKeyish | null;
   recipientTokenAccountAddress?: PublicKeyish | null;
   tokenProgramId?: PublicKeyish | null;
@@ -3096,11 +2802,7 @@ function buildObligationFlowTx(params: {
       );
     }
     classicTokenProgramId(params.tokenProgramId);
-    assertAllOrNoneAccountScope('settlement oracle fee', {
-      poolOracleFeeVaultAddress: params.poolOracleFeeVaultAddress,
-      poolOraclePolicyAddress: params.poolOraclePolicyAddress,
-      oracleFeeAttestationAddress: params.oracleFeeAttestationAddress,
-    });
+    assertOracleFeeScope(params);
     if (
       hasAnyAccountScopeValue([
         params.poolOracleFeeVaultAddress,
@@ -3126,6 +2828,14 @@ function buildObligationFlowTx(params: {
       { pubkey: params.healthPlanAddress },
       ...(params.includeVault
         ? [
+            {
+              pubkey: reserveAssetRailAddress({
+                reserveDomainAddress: params.reserveDomainAddress,
+                assetMint: params.assetMint,
+                reserveAssetRailAddress: params.reserveAssetRailAddress,
+                programId,
+              }),
+            } satisfies ProtocolInstructionAccountInput,
             {
               pubkey: deriveDomainAssetVaultPda({
                 reserveDomain: params.reserveDomainAddress,
@@ -3258,6 +2968,7 @@ export function buildSettleObligationTx(
     capitalClassAddress?: PublicKeyish | null;
     allocationPositionAddress?: PublicKeyish | null;
     poolAssetMint?: PublicKeyish | null;
+    reserveAssetRailAddress?: PublicKeyish | null;
     programId?: PublicKeyish;
   } & SettlementOutflowAccounts,
 ): Transaction {
@@ -4058,10 +3769,6 @@ export interface SafeProtocolClientOptions {
   unsafeAllowCustomProgramId?: boolean;
 }
 
-export type SafeDepositCommitmentTxParams = Omit<
-  Parameters<typeof buildDepositCommitmentTx>[0],
-  'programId'
->;
 export type SafeFundSponsorBudgetTxParams = Omit<
   Parameters<typeof buildFundSponsorBudgetTx>[0],
   'programId'
@@ -4124,6 +3831,18 @@ export type SafeSettleObligationTxParams = Omit<
 > & {
   recipientOwnerAddress: PublicKeyish;
 };
+export type SafeSettleClaimCaseTxParams = Omit<
+  Parameters<typeof buildSettleClaimCaseTx>[0],
+  'programId'
+> & {
+  recipientOwnerAddress: PublicKeyish;
+};
+export type SafeSettleClaimCaseSelectedAssetTxParams = Omit<
+  Parameters<typeof buildSettleClaimCaseSelectedAssetTx>[0],
+  'programId'
+> & {
+  recipientOwnerAddress: PublicKeyish;
+};
 export type SafeMarkImpairmentTxParams = Omit<
   Parameters<typeof buildMarkImpairmentTx>[0],
   'programId'
@@ -4142,9 +3861,6 @@ export interface SafeProtocolClient {
   programId: PublicKey;
   raw: ProtocolClient;
   getProgramId(): PublicKey;
-  buildDepositCommitmentTx(
-    params: SafeDepositCommitmentTxParams,
-  ): Promise<Transaction>;
   buildFundSponsorBudgetTx(
     params: SafeFundSponsorBudgetTxParams,
   ): Promise<Transaction>;
@@ -4181,6 +3897,12 @@ export interface SafeProtocolClient {
   buildReleaseReserveTx(params: SafeReleaseReserveTxParams): Transaction;
   buildSettleObligationTx(
     params: SafeSettleObligationTxParams,
+  ): Promise<Transaction>;
+  buildSettleClaimCaseTx(
+    params: SafeSettleClaimCaseTxParams,
+  ): Promise<Transaction>;
+  buildSettleClaimCaseSelectedAssetTx(
+    params: SafeSettleClaimCaseSelectedAssetTxParams,
   ): Promise<Transaction>;
   buildMarkImpairmentTx(params: SafeMarkImpairmentTxParams): Transaction;
   buildRegisterOracleTx(params: SafeRegisterOracleTxParams): Transaction;
@@ -4276,38 +3998,6 @@ export function createSafeProtocolClient(
     programId,
     raw,
     getProgramId: () => programId,
-    async buildDepositCommitmentTx(
-      params: SafeDepositCommitmentTxParams,
-    ): Promise<Transaction> {
-      const paymentAssetMint = toPublicKey(params.paymentAssetMint);
-      const vaultTokenAccount = params.vaultTokenAccountAddress
-        ? toPublicKey(params.vaultTokenAccountAddress)
-        : deriveDomainAssetVaultTokenAccountPda({
-            reserveDomain: params.reserveDomainAddress,
-            assetMint: paymentAssetMint,
-            programId,
-          });
-      const domainAssetVault = deriveDomainAssetVaultPda({
-        reserveDomain: params.reserveDomainAddress,
-        assetMint: paymentAssetMint,
-        programId,
-      });
-      await preflightClassicTokenAccount({
-        connection,
-        tokenAccountAddress: params.sourceTokenAccountAddress,
-        mintAddress: paymentAssetMint,
-        ownerAddress: params.depositor,
-        label: 'deposit source token account',
-      });
-      await preflightClassicTokenAccount({
-        connection,
-        tokenAccountAddress: vaultTokenAccount,
-        mintAddress: paymentAssetMint,
-        ownerAddress: domainAssetVault,
-        label: 'domain vault token account',
-      });
-      return buildDepositCommitmentTx({ ...params, programId });
-    },
     async buildFundSponsorBudgetTx(
       params: SafeFundSponsorBudgetTxParams,
     ): Promise<Transaction> {
@@ -4444,6 +4134,45 @@ export function createSafeProtocolClient(
       } = params;
       void _recipientOwnerAddress;
       return buildSettleObligationTx({ ...builderParams, programId });
+    },
+    async buildSettleClaimCaseTx(
+      params: SafeSettleClaimCaseTxParams,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.assetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.vaultTokenAccountAddress,
+        recipientOwnerAddress: params.recipientOwnerAddress,
+        recipientLabel: 'claim settlement recipient token account',
+      });
+      const {
+        recipientOwnerAddress: _recipientOwnerAddress,
+        ...builderParams
+      } = params;
+      void _recipientOwnerAddress;
+      return buildSettleClaimCaseTx({ ...builderParams, programId });
+    },
+    async buildSettleClaimCaseSelectedAssetTx(
+      params: SafeSettleClaimCaseSelectedAssetTxParams,
+    ): Promise<Transaction> {
+      await preflightDomainVaultOutflow({
+        reserveDomainAddress: params.reserveDomainAddress,
+        assetMint: params.payoutAssetMint,
+        recipientTokenAccountAddress: params.recipientTokenAccountAddress,
+        vaultTokenAccountAddress: params.payoutVaultTokenAccountAddress,
+        recipientOwnerAddress: params.recipientOwnerAddress,
+        recipientLabel: 'selected-asset claim recipient token account',
+      });
+      const {
+        recipientOwnerAddress: _recipientOwnerAddress,
+        ...builderParams
+      } = params;
+      void _recipientOwnerAddress;
+      return buildSettleClaimCaseSelectedAssetTx({
+        ...builderParams,
+        programId,
+      });
     },
     buildMarkImpairmentTx(params: SafeMarkImpairmentTxParams): Transaction {
       return buildMarkImpairmentTx({ ...params, programId });

@@ -8,4 +8,4 @@
 
 > `const` **OBLIGATION\_DELIVERY\_MODE\_CLAIMABLE**: `0` = `0`
 
-Defined in: [src/protocol\_models.ts:92](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L92)
+Defined in: [src/protocol\_models.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L76)

@@ -6,7 +6,7 @@
 
 # Interface: InitProtocolFeeVaultArgs
 
-Defined in: [src/generated/protocol\_types.ts:667](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L667)
+Defined in: [src/generated/protocol\_types.ts:518](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L518)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:667](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:668](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L668)
+Defined in: [src/generated/protocol\_types.ts:519](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L519)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:668](https://github.com/OmegaX-Hea
 
 > **fee\_recipient**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:669](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L669)
+Defined in: [src/generated/protocol\_types.ts:520](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L520)

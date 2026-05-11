@@ -6,7 +6,7 @@
 
 # Interface: LiquidityPoolCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:734](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L734)
+Defined in: [src/generated/protocol\_types.ts:587](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L587)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:734](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:737](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L737)
+Defined in: [src/generated/protocol\_types.ts:590](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L590)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:737](https://github.com/OmegaX-Hea
 
 > **liquidity\_pool**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:736](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L736)
+Defined in: [src/generated/protocol\_types.ts:589](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L589)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:736](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:735](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L735)
+Defined in: [src/generated/protocol\_types.ts:588](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L588)

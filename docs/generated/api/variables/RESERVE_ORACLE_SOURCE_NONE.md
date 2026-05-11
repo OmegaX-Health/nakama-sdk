@@ -8,4 +8,4 @@
 
 > `const` **RESERVE\_ORACLE\_SOURCE\_NONE**: `0` = `0`
 
-Defined in: [src/protocol\_models.ts:46](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L46)
+Defined in: [src/protocol\_models.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L30)

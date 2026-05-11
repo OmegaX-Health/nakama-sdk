@@ -8,7 +8,7 @@
 
 > **describeFundingLineType**(`lineType`): `string`
 
-Defined in: [src/protocol\_models.ts:523](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L523)
+Defined in: [src/protocol\_models.ts:507](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L507)
 
 ## Parameters
 

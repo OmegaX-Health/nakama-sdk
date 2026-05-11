@@ -8,7 +8,7 @@
 
 > **deriveHealthPlanPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:224](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L224)
+Defined in: [src/protocol\_seeds.ts:220](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L220)
 
 ## Parameters
 

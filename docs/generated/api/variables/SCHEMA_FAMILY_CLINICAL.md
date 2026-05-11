@@ -8,4 +8,4 @@
 
 > `const` **SCHEMA\_FAMILY\_CLINICAL**: `1` = `1`
 
-Defined in: [src/protocol\_models.ts:123](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L123)
+Defined in: [src/protocol\_models.ts:107](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L107)

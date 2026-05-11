@@ -8,7 +8,7 @@
 
 > **sumReserveBalanceSheets**(`sheets`): [`NormalizedReserveBalanceSheet`](../type-aliases/NormalizedReserveBalanceSheet.md)
 
-Defined in: [src/protocol\_models.ts:459](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L459)
+Defined in: [src/protocol\_models.ts:443](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L443)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **buildCapitalReadModel**(`params`): [`CapitalReadModel`](../type-aliases/CapitalReadModel.md)
 
-Defined in: [src/protocol\_models.ts:746](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L746)
+Defined in: [src/protocol\_models.ts:730](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L730)
 
 ## Parameters
 

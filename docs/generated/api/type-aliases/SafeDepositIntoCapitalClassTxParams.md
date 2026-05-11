@@ -8,4 +8,4 @@
 
 > **SafeDepositIntoCapitalClassTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildDepositIntoCapitalClassTx`](../functions/buildDepositIntoCapitalClassTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:4073](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4073)
+Defined in: [src/protocol.ts:3780](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3780)

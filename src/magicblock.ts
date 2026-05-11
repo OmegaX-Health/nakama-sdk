@@ -5,20 +5,26 @@ import {
   Transaction,
   TransactionInstruction,
 } from '@solana/web3.js';
-import type { Commitment } from '@solana/web3.js';
+import type { AccountInfo, Commitment } from '@solana/web3.js';
 
 import type { PublicKeyish } from './generated/protocol_types.js';
 import {
   anchorDiscriminator,
   encodeString,
   fromHex,
+  readI64Le,
+  readString,
+  readU32Le,
   sha256Hex,
   stableStringify,
+  toHex,
 } from './utils.js';
 import { toPublicKey } from './protocol_seeds.js';
 
 export const OMEGAX_PRIVATE_CLAIM_REVIEW_PROGRAM_ID =
   'FADqaRcJHERauzMo3BRzXZVY2qvrpPqg1ie2FGqACCVn';
+export const PRIVATE_REVIEW_REGISTRY_SEED = 'private_review_registry';
+export const PRIVATE_REVIEW_OPERATOR_SEED = 'private_review_operator';
 export const PRIVATE_CLAIM_REVIEW_SESSION_SEED = 'private_claim_review';
 
 export const MAGICBLOCK_DELEGATION_PROGRAM_ID =
@@ -63,7 +69,55 @@ export interface MagicBlockConnections {
 }
 
 export interface DerivePrivateClaimReviewSessionPdaParams {
+  sessionAuthority: PublicKeyish;
+  claimCase: PublicKeyish;
   sessionId: string;
+  programId?: PublicKeyish;
+}
+
+export interface DerivePrivateReviewOperatorPdaParams {
+  reviewerAuthority: PublicKeyish;
+  programId?: PublicKeyish;
+}
+
+export interface InitializeReviewRegistryArgs {
+  sessionAuthority: PublicKeyish;
+  paymentAttestor: PublicKeyish;
+  active?: boolean;
+}
+
+export interface BuildInitializeReviewRegistryTxParams extends InitializeReviewRegistryArgs {
+  authority: PublicKeyish;
+  registry?: PublicKeyish;
+  programId?: PublicKeyish;
+}
+
+export interface BuildSetReviewRegistryAuthorityTxParams {
+  authority: PublicKeyish;
+  newAuthority: PublicKeyish;
+  registry?: PublicKeyish;
+  programId?: PublicKeyish;
+}
+
+export interface UpsertReviewOperatorArgs {
+  reviewerAuthority: PublicKeyish;
+  reviewBinaryHashHex: string;
+  active?: boolean;
+}
+
+export interface BuildUpsertReviewOperatorTxParams extends UpsertReviewOperatorArgs {
+  authority: PublicKeyish;
+  registry?: PublicKeyish;
+  operator?: PublicKeyish;
+  programId?: PublicKeyish;
+}
+
+export interface BuildSetReviewOperatorActiveTxParams {
+  authority: PublicKeyish;
+  reviewerAuthority: PublicKeyish;
+  active: boolean;
+  registry?: PublicKeyish;
+  operator?: PublicKeyish;
   programId?: PublicKeyish;
 }
 
@@ -80,12 +134,16 @@ export interface OpenReviewSessionArgs {
 
 export interface BuildOpenReviewSessionTxParams extends OpenReviewSessionArgs {
   payer: PublicKeyish;
+  reviewerAuthority: PublicKeyish;
+  registry?: PublicKeyish;
+  operator?: PublicKeyish;
   reviewSession?: PublicKeyish;
   programId?: PublicKeyish;
 }
 
 export interface BuildDelegateReviewSessionTxParams {
   payer: PublicKeyish;
+  claimCase: PublicKeyish;
   sessionId: string;
   reviewSession?: PublicKeyish;
   programId?: PublicKeyish;
@@ -101,28 +159,38 @@ export interface RecordPrivateReviewArgs {
 
 export interface BuildRecordPrivateReviewTxParams extends RecordPrivateReviewArgs {
   reviewer: PublicKeyish;
+  sessionAuthority: PublicKeyish;
+  claimCase: PublicKeyish;
   sessionId: string;
+  registry?: PublicKeyish;
+  operator?: PublicKeyish;
   reviewSession?: PublicKeyish;
   programId?: PublicKeyish;
 }
 
 export interface BuildRecordPrivatePaymentRefTxParams {
-  payer: PublicKeyish;
+  paymentAttestor: PublicKeyish;
+  sessionAuthority: PublicKeyish;
+  claimCase: PublicKeyish;
   sessionId: string;
   privatePaymentRefHashHex: string;
+  registry?: PublicKeyish;
   reviewSession?: PublicKeyish;
   programId?: PublicKeyish;
 }
 
 export interface BuildCommitAndCloseReviewSessionTxParams {
   payer: PublicKeyish;
+  claimCase: PublicKeyish;
   sessionId: string;
   reviewSession?: PublicKeyish;
   programId?: PublicKeyish;
 }
 
 export interface BuildMarkReviewFailedTxParams {
-  payer: PublicKeyish;
+  actor: PublicKeyish;
+  sessionAuthority: PublicKeyish;
+  claimCase: PublicKeyish;
   sessionId: string;
   failureRefHashHex: string;
   reviewSession?: PublicKeyish;
@@ -143,6 +211,59 @@ export interface PrivatePaymentsBuildRequest {
     | '/v1/spl/initialize-mint';
   body: Record<string, unknown>;
   apiUrl?: string;
+}
+
+export interface PrivateReviewRegistryAccount {
+  address: PublicKey;
+  authority: PublicKey;
+  sessionAuthority: PublicKey;
+  paymentAttestor: PublicKey;
+  active: boolean;
+  operatorCount: number;
+  createdAt: bigint;
+  updatedAt: bigint;
+  bump: number;
+}
+
+export interface PrivateReviewOperatorAccount {
+  address: PublicKey;
+  registry: PublicKey;
+  reviewerAuthority: PublicKey;
+  reviewBinaryHashHex: string;
+  active: boolean;
+  createdAt: bigint;
+  updatedAt: bigint;
+  bump: number;
+}
+
+export interface PrivateClaimReviewSessionAccount {
+  address: PublicKey;
+  sessionId: string;
+  sessionAuthority: PublicKey;
+  claimCase: PublicKey;
+  healthPlan: PublicKey;
+  policySeries: PublicKey;
+  evidenceRefHashHex: string;
+  decisionSupportHashHex: string;
+  schemaKeyHashHex: string;
+  schemaHashHex: string;
+  reviewOperator: PublicKey;
+  reviewerAuthority: PublicKey;
+  paymentAttestor: PublicKey;
+  reviewResultHashHex: string;
+  reviewArtifactHashHex: string;
+  reviewBinaryHashHex: string;
+  teeAttestationDigestHex: string;
+  operator: PublicKey;
+  privatePaymentRefHashHex: string;
+  status: number;
+  openedAt: bigint;
+  delegatedAt: bigint;
+  reviewedAt: bigint;
+  paymentRecordedAt: bigint;
+  committedAt: bigint;
+  failedAt: bigint;
+  bump: number;
 }
 
 export function createMagicBlockConnections(
@@ -167,12 +288,35 @@ export function createMagicBlockConnections(
   };
 }
 
+export function derivePrivateReviewRegistryPda(
+  programId?: PublicKeyish,
+): PublicKey {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from(PRIVATE_REVIEW_REGISTRY_SEED, 'utf8')],
+    privateReviewProgramId(programId),
+  )[0];
+}
+
+export function derivePrivateReviewOperatorPda(
+  params: DerivePrivateReviewOperatorPdaParams,
+): PublicKey {
+  return PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(PRIVATE_REVIEW_OPERATOR_SEED, 'utf8'),
+      toPublicKey(params.reviewerAuthority).toBuffer(),
+    ],
+    privateReviewProgramId(params.programId),
+  )[0];
+}
+
 export function derivePrivateClaimReviewSessionPda(
   params: DerivePrivateClaimReviewSessionPdaParams,
 ): PublicKey {
   return PublicKey.findProgramAddressSync(
     [
       Buffer.from(PRIVATE_CLAIM_REVIEW_SESSION_SEED, 'utf8'),
+      toPublicKey(params.sessionAuthority).toBuffer(),
+      toPublicKey(params.claimCase).toBuffer(),
       Buffer.from(params.sessionId, 'utf8'),
     ],
     privateReviewProgramId(params.programId),
@@ -238,14 +382,161 @@ export function buildMagicBlockExplorerLink(
   return `${base}/${encodeURIComponent(params.signature)}${clusterQuery}`;
 }
 
+export function buildInitializeReviewRegistryTx(
+  params: BuildInitializeReviewRegistryTxParams,
+): Transaction {
+  const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
+
+  return tx(params.authority, [
+    new TransactionInstruction({
+      programId,
+      keys: [
+        {
+          pubkey: toPublicKey(params.authority),
+          isSigner: true,
+          isWritable: true,
+        },
+        { pubkey: registry, isSigner: false, isWritable: true },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+      ],
+      data: Buffer.concat([
+        ix('initialize_review_registry'),
+        key(params.sessionAuthority),
+        key(params.paymentAttestor),
+        bool(params.active ?? true),
+      ]),
+    }),
+  ]);
+}
+
+export function buildSetReviewRegistryAuthorityTx(
+  params: BuildSetReviewRegistryAuthorityTxParams,
+): Transaction {
+  const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
+
+  return tx(params.authority, [
+    new TransactionInstruction({
+      programId,
+      keys: [
+        {
+          pubkey: toPublicKey(params.authority),
+          isSigner: true,
+          isWritable: true,
+        },
+        { pubkey: registry, isSigner: false, isWritable: true },
+      ],
+      data: Buffer.concat([
+        ix('set_review_registry_authority'),
+        key(params.newAuthority),
+      ]),
+    }),
+  ]);
+}
+
+export function buildUpsertReviewOperatorTx(
+  params: BuildUpsertReviewOperatorTxParams,
+): Transaction {
+  const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
+  const operator =
+    params.operator != null
+      ? toPublicKey(params.operator)
+      : derivePrivateReviewOperatorPda({
+          reviewerAuthority: params.reviewerAuthority,
+          programId,
+        });
+
+  return tx(params.authority, [
+    new TransactionInstruction({
+      programId,
+      keys: [
+        {
+          pubkey: toPublicKey(params.authority),
+          isSigner: true,
+          isWritable: true,
+        },
+        { pubkey: registry, isSigner: false, isWritable: true },
+        { pubkey: operator, isSigner: false, isWritable: true },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+      ],
+      data: Buffer.concat([
+        ix('upsert_review_operator'),
+        key(params.reviewerAuthority),
+        hash(params.reviewBinaryHashHex, 'reviewBinaryHashHex'),
+        bool(params.active ?? true),
+      ]),
+    }),
+  ]);
+}
+
+export function buildSetReviewOperatorActiveTx(
+  params: BuildSetReviewOperatorActiveTxParams,
+): Transaction {
+  const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
+  const operator =
+    params.operator != null
+      ? toPublicKey(params.operator)
+      : derivePrivateReviewOperatorPda({
+          reviewerAuthority: params.reviewerAuthority,
+          programId,
+        });
+
+  return tx(params.authority, [
+    new TransactionInstruction({
+      programId,
+      keys: [
+        {
+          pubkey: toPublicKey(params.authority),
+          isSigner: true,
+          isWritable: true,
+        },
+        { pubkey: registry, isSigner: false, isWritable: true },
+        { pubkey: operator, isSigner: false, isWritable: true },
+      ],
+      data: Buffer.concat([
+        ix('set_review_operator_active'),
+        bool(params.active),
+      ]),
+    }),
+  ]);
+}
+
 export function buildOpenReviewSessionTx(
   params: BuildOpenReviewSessionTxParams,
 ): Transaction {
   const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
+  const operator =
+    params.operator != null
+      ? toPublicKey(params.operator)
+      : derivePrivateReviewOperatorPda({
+          reviewerAuthority: params.reviewerAuthority,
+          programId,
+        });
   const reviewSession =
     params.reviewSession != null
       ? toPublicKey(params.reviewSession)
       : derivePrivateClaimReviewSessionPda({
+          sessionAuthority: params.payer,
+          claimCase: params.claimCase,
           sessionId: params.sessionId,
           programId,
         });
@@ -255,6 +546,8 @@ export function buildOpenReviewSessionTx(
       programId,
       keys: [
         { pubkey: toPublicKey(params.payer), isSigner: true, isWritable: true },
+        { pubkey: registry, isSigner: false, isWritable: false },
+        { pubkey: operator, isSigner: false, isWritable: false },
         { pubkey: reviewSession, isSigner: false, isWritable: true },
         { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
       ],
@@ -281,6 +574,8 @@ export function buildDelegateReviewSessionTx(
     params.reviewSession != null
       ? toPublicKey(params.reviewSession)
       : derivePrivateClaimReviewSessionPda({
+          sessionAuthority: params.payer,
+          claimCase: params.claimCase,
           sessionId: params.sessionId,
           programId,
         });
@@ -325,6 +620,7 @@ export function buildDelegateReviewSessionTx(
       data: Buffer.concat([
         ix('delegate_review_session'),
         encodeString(params.sessionId),
+        key(params.claimCase),
       ]),
     }),
   ]);
@@ -334,10 +630,23 @@ export function buildRecordPrivateReviewTx(
   params: BuildRecordPrivateReviewTxParams,
 ): Transaction {
   const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
+  const operator =
+    params.operator != null
+      ? toPublicKey(params.operator)
+      : derivePrivateReviewOperatorPda({
+          reviewerAuthority: params.reviewer,
+          programId,
+        });
   const reviewSession =
     params.reviewSession != null
       ? toPublicKey(params.reviewSession)
       : derivePrivateClaimReviewSessionPda({
+          sessionAuthority: params.sessionAuthority,
+          claimCase: params.claimCase,
           sessionId: params.sessionId,
           programId,
         });
@@ -351,6 +660,8 @@ export function buildRecordPrivateReviewTx(
           isSigner: true,
           isWritable: true,
         },
+        { pubkey: registry, isSigner: false, isWritable: false },
+        { pubkey: operator, isSigner: false, isWritable: false },
         { pubkey: reviewSession, isSigner: false, isWritable: true },
       ],
       data: Buffer.concat([
@@ -369,19 +680,30 @@ export function buildRecordPrivatePaymentRefTx(
   params: BuildRecordPrivatePaymentRefTxParams,
 ): Transaction {
   const programId = privateReviewProgramId(params.programId);
+  const registry =
+    params.registry != null
+      ? toPublicKey(params.registry)
+      : derivePrivateReviewRegistryPda(programId);
   const reviewSession =
     params.reviewSession != null
       ? toPublicKey(params.reviewSession)
       : derivePrivateClaimReviewSessionPda({
+          sessionAuthority: params.sessionAuthority,
+          claimCase: params.claimCase,
           sessionId: params.sessionId,
           programId,
         });
 
-  return tx(params.payer, [
+  return tx(params.paymentAttestor, [
     new TransactionInstruction({
       programId,
       keys: [
-        { pubkey: toPublicKey(params.payer), isSigner: true, isWritable: true },
+        {
+          pubkey: toPublicKey(params.paymentAttestor),
+          isSigner: true,
+          isWritable: true,
+        },
+        { pubkey: registry, isSigner: false, isWritable: false },
         { pubkey: reviewSession, isSigner: false, isWritable: true },
       ],
       data: Buffer.concat([
@@ -400,6 +722,8 @@ export function buildCommitAndCloseReviewSessionTx(
     params.reviewSession != null
       ? toPublicKey(params.reviewSession)
       : derivePrivateClaimReviewSessionPda({
+          sessionAuthority: params.payer,
+          claimCase: params.claimCase,
           sessionId: params.sessionId,
           programId,
         });
@@ -434,15 +758,21 @@ export function buildMarkReviewFailedTx(
     params.reviewSession != null
       ? toPublicKey(params.reviewSession)
       : derivePrivateClaimReviewSessionPda({
+          sessionAuthority: params.sessionAuthority,
+          claimCase: params.claimCase,
           sessionId: params.sessionId,
           programId,
         });
 
-  return tx(params.payer, [
+  return tx(params.actor, [
     new TransactionInstruction({
       programId,
       keys: [
-        { pubkey: toPublicKey(params.payer), isSigner: true, isWritable: true },
+        {
+          pubkey: toPublicKey(params.actor),
+          isSigner: true,
+          isWritable: false,
+        },
         { pubkey: reviewSession, isSigner: false, isWritable: true },
       ],
       data: Buffer.concat([
@@ -451,6 +781,92 @@ export function buildMarkReviewFailedTx(
       ]),
     }),
   ]);
+}
+
+export async function fetchPrivateReviewOperator(
+  connection: Pick<Connection, 'getAccountInfo'>,
+  params: DerivePrivateReviewOperatorPdaParams,
+): Promise<PrivateReviewOperatorAccount | null> {
+  const address = derivePrivateReviewOperatorPda(params);
+  const info = await connection.getAccountInfo(address);
+  if (!info) return null;
+  assertOwnedByProgram(info, params.programId);
+  return decodePrivateReviewOperatorAccount(address, info.data);
+}
+
+export async function fetchPrivateClaimReviewSession(
+  connection: Pick<Connection, 'getAccountInfo'>,
+  params: DerivePrivateClaimReviewSessionPdaParams,
+): Promise<PrivateClaimReviewSessionAccount | null> {
+  const address = derivePrivateClaimReviewSessionPda(params);
+  const info = await connection.getAccountInfo(address);
+  if (!info) return null;
+  assertOwnedByProgram(info, params.programId);
+  return decodePrivateClaimReviewSessionAccount(address, info.data);
+}
+
+export async function verifyActivePrivateReviewOperator(
+  connection: Pick<Connection, 'getAccountInfo'>,
+  params: DerivePrivateReviewOperatorPdaParams & {
+    expectedReviewBinaryHashHex?: string;
+  },
+): Promise<PrivateReviewOperatorAccount> {
+  const operator = await fetchPrivateReviewOperator(connection, params);
+  if (!operator) {
+    throw new Error('MagicBlock private review operator account was not found');
+  }
+  if (!operator.active) {
+    throw new Error('MagicBlock private review operator is inactive');
+  }
+  if (
+    params.expectedReviewBinaryHashHex &&
+    normalizeHash(params.expectedReviewBinaryHashHex) !==
+      operator.reviewBinaryHashHex
+  ) {
+    throw new Error('MagicBlock private review operator binary hash mismatch');
+  }
+  return operator;
+}
+
+export async function verifyCommittedApprovedReviewSession(
+  connection: Pick<Connection, 'getAccountInfo'>,
+  params: DerivePrivateClaimReviewSessionPdaParams & {
+    expectedReviewResultHashHex: string;
+    expectedReviewBinaryHashHex: string;
+    expectedPrivatePaymentRefHashHex?: string;
+  },
+): Promise<PrivateClaimReviewSessionAccount> {
+  const session = await fetchPrivateClaimReviewSession(connection, params);
+  if (!session) {
+    throw new Error('MagicBlock private claim review session was not found');
+  }
+  if (session.status !== PRIVATE_REVIEW_STATUS_APPROVED) {
+    throw new Error('MagicBlock review session is not approved');
+  }
+  if (session.committedAt === 0n) {
+    throw new Error('MagicBlock review session is not committed');
+  }
+  assertHashMatches(
+    session.reviewResultHashHex,
+    params.expectedReviewResultHashHex,
+    'review result hash',
+  );
+  assertHashMatches(
+    session.reviewBinaryHashHex,
+    params.expectedReviewBinaryHashHex,
+    'review binary hash',
+  );
+  if (isZeroHashHex(session.privatePaymentRefHashHex)) {
+    throw new Error('MagicBlock approved review is missing payment reference');
+  }
+  if (params.expectedPrivatePaymentRefHashHex) {
+    assertHashMatches(
+      session.privatePaymentRefHashHex,
+      params.expectedPrivatePaymentRefHashHex,
+      'private payment reference hash',
+    );
+  }
+  return session;
 }
 
 export async function buildPrivatePaymentsApiTransaction(
@@ -502,6 +918,160 @@ export function deriveMagicBlockDelegateAccounts(params: {
   };
 }
 
+export function decodePrivateReviewRegistryAccount(
+  address: PublicKeyish,
+  data: Buffer | Uint8Array,
+): PrivateReviewRegistryAccount {
+  const buffer = accountDataBuffer(data, 'PrivateReviewRegistry');
+  let offset = 8;
+  const authority = readPublicKey(buffer, offset);
+  offset += 32;
+  const sessionAuthority = readPublicKey(buffer, offset);
+  offset += 32;
+  const paymentAttestor = readPublicKey(buffer, offset);
+  offset += 32;
+  const active = readBool(buffer, offset);
+  offset += 1;
+  const operatorCount = readU32Le(buffer, offset);
+  offset += 4;
+  const createdAt = readI64Le(buffer, offset);
+  offset += 8;
+  const updatedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const bump = buffer.readUInt8(offset);
+  return {
+    address: toPublicKey(address),
+    authority,
+    sessionAuthority,
+    paymentAttestor,
+    active,
+    operatorCount,
+    createdAt,
+    updatedAt,
+    bump,
+  };
+}
+
+export function decodePrivateReviewOperatorAccount(
+  address: PublicKeyish,
+  data: Buffer | Uint8Array,
+): PrivateReviewOperatorAccount {
+  const buffer = accountDataBuffer(data, 'PrivateReviewOperator');
+  let offset = 8;
+  const registry = readPublicKey(buffer, offset);
+  offset += 32;
+  const reviewerAuthority = readPublicKey(buffer, offset);
+  offset += 32;
+  const reviewBinaryHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const active = readBool(buffer, offset);
+  offset += 1;
+  const createdAt = readI64Le(buffer, offset);
+  offset += 8;
+  const updatedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const bump = buffer.readUInt8(offset);
+  return {
+    address: toPublicKey(address),
+    registry,
+    reviewerAuthority,
+    reviewBinaryHashHex,
+    active,
+    createdAt,
+    updatedAt,
+    bump,
+  };
+}
+
+export function decodePrivateClaimReviewSessionAccount(
+  address: PublicKeyish,
+  data: Buffer | Uint8Array,
+): PrivateClaimReviewSessionAccount {
+  const buffer = accountDataBuffer(data, 'PrivateClaimReviewSession');
+  let offset = 8;
+  const readSessionId = readString(buffer, offset);
+  const sessionId = readSessionId.value;
+  offset = readSessionId.offset;
+  const sessionAuthority = readPublicKey(buffer, offset);
+  offset += 32;
+  const claimCase = readPublicKey(buffer, offset);
+  offset += 32;
+  const healthPlan = readPublicKey(buffer, offset);
+  offset += 32;
+  const policySeries = readPublicKey(buffer, offset);
+  offset += 32;
+  const evidenceRefHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const decisionSupportHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const schemaKeyHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const schemaHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const reviewOperator = readPublicKey(buffer, offset);
+  offset += 32;
+  const reviewerAuthority = readPublicKey(buffer, offset);
+  offset += 32;
+  const paymentAttestor = readPublicKey(buffer, offset);
+  offset += 32;
+  const reviewResultHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const reviewArtifactHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const reviewBinaryHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const teeAttestationDigestHex = readHashHex(buffer, offset);
+  offset += 32;
+  const operator = readPublicKey(buffer, offset);
+  offset += 32;
+  const privatePaymentRefHashHex = readHashHex(buffer, offset);
+  offset += 32;
+  const status = buffer.readUInt8(offset);
+  offset += 1;
+  const openedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const delegatedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const reviewedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const paymentRecordedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const committedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const failedAt = readI64Le(buffer, offset);
+  offset += 8;
+  const bump = buffer.readUInt8(offset);
+  return {
+    address: toPublicKey(address),
+    sessionId,
+    sessionAuthority,
+    claimCase,
+    healthPlan,
+    policySeries,
+    evidenceRefHashHex,
+    decisionSupportHashHex,
+    schemaKeyHashHex,
+    schemaHashHex,
+    reviewOperator,
+    reviewerAuthority,
+    paymentAttestor,
+    reviewResultHashHex,
+    reviewArtifactHashHex,
+    reviewBinaryHashHex,
+    teeAttestationDigestHex,
+    operator,
+    privatePaymentRefHashHex,
+    status,
+    openedAt,
+    delegatedAt,
+    reviewedAt,
+    paymentRecordedAt,
+    committedAt,
+    failedAt,
+    bump,
+  };
+}
+
 function privateReviewProgramId(programId?: PublicKeyish): PublicKey {
   return toPublicKey(programId ?? OMEGAX_PRIVATE_CLAIM_REVIEW_PROGRAM_ID);
 }
@@ -526,6 +1096,10 @@ function key(value: PublicKeyish): Buffer {
   return toPublicKey(value).toBuffer();
 }
 
+function bool(value: boolean): Buffer {
+  return Buffer.from([value ? 1 : 0]);
+}
+
 function hash(value: string, label: string): Buffer {
   try {
     return Buffer.from(fromHex(value, 32));
@@ -542,4 +1116,65 @@ function tx(
   transaction.feePayer = toPublicKey(feePayer);
   transaction.add(...instructions);
   return transaction;
+}
+
+function assertOwnedByProgram(
+  info: AccountInfo<Buffer>,
+  programId?: PublicKeyish,
+): void {
+  const expected = privateReviewProgramId(programId);
+  if (!info.owner.equals(expected)) {
+    throw new Error(
+      `MagicBlock account owner mismatch: expected ${expected.toBase58()}, got ${info.owner.toBase58()}`,
+    );
+  }
+}
+
+function accountDataBuffer(
+  data: Buffer | Uint8Array,
+  accountName: string,
+): Buffer {
+  const buffer = Buffer.from(data);
+  const expected = anchorDiscriminator('account', accountName);
+  if (
+    buffer.length < expected.length ||
+    !buffer.subarray(0, 8).equals(expected)
+  ) {
+    throw new Error(`invalid ${accountName} account discriminator`);
+  }
+  return buffer;
+}
+
+function readPublicKey(buffer: Buffer, offset: number): PublicKey {
+  return new PublicKey(buffer.subarray(offset, offset + 32));
+}
+
+function readHashHex(buffer: Buffer, offset: number): string {
+  return toHex(buffer.subarray(offset, offset + 32));
+}
+
+function readBool(buffer: Buffer, offset: number): boolean {
+  const value = buffer.readUInt8(offset);
+  if (value !== 0 && value !== 1) {
+    throw new Error(`invalid bool byte ${value}`);
+  }
+  return value === 1;
+}
+
+function normalizeHash(value: string): string {
+  return toHex(fromHex(value, 32));
+}
+
+function isZeroHashHex(value: string): boolean {
+  return /^0+$/.test(normalizeHash(value));
+}
+
+function assertHashMatches(
+  actual: string,
+  expected: string,
+  label: string,
+): void {
+  if (normalizeHash(actual) !== normalizeHash(expected)) {
+    throw new Error(`MagicBlock ${label} mismatch`);
+  }
 }

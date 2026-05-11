@@ -119,7 +119,7 @@ This package exposes the live canonical object model:
 - reserve domains, domain asset vaults, reserve asset rails, and fee vaults
 - health plans and policy series
 - member positions and membership anchors
-- funding lines, commitment campaigns, obligations, and claim cases
+- funding lines, obligations, claim cases, and reserve-backed payouts
 - liquidity pools, capital classes, LP positions, and allocation positions
 - oracle profiles, pool oracle approvals, oracle policies, permission sets, and claim attestations
 - outcome schemas and schema dependency ledgers
@@ -128,13 +128,14 @@ This package exposes the live canonical object model:
 
 ## Release status
 
-- SDK release target: `0.8.7`
-- Protocol surface target: `omegax-protocol` commit `2326371`
+- SDK release target: `0.8.8`
+- Protocol surface target: `omegax-protocol` commit `763c7da`
 - Current public network target: Solana devnet beta
 - Public docs: [docs.omegax.health](https://docs.omegax.health)
 
 ## Release notes
 
+- `0.8.8` refreshes generated bindings for the 62-instruction / 31-account local protocol surface, removes the retired commitment-campaign API from current exports, adds governance authority accept/cancel builders, updates reserve-asset rail confidence inputs, adds direct plus selected-asset claim-case settlement helpers, and reflects inactive pool/allocation guard errors.
 - `0.8.7` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
 - `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
@@ -166,7 +167,7 @@ This package exposes the live canonical object model:
 - Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
 - `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
 - `@omegax/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
-- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveCommitmentCampaignPda(...)`, and `deriveCapitalClassPda(...)`
+- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveClaimCasePda(...)`, and `deriveCapitalClassPda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
 - `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
 - `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
@@ -189,12 +190,12 @@ keys, or live transaction submission for first success.
 
 ## What the SDK is for
 
-- Sponsors and operators can build reserve-domain, reserve-rail, health-plan, policy-series, funding-line, commitment, obligation, and claim-case transactions directly.
+- Sponsors and operators can build reserve-domain, reserve-rail, health-plan, policy-series, funding-line, obligation, and claim-case settlement transactions directly.
 - Capital providers can derive capital-class and allocation addresses, inspect ledgers, and build deposit and redemption flows against canonical pool and class objects.
 - Wallet apps and members can inspect plan participation, obligations, claim state, and payout history with the read-model helpers.
 - Oracle operators can register profiles, configure pool policy, attest claim cases on-chain, and use a narrower attestation helper surface for outcome packaging.
 - External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
-- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client now covers sponsor funding, premium intake, LP deposits/redemptions, redemption processing, settlement, and fee/treasury withdrawals. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
+- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client now covers sponsor funding, premium intake, claim-case settlement, LP deposits/redemptions, redemption processing, obligation settlement, and fee/treasury withdrawals. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
 - Safe settlement calls require `recipientOwnerAddress` alongside the custody accounts so the SDK can preflight payout token-account mint and owner before users sign.
 
 ## What the SDK does not do

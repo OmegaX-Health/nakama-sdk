@@ -8,4 +8,4 @@
 
 > `const` **SEED\_LP\_POSITION**: `"lp_position"` = `'lp_position'`
 
-Defined in: [src/protocol\_seeds.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L37)
+Defined in: [src/protocol\_seeds.ts:33](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L33)

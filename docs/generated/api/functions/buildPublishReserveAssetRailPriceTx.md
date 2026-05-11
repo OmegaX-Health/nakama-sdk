@@ -8,7 +8,7 @@
 
 > **buildPublishReserveAssetRailPriceTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1285](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1285)
+Defined in: [src/protocol.ts:1302](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1302)
 
 ## Parameters
 

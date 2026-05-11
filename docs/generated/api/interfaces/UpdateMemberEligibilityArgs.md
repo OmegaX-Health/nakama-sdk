@@ -6,7 +6,7 @@
 
 # Interface: UpdateMemberEligibilityArgs
 
-Defined in: [src/generated/protocol\_types.ts:1326](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1326)
+Defined in: [src/generated/protocol\_types.ts:1199](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1199)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1326](https://github.com/OmegaX-He
 
 > **active**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:1329](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1329)
+Defined in: [src/generated/protocol\_types.ts:1202](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1202)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1329](https://github.com/OmegaX-He
 
 > **delegated\_rights**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1328](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1328)
+Defined in: [src/generated/protocol\_types.ts:1201](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1201)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:1328](https://github.com/OmegaX-He
 
 > **eligibility\_status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1327](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1327)
+Defined in: [src/generated/protocol\_types.ts:1200](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1200)

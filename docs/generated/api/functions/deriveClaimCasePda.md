@@ -8,7 +8,7 @@
 
 > **deriveClaimCasePda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:408](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L408)
+Defined in: [src/protocol\_seeds.ts:342](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L342)
 
 ## Parameters
 

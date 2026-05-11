@@ -8,7 +8,7 @@
 
 > **buildSetPoolOracleTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3531](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3531)
+Defined in: [src/protocol.ts:3242](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3242)
 
 ## Parameters
 

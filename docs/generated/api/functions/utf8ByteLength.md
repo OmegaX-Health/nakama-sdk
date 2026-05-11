@@ -8,7 +8,7 @@
 
 > **utf8ByteLength**(`value`): `number`
 
-Defined in: [src/protocol\_seeds.ts:55](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L55)
+Defined in: [src/protocol\_seeds.ts:51](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L51)
 
 ## Parameters
 

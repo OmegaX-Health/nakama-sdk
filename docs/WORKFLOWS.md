@@ -108,6 +108,7 @@ Builders:
 - `buildAttachClaimEvidenceRefTx(...)`
 - `buildAdjudicateClaimCaseTx(...)`
 - `buildSettleClaimCaseTx(...)`
+- `buildSettleClaimCaseSelectedAssetTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
 - `buildSettleObligationTx(...)`
@@ -162,6 +163,8 @@ Builders:
 
 - `buildInitializeProtocolGovernanceTx(...)`
 - `buildRotateProtocolGovernanceAuthorityTx(...)`
+- `buildAcceptProtocolGovernanceAuthorityTx(...)`
+- `buildCancelProtocolGovernanceAuthorityTransferTx(...)`
 - `buildSetProtocolEmergencyPauseTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
@@ -222,14 +225,11 @@ Builders:
 - `buildUpdateMemberEligibilityTx(...)`
 - `buildOpenFundingLineTx(...)`
 - `buildFundSponsorBudgetTx(...)`
-- `buildCreateCommitmentCampaignTx(...)`
-- `buildCreateCommitmentPaymentRailTx(...)`
-- `buildDepositCommitmentTx(...)`
-- `buildActivateDirectPremiumCommitmentTx(...)`
-- `buildActivateTreasuryCreditCommitmentTx(...)`
-- `buildActivateWaterfallCommitmentTx(...)`
-- `buildRefundCommitmentTx(...)`
-- `buildPauseCommitmentCampaignTx(...)`
+- `buildRecordPremiumPaymentTx(...)`
+- `buildOpenClaimCaseTx(...)`
+- `buildAdjudicateClaimCaseTx(...)`
+- `buildSettleClaimCaseTx(...)`
+- `buildSettleClaimCaseSelectedAssetTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
 - `buildSettleObligationTx(...)`
@@ -242,10 +242,7 @@ Readers:
 - `fetchMemberPosition(...)`
 - `fetchFundingLine(...)`
 - `fetchFundingLineLedger(...)`
-- `fetchCommitmentCampaign(...)`
-- `fetchCommitmentPaymentRail(...)`
-- `fetchCommitmentLedger(...)`
-- `fetchCommitmentPosition(...)`
+- `fetchClaimCase(...)`
 - `fetchPlanReserveLedger(...)`
 - `fetchSeriesReserveLedger(...)`
 - `fetchObligation(...)`

@@ -8,7 +8,7 @@
 
 > **toBigIntAmount**(`value`): `bigint`
 
-Defined in: [src/protocol\_models.ts:414](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L414)
+Defined in: [src/protocol\_models.ts:398](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L398)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **PoolClassLedgerSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:296](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L296)
+Defined in: [src/protocol\_models.ts:280](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L280)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:296](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:297](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L297)
+Defined in: [src/protocol\_models.ts:281](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L281)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:297](https://github.com/OmegaX-Health/omega
 
 > **assetMint**: `string`
 
-Defined in: [src/protocol\_models.ts:299](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L299)
+Defined in: [src/protocol\_models.ts:283](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L283)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:299](https://github.com/OmegaX-Health/omega
 
 > **capitalClass**: `string`
 
-Defined in: [src/protocol\_models.ts:298](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L298)
+Defined in: [src/protocol\_models.ts:282](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L282)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol\_models.ts:298](https://github.com/OmegaX-Health/omega
 
 > `optional` **realizedLossAmount?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:303](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L303)
+Defined in: [src/protocol\_models.ts:287](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L287)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/protocol\_models.ts:303](https://github.com/OmegaX-Health/omega
 
 > `optional` **realizedYieldAmount?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:302](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L302)
+Defined in: [src/protocol\_models.ts:286](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L286)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol\_models.ts:302](https://github.com/OmegaX-Health/omega
 
 > **sheet**: [`PartialReserveBalanceSheet`](PartialReserveBalanceSheet.md)
 
-Defined in: [src/protocol\_models.ts:300](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L300)
+Defined in: [src/protocol\_models.ts:284](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L284)
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: [src/protocol\_models.ts:300](https://github.com/OmegaX-Health/omega
 
 > **totalShares**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:301](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L301)
+Defined in: [src/protocol\_models.ts:285](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L285)

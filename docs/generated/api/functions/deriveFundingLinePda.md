@@ -8,7 +8,7 @@
 
 > **deriveFundingLinePda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:316](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L316)
+Defined in: [src/protocol\_seeds.ts:312](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L312)
 
 ## Parameters
 

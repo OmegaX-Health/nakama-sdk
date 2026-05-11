@@ -8,4 +8,4 @@
 
 > `const` **SEED\_CLAIM\_ATTESTATION**: `"claim_attestation"` = `'claim_attestation'`
 
-Defined in: [src/protocol\_seeds.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L49)
+Defined in: [src/protocol\_seeds.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L45)

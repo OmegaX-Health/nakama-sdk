@@ -8,7 +8,7 @@
 
 > **deriveAllocationPositionPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:498](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L498)
+Defined in: [src/protocol\_seeds.ts:432](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L432)
 
 ## Parameters
 

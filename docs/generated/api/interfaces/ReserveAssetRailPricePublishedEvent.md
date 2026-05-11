@@ -6,7 +6,7 @@
 
 # Interface: ReserveAssetRailPricePublishedEvent
 
-Defined in: [src/generated/protocol\_types.ts:1170](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1170)
+Defined in: [src/generated/protocol\_types.ts:1036](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1036)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1170](https://github.com/OmegaX-He
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1172](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1172)
+Defined in: [src/generated/protocol\_types.ts:1038](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1038)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1172](https://github.com/OmegaX-He
 
 > **confidence\_bps**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1175](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1175)
+Defined in: [src/generated/protocol\_types.ts:1041](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1041)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1175](https://github.com/OmegaX-He
 
 > **oracle\_authority**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1173)
+Defined in: [src/generated/protocol\_types.ts:1039](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1039)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:1173](https://github.com/OmegaX-He
 
 > **price\_usd\_1e8**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1174](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1174)
+Defined in: [src/generated/protocol\_types.ts:1040](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1040)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:1174](https://github.com/OmegaX-He
 
 > **proof\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:1177](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1177)
+Defined in: [src/generated/protocol\_types.ts:1043](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1043)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:1177](https://github.com/OmegaX-He
 
 > **published\_at\_ts**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1176)
+Defined in: [src/generated/protocol\_types.ts:1042](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1042)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/generated/protocol\_types.ts:1176](https://github.com/OmegaX-He
 
 > **reserve\_asset\_rail**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1171](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1171)
+Defined in: [src/generated/protocol\_types.ts:1037](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1037)

@@ -8,7 +8,7 @@
 
 > **buildReserveObligationTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3198](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3198)
+Defined in: [src/protocol.ts:2908](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2908)
 
 ## Parameters
 

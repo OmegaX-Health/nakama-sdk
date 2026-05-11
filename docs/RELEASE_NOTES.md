@@ -1,5 +1,29 @@
 # Release Notes — `@omegax/protocol-sdk`
 
+## `0.8.8`
+
+- Refreshed generated IDL, contract, and type bindings against the current local
+  `omegax-protocol` surface at commit `763c7da`, covering 62 instructions, 31
+  accounts, and 122 types.
+- Reflected the latest allocation guard errors, including inactive liquidity
+  pools and inactive or deallocation-only allocation positions.
+- Removed the retired commitment-campaign builders, readers, PDA helpers, seed
+  constants, and public model constants from the current SDK surface.
+- Added checked governance authority accept and cancellation builders for the
+  expanded governance-transfer lifecycle.
+- Updated reserve asset rail configuration for the current protocol account and
+  argument shape, including `maxConfidenceBps`.
+- Added direct `buildSettleClaimCaseTx(...)` and selected-asset
+  `buildSettleClaimCaseSelectedAssetTx(...)` helpers, plus safe-client parameter
+  aliases and preflight-aware safe-client methods.
+- Realigned funding-line, member-position, obligation, and settlement builders
+  with the latest optional account slots and reserve-asset-rail requirements.
+- Fixed the packed `omegax-sdk` CLI entrypoint so installs invoked through
+  `node_modules/.bin` run the CLI instead of exiting quietly through symlinked
+  bin paths.
+- Regenerated TypeDoc markdown and refreshed authored docs, release notes, and
+  release coordination material for the `0.8.8` publish train.
+
 ## `0.8.7`
 
 - Added the full onboarding DX pass for external app/backend and oracle-service
@@ -46,7 +70,8 @@
 ## `0.8.5`
 
 - Refreshed generated IDL, contract, and type bindings against the local `omegax-protocol` surface at commit `2326371`, covering 67 instructions, 35 accounts, and 134 types.
-- Added PDA helpers for `deriveReserveAssetRailPda(...)`, `deriveCommitmentCampaignPda(...)`, `deriveCommitmentPaymentRailPda(...)`, `deriveCommitmentLedgerPda(...)`, and `deriveCommitmentPositionPda(...)`.
+- Added PDA helper coverage for reserve asset rails and the then-current commitment
+  account model.
 - Added `buildInitializeSeriesReserveLedgerTx(...)` for initializing extra-asset series reserve accounting.
 - Exported canonical commitment, reserve asset role/source, membership mode/gate/proof, claim-attestation decision, pool-oracle permission, oracle type, schema family/visibility, and native SOL mint constants from the root package and protocol-model module.
 - Updated `buildAttestClaimCaseTx(...)` for the expanded local protocol account list, including `protocol_governance`, `health_plan`, `funding_line`, optional pool oracle scope accounts, writable `claim_case`, and the current `ClaimAttestation` fields.

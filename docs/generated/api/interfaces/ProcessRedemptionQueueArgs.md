@@ -6,7 +6,7 @@
 
 # Interface: ProcessRedemptionQueueArgs
 
-Defined in: [src/generated/protocol\_types.ts:1048](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1048)
+Defined in: [src/generated/protocol\_types.ts:896](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L896)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:1048](https://github.com/OmegaX-He
 
 > **shares**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1049](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1049)
+Defined in: [src/generated/protocol\_types.ts:897](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L897)

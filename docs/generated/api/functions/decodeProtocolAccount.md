@@ -8,7 +8,7 @@
 
 > **decodeProtocolAccount**\<`T`\>(`accountName`, `data`): `T`
 
-Defined in: [src/protocol.ts:652](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L652)
+Defined in: [src/protocol.ts:651](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L651)
 
 ## Type Parameters
 

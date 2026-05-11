@@ -8,4 +8,4 @@
 
 > `const` **REDEMPTION\_POLICY\_PAUSED**: `2` = `2`
 
-Defined in: [src/protocol\_models.ts:97](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L97)
+Defined in: [src/protocol\_models.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L81)

@@ -8,4 +8,4 @@
 
 > `const` **SCHEMA\_VISIBILITY\_RESTRICTED**: `2` = `2`
 
-Defined in: [src/protocol\_models.ts:128](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L128)
+Defined in: [src/protocol\_models.ts:112](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L112)
