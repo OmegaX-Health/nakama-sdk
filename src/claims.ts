@@ -145,10 +145,8 @@ export function validateSignedClaimTx(
     }
   }
 
-  const expectedUnsignedTxBase64 = (
-    params.expectedUnsignedTxBase64 ??
-    intent?.unsignedTxBase64 ??
-    ''
+  const expectedUnsignedTxBase64 = String(
+    params.expectedUnsignedTxBase64 ?? '',
   ).trim();
   if (!expectedUnsignedTxBase64) {
     return {

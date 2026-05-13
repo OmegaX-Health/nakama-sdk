@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.8`.
+This page documents the public SDK surface shipped in `0.8.9`.
 
 Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
 `docs/generated/api/README.md` for generated symbol-level markdown.
@@ -436,13 +436,16 @@ Available from the root package and `@omegax/protocol-sdk/claims`.
 - `normalizeClaimRpcFailure(...)`
 - `validateSignedClaimTx(...)`
 
-`validateSignedClaimTx(...)` requires a matching unsigned transaction intent and
-fails closed when the signed transaction does not match that intent. Claim
-intents should include `intentId`, `nonce`, `expiresAtIso`, `requiredSigner`,
-and `unsignedTxBase64`; the validator rejects stale intents, wrong nonces, wrong
-signers, malformed transactions, and message tampering. Recent-blockhash refresh
-is allowed only when every non-blockhash byte still matches, and
-`requireExactMessage: true` disables even that for high-risk operator flows.
+`validateSignedClaimTx(...)` requires a trusted
+`expectedUnsignedTxBase64` from the service that created the intent, and fails
+closed when the signed transaction does not match it. Claim intents should
+include `intentId`, `nonce`, `expiresAtIso`, `requiredSigner`, and
+`unsignedTxBase64`, but submitted intent bytes are metadata only; do not use them
+as the expected transaction source. The validator rejects stale intents, wrong
+nonces, wrong signers, malformed transactions, and message tampering.
+Recent-blockhash refresh is allowed only when every non-blockhash byte still
+matches, and `requireExactMessage: true` disables even that for high-risk
+operator flows.
 
 The claims module also re-exports:
 

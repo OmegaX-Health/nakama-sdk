@@ -157,6 +157,7 @@ test('validateSignedClaimTx enforces claim intent expiry, nonce, and signer bind
 
   const valid = validateSignedClaimTx({
     signedTxBase64: serializeTransactionBase64(signedTx),
+    expectedUnsignedTxBase64: serializeTransactionBase64(unsignedTx),
     claimIntent: intent,
     requiredSigner: payer.publicKey.toBase58(),
     expectedIntentId: 'intent-1',
@@ -167,6 +168,7 @@ test('validateSignedClaimTx enforces claim intent expiry, nonce, and signer bind
 
   const stale = validateSignedClaimTx({
     signedTxBase64: serializeTransactionBase64(signedTx),
+    expectedUnsignedTxBase64: serializeTransactionBase64(unsignedTx),
     claimIntent: intent,
     requiredSigner: payer.publicKey.toBase58(),
     expectedIntentId: 'intent-1',
@@ -178,6 +180,7 @@ test('validateSignedClaimTx enforces claim intent expiry, nonce, and signer bind
 
   const wrongNonce = validateSignedClaimTx({
     signedTxBase64: serializeTransactionBase64(signedTx),
+    expectedUnsignedTxBase64: serializeTransactionBase64(unsignedTx),
     claimIntent: intent,
     requiredSigner: payer.publicKey.toBase58(),
     expectedIntentId: 'intent-1',
@@ -186,6 +189,46 @@ test('validateSignedClaimTx enforces claim intent expiry, nonce, and signer bind
   });
   assert.equal(wrongNonce.valid, false);
   assert.equal(wrongNonce.reason, 'intent_nonce_mismatch');
+});
+
+test('validateSignedClaimTx does not trust client-supplied intent transaction bytes', () => {
+  const payer = Keypair.generate();
+  const serverExpectedTx = buildTransferTransaction({ payer, lamports: 1 });
+  const attackerChosenTx = buildTransferTransaction({ payer, lamports: 2 });
+  attackerChosenTx.sign(payer);
+  const clientSubmittedIntent = {
+    intentId: 'intent-1',
+    nonce: 'nonce-1',
+    unsignedTxBase64: serializeTransactionBase64(attackerChosenTx),
+    requiredSigner: payer.publicKey.toBase58(),
+    expiresAtIso: '2026-05-04T00:10:00.000Z',
+    attestationRefs: ['attestation-1'],
+  };
+
+  const missingTrustedExpected = validateSignedClaimTx({
+    signedTxBase64: serializeTransactionBase64(attackerChosenTx),
+    claimIntent: clientSubmittedIntent,
+    requiredSigner: payer.publicKey.toBase58(),
+    expectedIntentId: 'intent-1',
+    expectedNonce: 'nonce-1',
+    nowIso: '2026-05-04T00:00:00.000Z',
+  } as Parameters<typeof validateSignedClaimTx>[0]);
+
+  assert.equal(missingTrustedExpected.valid, false);
+  assert.equal(missingTrustedExpected.reason, 'intent_message_mismatch');
+
+  const serverExpected = validateSignedClaimTx({
+    signedTxBase64: serializeTransactionBase64(attackerChosenTx),
+    expectedUnsignedTxBase64: serializeTransactionBase64(serverExpectedTx),
+    claimIntent: clientSubmittedIntent,
+    requiredSigner: payer.publicKey.toBase58(),
+    expectedIntentId: 'intent-1',
+    expectedNonce: 'nonce-1',
+    nowIso: '2026-05-04T00:00:00.000Z',
+  });
+
+  assert.equal(serverExpected.valid, false);
+  assert.equal(serverExpected.reason, 'intent_message_mismatch');
 });
 
 test('validateSignedClaimTx allows blockhash-only refresh unless exact mode is required', () => {
