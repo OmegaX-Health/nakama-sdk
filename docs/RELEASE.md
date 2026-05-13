@@ -97,8 +97,9 @@ OMEGAX_REQUIRE_GITHUB_GOVERNANCE=1 \
 npm run security:release-governance
 ```
 
-The second reviewer must already have repository access, and npm trusted
-publishing must be configured in npm for the `npm-production` GitHub environment.
+The second reviewer must already have write, maintain, or admin access to this
+repository, and npm trusted publishing must be configured in npm for the
+`npm-production` GitHub environment.
 
 ## Protocol binding refresh
 

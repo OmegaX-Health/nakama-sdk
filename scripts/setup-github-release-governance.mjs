@@ -56,14 +56,50 @@ async function github(path, options = {}) {
 
 async function resolveUserReviewer(login) {
   const user = await github(`/users/${encodeURIComponent(login)}`);
-  return { type: 'User', id: user.id, login: user.login };
+  const permission = await github(
+    `/repos/${repository}/collaborators/${encodeURIComponent(user.login)}/permission`,
+  );
+  const permissionName = String(permission?.permission ?? '').toLowerCase();
+  if (!['admin', 'maintain', 'write'].includes(permissionName)) {
+    throw new Error(
+      `Release reviewer ${user.login} must have write, maintain, or admin access to ${repository}; found ${permissionName || 'none'}.`,
+    );
+  }
+  return {
+    type: 'User',
+    id: user.id,
+    login: user.login,
+    permission: permissionName,
+  };
 }
 
 async function resolveTeamReviewer(org, slug) {
   const team = await github(
     `/orgs/${encodeURIComponent(org)}/teams/${encodeURIComponent(slug)}`,
   );
-  return { type: 'Team', id: team.id, slug: team.slug };
+  const repo = await github(
+    `/orgs/${encodeURIComponent(org)}/teams/${encodeURIComponent(team.slug)}/repos/${repository}`,
+  );
+  const permissionName = String(
+    repo?.permissions?.admin
+      ? 'admin'
+      : repo?.permissions?.maintain
+        ? 'maintain'
+        : repo?.permissions?.push
+          ? 'write'
+          : '',
+  ).toLowerCase();
+  if (!permissionName) {
+    throw new Error(
+      `Release reviewer team ${team.slug} must have write, maintain, or admin access to ${repository}.`,
+    );
+  }
+  return {
+    type: 'Team',
+    id: team.id,
+    slug: team.slug,
+    permission: permissionName,
+  };
 }
 
 async function currentBranchProtection() {
@@ -134,8 +170,8 @@ async function main() {
     apply,
     reviewers: [...userReviewers, ...teamReviewers].map((reviewer) =>
       reviewer.type === 'Team'
-        ? `team:${reviewer.slug}`
-        : `user:${reviewer.login}`,
+        ? `team:${reviewer.slug}:${reviewer.permission}`
+        : `user:${reviewer.login}:${reviewer.permission}`,
     ),
     branchProtection: branchBody,
     environmentProtection: environmentBody,
