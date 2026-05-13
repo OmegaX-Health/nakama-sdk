@@ -69,6 +69,37 @@ Production moderate-or-higher dependency advisories are release blockers unless
 Solana-chain moderate advisories are allowed only through that script's narrow
 documented exception rather than forced transitive overrides.
 
+## GitHub release governance setup
+
+Release governance setup is a live GitHub admin change. The helper defaults to a
+dry run and requires explicit reviewer input before it can mutate anything:
+
+```bash
+GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
+npm run security:release-governance:setup
+```
+
+After reviewing the planned branch and environment settings, apply them only with
+explicit approval:
+
+```bash
+GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
+npm run security:release-governance:setup -- --apply
+```
+
+Then verify live state:
+
+```bash
+GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+OMEGAX_REQUIRE_GITHUB_GOVERNANCE=1 \
+npm run security:release-governance
+```
+
+The second reviewer must already have repository access, and npm trusted
+publishing must be configured in npm for the `npm-production` GitHub environment.
+
 ## Protocol binding refresh
 
 Whenever the protocol IDL or contract artifact changes:

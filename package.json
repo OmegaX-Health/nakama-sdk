@@ -134,6 +134,7 @@
     "security:install-scripts": "node scripts/check-install-scripts.mjs",
     "security:package": "node scripts/check-package-manifest.mjs",
     "security:release-governance": "node scripts/check-github-release-governance.mjs",
+    "security:release-governance:setup": "node scripts/setup-github-release-governance.mjs",
     "security:release-tag": "node scripts/check-release-tag.mjs",
     "test": "node scripts/run-tests.mjs",
     "dev": "tsx watch src/index.ts"
