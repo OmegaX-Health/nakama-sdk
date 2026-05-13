@@ -91,7 +91,8 @@ Fix:
 - Re-sign and simulate with `sigVerify: true`.
 - For claim or intake flows, call `validateSignedClaimTx(...)` before trusting
   the submitted transaction, and always pass the exact
-  `expectedUnsignedTxBase64` intent that the user was supposed to sign.
+  server-stored `expectedUnsignedTxBase64` transaction that the user was
+  supposed to sign.
 
 ### `rpc_timeout`
 

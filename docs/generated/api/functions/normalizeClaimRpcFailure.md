@@ -8,7 +8,7 @@
 
 > **normalizeClaimRpcFailure**(`error`): [`ClaimFailureDetail`](../interfaces/ClaimFailureDetail.md)
 
-Defined in: [src/claims.ts:387](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/claims.ts#L387)
+Defined in: [src/claims.ts:385](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/claims.ts#L385)
 
 ## Parameters
 

@@ -133,10 +133,12 @@ if (!simulation.signatureVerified) {
 
 Simulation is preflight feedback, not authentication. Claim and intake services
 that accept user-submitted transactions should call `validateSignedClaimTx(...)`
-with a `ClaimIntent` containing `intentId`, `nonce`, `expiresAtIso`,
-`requiredSigner`, and `unsignedTxBase64` before trusting the signer or intent.
-Operator flows can set `requireExactMessage: true`; wallet flows may allow
-blockhash-only refresh when every non-blockhash byte still matches.
+with the server-stored `expectedUnsignedTxBase64` plus a `ClaimIntent`
+containing `intentId`, `nonce`, `expiresAtIso`, `requiredSigner`, and
+`unsignedTxBase64`. Treat the submitted intent as metadata to check against
+server state, not as the source of truth for the transaction bytes. Operator
+flows can set `requireExactMessage: true`; wallet flows may allow blockhash-only
+refresh when every non-blockhash byte still matches.
 
 ## Path A: Oracle and event producers
 

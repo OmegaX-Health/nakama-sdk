@@ -1,5 +1,11 @@
 # Release Notes — `@omegax/protocol-sdk`
 
+## Next
+
+- Hardened `validateSignedClaimTx(...)` so submitted `ClaimIntent` transaction
+  bytes can no longer act as their own expected-message proof; claim intake now
+  requires the service's trusted `expectedUnsignedTxBase64`.
+
 ## `0.8.8`
 
 - Refreshed generated IDL, contract, and type bindings against the current local

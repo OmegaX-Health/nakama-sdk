@@ -42,9 +42,9 @@ Defined in: [src/types.ts:153](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 ***
 
-### expectedUnsignedTxBase64?
+### expectedUnsignedTxBase64
 
-> `optional` **expectedUnsignedTxBase64?**: `string`
+> **expectedUnsignedTxBase64**: `string`
 
 Defined in: [src/types.ts:150](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L150)
 

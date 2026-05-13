@@ -126,7 +126,8 @@ Failure helpers:
 - `normalizeClaimSimulationFailure(...)`
 - `normalizeClaimRpcFailure(...)`
 - `validateSignedClaimTx(...)` for checking the submitted signed transaction
-  against a nonce-bearing, expiring `ClaimIntent` before trusting claim intake.
+  against a server-stored unsigned transaction plus a nonce-bearing, expiring
+  `ClaimIntent` before trusting claim intake.
 
 See `examples/app-builder-read.ts` for deterministic app-facing read-model
 shaping from member, claim, and obligation snapshots.
