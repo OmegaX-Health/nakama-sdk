@@ -8,7 +8,7 @@
 
 > **OracleSigner** = `object`
 
-Defined in: [src/types.ts:124](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L124)
+Defined in: [src/types.ts:94](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L94)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:124](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **keyId**: `string`
 
-Defined in: [src/types.ts:125](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L125)
+Defined in: [src/types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L95)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:125](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **publicKeyBase58**: `string`
 
-Defined in: [src/types.ts:126](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L126)
+Defined in: [src/types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L96)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:126](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **sign**: (`message`) => `Promise`\<`Uint8Array`\>
 
-Defined in: [src/types.ts:127](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L127)
+Defined in: [src/types.ts:97](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L97)
 
 #### Parameters
 

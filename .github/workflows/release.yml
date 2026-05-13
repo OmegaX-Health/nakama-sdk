@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  deployments: read
 
 jobs:
   verify:
@@ -58,6 +59,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Clone protocol artifact target
+        env:
+          OMEGAX_PROTOCOL_TOKEN: ${{ secrets.OMEGAX_PROTOCOL_READ_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          commit="$(node -p "require('./SDK_RUNTIME.json').protocol.bindingRefreshCommit")"
+          git clone --filter=blob:none --no-checkout --depth 1 \
+            "https://x-access-token:${OMEGAX_PROTOCOL_TOKEN}@github.com/OmegaX-Health/omegax-protocol.git" \
+            ../omegax-protocol
+          git -C ../omegax-protocol fetch --depth 1 origin "${commit}"
+          git -C ../omegax-protocol checkout --detach FETCH_HEAD
+
+      - name: Release governance
+        env:
+          GITHUB_TOKEN: ${{ secrets.OMEGAX_GOVERNANCE_READ_TOKEN }}
+          OMEGAX_REQUIRE_GITHUB_GOVERNANCE: '1'
+        run: npm run security:release-governance
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -91,6 +110,14 @@ jobs:
         env:
           OMEGAX_DOCS_REPO_DIR: ../omegax-docs
         run: npm run docs:sync:check:strict
+
+      - name: Runtime manifest consistency
+        run: npm run runtime:check
+
+      - name: Protocol artifact parity
+        env:
+          OMEGAX_PROTOCOL_REPO_STRICT_HEAD: '1'
+        run: npm run protocol:artifact:check
 
       - name: Security audit (prod dependencies)
         run: npm run audit:prod
@@ -148,18 +175,14 @@ jobs:
 
       - name: Validate release tag and npm availability
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ github.ref_name }}
-          # Historical SDK releases use annotated tags without local GPG signatures.
-          # The release guard still requires an annotated tag and an unpublished npm version.
-          ALLOW_UNSIGNED_RELEASE_TAG: '1'
         run: |
           git fetch --force origin "refs/tags/${TAG_NAME}:refs/tags/${TAG_NAME}"
           npm run security:release-tag
 
       - name: Publish to npm
         run: npm publish --ignore-scripts --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Post-publish clean install/import smoke
         shell: bash

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   Keypair,
   PublicKey,
+  SYSVAR_CLOCK_PUBKEY,
   SYSVAR_RENT_PUBKEY,
   SystemProgram,
   Transaction,
@@ -85,6 +86,19 @@ function deriveProgramDataAddress(programId: string): PublicKey {
 
 async function sleep(ms: number) {
   await new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+}
+
+async function getClusterUnixTimestamp(
+  connection: ReturnType<typeof createConnection>,
+): Promise<bigint> {
+  const account = await connection.getAccountInfo(
+    SYSVAR_CLOCK_PUBKEY,
+    'confirmed',
+  );
+  if (!account) {
+    return BigInt(Math.floor(Date.now() / 1000));
+  }
+  return Buffer.from(account.data).readBigInt64LE(32);
 }
 
 async function airdrop(
@@ -647,6 +661,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     })) as never,
   });
 
+  const reservePricePublishedAtTs = await getClusterUnixTimestamp(connection);
   await simulateAndBroadcast({
     label: 'publish_reserve_asset_rail_price',
     rpc,
@@ -655,7 +670,7 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
       args: {
         price_usd_1e8: 100_000_000n,
         confidence_bps: 5,
-        published_at_ts: BigInt(Math.floor(Date.now() / 1000)),
+        published_at_ts: reservePricePublishedAtTs,
         proof_hash: fixedHash(20),
       },
       accounts: {

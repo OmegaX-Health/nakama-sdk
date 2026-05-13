@@ -8,4 +8,4 @@
 
 > **SignatureLifecycleStatus** = [`GetSignatureStatusResult`](../interfaces/GetSignatureStatusResult.md)\[`"status"`\]
 
-Defined in: [src/types.ts:166](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L166)
+Defined in: [src/types.ts:136](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L136)

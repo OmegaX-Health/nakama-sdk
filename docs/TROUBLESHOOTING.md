@@ -9,20 +9,25 @@ This page maps common integration failures to likely causes in the canonical Ome
 3. Confirm `programId` and RPC cluster match the deployment you expect.
 4. Confirm product/operator flows use `createSafeProtocolClient(...)` unless you
    are intentionally testing raw protocol builders.
-5. Run the no-signature smoke:
+5. Run the installed-package doctor:
 
 ```bash
 npx @omegax/protocol-sdk doctor
+```
+
+6. In the SDK repo, run the no-signature smoke:
+
+```bash
 npm run example:smoke
 ```
 
-6. Regenerate bindings if the sibling protocol workspace changed:
+7. Regenerate bindings if the sibling protocol workspace changed:
 
 ```bash
 npm run generate:protocol-bindings
 ```
 
-5. Run local checks:
+8. Run local checks:
 
 ```bash
 npm run typecheck

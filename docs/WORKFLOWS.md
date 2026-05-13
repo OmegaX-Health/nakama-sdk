@@ -322,10 +322,18 @@ npm run format:check
 npm run build
 npm test
 npm run docs:check
+npm run docs:api:check
 npm run docs:sync:check:strict
+npm run runtime:check
+npm run examples:check
+npm run dogfood:consumer
+npm run cli:check
+npm run templates:check
+npm run dx:smoke
 npm run security:secrets
 npm run security:install-scripts
 npm run security:package
 npm run audit:prod
+npm pack --dry-run
 npm run verify:protocol:local
 ```

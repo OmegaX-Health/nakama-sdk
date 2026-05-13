@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { readFileSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 
 const requireGitleaks =
   process.env.CI === 'true' || process.env.OMEGAX_REQUIRE_GITLEAKS === '1';
@@ -68,19 +68,37 @@ const patterns = [
   },
 ];
 
-const result = spawnSync('git', ['ls-files', '-z'], {
+const tracked = spawnSync('git', ['ls-files', '-z'], {
   encoding: 'buffer',
 });
-if (result.status !== 0) {
-  console.error(result.stderr.toString('utf8') || 'git ls-files failed');
-  process.exit(result.status ?? 1);
+if (tracked.status !== 0) {
+  console.error(tracked.stderr.toString('utf8') || 'git ls-files failed');
+  process.exit(tracked.status ?? 1);
 }
 
-const paths = result.stdout
-  .toString('utf8')
-  .split('\0')
-  .filter(Boolean)
-  .filter((path) => !skippedPaths.has(path));
+const untracked = spawnSync(
+  'git',
+  ['ls-files', '--others', '--exclude-standard', '-z'],
+  {
+    encoding: 'buffer',
+  },
+);
+if (untracked.status !== 0) {
+  console.error(
+    untracked.stderr.toString('utf8') || 'git ls-files --others failed',
+  );
+  process.exit(untracked.status ?? 1);
+}
+
+const paths = [
+  ...new Set(
+    [tracked.stdout, untracked.stdout]
+      .map((stdout) => stdout.toString('utf8'))
+      .join('\0')
+      .split('\0')
+      .filter(Boolean),
+  ),
+].filter((path) => !skippedPaths.has(path));
 
 const findings = [];
 for (const path of paths) {
@@ -88,6 +106,9 @@ for (const path of paths) {
   if (
     [...binaryExtensions].some((extension) => lowerPath.endsWith(extension))
   ) {
+    continue;
+  }
+  if (!existsSync(path)) {
     continue;
   }
   const stat = statSync(path);

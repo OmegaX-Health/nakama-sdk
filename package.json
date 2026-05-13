@@ -1,6 +1,6 @@
 {
   "name": "@omegax/protocol-sdk",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "description": "TypeScript SDK for the canonical OmegaX health capital markets protocol surface on Solana devnet.",
   "author": "OMEGAX HEALTH FZCO",
   "contributors": [
@@ -87,7 +87,13 @@
   },
   "files": [
     "dist",
+    "docs",
+    "examples/README.md",
+    "examples/.env.example",
+    "examples/*.ts",
     "templates",
+    "SDK_QUALITY.md",
+    "SDK_RUNTIME.json",
     "NOTICE"
   ],
   "scripts": {
@@ -110,11 +116,13 @@
     "docs:sync:check": "node scripts/check-omegax-docs-sync.mjs",
     "docs:sync:check:strict": "node scripts/check-omegax-docs-sync.mjs --strict",
     "docs:sync:update": "node scripts/update-docs-sync-manifest.mjs",
+    "runtime:check": "node scripts/check-sdk-runtime-manifest.mjs",
+    "protocol:artifact:check": "node scripts/check-protocol-artifact-parity.mjs",
     "dx:smoke": "node scripts/dx-smoke.mjs",
-    "example:smoke": "tsx examples/devnet-smoke.ts",
-    "example:app": "tsx examples/app-builder-read.ts",
-    "example:oracle": "tsx examples/oracle-attestation.ts",
-    "examples:check": "npm run example:smoke && npm run example:app && npm run example:oracle",
+    "example:smoke": "npm run build && tsx examples/devnet-smoke.ts",
+    "example:app": "npm run build && tsx examples/app-builder-read.ts",
+    "example:oracle": "npm run build && tsx examples/oracle-attestation.ts",
+    "examples:check": "npm run build && tsx examples/devnet-smoke.ts && tsx examples/app-builder-read.ts && tsx examples/oracle-attestation.ts",
     "dogfood:consumer": "node scripts/dogfood-consumer-app.mjs",
     "cli:check": "node scripts/check-cli.mjs",
     "templates:check": "node scripts/check-templates.mjs",
@@ -125,6 +133,7 @@
     "security:secrets": "node scripts/check-secrets.mjs",
     "security:install-scripts": "node scripts/check-install-scripts.mjs",
     "security:package": "node scripts/check-package-manifest.mjs",
+    "security:release-governance": "node scripts/check-github-release-governance.mjs",
     "security:release-tag": "node scripts/check-release-tag.mjs",
     "test": "node scripts/run-tests.mjs",
     "dev": "tsx watch src/index.ts"

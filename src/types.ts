@@ -9,12 +9,7 @@ export type ClaimFailureCode =
   | 'pool_not_found'
   | 'pool_not_active'
   | 'membership_not_active'
-  | 'claim_window_not_set'
-  | 'claim_window_not_open'
-  | 'claim_window_closed'
   | 'no_passing_outcomes'
-  | 'seeker_rule_misconfigured'
-  | 'seeker_commitment_disabled'
   | 'intent_expired'
   | 'intent_id_mismatch'
   | 'intent_message_mismatch'
@@ -52,31 +47,6 @@ export type ClaimIntent = {
   requiredSigner: string;
   expiresAtIso: string;
   attestationRefs: string[];
-};
-
-export type RewardSummary = {
-  wallet: {
-    connected: boolean;
-    address: string | null;
-    provider: string | null;
-  };
-  cycle: {
-    id: string;
-    status: 'active' | 'completed' | 'abandoned' | 'paused';
-    primaryGoalId: string | null;
-    outcomesPassed: number;
-    outcomesTotal: number;
-    startIso: string;
-    endIso: string;
-  };
-  rewards: {
-    asset: string;
-    claimableRaw: string;
-    claimableUi: string;
-    status: 'eligible' | 'not_eligible' | 'pending' | 'claimed' | 'failed';
-    errorCode?: string | null;
-    errorMessage?: string | null;
-  };
 };
 
 export type OutcomeAttestation = {
@@ -164,48 +134,6 @@ export interface ValidateSignedClaimTxResult {
 }
 
 export type SignatureLifecycleStatus = GetSignatureStatusResult['status'];
-
-export type ProtocolCycleQuoteFields = {
-  poolAddress: string;
-  member: string;
-  seriesRefHashHex: string;
-  paymentMint: string;
-  premiumAmountRaw: bigint;
-  canonicalPremiumAmount: bigint;
-  periodIndex: bigint;
-  commitmentEnabled: boolean;
-  bondAmountRaw: bigint;
-  shieldFeeRaw: bigint;
-  protocolFeeRaw: bigint;
-  oracleFeeRaw: bigint;
-  netPoolPremiumRaw: bigint;
-  totalAmountRaw: bigint;
-  includedShieldCount: number;
-  thresholdBps: number;
-  outcomeThresholdScore: number;
-  cohortHashHex: string;
-  expiresAtTs: bigint;
-  nonceHashHex: string;
-  quoteMetaHashHex: string;
-};
-
-export interface ProtocolMemberCycleAccount {
-  address?: string;
-  commitmentEnabled: boolean;
-  outcomeThresholdScore: number;
-  cohortHashHex: string;
-  settledHealthAlphaScore: bigint | number;
-}
-
-export interface ProtocolCohortSettlementRootAccount {
-  address?: string;
-  finalized: boolean;
-  redistributableFailedBondsTotal: bigint;
-  successfulHealthAlphaScoreSum: bigint;
-  successfulMemberCount: bigint | number;
-  successfulClaimCount: bigint | number;
-  redistributionClaimedAmount: bigint;
-}
 
 export interface BroadcastSignedTxParams {
   signedTxBase64: string;

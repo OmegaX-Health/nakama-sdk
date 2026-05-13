@@ -1,5 +1,18 @@
 # Release Notes — `@omegax/protocol-sdk`
 
+## `0.8.10`
+
+- Added `SDK_QUALITY.md` and `SDK_RUNTIME.json` so humans and AI agents can
+  inspect the SDK contract, safety rules, public lanes, protocol target, and
+  release gates without inferring them from prose.
+- Packaged curated docs and safe examples with the npm artifact, and tightened
+  package/release verification around docs, examples, runtime metadata, CLI,
+  templates, secrets, install scripts, and packed consumer smokes.
+- Removed stale reward/seeker-era public types from the canonical SDK surface
+  and regenerated symbol-level API docs.
+- Clarified the protocol surface target and `v0.8.9` post-publish smoke history
+  without treating the already-published package as unpublished.
+
 ## `0.8.9`
 
 - Hardened `validateSignedClaimTx(...)` so submitted `ClaimIntent` transaction

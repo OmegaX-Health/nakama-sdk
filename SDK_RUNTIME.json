@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "@omegax/protocol-sdk",
+    "version": "0.8.10",
+    "module": "module",
+    "node": ">=20"
+  },
+  "protocol": {
+    "sourceRepo": "../omegax-protocol",
+    "bindingRefreshCommit": "763c7da",
+    "programId": "Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B",
+    "contractSha256": "f95822562b0c1f1b2d5bddde10f63d98d49dca7135c879011e432d0706735222",
+    "surface": {
+      "instructions": 62,
+      "accounts": 31,
+      "types": 122
+    },
+    "parityCommand": "npm run verify:protocol:local"
+  },
+  "publicSubpaths": [
+    ".",
+    "./claims",
+    "./errors",
+    "./magicblock",
+    "./oracle",
+    "./package.json",
+    "./protocol",
+    "./protocol_models",
+    "./protocol_seeds",
+    "./rpc",
+    "./transactions",
+    "./types",
+    "./utils"
+  ],
+  "lanes": [
+    {
+      "id": "app-read-build",
+      "entrypoints": [
+        { "name": "createConnection", "kind": "function", "subpath": "." },
+        {
+          "name": "createSafeProtocolClient",
+          "kind": "function",
+          "subpath": "."
+        },
+        { "name": "deriveHealthPlanPda", "kind": "function", "subpath": "." },
+        { "name": "derivePolicySeriesPda", "kind": "function", "subpath": "." }
+      ],
+      "sideEffects": "Reads network state only when a fetch method is called; builders return unsigned transactions."
+    },
+    {
+      "id": "claim-intake",
+      "entrypoints": [
+        { "name": "ClaimIntent", "kind": "type", "subpath": "./types" },
+        { "name": "validateSignedClaimTx", "kind": "function", "subpath": "." },
+        { "name": "simulateSignedTx", "kind": "method", "subpath": "./rpc" },
+        { "name": "broadcastSignedTx", "kind": "method", "subpath": "./rpc" }
+      ],
+      "sideEffects": "Validation is local; simulation and broadcast require explicit RPC calls."
+    },
+    {
+      "id": "oracle-attestation",
+      "entrypoints": [
+        { "name": "attestProtocolOutcome", "kind": "function", "subpath": "." },
+        {
+          "name": "verifyProtocolOracleAttestation",
+          "kind": "function",
+          "subpath": "."
+        },
+        {
+          "name": "createOracleSignerFromKmsAdapter",
+          "kind": "function",
+          "subpath": "."
+        }
+      ],
+      "sideEffects": "Signing occurs only through the caller-provided signer adapter."
+    },
+    {
+      "id": "maintainer-protocol-parity",
+      "entrypoints": [
+        {
+          "name": "listProtocolInstructionNames",
+          "kind": "function",
+          "subpath": "."
+        },
+        {
+          "name": "listProtocolAccountNames",
+          "kind": "function",
+          "subpath": "."
+        },
+        { "name": "decodeProtocolAccount", "kind": "function", "subpath": "." },
+        {
+          "name": "buildProtocolInstruction",
+          "kind": "function",
+          "subpath": "."
+        }
+      ],
+      "sideEffects": "No network mutation unless the caller separately signs and broadcasts."
+    }
+  ],
+  "environment": {
+    "required": [],
+    "optional": ["SOLANA_RPC_URL", "OMEGAX_PROTOCOL_REPO"],
+    "unsafe": [
+      {
+        "name": "OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID",
+        "purpose": "Allows custom program IDs for devnet, localnet, and test workflows only."
+      }
+    ]
+  },
+  "safetyRules": [
+    "No hidden signing.",
+    "No hidden broadcast.",
+    "No implicit production cluster.",
+    "Custom program IDs fail closed unless explicitly unsafe-enabled.",
+    "Signed claim transactions must be compared with trusted expected unsigned bytes."
+  ],
+  "docs": [
+    "README.md",
+    "SDK_QUALITY.md",
+    "docs/GETTING_STARTED.md",
+    "docs/API_REFERENCE.md",
+    "docs/WORKFLOWS.md",
+    "docs/RECIPES.md",
+    "examples/README.md"
+  ],
+  "validationGates": [
+    "npm test",
+    "npm run typecheck",
+    "npm run lint",
+    "npm run format:check",
+    "npm run build",
+    "npm run docs:api:check",
+    "npm run docs:check",
+    "npm run docs:sync:check:strict",
+    "npm run runtime:check",
+    "npm run protocol:artifact:check",
+    "npm run examples:check",
+    "npm run dogfood:consumer",
+    "npm run cli:check",
+    "npm run templates:check",
+    "npm run dx:smoke",
+    "npm run security:secrets",
+    "npm run security:install-scripts",
+    "npm run security:release-governance",
+    "npm run security:package",
+    "npm run audit:prod",
+    "npm pack --dry-run"
+  ]
+}

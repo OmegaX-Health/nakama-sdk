@@ -6,7 +6,7 @@
 
 # Interface: RpcClient
 
-Defined in: [src/types.ts:256](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L256)
+Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L184)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:256](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **broadcastSignedTx**(`params`): `Promise`\<[`BroadcastSignedTxResult`](BroadcastSignedTxResult.md)\>
 
-Defined in: [src/types.ts:258](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L258)
+Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L186)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:258](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **getRecentBlockhash**(): `Promise`\<`string`\>
 
-Defined in: [src/types.ts:257](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L257)
+Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L185)
 
 #### Returns
 
@@ -44,7 +44,7 @@ Defined in: [src/types.ts:257](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **getSignatureStatus**(`params`): `Promise`\<[`GetSignatureStatusResult`](GetSignatureStatusResult.md)\>
 
-Defined in: [src/types.ts:264](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L264)
+Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L192)
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: [src/types.ts:264](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **simulateSignedTx**(`params`): `Promise`\<[`SimulateSignedTxResult`](SimulateSignedTxResult.md)\>
 
-Defined in: [src/types.ts:261](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L261)
+Defined in: [src/types.ts:189](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L189)
 
 #### Parameters
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -24,7 +25,11 @@ function run(command, args, options = {}) {
     if (options.capture) {
       process.stderr.write(result.stderr || result.stdout);
     }
-    process.exit(result.status ?? 1);
+    throw new Error(
+      `Command failed: ${command} ${args.join(' ')} (exit ${
+        result.status ?? 1
+      })`,
+    );
   }
 
   return result.stdout;
@@ -49,6 +54,12 @@ async function patchSdkDependency(appRoot, tarballPath) {
   );
 }
 
+function ensureCliBuilt() {
+  if (!existsSync(cliPath)) {
+    run('npm', ['run', 'build']);
+  }
+}
+
 export async function runTemplateChecks() {
   run('npm', ['run', 'build']);
   const tarballPath = parsePackedTarball(
@@ -59,6 +70,7 @@ export async function runTemplateChecks() {
   try {
     for (const template of templates) {
       const appRoot = join(tempRoot, template);
+      ensureCliBuilt();
       run(process.execPath, [
         cliPath,
         'scaffold',

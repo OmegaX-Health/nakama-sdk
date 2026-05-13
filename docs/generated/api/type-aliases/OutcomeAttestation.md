@@ -8,7 +8,7 @@
 
 > **OutcomeAttestation** = `object`
 
-Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L82)
+Defined in: [src/types.ts:52](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L52)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **asOfIso**: `string`
 
-Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L87)
+Defined in: [src/types.ts:57](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L57)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **cycleId**: `string`
 
-Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L85)
+Defined in: [src/types.ts:55](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L55)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **digestHex**: `string`
 
-Defined in: [src/types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L96)
+Defined in: [src/types.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L66)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **id**: `string`
 
-Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L83)
+Defined in: [src/types.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L53)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **issuedAtIso**: `string`
 
-Defined in: [src/types.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L88)
+Defined in: [src/types.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L58)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/types.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **outcomeId**: `string`
 
-Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L86)
+Defined in: [src/types.ts:56](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L56)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **payload**: `Record`\<`string`, `unknown`\>
 
-Defined in: [src/types.ts:89](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L89)
+Defined in: [src/types.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L59)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/types.ts:89](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **signatureBase64**: `string`
 
-Defined in: [src/types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L95)
+Defined in: [src/types.ts:65](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L65)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **userId**: `string`
 
-Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L84)
+Defined in: [src/types.ts:54](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L54)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **verifier**: `object`
 
-Defined in: [src/types.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L90)
+Defined in: [src/types.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L60)
 
 #### algorithm
 

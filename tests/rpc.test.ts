@@ -164,6 +164,57 @@ test('createRpcClient simulates versioned transactions without stale decoding as
   assert.ok(simulatedTx instanceof VersionedTransaction);
 });
 
+test('createRpcClient keeps blockhash replacement off by default when verifying signatures', async () => {
+  const payer = Keypair.generate();
+  const recipient = Keypair.generate();
+  const tx = new Transaction({
+    feePayer: payer.publicKey,
+    recentBlockhash: '11111111111111111111111111111111',
+  }).add(
+    SystemProgram.transfer({
+      fromPubkey: payer.publicKey,
+      toPubkey: recipient.publicKey,
+      lamports: 1,
+    }),
+  );
+  tx.sign(payer);
+
+  const simulationOptions: unknown[] = [];
+  const rpc = createRpcClient(
+    createRpcConnectionStub({
+      async simulateTransaction(_transaction: unknown, options: unknown) {
+        simulationOptions.push(options);
+        return {
+          value: {
+            err: null,
+            logs: ['ok'],
+            unitsConsumed: 1234,
+          },
+        };
+      },
+    }),
+  );
+
+  await rpc.simulateSignedTx({
+    signedTxBase64: tx.serialize().toString('base64'),
+  });
+  await rpc.simulateSignedTx({
+    signedTxBase64: tx.serialize().toString('base64'),
+    sigVerify: false,
+  });
+
+  assert.deepEqual(simulationOptions[0], {
+    commitment: 'confirmed',
+    replaceRecentBlockhash: false,
+    sigVerify: true,
+  });
+  assert.deepEqual(simulationOptions[1], {
+    commitment: 'confirmed',
+    replaceRecentBlockhash: true,
+    sigVerify: false,
+  });
+});
+
 test('createRpcClient fails closed when signature verification fallback is not explicitly allowed', async () => {
   const payer = Keypair.generate();
   const recipient = Keypair.generate();

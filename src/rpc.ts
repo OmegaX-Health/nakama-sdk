@@ -211,7 +211,8 @@ export function createRpcClient(connection: Connection): RpcClient {
         };
       }
 
-      const replaceRecentBlockhash = params.replaceRecentBlockhash ?? true;
+      const replaceRecentBlockhash =
+        params.replaceRecentBlockhash ?? !sigVerify;
       const baseOptions = {
         commitment: normalizeSimulationCommitment(params.commitment),
         replaceRecentBlockhash,

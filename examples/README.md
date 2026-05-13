@@ -18,6 +18,15 @@ Optional:
 SOLANA_RPC_URL=https://api.devnet.solana.com npm run example:smoke
 ```
 
+In an installed consumer project, use the packaged examples and CLI:
+
+```bash
+npm install @omegax/protocol-sdk
+npm install --save-dev tsx
+npx @omegax/protocol-sdk examples
+npx tsx node_modules/@omegax/protocol-sdk/examples/devnet-smoke.ts
+```
+
 ## App Builder Read Model
 
 Shows how a health app, wallet, or backend can turn member positions,

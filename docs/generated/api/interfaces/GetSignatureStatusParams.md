@@ -6,7 +6,7 @@
 
 # Interface: GetSignatureStatusParams
 
-Defined in: [src/types.ts:243](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L243)
+Defined in: [src/types.ts:171](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L171)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:243](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **searchTransactionHistory?**: `boolean`
 
-Defined in: [src/types.ts:245](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L245)
+Defined in: [src/types.ts:173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L173)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/types.ts:245](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signature**: `string`
 
-Defined in: [src/types.ts:244](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L244)
+Defined in: [src/types.ts:172](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L172)

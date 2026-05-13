@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.9`.
+This page documents the public SDK surface shipped in `0.8.10`.
 
 Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
 `docs/generated/api/README.md` for generated symbol-level markdown.
@@ -64,9 +64,12 @@ Returned by `createRpcClient(...)`.
 - `simulateSignedTx(...)`
 - `getSignatureStatus(...)`
 
-`simulateSignedTx(...)` verifies signatures by default. If an RPC rejects the
-signature-verifying simulation argument combination, the SDK fails closed unless
-the caller explicitly passes `allowSigVerifyFallback: true`. Results include
+`simulateSignedTx(...)` verifies signatures by default and leaves blockhash
+replacement off while verifying signatures. If you disable signature
+verification, blockhash replacement defaults on for fresher preflight. If an RPC
+rejects the signature-verifying simulation argument combination, the SDK fails
+closed unless the caller explicitly passes `allowSigVerifyFallback: true`.
+Results include
 `sigVerifyRequested`, `sigVerifyUsed`, `signatureVerified`, and
 `verificationDowngraded` so intake services can reject unverified preflight
 results.

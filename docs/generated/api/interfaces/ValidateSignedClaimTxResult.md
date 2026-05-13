@@ -6,7 +6,7 @@
 
 # Interface: ValidateSignedClaimTxResult
 
-Defined in: [src/types.ts:159](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L159)
+Defined in: [src/types.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L129)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:159](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **reason**: [`ValidateSignedClaimTxReason`](../type-aliases/ValidateSignedClaimTxReason.md) \| `null`
 
-Defined in: [src/types.ts:162](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L162)
+Defined in: [src/types.ts:132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L132)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:162](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signer**: `string` \| `null`
 
-Defined in: [src/types.ts:163](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L163)
+Defined in: [src/types.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L133)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:163](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **txSignature**: `string` \| `null`
 
-Defined in: [src/types.ts:161](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L161)
+Defined in: [src/types.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L131)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/types.ts:161](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **valid**: `boolean`
 
-Defined in: [src/types.ts:160](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L160)
+Defined in: [src/types.ts:130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L130)
