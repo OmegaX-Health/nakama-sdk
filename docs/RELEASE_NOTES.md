@@ -1,6 +1,6 @@
 # Release Notes — `@omegax/protocol-sdk`
 
-## Next
+## `0.8.9`
 
 - Hardened `validateSignedClaimTx(...)` so submitted `ClaimIntent` transaction
   bytes can no longer act as their own expected-message proof; claim intake now

@@ -1,6 +1,6 @@
 # API Reference — `@omegax/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.8`.
+This page documents the public SDK surface shipped in `0.8.9`.
 
 Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
 `docs/generated/api/README.md` for generated symbol-level markdown.
