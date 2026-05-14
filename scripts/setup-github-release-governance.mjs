@@ -142,6 +142,16 @@ function branchProtectionBody(existing) {
   };
 }
 
+function reviewerKey(reviewer) {
+  return `${reviewer.type}:${reviewer.id}`;
+}
+
+function reviewerLabel(reviewer) {
+  return reviewer.type === 'Team'
+    ? `team:${reviewer.slug}:${reviewer.permission}`
+    : `user:${reviewer.login}:${reviewer.permission}`;
+}
+
 async function main() {
   assertRepository(repository);
 
@@ -151,7 +161,7 @@ async function main() {
 
   if (reviewerLogins.length + reviewerTeams.length < 2) {
     fail(
-      'Set at least two release reviewers via OMEGAX_RELEASE_REVIEWERS=login1,login2 or OMEGAX_RELEASE_REVIEWER_TEAMS=team-slug.',
+      'Set at least two distinct release reviewers via OMEGAX_RELEASE_REVIEWERS=login1,login2 or OMEGAX_RELEASE_REVIEWER_TEAMS=team-slug.',
     );
     return;
   }
@@ -161,12 +171,21 @@ async function main() {
     Promise.all(reviewerLogins.map(resolveUserReviewer)),
     Promise.all(reviewerTeams.map((slug) => resolveTeamReviewer(org, slug))),
   ]);
+  const reviewers = [...userReviewers, ...teamReviewers];
+  const distinctReviewerKeys = new Set(reviewers.map(reviewerKey));
+
+  if (distinctReviewerKeys.size < 2) {
+    fail(
+      'Set at least two distinct release reviewers; duplicate reviewer entries do not satisfy the release-governance requirement.',
+    );
+    return;
+  }
 
   const branchBody = branchProtectionBody(branchProtection);
   const environmentBody = {
     wait_timer: 0,
     prevent_self_review: true,
-    reviewers: [...userReviewers, ...teamReviewers].map((reviewer) => ({
+    reviewers: reviewers.map((reviewer) => ({
       type: reviewer.type,
       id: reviewer.id,
     })),
@@ -178,11 +197,7 @@ async function main() {
     branch,
     environment: environmentName,
     apply,
-    reviewers: [...userReviewers, ...teamReviewers].map((reviewer) =>
-      reviewer.type === 'Team'
-        ? `team:${reviewer.slug}:${reviewer.permission}`
-        : `user:${reviewer.login}:${reviewer.permission}`,
-    ),
+    reviewers: reviewers.map(reviewerLabel),
     branchProtection: branchBody,
     environmentProtection: environmentBody,
   };
