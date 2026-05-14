@@ -143,7 +143,10 @@ repository, and npm trusted publishing must be configured in npm for the
 GitHub users or teams; code-owner alias accounts, automation identities, and
 duplicate reviewer entries do not satisfy the second-reviewer requirement. If an
 alias account needs to be rejected during setup, pass it through
-`OMEGAX_RELEASE_EXCLUDED_REVIEWERS`.
+`OMEGAX_RELEASE_EXCLUDED_REVIEWERS`. Reviewer teams must have at least one
+visible non-excluded member, so the token used for setup must be allowed to read
+team membership; empty teams or teams made only of excluded code-owner aliases
+fail the dry run.
 
 The governance token is used in the release workflow's `verify` job before the
 protected `npm-production` publish job starts, so configure it as a repository

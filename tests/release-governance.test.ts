@@ -12,6 +12,8 @@ import {
 import {
   branchProtectionBody,
   deploymentBranchPolicyBody,
+  eligibleTeamReviewerMembers,
+  nextGitHubPagePath,
   restrictionPayload,
 } from '../scripts/setup-github-release-governance.mjs';
 import {
@@ -320,4 +322,33 @@ test('release setup preserves environment deployment branch policy', () => {
     },
   );
   assert.equal(deploymentBranchPolicyBody({}), null);
+});
+
+test('release setup filters excluded team members before accepting team reviewers', () => {
+  assert.deepEqual(
+    eligibleTeamReviewerMembers(
+      [{ login: 'marinosabijan' }, { login: 'code-owner-alias' }, {}],
+      new Set(['code-owner-alias']),
+    ),
+    ['marinosabijan'],
+  );
+
+  assert.deepEqual(
+    eligibleTeamReviewerMembers(
+      [{ login: 'CODE-OWNER-ALIAS' }],
+      new Set(['code-owner-alias']),
+    ),
+    [],
+  );
+});
+
+test('release setup follows GitHub pagination links for reviewer team inspection', () => {
+  assert.equal(
+    nextGitHubPagePath(
+      '<https://api.github.com/orgs/OmegaX-Health/teams/release/members?per_page=100&page=2>; rel="next", <https://api.github.com/orgs/OmegaX-Health/teams/release/members?per_page=100&page=3>; rel="last"',
+    ),
+    '/orgs/OmegaX-Health/teams/release/members?per_page=100&page=2',
+  );
+
+  assert.equal(nextGitHubPagePath(null), null);
 });

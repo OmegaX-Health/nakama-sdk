@@ -32,7 +32,7 @@ function assertRepository(value) {
   }
 }
 
-async function github(path, options = {}) {
+async function githubResponse(path, options = {}) {
   if (!token) {
     throw new Error(
       'Missing GitHub token. Set GITHUB_TOKEN or OMEGAX_GOVERNANCE_TOKEN.',
@@ -57,8 +57,52 @@ async function github(path, options = {}) {
     );
   }
 
+  return response;
+}
+
+async function github(path, options = {}) {
+  const response = await githubResponse(path, options);
   if (response.status === 204) return null;
   return await response.json();
+}
+
+export function nextGitHubPagePath(linkHeader) {
+  for (const part of String(linkHeader ?? '').split(',')) {
+    const match = part.match(/<([^>]+)>;\s*rel="next"/u);
+    if (!match) continue;
+
+    const url = new URL(match[1]);
+    return `${url.pathname}${url.search}`;
+  }
+
+  return null;
+}
+
+async function githubPages(path) {
+  const items = [];
+  let page = path;
+
+  while (page) {
+    const response = await githubResponse(page);
+    const body = await response.json();
+    if (!Array.isArray(body)) {
+      throw new Error(`Expected GitHub list response for ${page}.`);
+    }
+    items.push(...body);
+    page = nextGitHubPagePath(response.headers.get('link'));
+  }
+
+  return items;
+}
+
+export function eligibleTeamReviewerMembers(
+  members,
+  excludedLogins = new Set(),
+) {
+  return (members ?? [])
+    .map((member) => String(member?.login ?? '').trim())
+    .filter(Boolean)
+    .filter((login) => !excludedLogins.has(login.toLowerCase()));
 }
 
 async function resolveUserReviewer(login) {
@@ -106,11 +150,24 @@ async function resolveTeamReviewer(org, slug) {
       `Release reviewer team ${team.slug} must have write, maintain, or admin access to ${repository}.`,
     );
   }
+  const members = await githubPages(
+    `/orgs/${encodeURIComponent(org)}/teams/${encodeURIComponent(team.slug)}/members?per_page=100`,
+  );
+  const eligibleMemberLogins = eligibleTeamReviewerMembers(
+    members,
+    excludedReviewerLogins,
+  );
+  if (eligibleMemberLogins.length === 0) {
+    throw new Error(
+      `Release reviewer team ${team.slug} must have at least one visible non-excluded member; empty teams or teams made only of code-owner aliases cannot satisfy release governance.`,
+    );
+  }
   return {
     type: 'Team',
     id: team.id,
     slug: team.slug,
     permission: permissionName,
+    eligibleMemberLogins,
   };
 }
 
@@ -267,7 +324,7 @@ export function reviewerKey(reviewer) {
 
 function reviewerLabel(reviewer) {
   return reviewer.type === 'Team'
-    ? `team:${reviewer.slug}:${reviewer.permission}`
+    ? `team:${reviewer.slug}:${reviewer.permission}:${reviewer.eligibleMemberLogins.length}-visible-member${reviewer.eligibleMemberLogins.length === 1 ? '' : 's'}`
     : `user:${reviewer.login}:${reviewer.permission}`;
 }
 
