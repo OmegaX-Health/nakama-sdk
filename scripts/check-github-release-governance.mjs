@@ -100,6 +100,21 @@ async function main() {
   }
 
   const branch = await githubJson('/branches/main/protection');
+  const statusChecks = branch?.required_status_checks;
+  const requiredStatusCheckCount =
+    (statusChecks?.contexts ?? []).length + (statusChecks?.checks ?? []).length;
+  if (!statusChecks || statusChecks.strict !== true) {
+    fail('main branch protection must require strict status checks.');
+  }
+  if (requiredStatusCheckCount < 1) {
+    fail('main branch protection must require at least one status check.');
+  }
+  if (branch?.allow_force_pushes?.enabled !== false) {
+    fail('main branch protection must not allow force pushes.');
+  }
+  if (branch?.allow_deletions?.enabled !== false) {
+    fail('main branch protection must not allow branch deletion.');
+  }
   const prReviews = branch?.required_pull_request_reviews;
   const requiredReviews = Number(
     prReviews?.required_approving_review_count ?? 0,

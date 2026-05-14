@@ -21,6 +21,8 @@ This is the maintainer flow for publishing the canonical SDK release.
 - SDK commits include `Signed-off-by` trailers because CI enforces DCO.
 - GitHub `main` branch protection requires at least one approving review and
   CODEOWNERS review before release tags are cut.
+- GitHub `main` branch protection requires strict status checks, does not allow
+  force pushes, and does not allow branch deletion.
 - The `npm-production` environment requires at least two reviewers and prevents
   self-review.
 - A repository Actions secret named `OMEGAX_GOVERNANCE_READ_TOKEN` is available
@@ -95,9 +97,10 @@ npm run security:release-governance:setup -- --apply
 ```
 
 The setup helper preserves existing required status checks, GitHub App-bound
-checks, branch push restrictions, pull-request review dismissal/bypass
-allowances, and environment deployment branch policy while adding the required
-review and protected publish gates. Review the dry-run JSON before applying.
+checks, branch push restrictions, branch safety flags, pull-request review
+dismissal/bypass allowances, and environment deployment branch policy while
+adding the required review and protected publish gates. Review the dry-run JSON
+before applying.
 
 Then verify live state:
 

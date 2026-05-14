@@ -226,13 +226,37 @@ function deploymentBranchPolicyBody(environment) {
   };
 }
 
+function branchProtectionFlag(existing, name) {
+  if (typeof existing?.[name]?.enabled === 'boolean') {
+    return existing[name].enabled;
+  }
+  return undefined;
+}
+
 function branchProtectionBody(existing) {
-  return {
+  const body = {
     required_status_checks: requiredStatusChecksBody(existing),
     enforce_admins: true,
     required_pull_request_reviews: pullRequestReviewsBody(existing),
     restrictions: restrictionPayload(existing?.restrictions, 'branch push'),
   };
+
+  for (const name of [
+    'required_linear_history',
+    'allow_force_pushes',
+    'allow_deletions',
+    'block_creations',
+    'required_conversation_resolution',
+    'lock_branch',
+    'allow_fork_syncing',
+  ]) {
+    const value = branchProtectionFlag(existing, name);
+    if (typeof value === 'boolean') {
+      body[name] = value;
+    }
+  }
+
+  return body;
 }
 
 function reviewerKey(reviewer) {
