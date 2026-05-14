@@ -44,6 +44,9 @@ npm view @omegax/protocol-sdk version dist-tags versions --json
 gh auth status
 gh pr list --repo OmegaX-Health/omegax-sdk --state open \
   --json number,title,headRefName,baseRefName,author,mergeStateStatus,reviewDecision,statusCheckRollup
+gh run list --repo OmegaX-Health/omegax-sdk --limit 10 \
+  --json databaseId,workflowName,headBranch,headSha,status,conclusion,createdAt,displayTitle,event
+gh run view 25779686120 --repo OmegaX-Health/omegax-sdk --log-failed
 npm run release:state -- --json
 npm run security:release-governance:live -- --json
 npm run verify:protocol:local
@@ -72,6 +75,11 @@ secret-name, collaborator, team, and invitation summaries.
 - Local package version: `@omegax/protocol-sdk@0.8.10`.
 - Remote release tag: `v0.8.10` missing.
 - GitHub release: `v0.8.10` missing; latest visible release was `v0.8.8`.
+- Prior release workflow failure: the old `v0.8.9` Release run passed
+  verification and npm publish, then failed the post-publish clean
+  install/import smoke with npm `ETARGET` before registry visibility caught up.
+  The current release workflow already has the extended retry window documented
+  in `docs/RELEASE.md`; this is not the current `v0.8.10` blocker.
 - Strict release verification: `npm run verify:release:strict` passed after
   commit `ebbe631`, including security checks, typecheck, lint,
   format, build, SDK tests `114/114`, docs/API/docs-sync checks, runtime and
