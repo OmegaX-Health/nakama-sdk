@@ -131,8 +131,13 @@ Before tagging, confirm the release no longer has legacy npm publish tokens:
 
 ```bash
 gh secret list --repo OmegaX-Health/omegax-sdk
+gh secret list --org OmegaX-Health -a actions
 gh secret list --repo OmegaX-Health/omegax-sdk --env npm-production
 ```
+
+The release governance checker audits organization Actions secrets when the
+token has org-secret visibility; otherwise it warns and treats org-secret review
+as a human security checklist item.
 
 If `NPM_TOKEN` or `NODE_AUTH_TOKEN` exists, remove it only after explicit
 security approval:
@@ -141,6 +146,9 @@ security approval:
 gh secret delete NPM_TOKEN --repo OmegaX-Health/omegax-sdk
 gh secret delete NODE_AUTH_TOKEN --repo OmegaX-Health/omegax-sdk
 ```
+
+Remove organization or environment scoped npm tokens through the matching
+GitHub UI or `gh secret delete` scope only after the same explicit approval.
 
 ## Protocol binding refresh
 

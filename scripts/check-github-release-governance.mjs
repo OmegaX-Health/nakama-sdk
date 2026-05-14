@@ -168,6 +168,39 @@ async function optionalGithubJson(path) {
   return await response.json();
 }
 
+async function optionalOrganizationJson(path) {
+  const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
+  const repository = process.env.GITHUB_REPOSITORY;
+  if (!token || !repository) return null;
+
+  const [owner] = repository.split('/');
+  if (!owner) return null;
+
+  const response = await fetch(
+    `https://api.github.com/orgs/${encodeURIComponent(owner)}${path}`,
+    {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+
+  if (response.status === 403 || response.status === 404) {
+    warn(
+      `Skipping optional GitHub organization governance check for ${path}: ${response.status}.`,
+    );
+    return null;
+  }
+  if (!response.ok) {
+    throw new Error(
+      `GitHub organization governance check failed for ${path}: ${response.status} ${await response.text()}`,
+    );
+  }
+  return await response.json();
+}
+
 async function main() {
   const releaseWorkflow = readFileSync('.github/workflows/release.yml', 'utf8');
   for (const message of getReleaseWorkflowInvariantFailures(releaseWorkflow)) {
@@ -259,6 +292,10 @@ async function main() {
     {
       label: 'Repository Actions',
       response: repositorySecrets,
+    },
+    {
+      label: 'Organization Actions',
+      response: await optionalOrganizationJson('/actions/secrets'),
     },
     {
       label: 'npm-production environment',
