@@ -6,6 +6,7 @@ import {
   getBranchProtectionFailures,
   getEnvironmentProtectionFailures,
   getReleaseSecretFailures,
+  buildReleaseGovernanceReport,
   getReleaseWorkflowInvariantFailures,
 } from '../scripts/check-github-release-governance.mjs';
 import {
@@ -14,6 +15,7 @@ import {
   restrictionPayload,
 } from '../scripts/setup-github-release-governance.mjs';
 import {
+  buildLiveReleaseGovernanceArgs,
   buildLiveReleaseGovernanceEnv,
   needsGitHubToken,
 } from '../scripts/run-live-release-governance.mjs';
@@ -188,6 +190,31 @@ test('live governance wrapper defaults to the SDK repo and authenticated gh toke
       GITHUB_REPOSITORY: 'Example/repo',
       OMEGAX_REQUIRE_GITHUB_GOVERNANCE: '0',
       GITHUB_TOKEN: 'explicit-token',
+    },
+  );
+});
+
+test('live governance wrapper forwards structured-output flags', () => {
+  assert.deepEqual(
+    buildLiveReleaseGovernanceArgs('/tmp/checker.mjs', ['--json']),
+    ['/tmp/checker.mjs', '--json'],
+  );
+});
+
+test('release governance report exposes structured blocker evidence', () => {
+  assert.deepEqual(
+    buildReleaseGovernanceReport({
+      repository: 'OmegaX-Health/omegax-sdk',
+      liveChecked: true,
+      failures: ['branch protection missing'],
+      warnings: ['org secret visibility unavailable'],
+    }),
+    {
+      ok: false,
+      repository: 'OmegaX-Health/omegax-sdk',
+      liveChecked: true,
+      failures: ['branch protection missing'],
+      warnings: ['org secret visibility unavailable'],
     },
   );
 });

@@ -3,13 +3,61 @@
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
+const jsonOutput = process.argv.includes('--json');
+const failures = [];
+const warnings = [];
+
 function fail(message) {
-  console.error(message);
+  failures.push(message);
+  if (!jsonOutput) {
+    console.error(message);
+  }
   process.exitCode = 1;
 }
 
 function warn(message) {
-  console.warn(`Warning: ${message}`);
+  warnings.push(message);
+  if (!jsonOutput) {
+    console.warn(`Warning: ${message}`);
+  }
+}
+
+export function buildReleaseGovernanceReport({
+  repository = null,
+  liveChecked = false,
+  failures: reportFailures = [],
+  warnings: reportWarnings = [],
+}) {
+  return {
+    ok: reportFailures.length === 0,
+    repository,
+    liveChecked,
+    failures: reportFailures,
+    warnings: reportWarnings,
+  };
+}
+
+function finish(message, { liveChecked = false } = {}) {
+  if (jsonOutput) {
+    console.log(
+      JSON.stringify(
+        buildReleaseGovernanceReport({
+          repository: process.env.GITHUB_REPOSITORY ?? null,
+          liveChecked,
+          failures,
+          warnings,
+        }),
+        null,
+        2,
+      ),
+    );
+  } else if (!process.exitCode && message) {
+    console.log(message);
+  }
+
+  if (process.exitCode) {
+    process.exit(process.exitCode);
+  }
 }
 
 const releaseWorkflowInvariants = [
@@ -315,8 +363,7 @@ async function main() {
     warn(
       'Skipping live GitHub branch/environment governance checks outside GitHub Actions.',
     );
-    if (process.exitCode) process.exit(process.exitCode);
-    console.log('Release governance static check passed.');
+    finish('Release governance static check passed.');
     return;
   }
 
@@ -344,8 +391,7 @@ async function main() {
     fail(message);
   }
 
-  if (process.exitCode) process.exit(process.exitCode);
-  console.log('Release governance check passed.');
+  finish('Release governance check passed.', { liveChecked: true });
 }
 
 if (
@@ -353,7 +399,26 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   main().catch((error) => {
-    console.error(error instanceof Error ? error.message : String(error));
+    const message = error instanceof Error ? error.message : String(error);
+    if (jsonOutput) {
+      console.log(
+        JSON.stringify(
+          buildReleaseGovernanceReport({
+            repository: process.env.GITHUB_REPOSITORY ?? null,
+            liveChecked: Boolean(
+              process.env.GITHUB_REPOSITORY &&
+              (process.env.OMEGAX_GOVERNANCE_TOKEN || process.env.GITHUB_TOKEN),
+            ),
+            failures: [...failures, message],
+            warnings,
+          }),
+          null,
+          2,
+        ),
+      );
+    } else {
+      console.error(message);
+    }
     process.exitCode = 1;
   });
 }

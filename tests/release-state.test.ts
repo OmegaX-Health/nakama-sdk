@@ -133,14 +133,56 @@ test('release state classifier fails closed on missing upstream and unavailable 
   });
 
   assert.equal(state.git.synced, false);
+  assert.equal(state.npm.registryAvailable, false);
   assert.deepEqual(
     state.findings.map((finding) => finding.code),
     [
       'git-upstream-missing',
       'npm-registry-unavailable',
-      'npm-version-unpublished',
       'remote-tag-missing',
       'github-release-missing',
     ],
   );
+  assert.match(formatReleaseStateReport(state), /npm: registry unavailable/u);
+  assert.doesNotMatch(
+    formatReleaseStateReport(state),
+    /local version unpublished/u,
+  );
+});
+
+test('release state report does not call unavailable external probes missing', () => {
+  const state = classifyReleaseState({
+    packageName: '@omegax/protocol-sdk',
+    packageVersion: '0.8.10',
+    git: {
+      branch: 'main',
+      upstream: 'origin/main',
+      ahead: 0,
+      behind: 0,
+      remoteTagRefs: [],
+      remoteTagError: 'git ls-remote timed out',
+    },
+    npm: {
+      latest: '0.8.10',
+      distTags: { latest: '0.8.10' },
+      versions: ['0.8.10'],
+    },
+    github: {
+      releases: [],
+      error: 'gh release list timed out',
+    },
+  });
+
+  assert.equal(state.git.remoteTagAvailable, false);
+  assert.equal(state.github.releasesAvailable, false);
+  assert.deepEqual(
+    state.findings.map((finding) => finding.code),
+    ['github-release-list-unavailable', 'remote-tag-list-unavailable'],
+  );
+
+  const report = formatReleaseStateReport(state);
+  assert.match(report, /tag: v0\.8\.10 unknown; remote tag list unavailable/u);
+  assert.match(report, /GitHub release: unknown; release list unavailable/u);
+  assert.doesNotMatch(report, /missing on origin/u);
+  assert.doesNotMatch(report, /GitHub release: missing/u);
 });

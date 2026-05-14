@@ -37,6 +37,10 @@ export function readGhAuthToken(spawn = spawnSync) {
   return token || null;
 }
 
+export function buildLiveReleaseGovernanceArgs(checkerPath, args = []) {
+  return [checkerPath, ...args];
+}
+
 function releaseGovernanceCheckerPath() {
   return join(
     dirname(fileURLToPath(import.meta.url)),
@@ -46,6 +50,7 @@ function releaseGovernanceCheckerPath() {
 
 export function runLiveReleaseGovernance({
   env = process.env,
+  args = process.argv.slice(2),
   spawn = spawnSync,
   checkerPath = releaseGovernanceCheckerPath(),
 } = {}) {
@@ -56,10 +61,14 @@ export function runLiveReleaseGovernance({
     );
   }
 
-  const result = spawn(process.execPath, [checkerPath], {
-    env: buildLiveReleaseGovernanceEnv(env, token),
-    stdio: 'inherit',
-  });
+  const result = spawn(
+    process.execPath,
+    buildLiveReleaseGovernanceArgs(checkerPath, args),
+    {
+      env: buildLiveReleaseGovernanceEnv(env, token),
+      stdio: 'inherit',
+    },
+  );
 
   if (result.error) {
     console.error(

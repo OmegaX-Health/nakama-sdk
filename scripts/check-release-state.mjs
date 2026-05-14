@@ -5,19 +5,33 @@ import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 export const DEFAULT_RELEASE_REPOSITORY = 'OmegaX-Health/omegax-sdk';
+export const DEFAULT_COMMAND_TIMEOUT_MS = 15_000;
+
+function commandTimeoutMs() {
+  const configured = Number(process.env.OMEGAX_RELEASE_STATE_TIMEOUT_MS);
+  return Number.isFinite(configured) && configured > 0
+    ? configured
+    : DEFAULT_COMMAND_TIMEOUT_MS;
+}
 
 function run(command, args) {
+  const timeout = commandTimeoutMs();
   const result = spawnSync(command, args, {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
+    timeout,
   });
+  const error =
+    result.error?.code === 'ETIMEDOUT'
+      ? `${command} ${args.join(' ')} timed out after ${timeout}ms`
+      : result.error?.message;
 
   return {
     ok: result.status === 0,
     status: result.status,
     stdout: String(result.stdout ?? '').trim(),
     stderr: String(result.stderr ?? '').trim(),
-    error: result.error?.message,
+    error,
   };
 }
 
@@ -166,6 +180,9 @@ export function classifyReleaseState(input) {
   const behind = Number(input.git?.behind ?? 0);
   const upstream = input.git?.upstream ?? null;
   const gitSynced = Boolean(upstream) && ahead === 0 && behind === 0;
+  const npmUnavailable = (input.npm?.errors ?? []).length > 0;
+  const remoteTagUnavailable = Boolean(input.git?.remoteTagError);
+  const githubUnavailable = Boolean(input.github?.error);
   const findings = [];
 
   if (!upstream) {
@@ -200,7 +217,7 @@ export function classifyReleaseState(input) {
       `Unable to inspect npm registry state: ${error}`,
     );
   }
-  if (!npmVersionPublished) {
+  if (!npmVersionPublished && !npmUnavailable) {
     addFinding(
       findings,
       'info',
@@ -216,7 +233,7 @@ export function classifyReleaseState(input) {
       `${packageName}@${packageVersion} exists on npm but latest is ${npmLatest ?? 'unknown'}.`,
     );
   }
-  if (!remoteTagExists) {
+  if (!remoteTagExists && !remoteTagUnavailable) {
     addFinding(
       findings,
       'info',
@@ -232,7 +249,7 @@ export function classifyReleaseState(input) {
       `Remote tag ${tagName} exists but ${packageName}@${packageVersion} is not published on npm.`,
     );
   }
-  if (!githubRelease) {
+  if (!githubRelease && !githubUnavailable) {
     addFinding(
       findings,
       'info',
@@ -248,7 +265,7 @@ export function classifyReleaseState(input) {
       `GitHub release ${tagName} exists but ${packageName}@${packageVersion} is not published on npm.`,
     );
   }
-  if (input.github?.error) {
+  if (githubUnavailable) {
     addFinding(
       findings,
       'warning',
@@ -256,7 +273,7 @@ export function classifyReleaseState(input) {
       `Unable to inspect GitHub releases: ${input.github.error}`,
     );
   }
-  if (input.git?.remoteTagError) {
+  if (remoteTagUnavailable) {
     addFinding(
       findings,
       'warning',
@@ -275,14 +292,17 @@ export function classifyReleaseState(input) {
       ahead,
       behind,
       synced: gitSynced,
+      remoteTagAvailable: !remoteTagUnavailable,
       remoteTagExists,
     },
     npm: {
       latest: npmLatest,
       distTags: input.npm?.distTags ?? {},
+      registryAvailable: !npmUnavailable,
       versionPublished: npmVersionPublished,
     },
     github: {
+      releasesAvailable: !githubUnavailable,
       releaseExists: Boolean(githubRelease),
       release: githubRelease ?? null,
       latestRelease: latestGitHubRelease,
@@ -296,13 +316,22 @@ function formatFinding({ severity, code, message }) {
 }
 
 export function formatReleaseStateReport(state) {
+  const npmState = state.npm.registryAvailable
+    ? `latest ${state.npm.latest ?? 'unknown'}; ${state.npm.versionPublished ? 'local version published' : 'local version unpublished'}`
+    : 'registry unavailable';
+  const tagState = state.git.remoteTagAvailable
+    ? `${state.tagName} ${state.git.remoteTagExists ? 'present on origin' : 'missing on origin'}`
+    : `${state.tagName} unknown; remote tag list unavailable`;
+  const githubReleaseState = state.github.releasesAvailable
+    ? `${state.github.releaseExists ? 'present' : 'missing'}${state.github.latestRelease?.tagName ? `; latest visible ${state.github.latestRelease.tagName}` : ''}`
+    : 'unknown; release list unavailable';
   const lines = [
     'OmegaX SDK release state',
     `- package: ${state.packageName}@${state.packageVersion}`,
     `- git: ${state.git.branch ?? 'unknown'} ${state.git.synced ? 'synced with' : `ahead ${state.git.ahead}, behind ${state.git.behind} vs`} ${state.git.upstream ?? 'upstream unknown'}`,
-    `- npm: latest ${state.npm.latest ?? 'unknown'}; ${state.npm.versionPublished ? 'local version published' : 'local version unpublished'}`,
-    `- tag: ${state.tagName} ${state.git.remoteTagExists ? 'present on origin' : 'missing on origin'}`,
-    `- GitHub release: ${state.github.releaseExists ? 'present' : 'missing'}${state.github.latestRelease?.tagName ? `; latest visible ${state.github.latestRelease.tagName}` : ''}`,
+    `- npm: ${npmState}`,
+    `- tag: ${tagState}`,
+    `- GitHub release: ${githubReleaseState}`,
   ];
 
   if (state.findings.length === 0) {

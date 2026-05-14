@@ -80,13 +80,17 @@ reruns.
 GitHub credentials are absent. `npm run security:release-governance:live` is the
 authoritative live GitHub branch/environment/secret check. It uses
 `OMEGAX_GOVERNANCE_TOKEN` or `GITHUB_TOKEN` when either is set, otherwise it
-falls back to the local authenticated `gh` CLI token without printing it.
+falls back to the local authenticated `gh` CLI token without printing it. Use
+`npm run security:release-governance:live -- --json` when an automation needs
+structured `failures` and `warnings` instead of stderr scraping.
 `npm run release:state` is the read-only public release truth report: it compares
 `package.json`, local git ahead/behind state, npm registry versions, remote tags,
 and visible GitHub releases without mutating any external service. Use
 `npm run release:state -- --json` when an automation needs structured evidence,
 or `npm run release:state -- --fail-on-blockers` when local ahead/behind drift
-should fail the command.
+should fail the command. External probes time out after 15 seconds by default;
+set `OMEGAX_RELEASE_STATE_TIMEOUT_MS` only when an unusually slow local network
+needs a larger read-only window.
 
 Production moderate-or-higher dependency advisories are release blockers unless
 `npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
