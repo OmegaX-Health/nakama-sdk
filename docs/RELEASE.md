@@ -23,9 +23,9 @@ This is the maintainer flow for publishing the canonical SDK release.
   CODEOWNERS review before release tags are cut.
 - The `npm-production` environment requires at least two reviewers and prevents
   self-review.
-- A repository or organization Actions secret named
-  `OMEGAX_GOVERNANCE_READ_TOKEN` is available to the unprotected `verify` job
-  and can read repository branch and environment protection settings.
+- A repository Actions secret named `OMEGAX_GOVERNANCE_READ_TOKEN` is available
+  to the unprotected `verify` job and can read repository branch and environment
+  protection settings.
 - Stale repository, organization, or environment secrets named `NPM_TOKEN` or
   `NODE_AUTH_TOKEN` have been removed before tagging. Publishing uses trusted
   publishing/OIDC instead of a long-lived npm token.
@@ -109,9 +109,10 @@ from the independent reviewer set and does not satisfy the second-reviewer
 requirement.
 
 The governance token is used in the release workflow's `verify` job before the
-protected `npm-production` publish job starts, so it must be a repository or
-organization Actions secret that is available to that job. An environment-only
-secret on `npm-production` will not be visible to `verify`.
+protected `npm-production` publish job starts, so configure it as a repository
+Actions secret. An environment-only secret on `npm-production` will not be
+visible to `verify`, and an organization secret is harder to audit from the
+repo-level release gate.
 
 Before tagging, confirm the release no longer has legacy npm publish tokens:
 

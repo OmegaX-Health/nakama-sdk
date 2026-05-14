@@ -129,11 +129,24 @@ async function main() {
     }
   }
 
+  const repositorySecrets = await optionalGithubJson('/actions/secrets');
+  const repositorySecretNames = new Set(
+    (repositorySecrets?.secrets ?? []).map((secret) => secret.name),
+  );
+  if (
+    repositorySecrets &&
+    !repositorySecretNames.has('OMEGAX_GOVERNANCE_READ_TOKEN')
+  ) {
+    fail(
+      'Repository Actions secrets must include OMEGAX_GOVERNANCE_READ_TOKEN for the unprotected release verify job.',
+    );
+  }
+
   const stalePublishSecrets = ['NPM_TOKEN', 'NODE_AUTH_TOKEN'];
   const secretScopes = [
     {
       label: 'Repository Actions',
-      response: await optionalGithubJson('/actions/secrets'),
+      response: repositorySecrets,
     },
     {
       label: 'npm-production environment',
