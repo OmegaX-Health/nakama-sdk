@@ -31,6 +31,17 @@ test('release workflow invariants catch unsafe publish drift', () => {
   ]);
 });
 
+test('release workflow trigger invariant rejects extra release events', () => {
+  const workflow = readFileSync(
+    '.github/workflows/release.yml',
+    'utf8',
+  ).replace("      - 'v*'", "      - 'v*'\n  workflow_dispatch:");
+
+  assert.deepEqual(getReleaseWorkflowInvariantFailures(workflow), [
+    'Release workflow must run only from v* tag pushes.',
+  ]);
+});
+
 test('release setup preserves existing branch protection safety settings', () => {
   const body = branchProtectionBody({
     required_status_checks: {

@@ -18,10 +18,6 @@ const releaseWorkflowInvariants = [
     message: 'Release workflow must be named Release.',
   },
   {
-    pattern: /push:\s*\n\s+tags:\s*\n\s+- ['"]v\*['"]/u,
-    message: 'Release workflow must run only from v* tag pushes.',
-  },
-  {
     pattern:
       /Release governance[\s\S]*GITHUB_TOKEN:\s*\$\{\{\s*secrets\.OMEGAX_GOVERNANCE_READ_TOKEN\s*\}\}[\s\S]*OMEGAX_REQUIRE_GITHUB_GOVERNANCE:\s*['"]1['"][\s\S]*run:\s+npm run security:release-governance/u,
     message:
@@ -59,6 +55,38 @@ const releaseWorkflowInvariants = [
   },
 ];
 
+function topLevelKeyName(line) {
+  const match = /^([A-Za-z0-9_-]+):(?:\s|$)/u.exec(line);
+  return match?.[1] ?? null;
+}
+
+export function getTopLevelBlock(workflow, key) {
+  const lines = workflow.split(/\r?\n/u);
+  const startIndex = lines.findIndex((line) => topLevelKeyName(line) === key);
+  if (startIndex === -1) return null;
+
+  const block = [lines[startIndex]];
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (topLevelKeyName(line)) break;
+    block.push(line);
+  }
+  return block.join('\n');
+}
+
+export function getReleaseWorkflowTriggerFailures(workflow) {
+  const onBlock = getTopLevelBlock(workflow, 'on');
+  if (!onBlock) {
+    return ['Release workflow must run only from v* tag pushes.'];
+  }
+  const normalized = onBlock.trimEnd();
+  const expected = ['on:', '  push:', '    tags:', "      - 'v*'"].join('\n');
+
+  return normalized === expected
+    ? []
+    : ['Release workflow must run only from v* tag pushes.'];
+}
+
 export function getReleaseWorkflowInvariantFailures(workflow) {
   const failures = [];
   if (workflow.includes('NODE_AUTH_TOKEN')) {
@@ -72,6 +100,7 @@ export function getReleaseWorkflowInvariantFailures(workflow) {
       'Release workflow must not bypass signed release tag verification.',
     );
   }
+  failures.push(...getReleaseWorkflowTriggerFailures(workflow));
 
   for (const { pattern, message } of releaseWorkflowInvariants) {
     const matches =
