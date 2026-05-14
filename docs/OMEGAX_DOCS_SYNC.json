@@ -1,23 +1,23 @@
 {
-  "sdkVersion": "0.8.9",
+  "sdkVersion": "0.8.10",
   "omegaxDocsRepo": "https://github.com/OmegaX-Health/omegax-docs",
   "omegaxDocsCommit": "5d5678c9a492574985d1ed6276696527d8e07826",
-  "syncedAt": "2026-05-13T05:04:48.958Z",
+  "syncedAt": "2026-05-13T19:53:14.317Z",
   "syncedBy": "dr_sabijan",
   "pages": [
     {
       "sdkDoc": "README.md",
-      "sdkDocSha256": "1b49e94700059ba97ed93eac5b3ef5cec08ab96c4648a2ddb5314d032b44d575",
+      "sdkDocSha256": "28b925436460004e18ed140b7065f3e6902e74dc31ac1e490485106aec7047d8",
       "omegaxDocsPath": "website/docs/sdk/overview.mdx"
     },
     {
       "sdkDoc": "docs/GETTING_STARTED.md",
-      "sdkDocSha256": "fa30e4eb1dd1ec6e99c4d9432b9139c109682ee071c9302dfc659cf3e25820d3",
+      "sdkDocSha256": "e2d7c4f4d5576473d70608d10d63f42e7205690b81e88c0066342130c5bbf6b8",
       "omegaxDocsPath": "website/docs/sdk/getting-started.md"
     },
     {
       "sdkDoc": "docs/WORKFLOWS.md",
-      "sdkDocSha256": "bdef63915fa167c6ba744a31b31eb54f29f8c3b522bf2e89e63b2dcb3be1f943",
+      "sdkDocSha256": "3b57dd7da14eb2fb76f8bf33332dec51fa621b13b7a43f28d00b31b5bae2e370",
       "omegaxDocsPath": "website/docs/sdk/workflows.md"
     },
     {
@@ -37,17 +37,17 @@
     },
     {
       "sdkDoc": "docs/API_REFERENCE.md",
-      "sdkDocSha256": "49756f16c106bc8e37120da3d6dceea5f311a89d742f2f7239d4fb1384ad95e0",
+      "sdkDocSha256": "473bbea753e65e6b42889829a2cf0b3448b0d3bddd7940b454c055e6fe037ccb",
       "omegaxDocsPath": "website/docs/sdk/api-reference.md"
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
-      "sdkDocSha256": "be951eb7b0a9f9bd02931784bf9b9e5d5a19b1a8c6298975de7686fc98f94609",
+      "sdkDocSha256": "57b9df3831448e33d0341a6044e3483db25e56414f971c05063a829c4ea7b580",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {
       "sdkDoc": "docs/TROUBLESHOOTING.md",
-      "sdkDocSha256": "7b6cda6a206b71e7696a7ae0b4554f409c9f60073bed515e3d2878f7e3958ca6",
+      "sdkDocSha256": "3afe7337c5a4f875da430e0d46f90a8659485a5b1c140c7e2c1e43ea99d014f9",
       "omegaxDocsPath": "website/docs/sdk/troubleshooting.md"
     }
   ]

@@ -6,7 +6,7 @@
 
 # Interface: ClaimFailureDetail
 
-Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L40)
+Defined in: [src/types.ts:35](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L35)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **code**: [`ClaimFailureCode`](../type-aliases/ClaimFailureCode.md)
 
-Defined in: [src/types.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L41)
+Defined in: [src/types.ts:36](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L36)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **logs**: `string`[]
 
-Defined in: [src/types.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L44)
+Defined in: [src/types.ts:39](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L39)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **message**: `string`
 
-Defined in: [src/types.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L42)
+Defined in: [src/types.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L37)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **reason**: `string`
 
-Defined in: [src/types.ts:43](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L43)
+Defined in: [src/types.ts:38](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L38)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:43](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **retryable**: `boolean`
 
-Defined in: [src/types.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L45)
+Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L40)

@@ -6,6 +6,9 @@ const strict = process.argv.includes('--strict');
 const protocol = process.argv.includes('--protocol');
 
 const checks = [
+  { command: 'npm', args: ['run', 'security:secrets'] },
+  { command: 'npm', args: ['run', 'security:install-scripts'] },
+  { command: 'npm', args: ['run', 'security:release-governance'] },
   { command: 'npm', args: ['run', 'typecheck'] },
   { command: 'npm', args: ['run', 'lint'] },
   { command: 'npm', args: ['run', 'format:check'] },
@@ -17,6 +20,8 @@ const checks = [
     command: 'npm',
     args: ['run', strict ? 'docs:sync:check:strict' : 'docs:sync:check'],
   },
+  { command: 'npm', args: ['run', 'runtime:check'] },
+  { command: 'npm', args: ['run', 'protocol:artifact:check'] },
   { command: 'npm', args: ['run', 'security:package'] },
   { command: 'npm', args: ['run', 'audit:prod'] },
   { command: 'npm', args: ['run', 'examples:check'] },
@@ -28,6 +33,7 @@ const checks = [
   { command: 'npm', args: ['run', 'cli:check'] },
   { command: 'npm', args: ['run', 'templates:check'] },
   { command: 'npm', args: ['run', 'dx:smoke'] },
+  { command: 'npm', args: ['run', 'release:state'] },
   { command: 'npm', args: ['pack', '--dry-run'] },
 ];
 

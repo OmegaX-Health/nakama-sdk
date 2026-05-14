@@ -110,6 +110,9 @@ jobs:
       - name: Docs sync parity (omegax-docs)
         run: npm run docs:sync:check
 
+      - name: Runtime manifest consistency
+        run: npm run runtime:check
+
       - name: Dry-run package
         run: npm pack --dry-run
 

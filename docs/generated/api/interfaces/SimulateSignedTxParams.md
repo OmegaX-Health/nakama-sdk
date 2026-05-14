@@ -6,7 +6,7 @@
 
 # Interface: SimulateSignedTxParams
 
-Defined in: [src/types.ts:223](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L223)
+Defined in: [src/types.ts:151](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L151)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:223](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **allowSigVerifyFallback?**: `boolean`
 
-Defined in: [src/types.ts:228](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L228)
+Defined in: [src/types.ts:156](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L156)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:228](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **commitment?**: `Commitment`
 
-Defined in: [src/types.ts:225](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L225)
+Defined in: [src/types.ts:153](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L153)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:225](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **replaceRecentBlockhash?**: `boolean`
 
-Defined in: [src/types.ts:226](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L226)
+Defined in: [src/types.ts:154](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L154)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:226](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signedTxBase64**: `string`
 
-Defined in: [src/types.ts:224](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L224)
+Defined in: [src/types.ts:152](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L152)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:224](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **sigVerify?**: `boolean`
 
-Defined in: [src/types.ts:227](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L227)
+Defined in: [src/types.ts:155](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L155)

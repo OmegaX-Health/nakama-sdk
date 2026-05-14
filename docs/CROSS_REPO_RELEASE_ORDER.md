@@ -4,8 +4,9 @@ Use this sequence to publish the canonical OmegaX protocol release train without
 
 ## Target versions
 
-- `omegax-protocol`: commit `96f3f48`
-- `omegax-sdk`: `v0.8.9`
+- `omegax-protocol`: protocol surface commit `763c7da`, contract hash
+  `f95822562b0c1f1b2d5bddde10f63d98d49dca7135c879011e432d0706735222`
+- `omegax-sdk`: `v0.8.10`
 - `omegax-docs`: synced to the same canonical surface on `main`
 
 ## Local preparation order
@@ -21,7 +22,7 @@ Use this sequence to publish the canonical OmegaX protocol release train without
 2. Push `omegax-docs` `main`.
 3. Push `omegax-sdk` `main`.
 4. Confirm docs deploy succeeded.
-5. Tag and push SDK `v0.8.9`.
+5. Tag and push SDK `v0.8.10`.
 6. Confirm npm publish and clean install smoke.
 7. Tag and push the matching protocol release marker only after approval.
 
@@ -31,3 +32,6 @@ Use this sequence to publish the canonical OmegaX protocol release train without
 - The docs portal becomes public immediately on push to `main`.
 - The SDK strict docs-sync gate must point to the exact merged docs commit.
 - The protocol should not be treated as publicly published until protocol, SDK, and docs all agree.
+- Later protocol repo commits may update docs or frontend-only work without
+  changing the SDK target. The SDK target changes only when the generated IDL or
+  protocol contract hash changes.

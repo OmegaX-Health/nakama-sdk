@@ -304,7 +304,15 @@ function printDoctorHuman(result: DoctorResult): void {
     const label = check.status === 'pass' ? 'PASS' : 'FAIL';
     console.log(`${label} ${check.name}: ${check.message}`);
   }
-  console.log(result.ok ? 'Doctor passed.' : 'Doctor failed.');
+  if (result.ok) {
+    console.log(
+      'Doctor passed. Next: run `npx @omegax/protocol-sdk examples` or scaffold a template.',
+    );
+  } else {
+    console.log(
+      'Doctor failed. Rerun with `--json` for machine-readable details and see docs/TROUBLESHOOTING.md.',
+    );
+  }
 }
 
 async function directoryIsEmpty(path: string): Promise<boolean> {
