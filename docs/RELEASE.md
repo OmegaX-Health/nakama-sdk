@@ -57,6 +57,7 @@ npm run dogfood:consumer
 npm run cli:check
 npm run templates:check
 npm run dx:smoke
+npm run release:state
 npm run verify:release
 npm run security:secrets
 npm run security:install-scripts
@@ -80,6 +81,12 @@ GitHub credentials are absent. `npm run security:release-governance:live` is the
 authoritative live GitHub branch/environment/secret check. It uses
 `OMEGAX_GOVERNANCE_TOKEN` or `GITHUB_TOKEN` when either is set, otherwise it
 falls back to the local authenticated `gh` CLI token without printing it.
+`npm run release:state` is the read-only public release truth report: it compares
+`package.json`, local git ahead/behind state, npm registry versions, remote tags,
+and visible GitHub releases without mutating any external service. Use
+`npm run release:state -- --json` when an automation needs structured evidence,
+or `npm run release:state -- --fail-on-blockers` when local ahead/behind drift
+should fail the command.
 
 Production moderate-or-higher dependency advisories are release blockers unless
 `npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
@@ -193,6 +200,7 @@ security review.
 ## Post-publish verification
 
 ```bash
+npm run release:state
 npm view @omegax/protocol-sdk version
 ```
 

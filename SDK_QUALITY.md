@@ -112,6 +112,7 @@ npm run dogfood:consumer
 npm run cli:check
 npm run templates:check
 npm run dx:smoke
+npm run release:state
 npm run security:secrets
 npm run security:install-scripts
 npm run security:release-governance

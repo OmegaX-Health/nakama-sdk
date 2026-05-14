@@ -126,6 +126,7 @@
     "dogfood:consumer": "node scripts/dogfood-consumer-app.mjs",
     "cli:check": "node scripts/check-cli.mjs",
     "templates:check": "node scripts/check-templates.mjs",
+    "release:state": "node scripts/check-release-state.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:release:strict": "node scripts/verify-release.mjs --strict",
     "verify:release:protocol": "node scripts/verify-release.mjs --strict --protocol",

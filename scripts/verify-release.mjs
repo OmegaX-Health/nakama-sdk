@@ -33,6 +33,7 @@ const checks = [
   { command: 'npm', args: ['run', 'cli:check'] },
   { command: 'npm', args: ['run', 'templates:check'] },
   { command: 'npm', args: ['run', 'dx:smoke'] },
+  { command: 'npm', args: ['run', 'release:state'] },
   { command: 'npm', args: ['pack', '--dry-run'] },
 ];
 
