@@ -114,6 +114,97 @@ export function getReleaseWorkflowInvariantFailures(workflow) {
   return failures;
 }
 
+export function getBranchProtectionFailures(branch) {
+  const failures = [];
+  const statusChecks = branch?.required_status_checks;
+  const requiredStatusCheckCount =
+    (statusChecks?.contexts ?? []).length + (statusChecks?.checks ?? []).length;
+  if (!statusChecks || statusChecks.strict !== true) {
+    failures.push('main branch protection must require strict status checks.');
+  }
+  if (requiredStatusCheckCount < 1) {
+    failures.push(
+      'main branch protection must require at least one status check.',
+    );
+  }
+  if (branch?.allow_force_pushes?.enabled !== false) {
+    failures.push('main branch protection must not allow force pushes.');
+  }
+  if (branch?.allow_deletions?.enabled !== false) {
+    failures.push('main branch protection must not allow branch deletion.');
+  }
+
+  const prReviews = branch?.required_pull_request_reviews;
+  const requiredReviews = Number(
+    prReviews?.required_approving_review_count ?? 0,
+  );
+  if (requiredReviews < 1) {
+    failures.push(
+      'main branch protection must require at least one approving PR review.',
+    );
+  }
+  if (!prReviews?.require_code_owner_reviews) {
+    failures.push('main branch protection must require CODEOWNERS review.');
+  }
+
+  return failures;
+}
+
+export function getEnvironmentProtectionFailures(environment) {
+  const failures = [];
+  const reviewerRule = (environment?.protection_rules ?? []).find(
+    (rule) => rule.type === 'required_reviewers',
+  );
+  const reviewers = reviewerRule?.reviewers ?? [];
+  if (!reviewerRule) {
+    failures.push('npm-production environment must require reviewers.');
+    return failures;
+  }
+  if (reviewers.length < 2) {
+    failures.push(
+      'npm-production environment must require at least two reviewers.',
+    );
+  }
+  if (reviewerRule.prevent_self_review !== true) {
+    failures.push('npm-production environment must prevent self-review.');
+  }
+  return failures;
+}
+
+export function secretNamesFromResponse(response) {
+  return new Set((response?.secrets ?? []).map((secret) => secret.name));
+}
+
+export function getReleaseSecretFailures(secretScopes) {
+  const failures = [];
+  const repositorySecrets = secretNamesFromResponse(secretScopes.repository);
+  if (
+    secretScopes.repository &&
+    !repositorySecrets.has('OMEGAX_GOVERNANCE_READ_TOKEN')
+  ) {
+    failures.push(
+      'Repository Actions secrets must include OMEGAX_GOVERNANCE_READ_TOKEN for the unprotected release verify job.',
+    );
+  }
+
+  const stalePublishSecrets = ['NPM_TOKEN', 'NODE_AUTH_TOKEN'];
+  for (const { label, response } of [
+    { label: 'Repository Actions', response: secretScopes.repository },
+    { label: 'Organization Actions', response: secretScopes.organization },
+    { label: 'npm-production environment', response: secretScopes.environment },
+  ]) {
+    const secretNames = secretNamesFromResponse(response);
+    for (const staleSecret of stalePublishSecrets) {
+      if (!secretNames.has(staleSecret)) continue;
+      failures.push(
+        `${label} secrets must not include stale npm publish token ${staleSecret}; trusted publishing should use OIDC.`,
+      );
+    }
+  }
+
+  return failures;
+}
+
 async function githubJson(path) {
   const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
   const repository = process.env.GITHUB_REPOSITORY;
@@ -230,90 +321,27 @@ async function main() {
   }
 
   const branch = await githubJson('/branches/main/protection');
-  const statusChecks = branch?.required_status_checks;
-  const requiredStatusCheckCount =
-    (statusChecks?.contexts ?? []).length + (statusChecks?.checks ?? []).length;
-  if (!statusChecks || statusChecks.strict !== true) {
-    fail('main branch protection must require strict status checks.');
-  }
-  if (requiredStatusCheckCount < 1) {
-    fail('main branch protection must require at least one status check.');
-  }
-  if (branch?.allow_force_pushes?.enabled !== false) {
-    fail('main branch protection must not allow force pushes.');
-  }
-  if (branch?.allow_deletions?.enabled !== false) {
-    fail('main branch protection must not allow branch deletion.');
-  }
-  const prReviews = branch?.required_pull_request_reviews;
-  const requiredReviews = Number(
-    prReviews?.required_approving_review_count ?? 0,
-  );
-  if (requiredReviews < 1) {
-    fail(
-      'main branch protection must require at least one approving PR review.',
-    );
-  }
-  if (!prReviews?.require_code_owner_reviews) {
-    fail('main branch protection must require CODEOWNERS review.');
+  for (const message of getBranchProtectionFailures(branch)) {
+    fail(message);
   }
 
   const environment = await githubJson('/environments/npm-production');
-  const reviewerRule = (environment?.protection_rules ?? []).find(
-    (rule) => rule.type === 'required_reviewers',
-  );
-  const reviewers = reviewerRule?.reviewers ?? [];
-  if (!reviewerRule) {
-    fail('npm-production environment must require reviewers.');
-  } else {
-    if (reviewers.length < 2) {
-      fail('npm-production environment must require at least two reviewers.');
-    }
-    if (reviewerRule.prevent_self_review !== true) {
-      fail('npm-production environment must prevent self-review.');
-    }
+  for (const message of getEnvironmentProtectionFailures(environment)) {
+    fail(message);
   }
 
   const repositorySecrets = await optionalGithubJson('/actions/secrets');
-  const repositorySecretNames = new Set(
-    (repositorySecrets?.secrets ?? []).map((secret) => secret.name),
+  const organizationSecrets =
+    await optionalOrganizationJson('/actions/secrets');
+  const environmentSecrets = await optionalGithubJson(
+    '/environments/npm-production/secrets',
   );
-  if (
-    repositorySecrets &&
-    !repositorySecretNames.has('OMEGAX_GOVERNANCE_READ_TOKEN')
-  ) {
-    fail(
-      'Repository Actions secrets must include OMEGAX_GOVERNANCE_READ_TOKEN for the unprotected release verify job.',
-    );
-  }
-
-  const stalePublishSecrets = ['NPM_TOKEN', 'NODE_AUTH_TOKEN'];
-  const secretScopes = [
-    {
-      label: 'Repository Actions',
-      response: repositorySecrets,
-    },
-    {
-      label: 'Organization Actions',
-      response: await optionalOrganizationJson('/actions/secrets'),
-    },
-    {
-      label: 'npm-production environment',
-      response: await optionalGithubJson(
-        '/environments/npm-production/secrets',
-      ),
-    },
-  ];
-  for (const { label, response } of secretScopes) {
-    const secretNames = new Set(
-      (response?.secrets ?? []).map((secret) => secret.name),
-    );
-    for (const staleSecret of stalePublishSecrets) {
-      if (!secretNames.has(staleSecret)) continue;
-      fail(
-        `${label} secrets must not include stale npm publish token ${staleSecret}; trusted publishing should use OIDC.`,
-      );
-    }
+  for (const message of getReleaseSecretFailures({
+    repository: repositorySecrets,
+    organization: organizationSecrets,
+    environment: environmentSecrets,
+  })) {
+    fail(message);
   }
 
   if (process.exitCode) process.exit(process.exitCode);

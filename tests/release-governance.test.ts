@@ -2,7 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { getReleaseWorkflowInvariantFailures } from '../scripts/check-github-release-governance.mjs';
+import {
+  getBranchProtectionFailures,
+  getEnvironmentProtectionFailures,
+  getReleaseSecretFailures,
+  getReleaseWorkflowInvariantFailures,
+} from '../scripts/check-github-release-governance.mjs';
 import {
   branchProtectionBody,
   deploymentBranchPolicyBody,
@@ -40,6 +45,116 @@ test('release workflow trigger invariant rejects extra release events', () => {
   assert.deepEqual(getReleaseWorkflowInvariantFailures(workflow), [
     'Release workflow must run only from v* tag pushes.',
   ]);
+});
+
+test('live branch protection classification catches unsafe settings', () => {
+  assert.deepEqual(
+    getBranchProtectionFailures({
+      required_status_checks: {
+        strict: true,
+        contexts: ['test'],
+        checks: [],
+      },
+      allow_force_pushes: { enabled: false },
+      allow_deletions: { enabled: false },
+      required_pull_request_reviews: {
+        required_approving_review_count: 1,
+        require_code_owner_reviews: true,
+      },
+    }),
+    [],
+  );
+
+  assert.deepEqual(
+    getBranchProtectionFailures({
+      required_status_checks: {
+        strict: false,
+        contexts: [],
+        checks: [],
+      },
+      allow_force_pushes: { enabled: true },
+      allow_deletions: { enabled: true },
+      required_pull_request_reviews: null,
+    }),
+    [
+      'main branch protection must require strict status checks.',
+      'main branch protection must require at least one status check.',
+      'main branch protection must not allow force pushes.',
+      'main branch protection must not allow branch deletion.',
+      'main branch protection must require at least one approving PR review.',
+      'main branch protection must require CODEOWNERS review.',
+    ],
+  );
+});
+
+test('live environment governance classification requires independent publish review', () => {
+  assert.deepEqual(
+    getEnvironmentProtectionFailures({
+      protection_rules: [
+        {
+          type: 'required_reviewers',
+          prevent_self_review: true,
+          reviewers: [
+            { reviewer: { login: 'first' } },
+            { reviewer: { login: 'second' } },
+          ],
+        },
+      ],
+    }),
+    [],
+  );
+
+  assert.deepEqual(
+    getEnvironmentProtectionFailures({
+      protection_rules: [
+        {
+          type: 'required_reviewers',
+          prevent_self_review: false,
+          reviewers: [{ reviewer: { login: 'only' } }],
+        },
+      ],
+    }),
+    [
+      'npm-production environment must require at least two reviewers.',
+      'npm-production environment must prevent self-review.',
+    ],
+  );
+  assert.deepEqual(getEnvironmentProtectionFailures({ protection_rules: [] }), [
+    'npm-production environment must require reviewers.',
+  ]);
+});
+
+test('live secret governance classification detects missing and stale release secrets', () => {
+  assert.deepEqual(
+    getReleaseSecretFailures({
+      repository: {
+        secrets: [{ name: 'OMEGAX_GOVERNANCE_READ_TOKEN' }],
+      },
+      organization: { secrets: [] },
+      environment: { secrets: [] },
+    }),
+    [],
+  );
+
+  assert.deepEqual(
+    getReleaseSecretFailures({
+      repository: {
+        secrets: [{ name: 'NPM_TOKEN' }],
+      },
+      organization: {
+        secrets: [{ name: 'NODE_AUTH_TOKEN' }],
+      },
+      environment: {
+        secrets: [{ name: 'NPM_TOKEN' }],
+      },
+    }),
+    [
+      'Repository Actions secrets must include OMEGAX_GOVERNANCE_READ_TOKEN for the unprotected release verify job.',
+      'Repository Actions secrets must not include stale npm publish token NPM_TOKEN; trusted publishing should use OIDC.',
+      'Organization Actions secrets must not include stale npm publish token NODE_AUTH_TOKEN; trusted publishing should use OIDC.',
+      'npm-production environment secrets must not include stale npm publish token NPM_TOKEN; trusted publishing should use OIDC.',
+    ],
+  );
 });
 
 test('release setup preserves existing branch protection safety settings', () => {
