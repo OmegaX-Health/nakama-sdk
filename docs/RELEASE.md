@@ -94,6 +94,11 @@ OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
 npm run security:release-governance:setup -- --apply
 ```
 
+The setup helper preserves existing required status checks, GitHub App-bound
+checks, branch push restrictions, pull-request review dismissal/bypass
+allowances, and environment deployment branch policy while adding the required
+review and protected publish gates. Review the dry-run JSON before applying.
+
 Then verify live state:
 
 ```bash

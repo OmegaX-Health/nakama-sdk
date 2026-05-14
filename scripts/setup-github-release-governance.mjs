@@ -118,27 +118,120 @@ async function currentBranchProtection() {
   );
 }
 
-function branchProtectionBody(existing) {
-  const contexts = existing?.required_status_checks?.contexts ?? ['test'];
+async function currentEnvironment() {
+  return await github(
+    `/repos/${repository}/environments/${encodeURIComponent(environmentName)}`,
+  );
+}
+
+function requiredIdentifiers(items, label, selectIdentifier) {
+  return (items ?? []).map((item) => {
+    const identifier = selectIdentifier(item);
+    if (!identifier) {
+      throw new Error(
+        `Cannot preserve existing ${label}; GitHub response is missing a required identifier.`,
+      );
+    }
+    return identifier;
+  });
+}
+
+function restrictionPayload(restrictions, label) {
+  if (!restrictions) return null;
+
   return {
-    required_status_checks: {
-      strict: existing?.required_status_checks?.strict ?? true,
-      contexts: contexts.length > 0 ? contexts : ['test'],
-    },
+    users: requiredIdentifiers(
+      restrictions.users,
+      `${label} user restrictions`,
+      (user) => user.login,
+    ),
+    teams: requiredIdentifiers(
+      restrictions.teams,
+      `${label} team restrictions`,
+      (team) => team.slug,
+    ),
+    apps: requiredIdentifiers(
+      restrictions.apps,
+      `${label} app restrictions`,
+      (app) => app.slug,
+    ),
+  };
+}
+
+function requiredStatusChecksBody(existing) {
+  const statusChecks = existing?.required_status_checks;
+  const contexts = (statusChecks?.contexts ?? []).filter(Boolean);
+  const checks = (statusChecks?.checks ?? [])
+    .map((check) => {
+      if (!check?.context) return null;
+      const normalized = { context: check.context };
+      if (Number.isInteger(check.app_id)) {
+        normalized.app_id = check.app_id;
+      }
+      return normalized;
+    })
+    .filter(Boolean);
+  const checkContexts = checks.map((check) => check.context).filter(Boolean);
+  const requiredContexts =
+    contexts.length > 0
+      ? contexts
+      : checkContexts.length > 0
+        ? checkContexts
+        : ['test'];
+
+  return {
+    strict: statusChecks?.strict ?? true,
+    contexts: requiredContexts,
+    ...(checks.length > 0 ? { checks } : {}),
+  };
+}
+
+function pullRequestReviewsBody(existing) {
+  const reviews = existing?.required_pull_request_reviews;
+  const body = {
+    dismiss_stale_reviews: reviews?.dismiss_stale_reviews ?? true,
+    require_code_owner_reviews: true,
+    required_approving_review_count: Math.max(
+      1,
+      Number(reviews?.required_approving_review_count ?? 0),
+    ),
+  };
+
+  if (typeof reviews?.require_last_push_approval === 'boolean') {
+    body.require_last_push_approval = reviews.require_last_push_approval;
+  }
+  if (reviews?.dismissal_restrictions) {
+    body.dismissal_restrictions = restrictionPayload(
+      reviews.dismissal_restrictions,
+      'pull-request dismissal',
+    );
+  }
+  if (reviews?.bypass_pull_request_allowances) {
+    body.bypass_pull_request_allowances = restrictionPayload(
+      reviews.bypass_pull_request_allowances,
+      'pull-request bypass',
+    );
+  }
+
+  return body;
+}
+
+function deploymentBranchPolicyBody(environment) {
+  const policy = environment?.deployment_branch_policy;
+  if (!policy) return null;
+
+  return {
+    protected_branches: Boolean(policy.protected_branches),
+    custom_branch_policies: Boolean(policy.custom_branch_policies),
+  };
+}
+
+function branchProtectionBody(existing) {
+  return {
+    required_status_checks: requiredStatusChecksBody(existing),
     enforce_admins: true,
-    required_pull_request_reviews: {
-      dismiss_stale_reviews:
-        existing?.required_pull_request_reviews?.dismiss_stale_reviews ?? true,
-      require_code_owner_reviews: true,
-      required_approving_review_count: Math.max(
-        1,
-        Number(
-          existing?.required_pull_request_reviews
-            ?.required_approving_review_count ?? 0,
-        ),
-      ),
-    },
-    restrictions: null,
+    required_pull_request_reviews: pullRequestReviewsBody(existing),
+    restrictions: restrictionPayload(existing?.restrictions, 'branch push'),
   };
 }
 
@@ -166,11 +259,13 @@ async function main() {
     return;
   }
 
-  const [branchProtection, userReviewers, teamReviewers] = await Promise.all([
-    currentBranchProtection(),
-    Promise.all(reviewerLogins.map(resolveUserReviewer)),
-    Promise.all(reviewerTeams.map((slug) => resolveTeamReviewer(org, slug))),
-  ]);
+  const [branchProtection, environment, userReviewers, teamReviewers] =
+    await Promise.all([
+      currentBranchProtection(),
+      currentEnvironment(),
+      Promise.all(reviewerLogins.map(resolveUserReviewer)),
+      Promise.all(reviewerTeams.map((slug) => resolveTeamReviewer(org, slug))),
+    ]);
   const reviewers = [...userReviewers, ...teamReviewers];
   const distinctReviewerKeys = new Set(reviewers.map(reviewerKey));
 
@@ -183,13 +278,13 @@ async function main() {
 
   const branchBody = branchProtectionBody(branchProtection);
   const environmentBody = {
-    wait_timer: 0,
+    wait_timer: Number(environment?.wait_timer ?? 0),
     prevent_self_review: true,
     reviewers: reviewers.map((reviewer) => ({
       type: reviewer.type,
       id: reviewer.id,
     })),
-    deployment_branch_policy: null,
+    deployment_branch_policy: deploymentBranchPolicyBody(environment),
   };
 
   const summary = {
