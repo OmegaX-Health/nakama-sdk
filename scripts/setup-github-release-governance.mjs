@@ -9,7 +9,7 @@ const environmentName =
   process.env.OMEGAX_RELEASE_ENVIRONMENT ?? 'npm-production';
 const apply = process.argv.includes('--apply');
 const excludedReviewerLogins = new Set(
-  ['spiritorient', ...parseCsv(process.env.OMEGAX_RELEASE_EXCLUDED_REVIEWERS)]
+  parseCsv(process.env.OMEGAX_RELEASE_EXCLUDED_REVIEWERS)
     .map((login) => login.toLowerCase())
     .filter(Boolean),
 );

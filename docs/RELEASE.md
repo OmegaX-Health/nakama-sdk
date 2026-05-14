@@ -61,6 +61,7 @@ npm run verify:release
 npm run security:secrets
 npm run security:install-scripts
 npm run security:release-governance
+npm run security:release-governance:live
 npm run security:package
 npm run audit:prod
 npm run verify:protocol:local
@@ -74,6 +75,10 @@ sibling protocol checkout is part of the release decision.
 Treat `verify:release:strict` as the canonical aggregate local release gate;
 the expanded checklist above is kept for readable audit trails and one-off
 reruns.
+`npm run security:release-governance` is the local static workflow check when
+GitHub credentials are absent. `npm run security:release-governance:live` is the
+authoritative live GitHub branch/environment/secret check and requires
+`GITHUB_TOKEN` or `OMEGAX_GOVERNANCE_TOKEN`.
 
 Production moderate-or-higher dependency advisories are release blockers unless
 `npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
@@ -114,12 +119,19 @@ OMEGAX_REQUIRE_GITHUB_GOVERNANCE=1 \
 npm run security:release-governance
 ```
 
+Or use the packaged live gate:
+
+```bash
+npm run security:release-governance:live
+```
+
 The second reviewer must already have write, maintain, or admin access to this
 repository, and npm trusted publishing must be configured in npm for the
-`npm-production` GitHub environment. `spiritorient` is intentionally excluded
-from the independent reviewer set and does not satisfy the second-reviewer
-requirement. Duplicate reviewer entries, such as repeating the same user twice,
-also do not satisfy the requirement.
+`npm-production` GitHub environment. Reviewer lists must use real independent
+GitHub users or teams; code-owner alias accounts, automation identities, and
+duplicate reviewer entries do not satisfy the second-reviewer requirement. If an
+alias account needs to be rejected during setup, pass it through
+`OMEGAX_RELEASE_EXCLUDED_REVIEWERS`.
 
 The governance token is used in the release workflow's `verify` job before the
 protected `npm-production` publish job starts, so configure it as a repository
