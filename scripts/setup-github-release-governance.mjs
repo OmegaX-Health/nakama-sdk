@@ -6,6 +6,11 @@ const branch = process.env.OMEGAX_RELEASE_BRANCH ?? 'main';
 const environmentName =
   process.env.OMEGAX_RELEASE_ENVIRONMENT ?? 'npm-production';
 const apply = process.argv.includes('--apply');
+const excludedReviewerLogins = new Set(
+  ['spiritorient', ...parseCsv(process.env.OMEGAX_RELEASE_EXCLUDED_REVIEWERS)]
+    .map((login) => login.toLowerCase())
+    .filter(Boolean),
+);
 
 function fail(message) {
   console.error(message);
@@ -56,6 +61,11 @@ async function github(path, options = {}) {
 
 async function resolveUserReviewer(login) {
   const user = await github(`/users/${encodeURIComponent(login)}`);
+  if (excludedReviewerLogins.has(String(user.login).toLowerCase())) {
+    throw new Error(
+      `Release reviewer ${user.login} is excluded from the independent reviewer set.`,
+    );
+  }
   const permission = await github(
     `/repos/${repository}/collaborators/${encodeURIComponent(user.login)}/permission`,
   );

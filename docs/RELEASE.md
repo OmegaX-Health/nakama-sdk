@@ -99,7 +99,9 @@ npm run security:release-governance
 
 The second reviewer must already have write, maintain, or admin access to this
 repository, and npm trusted publishing must be configured in npm for the
-`npm-production` GitHub environment.
+`npm-production` GitHub environment. `spiritorient` is intentionally excluded
+from the independent reviewer set and does not satisfy the second-reviewer
+requirement.
 
 ## Protocol binding refresh
 
