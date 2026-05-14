@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 const jsonOutput = process.argv.includes('--json');
 const failures = [];
 const warnings = [];
+let governanceEvidence = null;
 
 function parseCsv(value) {
   return String(value ?? '')
@@ -42,14 +43,19 @@ export function buildReleaseGovernanceReport({
   liveChecked = false,
   failures: reportFailures = [],
   warnings: reportWarnings = [],
+  evidence = null,
 }) {
-  return {
+  const report = {
     ok: reportFailures.length === 0,
     repository,
     liveChecked,
     failures: reportFailures,
     warnings: reportWarnings,
   };
+  if (evidence) {
+    report.evidence = evidence;
+  }
+  return report;
 }
 
 function finish(message, { liveChecked = false } = {}) {
@@ -61,6 +67,7 @@ function finish(message, { liveChecked = false } = {}) {
           liveChecked,
           failures,
           warnings,
+          evidence: governanceEvidence,
         }),
         null,
         2,
@@ -365,6 +372,152 @@ export function getReleaseSecretFailures(secretScopes) {
   return failures;
 }
 
+export function getBranchProtectionEvidence(branch) {
+  const statusChecks = branch?.required_status_checks;
+  const prReviews = branch?.required_pull_request_reviews;
+
+  return {
+    strictStatusChecks: statusChecks?.strict ?? null,
+    requiredStatusCheckCount:
+      (statusChecks?.contexts ?? []).length +
+      (statusChecks?.checks ?? []).length,
+    requiredApprovingReviewCount:
+      prReviews?.required_approving_review_count ?? 0,
+    requiresCodeOwnerReviews: prReviews?.require_code_owner_reviews ?? false,
+    allowsForcePushes: branch?.allow_force_pushes?.enabled ?? null,
+    allowsDeletions: branch?.allow_deletions?.enabled ?? null,
+  };
+}
+
+function reviewerSummary(reviewerEntry) {
+  const reviewer = reviewerEntry?.reviewer ?? reviewerEntry;
+  const type = String(reviewerEntry?.type ?? reviewer?.type ?? 'User').trim();
+  const login = String(reviewer?.login ?? '').trim();
+  const slug = String(reviewer?.slug ?? '').trim();
+  const id = reviewer?.id == null ? null : String(reviewer.id);
+
+  return {
+    type: type || (slug ? 'Team' : 'User'),
+    login: login || null,
+    slug: slug || null,
+    id,
+  };
+}
+
+export function getEnvironmentProtectionEvidence(environment, options = {}) {
+  const reviewerRule = (environment?.protection_rules ?? []).find(
+    (rule) => rule.type === 'required_reviewers',
+  );
+  const reviewers = reviewerRule?.reviewers ?? [];
+  const { logins, missingTeamMembership } = reviewerRule
+    ? getEnvironmentHumanReviewerLogins(environment, options)
+    : { logins: [], missingTeamMembership: [] };
+
+  return {
+    requiredReviewersConfigured: Boolean(reviewerRule),
+    reviewerCount: reviewers.length,
+    preventSelfReview: reviewerRule?.prevent_self_review ?? null,
+    reviewers: reviewers.map(reviewerSummary),
+    eligibleHumanReviewers: logins,
+    missingTeamMembership,
+  };
+}
+
+function secretScopeEvidence(
+  response,
+  { requireGovernanceToken = false } = {},
+) {
+  const names = secretNamesFromResponse(response);
+  const stalePublishSecrets = ['NPM_TOKEN', 'NODE_AUTH_TOKEN'].filter((name) =>
+    names.has(name),
+  );
+
+  return {
+    visible: Boolean(response),
+    hasGovernanceReadToken: requireGovernanceToken
+      ? names.has('OMEGAX_GOVERNANCE_READ_TOKEN')
+      : null,
+    stalePublishSecrets,
+  };
+}
+
+export function getReleaseSecretEvidence(secretScopes) {
+  return {
+    repository: secretScopeEvidence(secretScopes.repository, {
+      requireGovernanceToken: true,
+    }),
+    organization: secretScopeEvidence(secretScopes.organization),
+    environment: secretScopeEvidence(secretScopes.environment),
+  };
+}
+
+function collaboratorPermission(collaborator) {
+  const permissions = collaborator?.permissions ?? {};
+  for (const permission of ['admin', 'maintain', 'push', 'triage', 'pull']) {
+    if (permissions[permission]) return permission;
+  }
+  return null;
+}
+
+export function getReviewerInventoryEvidence({
+  collaborators = null,
+  teams = null,
+  repositoryInvitations = null,
+  organizationInvitations = null,
+} = {}) {
+  return {
+    directCollaborators: Array.isArray(collaborators)
+      ? collaborators
+          .map((collaborator) => ({
+            login: String(collaborator?.login ?? '').trim() || null,
+            type: collaborator?.type ?? null,
+            permission: collaboratorPermission(collaborator),
+          }))
+          .filter((collaborator) => collaborator.login)
+      : null,
+    teams: Array.isArray(teams)
+      ? teams
+          .map((team) => ({
+            slug: String(team?.slug ?? '').trim() || null,
+            name: String(team?.name ?? '').trim() || null,
+            privacy: team?.privacy ?? null,
+            permission: team?.permission ?? null,
+          }))
+          .filter((team) => team.slug)
+      : null,
+    pendingRepositoryInvitations: Array.isArray(repositoryInvitations)
+      ? repositoryInvitations.map((invitation) => ({
+          login: invitation?.invitee?.login ?? null,
+          permissions: invitation?.permissions ?? null,
+        }))
+      : null,
+    pendingOrganizationInvitations: Array.isArray(organizationInvitations)
+      ? organizationInvitations.map((invitation) => ({
+          login: invitation?.login ?? null,
+          role: invitation?.role ?? null,
+          hasEmailOnlyIdentity: Boolean(
+            !invitation?.login && invitation?.email,
+          ),
+        }))
+      : null,
+  };
+}
+
+export function buildReleaseGovernanceEvidence({
+  branch,
+  environment,
+  teamMembers = {},
+  secretScopes = {},
+  reviewerInventory = {},
+} = {}) {
+  return {
+    branchProtection: getBranchProtectionEvidence(branch),
+    environment: getEnvironmentProtectionEvidence(environment, teamMembers),
+    secrets: getReleaseSecretEvidence(secretScopes),
+    reviewerInventory: getReviewerInventoryEvidence(reviewerInventory),
+  };
+}
+
 async function githubJson(path) {
   const repository = process.env.GITHUB_REPOSITORY;
   if (!repository) return null;
@@ -575,6 +728,38 @@ async function main() {
   const environmentSecrets = await optionalGithubJson(
     '/environments/npm-production/secrets',
   );
+  const [owner] = process.env.GITHUB_REPOSITORY.split('/');
+  const [collaborators, teams, repositoryInvitations, organizationInvitations] =
+    await Promise.all([
+      optionalGithubApiPages(
+        `/repos/${process.env.GITHUB_REPOSITORY}/collaborators?affiliation=all&per_page=100`,
+      ),
+      optionalGithubApiPages(
+        `/orgs/${encodeURIComponent(owner)}/teams?per_page=100`,
+      ),
+      optionalGithubApiPages(
+        `/repos/${process.env.GITHUB_REPOSITORY}/invitations?per_page=100`,
+      ),
+      optionalGithubApiPages(
+        `/orgs/${encodeURIComponent(owner)}/invitations?per_page=100`,
+      ),
+    ]);
+  governanceEvidence = buildReleaseGovernanceEvidence({
+    branch,
+    environment,
+    teamMembers,
+    secretScopes: {
+      repository: repositorySecrets,
+      organization: organizationSecrets,
+      environment: environmentSecrets,
+    },
+    reviewerInventory: {
+      collaborators,
+      teams,
+      repositoryInvitations,
+      organizationInvitations,
+    },
+  });
   for (const message of getReleaseSecretFailures({
     repository: repositorySecrets,
     organization: organizationSecrets,
@@ -603,6 +788,7 @@ if (
             ),
             failures: [...failures, message],
             warnings,
+            evidence: governanceEvidence,
           }),
           null,
           2,

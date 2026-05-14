@@ -9,6 +9,7 @@ import {
   getEnvironmentReviewerTeamReferences,
   getReleaseSecretFailures,
   buildReleaseGovernanceReport,
+  buildReleaseGovernanceEvidence,
   getReleaseWorkflowInvariantFailures,
 } from '../scripts/check-github-release-governance.mjs';
 import {
@@ -305,6 +306,129 @@ test('release governance report exposes structured blocker evidence', () => {
       liveChecked: true,
       failures: ['branch protection missing'],
       warnings: ['org secret visibility unavailable'],
+    },
+  );
+});
+
+test('release governance evidence summarizes live reviewer inventory safely', () => {
+  const evidence = buildReleaseGovernanceEvidence({
+    branch: {
+      required_status_checks: {
+        strict: true,
+        contexts: ['test'],
+        checks: [],
+      },
+      allow_force_pushes: { enabled: false },
+      allow_deletions: { enabled: false },
+      required_pull_request_reviews: null,
+    },
+    environment: {
+      protection_rules: [
+        {
+          type: 'required_reviewers',
+          prevent_self_review: false,
+          reviewers: [{ type: 'User', reviewer: { login: 'marinosabijan' } }],
+        },
+      ],
+    },
+    secretScopes: {
+      repository: {
+        secrets: [{ name: 'NPM_TOKEN' }],
+      },
+      organization: null,
+      environment: { secrets: [] },
+    },
+    reviewerInventory: {
+      collaborators: [
+        {
+          login: 'marinosabijan',
+          type: 'User',
+          permissions: { admin: true, push: true, pull: true },
+        },
+      ],
+      teams: [],
+      repositoryInvitations: [],
+      organizationInvitations: [
+        { email: 'redacted@example.com', role: 'direct_member' },
+      ],
+    },
+  });
+
+  assert.deepEqual(evidence, {
+    branchProtection: {
+      strictStatusChecks: true,
+      requiredStatusCheckCount: 1,
+      requiredApprovingReviewCount: 0,
+      requiresCodeOwnerReviews: false,
+      allowsForcePushes: false,
+      allowsDeletions: false,
+    },
+    environment: {
+      requiredReviewersConfigured: true,
+      reviewerCount: 1,
+      preventSelfReview: false,
+      reviewers: [
+        {
+          type: 'User',
+          login: 'marinosabijan',
+          slug: null,
+          id: null,
+        },
+      ],
+      eligibleHumanReviewers: ['marinosabijan'],
+      missingTeamMembership: [],
+    },
+    secrets: {
+      repository: {
+        visible: true,
+        hasGovernanceReadToken: false,
+        stalePublishSecrets: ['NPM_TOKEN'],
+      },
+      organization: {
+        visible: false,
+        hasGovernanceReadToken: null,
+        stalePublishSecrets: [],
+      },
+      environment: {
+        visible: true,
+        hasGovernanceReadToken: null,
+        stalePublishSecrets: [],
+      },
+    },
+    reviewerInventory: {
+      directCollaborators: [
+        {
+          login: 'marinosabijan',
+          type: 'User',
+          permission: 'admin',
+        },
+      ],
+      teams: [],
+      pendingRepositoryInvitations: [],
+      pendingOrganizationInvitations: [
+        {
+          login: null,
+          role: 'direct_member',
+          hasEmailOnlyIdentity: true,
+        },
+      ],
+    },
+  });
+
+  assert.deepEqual(
+    buildReleaseGovernanceReport({
+      repository: 'OmegaX-Health/omegax-sdk',
+      liveChecked: true,
+      failures: ['blocked'],
+      evidence,
+    }),
+    {
+      ok: false,
+      repository: 'OmegaX-Health/omegax-sdk',
+      liveChecked: true,
+      failures: ['blocked'],
+      warnings: [],
+      evidence,
     },
   );
 });

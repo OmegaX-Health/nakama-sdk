@@ -82,7 +82,11 @@ authoritative live GitHub branch/environment/secret check. It uses
 `OMEGAX_GOVERNANCE_TOKEN` or `GITHUB_TOKEN` when either is set, otherwise it
 falls back to the local authenticated `gh` CLI token without printing it. Use
 `npm run security:release-governance:live -- --json` when an automation needs
-structured `failures` and `warnings` instead of stderr scraping.
+structured `failures`, `warnings`, and non-secret `evidence` instead of stderr
+scraping. The `evidence` object summarizes branch protection, `npm-production`
+reviewers, visible eligible human reviewers, stale release-secret names, and
+optional collaborator/team/invitation inventory when the governance token can
+read it.
 `npm run release:state` is the read-only public release truth report: it compares
 `package.json`, local git ahead/behind state, npm registry versions, remote tags,
 and visible GitHub releases without mutating any external service. Use
