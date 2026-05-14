@@ -21,9 +21,14 @@ This is the maintainer flow for publishing the canonical SDK release.
 - SDK commits include `Signed-off-by` trailers because CI enforces DCO.
 - GitHub `main` branch protection requires at least one approving review and
   CODEOWNERS review before release tags are cut.
-- The `npm-production` environment requires at least two reviewers, prevents
-  self-review, and has an `OMEGAX_GOVERNANCE_READ_TOKEN` secret that can read
-  repository branch and environment protection settings.
+- The `npm-production` environment requires at least two reviewers and prevents
+  self-review.
+- A repository or organization Actions secret named
+  `OMEGAX_GOVERNANCE_READ_TOKEN` is available to the unprotected `verify` job
+  and can read repository branch and environment protection settings.
+- Stale repository, organization, or environment secrets named `NPM_TOKEN` or
+  `NODE_AUTH_TOKEN` have been removed before tagging. Publishing uses trusted
+  publishing/OIDC instead of a long-lived npm token.
 - npm trusted publishing is configured for this repository/package/environment;
   do not add a long-lived `NPM_TOKEN` or `NODE_AUTH_TOKEN` publish path.
 
@@ -102,6 +107,26 @@ repository, and npm trusted publishing must be configured in npm for the
 `npm-production` GitHub environment. `spiritorient` is intentionally excluded
 from the independent reviewer set and does not satisfy the second-reviewer
 requirement.
+
+The governance token is used in the release workflow's `verify` job before the
+protected `npm-production` publish job starts, so it must be a repository or
+organization Actions secret that is available to that job. An environment-only
+secret on `npm-production` will not be visible to `verify`.
+
+Before tagging, confirm the release no longer has legacy npm publish tokens:
+
+```bash
+gh secret list --repo OmegaX-Health/omegax-sdk
+gh secret list --repo OmegaX-Health/omegax-sdk --env npm-production
+```
+
+If `NPM_TOKEN` or `NODE_AUTH_TOKEN` exists, remove it only after explicit
+security approval:
+
+```bash
+gh secret delete NPM_TOKEN --repo OmegaX-Health/omegax-sdk
+gh secret delete NODE_AUTH_TOKEN --repo OmegaX-Health/omegax-sdk
+```
 
 ## Protocol binding refresh
 
