@@ -33,6 +33,10 @@ This is the maintainer flow for publishing the canonical SDK release.
   publishing/OIDC instead of a long-lived npm token.
 - npm trusted publishing is configured for this repository/package/environment;
   do not add a long-lived `NPM_TOKEN` or `NODE_AUTH_TOKEN` publish path.
+- The release workflow keeps `verify` and `publish` split: `verify` runs the
+  live governance gate with `OMEGAX_GOVERNANCE_READ_TOKEN`, and `publish`
+  depends on `verify`, uses `npm-production`, requests `id-token: write`, runs
+  `security:release-tag`, and publishes with provenance.
 
 ## Local release checks
 

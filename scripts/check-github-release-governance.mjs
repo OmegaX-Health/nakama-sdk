@@ -11,6 +11,16 @@ function warn(message) {
   console.warn(`Warning: ${message}`);
 }
 
+function requireWorkflowInvariant(workflow, pattern, message) {
+  const matches =
+    typeof pattern === 'string'
+      ? workflow.includes(pattern)
+      : pattern.test(workflow);
+  if (!matches) {
+    fail(message);
+  }
+}
+
 async function githubJson(path) {
   const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
   const repository = process.env.GITHUB_REPOSITORY;
@@ -76,6 +86,46 @@ async function main() {
   if (releaseWorkflow.includes('ALLOW_UNSIGNED_RELEASE_TAG')) {
     fail('Release workflow must not bypass signed release tag verification.');
   }
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /name:\s+Release/u,
+    'Release workflow must be named Release.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /push:\s*\n\s+tags:\s*\n\s+- ['"]v\*['"]/u,
+    'Release workflow must run only from v* tag pushes.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /Release governance[\s\S]*GITHUB_TOKEN:\s*\$\{\{\s*secrets\.OMEGAX_GOVERNANCE_READ_TOKEN\s*\}\}[\s\S]*OMEGAX_REQUIRE_GITHUB_GOVERNANCE:\s*['"]1['"][\s\S]*run:\s+npm run security:release-governance/u,
+    'Release workflow verify job must run live release governance with OMEGAX_GOVERNANCE_READ_TOKEN.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /publish:\s*\n\s+runs-on:[\s\S]*needs:\s+verify[\s\S]*environment:\s+npm-production/u,
+    'Release workflow publish job must depend on verify and use the npm-production environment.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /publish:[\s\S]*permissions:\s*\n\s+contents:\s+read\s*\n\s+id-token:\s+write/u,
+    'Release workflow publish job must request OIDC id-token: write permission.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /Install dependencies without lifecycle scripts[\s\S]*run:\s+npm ci --ignore-scripts/u,
+    'Release workflow publish job must install dependencies without lifecycle scripts.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /Validate release tag and npm availability[\s\S]*npm run security:release-tag/u,
+    'Release workflow publish job must verify the release tag before publishing.',
+  );
+  requireWorkflowInvariant(
+    releaseWorkflow,
+    /Publish to npm[\s\S]*npm publish --ignore-scripts --access public --provenance/u,
+    'Release workflow must publish with ignore-scripts, public access, and provenance.',
+  );
 
   if (
     !process.env.OMEGAX_GOVERNANCE_TOKEN &&
