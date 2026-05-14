@@ -112,12 +112,30 @@ OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
 npm run security:release-governance:setup
 ```
 
+Or dry-run with an eligible reviewer team:
+
+```bash
+GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+OMEGAX_RELEASE_REVIEWERS=marinosabijan \
+OMEGAX_RELEASE_REVIEWER_TEAMS=<team-slug> \
+npm run security:release-governance:setup
+```
+
 After reviewing the planned branch and environment settings, apply them only with
 explicit approval:
 
 ```bash
 GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
 OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
+npm run security:release-governance:setup -- --apply
+```
+
+Or apply with an eligible reviewer team:
+
+```bash
+GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+OMEGAX_RELEASE_REVIEWERS=marinosabijan \
+OMEGAX_RELEASE_REVIEWER_TEAMS=<team-slug> \
 npm run security:release-governance:setup -- --apply
 ```
 
