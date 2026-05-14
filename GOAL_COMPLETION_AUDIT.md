@@ -57,8 +57,9 @@ the commands above for the current truth. The live governance JSON now includes
 a non-secret `evidence` object with branch protection, environment reviewer,
 secret-name, collaborator, team, and invitation summaries.
 
-- Worktree: clean local `main`, ahead 27 and behind 0 versus `origin/main` in
-  the latest `release:state` check.
+- Worktree: local `main` remains ahead of `origin/main`; rerun
+  `npm run release:state -- --json` after the last commit for the exact current
+  ahead/behind count.
 - Open SDK PRs: none.
 - Repo collaborators with direct access: `marinosabijan` only.
 - Visible org teams: none during the last reviewer-inventory check.
