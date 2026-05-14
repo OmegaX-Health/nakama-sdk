@@ -50,16 +50,21 @@ npm run verify:protocol:local
 find . -maxdepth 1 -name '*.tgz' -print
 ```
 
-Observed evidence before the latest audit update:
+Recorded blocker evidence from audit runs. Treat exact counts, commits, and
+live GitHub inventory as stale after any local commit or GitHub/npm change; run
+the commands above for the current truth. The live governance JSON now includes
+a non-secret `evidence` object with branch protection, environment reviewer,
+secret-name, collaborator, team, and invitation summaries.
 
-- Worktree: clean on `main`, ahead `23`, behind `0` vs `origin/main`.
-- Latest local commit: `269596b docs: add sdk goal completion audit`.
+- Worktree: local `main` was ahead of `origin/main`; `release:state` is the
+  authoritative current ahead/behind check.
 - Open SDK PRs: none.
-- Repo collaborators with direct access: only `marinosabijan`.
-- Visible org teams: none.
-- Pending repo and org invitations: none.
-- `npm-production` reviewer configuration: only `marinosabijan`, with
-  `prevent_self_review: false`.
+- Repo collaborators with direct access: one visible owner account.
+- Visible org teams: none during the last reviewer-inventory check.
+- Pending repo and org invitations: none during the last reviewer-inventory
+  check.
+- `npm-production` reviewer configuration: one owner reviewer, with
+  `prevent_self_review: false` during the last live check.
 - npm registry latest: `@omegax/protocol-sdk@0.8.9`.
 - Local package version: `@omegax/protocol-sdk@0.8.10`.
 - Remote release tag: `v0.8.10` missing.
@@ -75,7 +80,7 @@ Observed evidence before the latest audit update:
 
 | Requirement                                             | Evidence                                                                                                                                                                                  | Status                                               |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Respect repo instructions and no surprise branch/push   | `AGENTS.md`; `git status` showed `main...origin/main [ahead 23]` before the latest audit update; no push was performed.                                                                   | Met locally, push still pending approval             |
+| Respect repo instructions and no surprise branch/push   | `AGENTS.md`; `git status --short --branch --untracked-files=all`; no push was performed during these audit runs.                                                                          | Met locally, push still pending approval             |
 | Preserve unrelated work                                 | Worktree clean before this audit addition; latest committed SDK work is isolated in local commits.                                                                                        | Met locally                                          |
 | SDK quality doctrine exists                             | `SDK_QUALITY.md` covers naming, exports, builders, readers/RPC, errors, side effects, protocol parity, docs/examples, agent usage, and release gates.                                     | Met                                                  |
 | Public exports are coherent and packaged                | `package.json#exports`, `SDK_RUNTIME.json`, `docs/generated/api/README.md`, `npm run runtime:check`, and `npm run docs:api:check`.                                                        | Met by latest strict verification                    |
@@ -86,8 +91,8 @@ Observed evidence before the latest audit update:
 | Docs, examples, templates, and generated API docs align | `docs:api:check`, `docs:check`, `docs:sync:check:strict`, `examples:check`, `dogfood:consumer`, `cli:check`, `templates:check`, and `dx:smoke` passed in `npm run verify:release:strict`. | Met by latest strict verification                    |
 | Package contents are release-safe                       | `security:package`, `security:secrets`, `security:install-scripts`, `audit:prod`, and `npm pack --dry-run` passed in `npm run verify:release:strict`.                                     | Met locally                                          |
 | Protocol artifact parity is checked                     | `protocol:artifact:check` passed in `npm run verify:release:strict`; `npm run verify:protocol:local` passed against sibling protocol commit `574672295721fa1d2cea5d5346577e4b3f7e1274`.   | Met by current local and protocol-local verification |
-| Live release state is ready                             | `npm run release:state -- --json` reports local branch ahead `23`, npm `0.8.10` unpublished, remote tag missing, and GitHub release missing.                                              | Blocked                                              |
-| Live GitHub governance is ready                         | `npm run security:release-governance:live -- --json` fails on branch review policy, `npm-production` reviewer policy, missing `OMEGAX_GOVERNANCE_READ_TOKEN`, and stale `NPM_TOKEN`.      | Blocked                                              |
+| Live release state is ready                             | `npm run release:state -- --json` reports local branch ahead, npm `0.8.10` unpublished, remote tag missing, and GitHub release missing until those external steps are fixed.              | Blocked                                              |
+| Live GitHub governance is ready                         | `npm run security:release-governance:live -- --json` reports blocker failures plus non-secret `evidence` for branch policy, environment reviewers, secrets, and reviewer inventory.       | Blocked                                              |
 | Independent reviewer requirement is real                | The live gate and setup helper reject code-owner aliases, automation identities, duplicate entries, empty/opaque teams, and teams without a distinct visible human.                       | Met in tooling, blocked in live configuration        |
 | No stale independent-reviewer alias remains             | Repo and heartbeat checks avoid treating the previously discussed code-owner alias as a separate reviewer.                                                                                | Met                                                  |
 
