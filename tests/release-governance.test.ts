@@ -12,6 +12,7 @@ import {
 import {
   branchProtectionBody,
   deploymentBranchPolicyBody,
+  eligibleHumanReviewerLogins,
   eligibleTeamReviewerMembers,
   nextGitHubPagePath,
   restrictionPayload,
@@ -339,6 +340,32 @@ test('release setup filters excluded team members before accepting team reviewer
       new Set(['code-owner-alias']),
     ),
     [],
+  );
+});
+
+test('release setup counts distinct eligible humans across users and teams', () => {
+  assert.deepEqual(
+    eligibleHumanReviewerLogins([
+      { type: 'User', login: 'marinosabijan' },
+      {
+        type: 'Team',
+        slug: 'release-reviewers',
+        eligibleMemberLogins: ['MARINOSABIJAN', 'second-reviewer'],
+      },
+    ]),
+    ['marinosabijan', 'second-reviewer'],
+  );
+
+  assert.deepEqual(
+    eligibleHumanReviewerLogins([
+      { type: 'User', login: 'marinosabijan' },
+      {
+        type: 'Team',
+        slug: 'release-reviewers',
+        eligibleMemberLogins: ['MARINOSABIJAN'],
+      },
+    ]),
+    ['marinosabijan'],
   );
 });
 

@@ -105,6 +105,24 @@ export function eligibleTeamReviewerMembers(
     .filter((login) => !excludedLogins.has(login.toLowerCase()));
 }
 
+export function eligibleHumanReviewerLogins(reviewers) {
+  const logins = new Set();
+
+  for (const reviewer of reviewers ?? []) {
+    if (reviewer?.type === 'User' && reviewer.login) {
+      logins.add(String(reviewer.login).toLowerCase());
+    }
+
+    if (reviewer?.type === 'Team') {
+      for (const login of reviewer.eligibleMemberLogins ?? []) {
+        logins.add(String(login).toLowerCase());
+      }
+    }
+  }
+
+  return [...logins].sort();
+}
+
 async function resolveUserReviewer(login) {
   const user = await github(`/users/${encodeURIComponent(login)}`);
   if (excludedReviewerLogins.has(String(user.login).toLowerCase())) {
@@ -351,10 +369,17 @@ async function main() {
     ]);
   const reviewers = [...userReviewers, ...teamReviewers];
   const distinctReviewerKeys = new Set(reviewers.map(reviewerKey));
+  const distinctHumanReviewerLogins = eligibleHumanReviewerLogins(reviewers);
 
   if (distinctReviewerKeys.size < 2) {
     fail(
       'Set at least two distinct release reviewers; duplicate reviewer entries do not satisfy the release-governance requirement.',
+    );
+    return;
+  }
+  if (distinctHumanReviewerLogins.length < 2) {
+    fail(
+      'Set at least two distinct eligible human release reviewers; a team that only contains an already-listed reviewer does not satisfy independent release governance.',
     );
     return;
   }
@@ -376,6 +401,7 @@ async function main() {
     environment: environmentName,
     apply,
     reviewers: reviewers.map(reviewerLabel),
+    eligibleHumanReviewers: distinctHumanReviewerLogins,
     branchProtection: branchBody,
     environmentProtection: environmentBody,
   };
