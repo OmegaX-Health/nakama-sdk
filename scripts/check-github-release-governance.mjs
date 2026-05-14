@@ -403,9 +403,9 @@ function nextGitHubPagePath(linkHeader) {
   return null;
 }
 
-async function githubApiPages(path) {
+async function optionalGithubApiPages(path) {
   const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
-  if (!token) return [];
+  if (!token) return null;
 
   const items = [];
   let page = path;
@@ -417,6 +417,9 @@ async function githubApiPages(path) {
         'X-GitHub-Api-Version': '2022-11-28',
       },
     });
+    if (response.status === 403 || response.status === 404) {
+      return null;
+    }
     if (!response.ok) {
       throw new Error(
         `GitHub governance check failed for ${page}: ${response.status} ${await response.text()}`,
@@ -477,9 +480,12 @@ async function getEnvironmentReviewerTeamMembers(environment) {
     if (!team.slug) {
       continue;
     }
-    const members = await githubApiPages(
+    const members = await optionalGithubApiPages(
       `/orgs/${encodeURIComponent(owner)}/teams/${encodeURIComponent(team.slug)}/members?per_page=100`,
     );
+    if (!members) {
+      continue;
+    }
     teamMembersBySlug.set(team.slug.toLowerCase(), members);
     if (team.id) {
       teamMembersById.set(team.id, members);
