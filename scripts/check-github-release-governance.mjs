@@ -7,6 +7,21 @@ const jsonOutput = process.argv.includes('--json');
 const failures = [];
 const warnings = [];
 
+function parseCsv(value) {
+  return String(value ?? '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function excludedReleaseReviewerLogins(env = process.env) {
+  return new Set(
+    parseCsv(env.OMEGAX_RELEASE_EXCLUDED_REVIEWERS).map((login) =>
+      login.toLowerCase(),
+    ),
+  );
+}
+
 function fail(message) {
   failures.push(message);
   if (!jsonOutput) {
@@ -198,7 +213,90 @@ export function getBranchProtectionFailures(branch) {
   return failures;
 }
 
-export function getEnvironmentProtectionFailures(environment) {
+export function getEnvironmentReviewerTeamReferences(environment) {
+  const reviewerRule = (environment?.protection_rules ?? []).find(
+    (rule) => rule.type === 'required_reviewers',
+  );
+  const reviewers = reviewerRule?.reviewers ?? [];
+  return reviewers
+    .map((reviewerEntry) => {
+      const reviewer = reviewerEntry?.reviewer ?? reviewerEntry;
+      const type = String(reviewerEntry?.type ?? reviewer?.type ?? '')
+        .trim()
+        .toLowerCase();
+      const slug = String(reviewer?.slug ?? '').trim();
+      const id = reviewer?.id == null ? null : String(reviewer.id);
+      if (type !== 'team' && !slug) return null;
+
+      return {
+        id,
+        slug: slug || null,
+        label: slug || id || 'unknown-team',
+      };
+    })
+    .filter(Boolean);
+}
+
+export function getEnvironmentHumanReviewerLogins(
+  environment,
+  {
+    excludedReviewerLogins = new Set(),
+    teamMembersBySlug = new Map(),
+    teamMembersById = new Map(),
+  } = {},
+) {
+  const reviewerRule = (environment?.protection_rules ?? []).find(
+    (rule) => rule.type === 'required_reviewers',
+  );
+  const reviewers = reviewerRule?.reviewers ?? [];
+  const logins = new Set();
+  const missingTeamMembership = [];
+
+  for (const reviewerEntry of reviewers) {
+    const reviewer = reviewerEntry?.reviewer ?? reviewerEntry;
+    const type = String(reviewerEntry?.type ?? reviewer?.type ?? '')
+      .trim()
+      .toLowerCase();
+    const login = String(reviewer?.login ?? '').trim();
+    const slug = String(reviewer?.slug ?? '').trim();
+    const id = reviewer?.id == null ? null : String(reviewer.id);
+
+    if ((type === 'user' || (!type && login)) && login) {
+      const normalizedLogin = login.toLowerCase();
+      if (!excludedReviewerLogins.has(normalizedLogin)) {
+        logins.add(normalizedLogin);
+      }
+      continue;
+    }
+
+    if (type === 'team' || slug) {
+      const teamMembers = slug
+        ? teamMembersBySlug.get(slug.toLowerCase())
+        : teamMembersById.get(id);
+      if (!teamMembers) {
+        missingTeamMembership.push(slug || id || 'unknown-team');
+        continue;
+      }
+
+      for (const member of teamMembers) {
+        const normalizedLogin = String(member?.login ?? member)
+          .trim()
+          .toLowerCase();
+        if (!normalizedLogin || excludedReviewerLogins.has(normalizedLogin)) {
+          continue;
+        }
+        logins.add(normalizedLogin);
+      }
+    }
+  }
+
+  return {
+    logins: [...logins].sort(),
+    missingTeamMembership,
+  };
+}
+
+export function getEnvironmentProtectionFailures(environment, options = {}) {
   const failures = [];
   const reviewerRule = (environment?.protection_rules ?? []).find(
     (rule) => rule.type === 'required_reviewers',
@@ -215,6 +313,20 @@ export function getEnvironmentProtectionFailures(environment) {
   }
   if (reviewerRule.prevent_self_review !== true) {
     failures.push('npm-production environment must prevent self-review.');
+  }
+  const { logins, missingTeamMembership } = getEnvironmentHumanReviewerLogins(
+    environment,
+    options,
+  );
+  for (const team of missingTeamMembership) {
+    failures.push(
+      `npm-production reviewer team ${team} membership must be visible to verify independent release reviewers.`,
+    );
+  }
+  if (missingTeamMembership.length === 0 && logins.length < 2) {
+    failures.push(
+      'npm-production environment must require at least two distinct eligible human reviewers.',
+    );
   }
   return failures;
 }
@@ -254,20 +366,22 @@ export function getReleaseSecretFailures(secretScopes) {
 }
 
 async function githubJson(path) {
-  const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
   const repository = process.env.GITHUB_REPOSITORY;
-  if (!token || !repository) return null;
+  if (!repository) return null;
+  return await githubApiJson(`/repos/${repository}${path}`);
+}
 
-  const response = await fetch(
-    `https://api.github.com/repos/${repository}${path}`,
-    {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${token}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
+async function githubApiJson(path) {
+  const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
+  if (!token) return null;
+
+  const response = await fetch(`https://api.github.com${path}`, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
     },
-  );
+  });
 
   if (!response.ok) {
     throw new Error(
@@ -275,6 +389,49 @@ async function githubJson(path) {
     );
   }
   return await response.json();
+}
+
+function nextGitHubPagePath(linkHeader) {
+  for (const part of String(linkHeader ?? '').split(',')) {
+    const match = part.match(/<([^>]+)>;\s*rel="next"/u);
+    if (!match) continue;
+
+    const url = new URL(match[1]);
+    return `${url.pathname}${url.search}`;
+  }
+
+  return null;
+}
+
+async function githubApiPages(path) {
+  const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
+  if (!token) return [];
+
+  const items = [];
+  let page = path;
+  while (page) {
+    const response = await fetch(`https://api.github.com${page}`, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(
+        `GitHub governance check failed for ${page}: ${response.status} ${await response.text()}`,
+      );
+    }
+
+    const body = await response.json();
+    if (!Array.isArray(body)) {
+      throw new Error(`Expected GitHub list response for ${page}.`);
+    }
+    items.push(...body);
+    page = nextGitHubPagePath(response.headers.get('link'));
+  }
+
+  return items;
 }
 
 async function optionalGithubJson(path) {
@@ -305,6 +462,31 @@ async function optionalGithubJson(path) {
     );
   }
   return await response.json();
+}
+
+async function getEnvironmentReviewerTeamMembers(environment) {
+  const repository = process.env.GITHUB_REPOSITORY;
+  if (!repository) {
+    return { teamMembersBySlug: new Map(), teamMembersById: new Map() };
+  }
+
+  const [owner] = repository.split('/');
+  const teamMembersBySlug = new Map();
+  const teamMembersById = new Map();
+  for (const team of getEnvironmentReviewerTeamReferences(environment)) {
+    if (!team.slug) {
+      continue;
+    }
+    const members = await githubApiPages(
+      `/orgs/${encodeURIComponent(owner)}/teams/${encodeURIComponent(team.slug)}/members?per_page=100`,
+    );
+    teamMembersBySlug.set(team.slug.toLowerCase(), members);
+    if (team.id) {
+      teamMembersById.set(team.id, members);
+    }
+  }
+
+  return { teamMembersBySlug, teamMembersById };
 }
 
 async function optionalOrganizationJson(path) {
@@ -373,7 +555,11 @@ async function main() {
   }
 
   const environment = await githubJson('/environments/npm-production');
-  for (const message of getEnvironmentProtectionFailures(environment)) {
+  const teamMembers = await getEnvironmentReviewerTeamMembers(environment);
+  for (const message of getEnvironmentProtectionFailures(environment, {
+    ...teamMembers,
+    excludedReviewerLogins: excludedReleaseReviewerLogins(),
+  })) {
     fail(message);
   }
 

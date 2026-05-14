@@ -5,6 +5,8 @@ import { readFileSync } from 'node:fs';
 import {
   getBranchProtectionFailures,
   getEnvironmentProtectionFailures,
+  getEnvironmentHumanReviewerLogins,
+  getEnvironmentReviewerTeamReferences,
   getReleaseSecretFailures,
   buildReleaseGovernanceReport,
   getReleaseWorkflowInvariantFailures,
@@ -126,11 +128,96 @@ test('live environment governance classification requires independent publish re
     [
       'npm-production environment must require at least two reviewers.',
       'npm-production environment must prevent self-review.',
+      'npm-production environment must require at least two distinct eligible human reviewers.',
     ],
   );
   assert.deepEqual(getEnvironmentProtectionFailures({ protection_rules: [] }), [
     'npm-production environment must require reviewers.',
   ]);
+});
+
+test('live environment governance validates distinct humans behind team reviewers', () => {
+  const environment = {
+    protection_rules: [
+      {
+        type: 'required_reviewers',
+        prevent_self_review: true,
+        reviewers: [
+          { type: 'User', reviewer: { login: 'marinosabijan' } },
+          {
+            type: 'Team',
+            reviewer: { slug: 'release-reviewers', id: 42 },
+          },
+        ],
+      },
+    ],
+  };
+
+  assert.deepEqual(getEnvironmentReviewerTeamReferences(environment), [
+    {
+      id: '42',
+      slug: 'release-reviewers',
+      label: 'release-reviewers',
+    },
+  ]);
+
+  assert.deepEqual(
+    getEnvironmentHumanReviewerLogins(environment, {
+      teamMembersBySlug: new Map([
+        ['release-reviewers', [{ login: 'MARINOSABIJAN' }]],
+      ]),
+    }),
+    {
+      logins: ['marinosabijan'],
+      missingTeamMembership: [],
+    },
+  );
+
+  assert.deepEqual(
+    getEnvironmentProtectionFailures(environment, {
+      teamMembersBySlug: new Map([
+        ['release-reviewers', [{ login: 'MARINOSABIJAN' }]],
+      ]),
+    }),
+    [
+      'npm-production environment must require at least two distinct eligible human reviewers.',
+    ],
+  );
+
+  assert.deepEqual(
+    getEnvironmentProtectionFailures(environment, {
+      teamMembersBySlug: new Map([
+        [
+          'release-reviewers',
+          [{ login: 'MARINOSABIJAN' }, { login: 'second-reviewer' }],
+        ],
+      ]),
+    }),
+    [],
+  );
+});
+
+test('live environment governance fails closed when team membership is hidden', () => {
+  assert.deepEqual(
+    getEnvironmentProtectionFailures({
+      protection_rules: [
+        {
+          type: 'required_reviewers',
+          prevent_self_review: true,
+          reviewers: [
+            { type: 'User', reviewer: { login: 'marinosabijan' } },
+            {
+              type: 'Team',
+              reviewer: { slug: 'release-reviewers', id: 42 },
+            },
+          ],
+        },
+      ],
+    }),
+    [
+      'npm-production reviewer team release-reviewers membership must be visible to verify independent release reviewers.',
+    ],
+  );
 });
 
 test('live secret governance classification detects missing and stale release secrets', () => {

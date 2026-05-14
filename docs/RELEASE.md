@@ -137,6 +137,12 @@ Or use the packaged live gate:
 npm run security:release-governance:live
 ```
 
+The live gate also validates distinct human reviewers for `npm-production`.
+When a required reviewer is a GitHub team, the governance token must be allowed
+to read that team's members; otherwise the live gate fails closed instead of
+accepting an opaque team as independent release approval. The setup helper and
+live gate both honor `OMEGAX_RELEASE_EXCLUDED_REVIEWERS`.
+
 The second reviewer must already have write, maintain, or admin access to this
 repository, and npm trusted publishing must be configured in npm for the
 `npm-production` GitHub environment. Reviewer lists must use real independent
