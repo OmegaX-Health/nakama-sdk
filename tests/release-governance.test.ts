@@ -13,6 +13,10 @@ import {
   deploymentBranchPolicyBody,
   restrictionPayload,
 } from '../scripts/setup-github-release-governance.mjs';
+import {
+  buildLiveReleaseGovernanceEnv,
+  needsGitHubToken,
+} from '../scripts/run-live-release-governance.mjs';
 
 test('release workflow satisfies static governance invariants', () => {
   const workflow = readFileSync('.github/workflows/release.yml', 'utf8');
@@ -154,6 +158,37 @@ test('live secret governance classification detects missing and stale release se
       'Organization Actions secrets must not include stale npm publish token NODE_AUTH_TOKEN; trusted publishing should use OIDC.',
       'npm-production environment secrets must not include stale npm publish token NPM_TOKEN; trusted publishing should use OIDC.',
     ],
+  );
+});
+
+test('live governance wrapper defaults to the SDK repo and authenticated gh token', () => {
+  assert.equal(needsGitHubToken({}), true);
+  assert.equal(needsGitHubToken({ GITHUB_TOKEN: 'existing' }), false);
+  assert.equal(
+    needsGitHubToken({ OMEGAX_GOVERNANCE_TOKEN: 'existing' }),
+    false,
+  );
+
+  assert.deepEqual(buildLiveReleaseGovernanceEnv({}, 'gh-token-for-test'), {
+    GITHUB_REPOSITORY: 'OmegaX-Health/omegax-sdk',
+    OMEGAX_REQUIRE_GITHUB_GOVERNANCE: '1',
+    GITHUB_TOKEN: 'gh-token-for-test',
+  });
+
+  assert.deepEqual(
+    buildLiveReleaseGovernanceEnv(
+      {
+        GITHUB_REPOSITORY: 'Example/repo',
+        OMEGAX_REQUIRE_GITHUB_GOVERNANCE: '0',
+        GITHUB_TOKEN: 'explicit-token',
+      },
+      'gh-token-for-test',
+    ),
+    {
+      GITHUB_REPOSITORY: 'Example/repo',
+      OMEGAX_REQUIRE_GITHUB_GOVERNANCE: '0',
+      GITHUB_TOKEN: 'explicit-token',
+    },
   );
 });
 

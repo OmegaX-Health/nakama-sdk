@@ -77,8 +77,9 @@ the expanded checklist above is kept for readable audit trails and one-off
 reruns.
 `npm run security:release-governance` is the local static workflow check when
 GitHub credentials are absent. `npm run security:release-governance:live` is the
-authoritative live GitHub branch/environment/secret check and requires
-`GITHUB_TOKEN` or `OMEGAX_GOVERNANCE_TOKEN`.
+authoritative live GitHub branch/environment/secret check. It uses
+`OMEGAX_GOVERNANCE_TOKEN` or `GITHUB_TOKEN` when either is set, otherwise it
+falls back to the local authenticated `gh` CLI token without printing it.
 
 Production moderate-or-higher dependency advisories are release blockers unless
 `npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
