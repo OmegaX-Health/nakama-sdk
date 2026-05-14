@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { pathToFileURL } from 'node:url';
+
 const repository = process.env.GITHUB_REPOSITORY ?? 'OmegaX-Health/omegax-sdk';
 const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
 const branch = process.env.OMEGAX_RELEASE_BRANCH ?? 'main';
@@ -124,7 +126,7 @@ async function currentEnvironment() {
   );
 }
 
-function requiredIdentifiers(items, label, selectIdentifier) {
+export function requiredIdentifiers(items, label, selectIdentifier) {
   return (items ?? []).map((item) => {
     const identifier = selectIdentifier(item);
     if (!identifier) {
@@ -136,7 +138,7 @@ function requiredIdentifiers(items, label, selectIdentifier) {
   });
 }
 
-function restrictionPayload(restrictions, label) {
+export function restrictionPayload(restrictions, label) {
   if (!restrictions) return null;
 
   return {
@@ -158,7 +160,7 @@ function restrictionPayload(restrictions, label) {
   };
 }
 
-function requiredStatusChecksBody(existing) {
+export function requiredStatusChecksBody(existing) {
   const statusChecks = existing?.required_status_checks;
   const contexts = (statusChecks?.contexts ?? []).filter(Boolean);
   const checks = (statusChecks?.checks ?? [])
@@ -186,7 +188,7 @@ function requiredStatusChecksBody(existing) {
   };
 }
 
-function pullRequestReviewsBody(existing) {
+export function pullRequestReviewsBody(existing) {
   const reviews = existing?.required_pull_request_reviews;
   const body = {
     dismiss_stale_reviews: reviews?.dismiss_stale_reviews ?? true,
@@ -216,7 +218,7 @@ function pullRequestReviewsBody(existing) {
   return body;
 }
 
-function deploymentBranchPolicyBody(environment) {
+export function deploymentBranchPolicyBody(environment) {
   const policy = environment?.deployment_branch_policy;
   if (!policy) return null;
 
@@ -233,7 +235,7 @@ function branchProtectionFlag(existing, name) {
   return undefined;
 }
 
-function branchProtectionBody(existing) {
+export function branchProtectionBody(existing) {
   const body = {
     required_status_checks: requiredStatusChecksBody(existing),
     enforce_admins: true,
@@ -259,7 +261,7 @@ function branchProtectionBody(existing) {
   return body;
 }
 
-function reviewerKey(reviewer) {
+export function reviewerKey(reviewer) {
   return `${reviewer.type}:${reviewer.id}`;
 }
 
@@ -348,7 +350,12 @@ async function main() {
   console.log('GitHub release governance settings updated.');
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  });
+}
