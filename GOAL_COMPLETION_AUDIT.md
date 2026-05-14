@@ -34,7 +34,7 @@ complete until the live blockers are fixed and the full audit is rerun.
 
 ## Evidence Snapshot
 
-Commands run during the latest blocker recheck:
+Commands run during the latest blocker rechecks:
 
 ```bash
 git fetch --prune origin
@@ -47,6 +47,7 @@ gh pr list --repo OmegaX-Health/omegax-sdk --state open \
 npm run release:state -- --json
 npm run security:release-governance:live -- --json
 npm run verify:protocol:local
+npm run verify:release:strict
 find . -maxdepth 1 -name '*.tgz' -print
 ```
 
@@ -56,19 +57,26 @@ the commands above for the current truth. The live governance JSON now includes
 a non-secret `evidence` object with branch protection, environment reviewer,
 secret-name, collaborator, team, and invitation summaries.
 
-- Worktree: local `main` was ahead of `origin/main`; `release:state` is the
-  authoritative current ahead/behind check.
+- Worktree: clean local `main`, ahead 27 and behind 0 versus `origin/main` in
+  the latest `release:state` check.
 - Open SDK PRs: none.
-- Repo collaborators with direct access: one visible owner account.
+- Repo collaborators with direct access: `marinosabijan` only.
 - Visible org teams: none during the last reviewer-inventory check.
 - Pending repo and org invitations: none during the last reviewer-inventory
   check.
-- `npm-production` reviewer configuration: one owner reviewer, with
-  `prevent_self_review: false` during the last live check.
+- `npm-production` reviewer configuration: one reviewer,
+  `marinosabijan`, with `prevent_self_review: false` during the last live
+  check.
 - npm registry latest: `@omegax/protocol-sdk@0.8.9`.
 - Local package version: `@omegax/protocol-sdk@0.8.10`.
 - Remote release tag: `v0.8.10` missing.
 - GitHub release: `v0.8.10` missing; latest visible release was `v0.8.8`.
+- Strict release verification: `npm run verify:release:strict` passed after
+  commit `ebbe631`, including security checks, typecheck, lint,
+  format, build, SDK tests `114/114`, docs/API/docs-sync checks, runtime and
+  protocol artifact checks, package manifest, production dependency audit,
+  examples, dogfood consumer, CLI, templates, DX smoke, `release:state`, and
+  `npm pack --dry-run`.
 - Protocol-local verification: passed against sibling
   `/Users/dr_sabijan/Documents/GitHub/omegax-protocol` commit
   `574672295721fa1d2cea5d5346577e4b3f7e1274`, including SDK tests `112/112`,
@@ -94,7 +102,7 @@ secret-name, collaborator, team, and invitation summaries.
 | Live release state is ready                             | `npm run release:state -- --json` reports local branch ahead, npm `0.8.10` unpublished, remote tag missing, and GitHub release missing until those external steps are fixed.              | Blocked                                              |
 | Live GitHub governance is ready                         | `npm run security:release-governance:live -- --json` reports blocker failures plus non-secret `evidence` for branch policy, environment reviewers, secrets, and reviewer inventory.       | Blocked                                              |
 | Independent reviewer requirement is real                | The live gate and setup helper reject code-owner aliases, automation identities, duplicate entries, empty/opaque teams, and teams without a distinct visible human.                       | Met in tooling, blocked in live configuration        |
-| No stale independent-reviewer alias remains             | Repo and heartbeat checks avoid treating the previously discussed code-owner alias as a separate reviewer.                                                                                | Met                                                  |
+| No duplicate code-owner reviewer path is counted        | Repo search for the old reviewer-alias variants returns no hits; live governance evidence and setup tooling require two distinct eligible human reviewers.                                | Met                                                  |
 
 ## Current Live Blockers
 
