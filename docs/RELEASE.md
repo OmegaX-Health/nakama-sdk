@@ -125,7 +125,9 @@ The setup helper preserves existing required status checks, GitHub App-bound
 checks, branch push restrictions, branch safety flags, pull-request review
 dismissal/bypass allowances, and environment deployment branch policy while
 adding the required review and protected publish gates. Review the dry-run JSON
-before applying.
+before applying. Add `--json` for pure structured output when an automation
+needs to classify reviewer-input failures or inspect the planned settings
+without parsing the dry-run prose.
 
 Then verify live state:
 

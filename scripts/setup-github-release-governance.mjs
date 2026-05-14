@@ -8,6 +8,8 @@ const branch = process.env.OMEGAX_RELEASE_BRANCH ?? 'main';
 const environmentName =
   process.env.OMEGAX_RELEASE_ENVIRONMENT ?? 'npm-production';
 const apply = process.argv.includes('--apply');
+const jsonOutput = process.argv.includes('--json');
+const setupFailures = [];
 const excludedReviewerLogins = new Set(
   parseCsv(process.env.OMEGAX_RELEASE_EXCLUDED_REVIEWERS)
     .map((login) => login.toLowerCase())
@@ -15,7 +17,10 @@ const excludedReviewerLogins = new Set(
 );
 
 function fail(message) {
-  console.error(message);
+  setupFailures.push(message);
+  if (!jsonOutput) {
+    console.error(message);
+  }
   process.exitCode = 1;
 }
 
@@ -29,6 +34,72 @@ function parseCsv(value) {
 function assertRepository(value) {
   if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u.test(value)) {
     throw new Error(`Invalid GITHUB_REPOSITORY value: ${value}`);
+  }
+}
+
+export function buildReleaseGovernanceSetupReport({
+  repository,
+  branch,
+  environment,
+  apply = false,
+  reviewers = [],
+  eligibleHumanReviewers = [],
+  branchProtection = null,
+  environmentProtection = null,
+  failures = [],
+  message = null,
+}) {
+  const report = {
+    ok: failures.length === 0,
+    repository,
+    branch,
+    environment,
+    apply,
+    reviewers,
+    eligibleHumanReviewers,
+    branchProtection,
+    environmentProtection,
+    failures,
+  };
+  if (message) {
+    report.message = message;
+  }
+  return report;
+}
+
+function setupSummary(report) {
+  return {
+    repository: report.repository,
+    branch: report.branch,
+    environment: report.environment,
+    apply: report.apply,
+    reviewers: report.reviewers,
+    eligibleHumanReviewers: report.eligibleHumanReviewers,
+    branchProtection: report.branchProtection,
+    environmentProtection: report.environmentProtection,
+  };
+}
+
+function outputSetupReport(report) {
+  const nextReport = buildReleaseGovernanceSetupReport({
+    repository,
+    branch,
+    environment: environmentName,
+    apply,
+    failures: setupFailures,
+    ...report,
+  });
+
+  if (jsonOutput) {
+    console.log(JSON.stringify(nextReport, null, 2));
+    return;
+  }
+
+  if (nextReport.ok) {
+    console.log(JSON.stringify(setupSummary(nextReport), null, 2));
+    if (nextReport.message) {
+      console.log(nextReport.message);
+    }
   }
 }
 
@@ -357,6 +428,7 @@ async function main() {
     fail(
       'Set at least two distinct release reviewers via OMEGAX_RELEASE_REVIEWERS=login1,login2 or OMEGAX_RELEASE_REVIEWER_TEAMS=team-slug.',
     );
+    outputSetupReport();
     return;
   }
 
@@ -370,20 +442,6 @@ async function main() {
   const reviewers = [...userReviewers, ...teamReviewers];
   const distinctReviewerKeys = new Set(reviewers.map(reviewerKey));
   const distinctHumanReviewerLogins = eligibleHumanReviewerLogins(reviewers);
-
-  if (distinctReviewerKeys.size < 2) {
-    fail(
-      'Set at least two distinct release reviewers; duplicate reviewer entries do not satisfy the release-governance requirement.',
-    );
-    return;
-  }
-  if (distinctHumanReviewerLogins.length < 2) {
-    fail(
-      'Set at least two distinct eligible human release reviewers; a team that only contains an already-listed reviewer does not satisfy independent release governance.',
-    );
-    return;
-  }
-
   const branchBody = branchProtectionBody(branchProtection);
   const environmentBody = {
     wait_timer: Number(environment?.wait_timer ?? 0),
@@ -394,24 +452,34 @@ async function main() {
     })),
     deployment_branch_policy: deploymentBranchPolicyBody(environment),
   };
-
-  const summary = {
-    repository,
-    branch,
-    environment: environmentName,
-    apply,
+  const reportDetails = {
     reviewers: reviewers.map(reviewerLabel),
     eligibleHumanReviewers: distinctHumanReviewerLogins,
     branchProtection: branchBody,
     environmentProtection: environmentBody,
   };
 
-  console.log(JSON.stringify(summary, null, 2));
+  if (distinctReviewerKeys.size < 2) {
+    fail(
+      'Set at least two distinct release reviewers; duplicate reviewer entries do not satisfy the release-governance requirement.',
+    );
+    outputSetupReport(reportDetails);
+    return;
+  }
+  if (distinctHumanReviewerLogins.length < 2) {
+    fail(
+      'Set at least two distinct eligible human release reviewers; a team that only contains an already-listed reviewer does not satisfy independent release governance.',
+    );
+    outputSetupReport(reportDetails);
+    return;
+  }
 
   if (!apply) {
-    console.log(
-      'Dry run only. Re-run with --apply after reviewing the planned GitHub settings.',
-    );
+    outputSetupReport({
+      ...reportDetails,
+      message:
+        'Dry run only. Re-run with --apply after reviewing the planned GitHub settings.',
+    });
     return;
   }
 
@@ -430,7 +498,10 @@ async function main() {
     },
   );
 
-  console.log('GitHub release governance settings updated.');
+  outputSetupReport({
+    ...reportDetails,
+    message: 'GitHub release governance settings updated.',
+  });
 }
 
 if (
@@ -438,7 +509,24 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   main().catch((error) => {
-    console.error(error instanceof Error ? error.message : String(error));
+    const message = error instanceof Error ? error.message : String(error);
+    if (jsonOutput) {
+      console.log(
+        JSON.stringify(
+          buildReleaseGovernanceSetupReport({
+            repository,
+            branch,
+            environment: environmentName,
+            apply,
+            failures: [...setupFailures, message],
+          }),
+          null,
+          2,
+        ),
+      );
+    } else {
+      console.error(message);
+    }
     process.exitCode = 1;
   });
 }

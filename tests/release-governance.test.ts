@@ -14,6 +14,7 @@ import {
 } from '../scripts/check-github-release-governance.mjs';
 import {
   branchProtectionBody,
+  buildReleaseGovernanceSetupReport,
   deploymentBranchPolicyBody,
   eligibleHumanReviewerLogins,
   eligibleTeamReviewerMembers,
@@ -503,6 +504,56 @@ test('release setup preserves existing branch protection safety settings', () =>
   assert.equal(body.required_conversation_resolution, true);
   assert.equal(body.lock_branch, false);
   assert.equal(body.allow_fork_syncing, false);
+});
+
+test('release setup report supports pure JSON automation output', () => {
+  assert.deepEqual(
+    buildReleaseGovernanceSetupReport({
+      repository: 'OmegaX-Health/omegax-sdk',
+      branch: 'main',
+      environment: 'npm-production',
+      apply: false,
+      reviewers: ['user:marinosabijan:admin', 'user:second:write'],
+      eligibleHumanReviewers: ['marinosabijan', 'second'],
+      branchProtection: { required_pull_request_reviews: {} },
+      environmentProtection: { reviewers: [] },
+      message: 'Dry run only.',
+    }),
+    {
+      ok: true,
+      repository: 'OmegaX-Health/omegax-sdk',
+      branch: 'main',
+      environment: 'npm-production',
+      apply: false,
+      reviewers: ['user:marinosabijan:admin', 'user:second:write'],
+      eligibleHumanReviewers: ['marinosabijan', 'second'],
+      branchProtection: { required_pull_request_reviews: {} },
+      environmentProtection: { reviewers: [] },
+      failures: [],
+      message: 'Dry run only.',
+    },
+  );
+
+  assert.deepEqual(
+    buildReleaseGovernanceSetupReport({
+      repository: 'OmegaX-Health/omegax-sdk',
+      branch: 'main',
+      environment: 'npm-production',
+      failures: ['Set at least two distinct release reviewers.'],
+    }),
+    {
+      ok: false,
+      repository: 'OmegaX-Health/omegax-sdk',
+      branch: 'main',
+      environment: 'npm-production',
+      apply: false,
+      reviewers: [],
+      eligibleHumanReviewers: [],
+      branchProtection: null,
+      environmentProtection: null,
+      failures: ['Set at least two distinct release reviewers.'],
+    },
+  );
 });
 
 test('release setup fails closed when existing restrictions cannot be preserved', () => {
