@@ -8,7 +8,7 @@
 
 > **buildBackfillSchemaDependencyLedgerTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3446](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3446)
+Defined in: [src/protocol.ts:3063](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3063)
 
 ## Parameters
 

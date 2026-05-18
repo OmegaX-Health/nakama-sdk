@@ -8,4 +8,4 @@
 
 > **SafeReserveObligationTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildReserveObligationTx`](../functions/buildReserveObligationTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3820](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3820)
+Defined in: [src/protocol.ts:3437](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3437)

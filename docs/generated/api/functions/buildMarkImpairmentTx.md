@@ -8,7 +8,7 @@
 
 > **buildMarkImpairmentTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3037](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3037)
+Defined in: [src/protocol.ts:2654](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2654)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **buildSettleClaimCaseSelectedAssetTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2643](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2643)
+Defined in: [src/protocol.ts:2260](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2260)
 
 ## Parameters
 

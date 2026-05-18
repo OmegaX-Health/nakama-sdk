@@ -8,7 +8,7 @@
 
 > **buildWithdrawPoolOracleFeeSolTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2173)
+Defined in: [src/protocol.ts:1790](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1790)
 
 ## Parameters
 

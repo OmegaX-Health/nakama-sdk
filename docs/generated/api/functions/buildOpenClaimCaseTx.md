@@ -8,7 +8,7 @@
 
 > **buildOpenClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2373](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2373)
+Defined in: [src/protocol.ts:1990](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1990)
 
 ## Parameters
 

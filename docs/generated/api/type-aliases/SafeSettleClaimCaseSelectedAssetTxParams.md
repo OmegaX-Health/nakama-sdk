@@ -8,7 +8,7 @@
 
 > **SafeSettleClaimCaseSelectedAssetTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildSettleClaimCaseSelectedAssetTx`](../functions/buildSettleClaimCaseSelectedAssetTx.md)\>\[`0`\], `"programId"`\> & `object`
 
-Defined in: [src/protocol.ts:3840](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3840)
+Defined in: [src/protocol.ts:3457](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3457)
 
 ## Type Declaration
 

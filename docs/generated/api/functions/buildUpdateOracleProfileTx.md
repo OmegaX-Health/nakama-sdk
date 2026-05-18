@@ -8,7 +8,7 @@
 
 > **buildUpdateOracleProfileTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3196](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3196)
+Defined in: [src/protocol.ts:2813](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2813)
 
 ## Parameters
 

@@ -32,9 +32,11 @@ const publicDocs = new Set([
   'docs/RECIPES.md',
   'docs/RELEASE.md',
   'docs/RELEASE_NOTES.md',
+  'docs/REPOSITORY_STRUCTURE.md',
   'docs/TOP_APIS.md',
   'docs/TROUBLESHOOTING.md',
   'docs/WORKFLOWS.md',
+  'docs/generated/README.md',
 ]);
 const allowed = files.filter(
   (path) =>
