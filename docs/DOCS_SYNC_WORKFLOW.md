@@ -13,16 +13,24 @@ This workflow keeps `@omegax/protocol-sdk` and `docs.omegax.health` on the same 
 - `README.md`
 - `docs/GETTING_STARTED.md`
 - `docs/WORKFLOWS.md`
+- `docs/RECIPES.md`
+- `docs/TOP_APIS.md`
+- `docs/ERROR_CATALOG.md`
 - `docs/API_REFERENCE.md`
+- `docs/RELEASE_NOTES.md`
 - `docs/TROUBLESHOOTING.md`
 - `docs/OMEGAX_DOCS_SYNC.json`
 
 Portal targets:
 
-- `website/docs/sdk/overview.md`
+- `website/docs/sdk/overview.mdx`
 - `website/docs/sdk/getting-started.md`
 - `website/docs/sdk/workflows.md`
+- `website/docs/sdk/recipes.md`
+- `website/docs/sdk/top-apis.md`
+- `website/docs/sdk/error-catalog.md`
 - `website/docs/sdk/api-reference.md`
+- `website/docs/sdk/release-notes.md`
 - `website/docs/sdk/troubleshooting.md`
 
 ## Update flow

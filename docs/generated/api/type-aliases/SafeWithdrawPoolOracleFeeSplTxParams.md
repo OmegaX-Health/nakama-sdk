@@ -8,4 +8,4 @@
 
 > **SafeWithdrawPoolOracleFeeSplTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildWithdrawPoolOracleFeeSplTx`](../functions/buildWithdrawPoolOracleFeeSplTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3800](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3800)
+Defined in: [src/protocol.ts:3417](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3417)

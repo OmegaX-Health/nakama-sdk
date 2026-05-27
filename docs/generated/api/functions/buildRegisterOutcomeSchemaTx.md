@@ -8,7 +8,7 @@
 
 > **buildRegisterOutcomeSchemaTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:3363](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3363)
+Defined in: [src/protocol.ts:2980](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2980)
 
 ## Parameters
 

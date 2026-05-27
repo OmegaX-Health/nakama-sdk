@@ -8,7 +8,7 @@
 
 > **buildInitializeSeriesReserveLedgerTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1450](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1450)
+Defined in: [src/protocol.ts:1067](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1067)
 
 ## Parameters
 

@@ -30,9 +30,11 @@ Use this page as the navigation hub for builders and release maintainers.
 - `../examples/README.md` for runnable smoke, app-builder, and oracle examples
 - `RELEASE_NOTES.md` for versioned SDK changes and rollout notes
 - `RELEASE.md` for local release gates and tag/publish steps
+- `REPOSITORY_STRUCTURE.md` for source ownership, generated-output rules, and validation by change type
 - `DOCS_SYNC_WORKFLOW.md` for SDK to `omegax-docs` parity
 - `OMEGAX_DOCS_SYNC.json` for the machine-checkable portal sync record
 - `CROSS_REPO_RELEASE_ORDER.md` for the protocol + docs + SDK publish sequence
+- `../scripts/README.md` for script side effects and command ownership
 
 ## Parity assurance
 

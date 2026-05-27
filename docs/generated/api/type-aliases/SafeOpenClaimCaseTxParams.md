@@ -8,4 +8,4 @@
 
 > **SafeOpenClaimCaseTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildOpenClaimCaseTx`](../functions/buildOpenClaimCaseTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3816](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3816)
+Defined in: [src/protocol.ts:3433](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3433)

@@ -8,7 +8,7 @@
 
 > **buildOpenMemberPositionTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2189](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2189)
+Defined in: [src/protocol.ts:1806](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1806)
 
 ## Parameters
 

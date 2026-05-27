@@ -1,0 +1,4 @@
+dist/** linguist-generated=true
+docs/generated/api/** linguist-generated=true
+src/generated/** linguist-generated=true
+tests/fixtures/omegax_protocol.idl.json linguist-generated=true

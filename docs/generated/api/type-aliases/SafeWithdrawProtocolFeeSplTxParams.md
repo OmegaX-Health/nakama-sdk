@@ -8,4 +8,4 @@
 
 > **SafeWithdrawProtocolFeeSplTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildWithdrawProtocolFeeSplTx`](../functions/buildWithdrawProtocolFeeSplTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3792](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3792)
+Defined in: [src/protocol.ts:3409](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3409)

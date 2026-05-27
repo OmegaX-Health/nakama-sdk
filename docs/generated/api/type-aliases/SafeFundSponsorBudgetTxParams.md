@@ -8,4 +8,4 @@
 
 > **SafeFundSponsorBudgetTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildFundSponsorBudgetTx`](../functions/buildFundSponsorBudgetTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3772](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3772)
+Defined in: [src/protocol.ts:3389](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3389)

@@ -8,7 +8,7 @@
 
 > **getProtocolIdl**(): `object`
 
-Defined in: [src/protocol.ts:618](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L618)
+Defined in: [src/protocol.ts:154](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L154)
 
 ## Returns
 

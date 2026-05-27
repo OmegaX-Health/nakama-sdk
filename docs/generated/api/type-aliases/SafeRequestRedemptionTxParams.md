@@ -8,4 +8,4 @@
 
 > **SafeRequestRedemptionTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildRequestRedemptionTx`](../functions/buildRequestRedemptionTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3784](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3784)
+Defined in: [src/protocol.ts:3401](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3401)

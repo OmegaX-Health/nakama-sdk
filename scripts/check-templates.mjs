@@ -9,6 +9,7 @@ import { join, resolve } from 'node:path';
 const sdkRoot = process.cwd();
 const cliPath = resolve(sdkRoot, 'dist/cli.js');
 const templates = ['node-backend', 'next-route', 'oracle-worker'];
+const sdkPackageName = '@omegax/protocol-sdk';
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -54,6 +55,29 @@ async function patchSdkDependency(appRoot, tarballPath) {
   );
 }
 
+async function assertTemplateDependencyVersions() {
+  const rootPackageJson = JSON.parse(
+    await readFile(join(sdkRoot, 'package.json'), 'utf8'),
+  );
+  const expectedDependency = `^${rootPackageJson.version}`;
+
+  for (const template of templates) {
+    const packageJsonPath = join(
+      sdkRoot,
+      'templates',
+      template,
+      'package.json',
+    );
+    const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
+    const actualDependency = packageJson.dependencies?.[sdkPackageName];
+    if (actualDependency !== expectedDependency) {
+      throw new Error(
+        `${packageJsonPath} must depend on ${sdkPackageName}@${expectedDependency}; found ${actualDependency ?? 'missing'}.`,
+      );
+    }
+  }
+}
+
 function ensureCliBuilt() {
   if (!existsSync(cliPath)) {
     run('npm', ['run', 'build']);
@@ -61,6 +85,7 @@ function ensureCliBuilt() {
 }
 
 export async function runTemplateChecks() {
+  await assertTemplateDependencyVersions();
   run('npm', ['run', 'build']);
   const tarballPath = parsePackedTarball(
     run('npm', ['pack', '--ignore-scripts', '--json'], { capture: true }),

@@ -8,7 +8,7 @@
 
 > **createProtocolClient**(`connection`, `programId?`, `options?`): [`ProtocolClient`](../interfaces/ProtocolClient.md)
 
-Defined in: [src/protocol.ts:4189](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L4189)
+Defined in: [src/protocol.ts:3806](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3806)
 
 ## Parameters
 

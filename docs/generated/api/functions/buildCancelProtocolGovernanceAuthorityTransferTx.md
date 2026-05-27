@@ -8,7 +8,7 @@
 
 > **buildCancelProtocolGovernanceAuthorityTransferTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1098](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1098)
+Defined in: [src/protocol.ts:715](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L715)
 
 ## Parameters
 

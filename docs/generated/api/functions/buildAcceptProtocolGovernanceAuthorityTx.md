@@ -8,7 +8,7 @@
 
 > **buildAcceptProtocolGovernanceAuthorityTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1078](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1078)
+Defined in: [src/protocol.ts:695](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L695)
 
 ## Parameters
 
