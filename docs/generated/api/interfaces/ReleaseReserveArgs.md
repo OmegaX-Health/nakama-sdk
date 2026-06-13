@@ -6,7 +6,7 @@
 
 # Interface: ReleaseReserveArgs
 
-Defined in: [src/generated/protocol\_types.ts:991](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L991)
+Defined in: [src/generated/protocol\_types.ts:374](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L374)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:991](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:992](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L992)
+Defined in: [src/generated/protocol\_types.ts:375](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L375)

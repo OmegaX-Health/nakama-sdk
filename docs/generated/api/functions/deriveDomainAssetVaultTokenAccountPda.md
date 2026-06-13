@@ -8,7 +8,7 @@
 
 > **deriveDomainAssetVaultTokenAccountPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L175)
+Defined in: [src/protocol\_seeds.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L176)
 
 ## Parameters
 

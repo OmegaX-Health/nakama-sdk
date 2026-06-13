@@ -8,7 +8,7 @@
 
 > **derivePlanReserveLedgerPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:235](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L235)
+Defined in: [src/protocol\_seeds.ts:236](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L236)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **SafeSettleObligationTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildSettleObligationTx`](../functions/buildSettleObligationTx.md)\>\[`0`\], `"programId"`\> & `object`
 
-Defined in: [src/protocol.ts:3445](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3445)
+Defined in: [src/protocol.ts:1883](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1883)
 
 ## Type Declaration
 

@@ -6,7 +6,7 @@
 
 # Interface: DomainAssetLedger
 
-Defined in: [src/generated/protocol\_types.ts:385](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L385)
+Defined in: [src/generated/protocol\_types.ts:175](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L175)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:385](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:387](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L387)
+Defined in: [src/generated/protocol\_types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L177)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:387](https://github.com/OmegaX-Hea
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:389](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L389)
+Defined in: [src/generated/protocol\_types.ts:179](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L179)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:389](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:386](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L386)
+Defined in: [src/generated/protocol\_types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L176)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:386](https://github.com/OmegaX-Hea
 
 > **sheet**: [`ReserveBalanceSheet`](ReserveBalanceSheet.md)
 
-Defined in: [src/generated/protocol\_types.ts:388](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L388)
+Defined in: [src/generated/protocol\_types.ts:178](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L178)

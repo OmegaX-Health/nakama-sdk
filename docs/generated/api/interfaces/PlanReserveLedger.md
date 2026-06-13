@@ -6,7 +6,7 @@
 
 # Interface: PlanReserveLedger
 
-Defined in: [src/generated/protocol\_types.ts:770](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L770)
+Defined in: [src/generated/protocol\_types.ts:319](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L319)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:770](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:772](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L772)
+Defined in: [src/generated/protocol\_types.ts:321](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L321)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:772](https://github.com/OmegaX-Hea
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:774](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L774)
+Defined in: [src/generated/protocol\_types.ts:323](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L323)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:774](https://github.com/OmegaX-Hea
 
 > **health\_plan**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:771](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L771)
+Defined in: [src/generated/protocol\_types.ts:320](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L320)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:771](https://github.com/OmegaX-Hea
 
 > **sheet**: [`ReserveBalanceSheet`](ReserveBalanceSheet.md)
 
-Defined in: [src/generated/protocol\_types.ts:773](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L773)
+Defined in: [src/generated/protocol\_types.ts:322](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L322)

@@ -6,7 +6,7 @@
 
 # Interface: UpdateHealthPlanControlsAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1781](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1781)
+Defined in: [src/generated/protocol\_types.ts:678](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L678)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1781](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1782](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1782)
+Defined in: [src/generated/protocol\_types.ts:679](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L679)
 
 ***
 
@@ -22,12 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:1782](https://github.com/OmegaX-He
 
 > **health\_plan**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1784](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1784)
-
-***
-
-### protocol\_governance
-
-> **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1783](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1783)
+Defined in: [src/generated/protocol\_types.ts:680](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L680)

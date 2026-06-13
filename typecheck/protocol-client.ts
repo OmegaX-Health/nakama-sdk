@@ -38,7 +38,6 @@ function assertProtocolClient(protocol: ProtocolClient) {
     },
     accounts: {
       authority,
-      protocol_governance: protocolGovernance,
       reserve_domain: reserveDomain,
     },
     recentBlockhash,
@@ -82,13 +81,6 @@ void buildSettleObligationTx({
 });
 
 const safeProtocol = createSafeProtocolClient(connection);
-void safeProtocol.buildWithdrawProtocolFeeSolTx({
-  authority,
-  reserveDomainAddress: reserveDomain,
-  recipient: authority,
-  recentBlockhash,
-  amount: 1n,
-});
 void safeProtocol.buildSettleObligationTx({
   authority,
   healthPlanAddress: healthPlan,

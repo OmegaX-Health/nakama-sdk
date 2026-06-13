@@ -8,7 +8,7 @@
 
 > **deriveReserveDomainPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:147](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L147)
+Defined in: [src/protocol\_seeds.ts:148](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L148)
 
 ## Parameters
 

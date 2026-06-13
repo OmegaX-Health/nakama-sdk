@@ -6,7 +6,7 @@
 
 # Interface: CreateDomainAssetVaultArgs
 
-Defined in: [src/generated/protocol\_types.ts:290](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L290)
+Defined in: [src/generated/protocol\_types.ts:108](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L108)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:290](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:291](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L291)
+Defined in: [src/generated/protocol\_types.ts:109](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L109)

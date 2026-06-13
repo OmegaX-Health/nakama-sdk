@@ -6,21 +6,21 @@ Build health apps, oracle services, and outcome-triggered settlement flows on So
 
 ## What you can build today
 
-- oracle and event-production services that register operators, manage policy, and emit compatible outcome and claim-case attestations
-- health apps, wallets, and agents that read member, claim, obligation, and payout state
-- sponsor and capital integrations that create plans, funding lines, pools, classes, allocations, and redemptions
+- oracle and event-production services that sign compatible outcome events and settlement-grade claim evidence
+- health apps, wallets, and agents that read claim, obligation, and payout state
+- sponsor and reserve integrations that create reserve domains, plans, policy series, funding lines, and reserve-backed settlement
 
 ## Who should use it
 
 - oracle and event producers
 - health / wallet / app builders
-- sponsor, treasury, and capital integrators
+- sponsor, treasury, and reserve integrators
 
 ## Choose your path
 
 ### Oracle and event producers
 
-Use the protocol registry builders plus `@omegax/protocol-sdk/oracle` to register oracles, manage pool policy, and package attestations.
+Use `@omegax/protocol-sdk/oracle` to sign outcome and settlement-grade claim attestations.
 
 Start with:
 
@@ -30,7 +30,7 @@ Start with:
 
 ### Health / wallet / app builders
 
-Use reader helpers and member / claim builders to power user-facing views and outcome-driven product flows.
+Use reader helpers and claim builders to power user-facing views and outcome-driven product flows.
 
 Start with:
 
@@ -38,9 +38,9 @@ Start with:
 - `/docs/WORKFLOWS.md`
 - `/docs/API_REFERENCE.md`
 
-### Sponsor and capital integrators
+### Sponsor and reserve integrators
 
-Use reserve-domain, plan, capital, allocation, and queue builders to launch or manage sponsor and LP lanes on the canonical model.
+Use reserve-domain, plan, policy-series, funding-line, and reserve-capital builders to launch or manage sponsor lanes on the canonical model.
 
 Start with:
 
@@ -94,9 +94,9 @@ const instructions = listProtocolInstructionNames();
 
 From there:
 
-- oracle and event producers usually move into `buildRegisterOracleTx(...)`, `buildClaimOracleTx(...)`, `buildSetPoolOraclePolicyTx(...)`, `buildAttestClaimCaseTx(...)`, and `attestOutcome(...)`
-- health and wallet builders usually move into member / claim reads plus `buildOpenMemberPositionTx(...)` and `buildOpenClaimCaseTx(...)`
-- sponsor and capital integrators usually move into safe reserve-domain, plan, pool, class, allocation, and redemption builders from `/docs/WORKFLOWS.md`
+- oracle and event producers usually move into `attestOutcome(...)`, `attestProtocolOutcome(...)`, and `verifyProtocolOracleAttestation(...)`
+- health and wallet builders usually move into claim / obligation reads plus `buildOpenClaimCaseTx(...)` and `buildAuthorizeClaimRecipientTx(...)`
+- sponsor and reserve integrators usually move into safe reserve-domain, plan, funding-line, and reserve-capital builders from `/docs/WORKFLOWS.md`
 
 ## First success smoke
 
@@ -115,14 +115,12 @@ For a clean external project, copy the same pattern from
 
 This package exposes the live canonical object model:
 
-- protocol governance and scoped controls
-- reserve domains, domain asset vaults, reserve asset rails, and fee vaults
+- reserve domains and domain asset vaults
 - health plans and policy series
-- member positions and membership anchors
-- funding lines, obligations, claim cases, and reserve-backed payouts
-- liquidity pools, capital classes, LP positions, and allocation positions
-- oracle profiles, pool oracle approvals, oracle policies, permission sets, and claim attestations
-- outcome schemas and schema dependency ledgers
+- funding lines and plan reserve ledgers
+- reserve capital contributions, sponsor budgets, premium income, and reserve earnings
+- obligations, claim cases, and reserve-backed payouts
+- oracle attestation helpers for outcome and settlement-grade claim evidence
 - reserve-aware read models for sponsors, members, and capital providers
 - RPC helpers for unsigned transaction submission flows
 
@@ -139,7 +137,7 @@ This package exposes the live canonical object model:
 - `0.8.9` hardens `validateSignedClaimTx(...)` so claim intake must compare signed transactions against the service's trusted `expectedUnsignedTxBase64`, not client-submitted intent bytes.
 - `0.8.8` refreshes generated bindings for the 62-instruction / 31-account local protocol surface, removes the retired commitment-campaign API from current exports, adds governance authority accept/cancel builders, updates reserve-asset rail confidence inputs, adds direct plus selected-asset claim-case settlement helpers, and reflects inactive pool/allocation guard errors.
 - `0.8.7` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
-- `0.8.5` refreshes generated bindings for the 67-instruction / 35-account protocol surface, adds reserve asset rail and commitment PDA helpers, exports canonical commitment/reserve/membership/oracle/schema constants, expands `buildAttestClaimCaseTx(...)`, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
+- `0.8.5` refreshes generated bindings for the then-current protocol surface, adds reserve and commitment PDA helpers, exports canonical reserve/membership/oracle/schema constants, expands the on-chain claim-case attestation builder, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
 - `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
 - `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
 - `0.8.2` keeps invite-only member enrollment builders aligned with the protocol account metas by preserving the optional invite-authority signer.
@@ -169,10 +167,10 @@ This package exposes the live canonical object model:
 - Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
 - `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
 - `@omegax/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
-- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveReserveAssetRailPda(...)`, `deriveHealthPlanPda(...)`, `deriveFundingLinePda(...)`, `deriveClaimCasePda(...)`, and `deriveCapitalClassPda(...)`
+- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveDomainAssetVaultPda(...)`, `deriveHealthPlanPda(...)`, `derivePolicySeriesPda(...)`, `deriveFundingLinePda(...)`, `deriveObligationPda(...)`, and `deriveClaimCasePda(...)`
 - `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
 - `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
-- `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)`, alongside the root-level `buildAttestClaimCaseTx(...)` helper for on-chain claim-case attestations
+- `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)` for service-side signing and settlement-grade evidence verification
 - `@omegax/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
 - `@omegax/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
 - `@omegax/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
@@ -192,12 +190,12 @@ keys, or live transaction submission for first success.
 
 ## What the SDK is for
 
-- Sponsors and operators can build reserve-domain, reserve-rail, health-plan, policy-series, funding-line, obligation, and claim-case settlement transactions directly.
-- Capital providers can derive capital-class and allocation addresses, inspect ledgers, and build deposit and redemption flows against canonical pool and class objects.
+- Sponsors and operators can build reserve-domain, health-plan, policy-series, funding-line, reserve-capital, obligation, and claim-case settlement transactions directly.
+- Capital contributors can deposit and return reserve capital against canonical funding lines, then inspect the resulting contribution and ledger state.
 - Wallet apps and members can inspect plan participation, obligations, claim state, and payout history with the read-model helpers.
-- Oracle operators can register profiles, configure pool policy, attest claim cases on-chain, and use a narrower attestation helper surface for outcome packaging.
+- Oracle operators can sign outcome and settlement-grade claim attestations with a narrow attestation helper surface.
 - External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
-- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client now covers sponsor funding, premium intake, claim-case settlement, LP deposits/redemptions, redemption processing, obligation settlement, and fee/treasury withdrawals. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
+- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client covers sponsor funding, premium intake, claim-case settlement, and obligation reserve/release/settle flows. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
 - Safe settlement calls require `recipientOwnerAddress` alongside the custody accounts so the SDK can preflight payout token-account mint and owner before users sign.
 
 ## What the SDK does not do

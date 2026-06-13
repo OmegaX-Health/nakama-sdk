@@ -6,31 +6,15 @@
 
 # Interface: ReserveObligationAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1640](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1640)
+Defined in: [src/generated/protocol\_types.ts:620](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L620)
 
 ## Properties
-
-### allocation\_ledger?
-
-> `optional` **allocation\_ledger?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1651](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1651)
-
-***
-
-### allocation\_position?
-
-> `optional` **allocation\_position?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1650](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1650)
-
-***
 
 ### authority
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1641](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1641)
+Defined in: [src/generated/protocol\_types.ts:621](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L621)
 
 ***
 
@@ -38,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1641](https://github.com/OmegaX-He
 
 > `optional` **claim\_case?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1653](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1653)
+Defined in: [src/generated/protocol\_types.ts:628](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L628)
 
 ***
 
@@ -46,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1653](https://github.com/OmegaX-He
 
 > **domain\_asset\_ledger**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1644](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1644)
+Defined in: [src/generated/protocol\_types.ts:623](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L623)
 
 ***
 
@@ -54,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:1644](https://github.com/OmegaX-He
 
 > **funding\_line**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1645](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1645)
+Defined in: [src/generated/protocol\_types.ts:624](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L624)
 
 ***
 
@@ -62,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:1645](https://github.com/OmegaX-He
 
 > **funding\_line\_ledger**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1646](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1646)
+Defined in: [src/generated/protocol\_types.ts:625](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L625)
 
 ***
 
@@ -70,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:1646](https://github.com/OmegaX-He
 
 > **health\_plan**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1643](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1643)
+Defined in: [src/generated/protocol\_types.ts:622](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L622)
 
 ***
 
@@ -78,7 +62,7 @@ Defined in: [src/generated/protocol\_types.ts:1643](https://github.com/OmegaX-He
 
 > **obligation**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1652](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1652)
+Defined in: [src/generated/protocol\_types.ts:627](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L627)
 
 ***
 
@@ -86,28 +70,4 @@ Defined in: [src/generated/protocol\_types.ts:1652](https://github.com/OmegaX-He
 
 > **plan\_reserve\_ledger**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1647](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1647)
-
-***
-
-### pool\_class\_ledger?
-
-> `optional` **pool\_class\_ledger?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1649](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1649)
-
-***
-
-### protocol\_governance
-
-> **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1642](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1642)
-
-***
-
-### series\_reserve\_ledger?
-
-> `optional` **series\_reserve\_ledger?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1648](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1648)
+Defined in: [src/generated/protocol\_types.ts:626](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L626)

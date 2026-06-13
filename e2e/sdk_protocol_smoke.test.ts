@@ -4,7 +4,6 @@ import assert from 'node:assert/strict';
 import {
   Keypair,
   PublicKey,
-  SYSVAR_CLOCK_PUBKEY,
   SYSVAR_RENT_PUBKEY,
   SystemProgram,
   Transaction,
@@ -13,49 +12,72 @@ import {
 } from '@solana/web3.js';
 
 import {
-  CAPITAL_CLASS_RESTRICTION_OPEN,
-  ELIGIBILITY_ELIGIBLE,
   OBLIGATION_DELIVERY_MODE_CLAIMABLE,
+  OBLIGATION_DELIVERY_MODE_PAYABLE,
+  OBLIGATION_STATUS_CANCELED,
   OBLIGATION_STATUS_CLAIMABLE_PAYABLE,
   OBLIGATION_STATUS_SETTLED,
-  REDEMPTION_POLICY_QUEUE_ONLY,
   SERIES_MODE_REWARD,
   SERIES_STATUS_ACTIVE,
-  ZERO_PUBKEY,
+  buildAdjudicateClaimCaseTx,
+  buildAuthorizeClaimRecipientTx,
+  buildCreateDomainAssetVaultTx,
+  buildCreateHealthPlanTx,
+  buildCreateObligationTx,
+  buildCreatePolicySeriesTx,
+  buildCreateReserveDomainTx,
+  buildDepositReserveCapitalTx,
+  buildFundSponsorBudgetTx,
+  buildOpenClaimCaseTx,
+  buildOpenFundingLineTx,
+  buildRecordPremiumPaymentTx,
+  buildRecordReserveEarningsTx,
+  buildReleaseReserveTx,
+  buildReserveObligationTx,
+  buildReturnReserveCapitalTx,
+  buildSettleClaimCaseTx,
+  buildSettleObligationTx,
+  buildUpdateHealthPlanControlsTx,
+  buildUpdateReserveDomainControlsTx,
+  buildVersionPolicySeriesTx,
   createConnection,
   createProtocolClient,
   createRpcClient,
-  deriveCapitalClassPda,
+  deriveClaimCasePda,
   deriveDomainAssetLedgerPda,
   deriveDomainAssetVaultPda,
+  deriveDomainAssetVaultTokenAccountPda,
   deriveFundingLineLedgerPda,
   deriveFundingLinePda,
   deriveHealthPlanPda,
-  deriveLiquidityPoolPda,
-  deriveLpPositionPda,
-  deriveMemberPositionPda,
   deriveObligationPda,
   derivePlanReserveLedgerPda,
   derivePolicySeriesPda,
-  derivePoolClassLedgerPda,
-  derivePoolTreasuryVaultPda,
-  deriveProtocolGovernancePda,
-  deriveDomainAssetVaultTokenAccountPda,
-  deriveReserveAssetRailPda,
   deriveReserveDomainPda,
-  deriveSeriesReserveLedgerPda,
   recomputeReserveBalanceSheet,
   type ProtocolClient,
 } from '../src/index.js';
 
+// Canonical 21-instruction localnet smoke. The protocol surface was trimmed to
+// the reserve-domain → vault → plan → series → funding-line → capital →
+// obligation → claim lifecycle, so this test drives every surviving builder end
+// to end against a live validator and asserts on the surviving on-chain
+// accounts (ReserveDomain, DomainAssetVault, DomainAssetLedger, HealthPlan,
+// PlanReserveLedger, PolicySeries, FundingLine, FundingLineLedger,
+// CapitalContribution, Obligation, ClaimCase).
+
 const TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
 );
-const BPF_LOADER_UPGRADEABLE_PROGRAM_ID = new PublicKey(
-  'BPFLoaderUpgradeab1e11111111111111111111111',
-);
 const MINT_ACCOUNT_SIZE = 82;
 const TOKEN_ACCOUNT_SIZE = 165;
+
+const FUNDING_LINE_TYPE_SPONSOR_BUDGET = 0;
+const FUNDING_LINE_TYPE_PREMIUM_INCOME = 1;
+const FUNDING_LINE_TYPE_BACKSTOP = 3;
+
+// Distinct 32-byte proof/terms fingerprints used across the lifecycle.
+const HASH = (byte: number) => Buffer.alloc(32, byte).toString('hex');
 
 function requiredEnv(name: string): string {
   const value = process.env[name]?.trim();
@@ -73,32 +95,8 @@ function keypairFromEnv(name: string): Keypair | null {
   return Keypair.fromSecretKey(Uint8Array.from(secretKey));
 }
 
-function fixedHash(byte: number): Uint8Array {
-  return Uint8Array.from({ length: 32 }, () => byte);
-}
-
-function deriveProgramDataAddress(programId: string): PublicKey {
-  return PublicKey.findProgramAddressSync(
-    [new PublicKey(programId).toBuffer()],
-    BPF_LOADER_UPGRADEABLE_PROGRAM_ID,
-  )[0];
-}
-
 async function sleep(ms: number) {
   await new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
-}
-
-async function getClusterUnixTimestamp(
-  connection: ReturnType<typeof createConnection>,
-): Promise<bigint> {
-  const account = await connection.getAccountInfo(
-    SYSVAR_CLOCK_PUBKEY,
-    'confirmed',
-  );
-  if (!account) {
-    return BigInt(Math.floor(Date.now() / 1000));
-  }
-  return Buffer.from(account.data).readBigInt64LE(32);
 }
 
 async function airdrop(
@@ -147,22 +145,6 @@ async function requestAirdropChunk(
       lastError instanceof Error ? lastError.message : String(lastError)
     }`,
   );
-}
-
-function signToBase64(
-  tx: {
-    partialSign: (...signers: Keypair[]) => void;
-    serialize: (options: {
-      requireAllSignatures: boolean;
-      verifySignatures: boolean;
-    }) => Uint8Array;
-  },
-  signers: Keypair[],
-) {
-  tx.partialSign(...signers);
-  return Buffer.from(
-    tx.serialize({ requireAllSignatures: true, verifySignatures: true }),
-  ).toString('base64');
 }
 
 function coptionPublicKeyBytes(value: PublicKey | null): Buffer {
@@ -334,60 +316,19 @@ async function mintClassicTokens(params: {
   });
 }
 
-async function simulateAndBroadcast(params: {
-  label: string;
-  rpc: ReturnType<typeof createRpcClient>;
-  tx: {
-    partialSign: (...signers: Keypair[]) => void;
-    serialize: (options: {
-      requireAllSignatures: boolean;
-      verifySignatures: boolean;
-    }) => Uint8Array;
-  };
-  signers: Keypair[];
-}) {
-  const signedTxBase64 = signToBase64(params.tx, params.signers);
-  let simulation = await params.rpc.simulateSignedTx({
-    signedTxBase64,
-    replaceRecentBlockhash: false,
-    sigVerify: true,
-  });
-  for (let attempt = 0; attempt < 10 && !simulation.ok; attempt += 1) {
-    const logs = simulation.logs.join('\n');
-    if (
-      !logs.includes('Program is not deployed') &&
-      !logs.includes('Unsupported program id')
-    ) {
-      break;
-    }
-    await sleep(500);
-    simulation = await params.rpc.simulateSignedTx({
-      signedTxBase64,
-      replaceRecentBlockhash: false,
-      sigVerify: true,
-    });
+async function tokenBalance(
+  connection: ReturnType<typeof createConnection>,
+  account: PublicKey,
+): Promise<bigint> {
+  const info = await connection.getAccountInfo(account, 'confirmed');
+  if (!info) {
+    throw new Error(`token account ${account.toBase58()} not found`);
   }
-  assert.equal(
-    simulation.ok,
-    true,
-    `${params.label} simulation failed\n${String(simulation.err)}\n${simulation.logs.join('\n')}`,
-  );
-
-  const broadcast = await params.rpc.broadcastSignedTx({ signedTxBase64 });
-  assert.equal(
-    broadcast.status,
-    'confirmed',
-    `${params.label} did not confirm`,
-  );
+  // SPL token amount is a u64 at offset 64 of the token-account data.
+  return Buffer.from(info.data).readBigUInt64LE(64);
 }
 
-function asDynamicClient(
-  client: ProtocolClient,
-): ProtocolClient & Record<string, unknown> {
-  return client as ProtocolClient & Record<string, unknown>;
-}
-
-test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and capital flows', async () => {
+test('sdk live localnet smoke drives the canonical 21-instruction protocol lifecycle', async () => {
   const rpcUrl = requiredEnv('SOLANA_RPC_URL');
   const programId = requiredEnv('PROTOCOL_PROGRAM_ID');
   const connection = createConnection({
@@ -397,13 +338,12 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     warnOnComingSoon: false,
   });
   const rpc = createRpcClient(connection);
-  const protocol = asDynamicClient(createProtocolClient(connection, programId));
+  const protocol: ProtocolClient = createProtocolClient(connection, programId);
 
   const adminFromFixture = keypairFromEnv('OMEGAX_SDK_E2E_ADMIN_KEYPAIR');
   const memberFromFixture = keypairFromEnv('OMEGAX_SDK_E2E_MEMBER_KEYPAIR');
   const admin = adminFromFixture ?? Keypair.generate();
   const member = memberFromFixture ?? Keypair.generate();
-  const shareMint = Keypair.generate().publicKey.toBase58();
 
   if (!adminFromFixture) {
     await airdrop(connection, admin.publicKey, 5_000_000_000);
@@ -412,33 +352,23 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     await airdrop(connection, member.publicKey, 5_000_000_000);
   }
 
+  // A real SPL mint backs the whole flow; admin custodies the source liquidity
+  // and the member is the claimant/recipient of the settled claim payout.
   const assetMintKey = await createClassicMint({
     connection,
     payer: admin,
     mintAuthority: admin.publicKey,
     decimals: 6,
   });
-  const reserveDomain = deriveReserveDomainPda({
-    domainId: 'sdk-open-domain',
-    programId,
-  }).toBase58();
-  const domainAssetVaultKey = deriveDomainAssetVaultPda({
-    reserveDomain,
-    assetMint: assetMintKey,
-    programId,
-  });
-  const vaultTokenAccountKey = deriveDomainAssetVaultTokenAccountPda({
-    reserveDomain,
-    assetMint: assetMintKey,
-    programId,
-  });
+  const assetMint = assetMintKey.toBase58();
+
   const adminSourceTokenAccountKey = await createClassicTokenAccount({
     connection,
     payer: admin,
     mint: assetMintKey,
     owner: admin.publicKey,
   });
-  const memberSourceTokenAccountKey = await createClassicTokenAccount({
+  const memberRecipientTokenAccountKey = await createClassicTokenAccount({
     connection,
     payer: admin,
     mint: assetMintKey,
@@ -450,31 +380,27 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     mint: assetMintKey,
     destination: adminSourceTokenAccountKey,
     authority: admin,
-    amount: 500_000n,
-  });
-  await mintClassicTokens({
-    connection,
-    payer: admin,
-    mint: assetMintKey,
-    destination: memberSourceTokenAccountKey,
-    authority: admin,
-    amount: 200_000n,
+    amount: 1_000_000n,
   });
 
-  const assetMint = assetMintKey.toBase58();
-  const vaultTokenAccount = vaultTokenAccountKey.toBase58();
   const adminSourceTokenAccount = adminSourceTokenAccountKey.toBase58();
-  const memberSourceTokenAccount = memberSourceTokenAccountKey.toBase58();
-  const tokenProgram = TOKEN_PROGRAM_ID.toBase58();
+  const memberRecipientTokenAccount = memberRecipientTokenAccountKey.toBase58();
 
-  const protocolGovernance = deriveProtocolGovernancePda(programId).toBase58();
-  const programData = deriveProgramDataAddress(programId).toBase58();
-  const domainAssetVault = domainAssetVaultKey.toBase58();
-  const reserveAssetRail = deriveReserveAssetRailPda({
+  // Canonical PDAs for the surviving account surface.
+  const reserveDomain = deriveReserveDomainPda({
+    domainId: 'sdk-domain',
+    programId,
+  }).toBase58();
+  const domainAssetVault = deriveDomainAssetVaultPda({
     reserveDomain,
     assetMint,
     programId,
   }).toBase58();
+  const vaultTokenAccountKey = deriveDomainAssetVaultTokenAccountPda({
+    reserveDomain,
+    assetMint,
+    programId,
+  });
   const domainAssetLedger = deriveDomainAssetLedgerPda({
     reserveDomain,
     assetMint,
@@ -482,33 +408,17 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
   }).toBase58();
   const healthPlan = deriveHealthPlanPda({
     reserveDomain,
-    planId: 'sdk-health-plan',
+    planId: 'sdk-plan',
     programId,
   }).toBase58();
   const policySeries = derivePolicySeriesPda({
     healthPlan,
-    seriesId: 'sdk-reward-series',
+    seriesId: 'sdk-series-v1',
     programId,
   }).toBase58();
-  const seriesReserveLedger = deriveSeriesReserveLedgerPda({
-    policySeries,
-    assetMint,
-    programId,
-  }).toBase58();
-  const memberPosition = deriveMemberPositionPda({
+  const nextPolicySeries = derivePolicySeriesPda({
     healthPlan,
-    wallet: member.publicKey,
-    seriesScope: policySeries,
-    programId,
-  }).toBase58();
-  const fundingLine = deriveFundingLinePda({
-    healthPlan,
-    lineId: 'sdk-sponsor-budget',
-    programId,
-  }).toBase58();
-  const fundingLineLedger = deriveFundingLineLedgerPda({
-    fundingLine,
-    assetMint,
+    seriesId: 'sdk-series-v2',
     programId,
   }).toBase58();
   const planReserveLedger = derivePlanReserveLedgerPda({
@@ -516,719 +426,751 @@ test('sdk live localnet smoke exercises canonical reserve, plan, obligation, and
     assetMint,
     programId,
   }).toBase58();
-  const obligation = deriveObligationPda({
-    fundingLine,
-    obligationId: 'sdk-reward-1',
+
+  const sponsorLine = deriveFundingLinePda({
+    healthPlan,
+    lineId: 'sdk-sponsor',
     programId,
   }).toBase58();
-  const liquidityPool = deriveLiquidityPoolPda({
-    reserveDomain,
-    poolId: 'sdk-income-pool',
+  const premiumLine = deriveFundingLinePda({
+    healthPlan,
+    lineId: 'sdk-premium',
     programId,
   }).toBase58();
-  const capitalClass = deriveCapitalClassPda({
-    liquidityPool,
-    classId: 'sdk-open-class',
+  const backstopLine = deriveFundingLinePda({
+    healthPlan,
+    lineId: 'sdk-backstop',
     programId,
   }).toBase58();
-  const poolClassLedger = derivePoolClassLedgerPda({
-    capitalClass,
+  const sponsorLineLedger = deriveFundingLineLedgerPda({
+    fundingLine: sponsorLine,
     assetMint,
     programId,
   }).toBase58();
-  const poolTreasuryVault = derivePoolTreasuryVaultPda({
-    liquidityPool,
+  const premiumLineLedger = deriveFundingLineLedgerPda({
+    fundingLine: premiumLine,
     assetMint,
     programId,
   }).toBase58();
-  const lpPosition = deriveLpPositionPda({
-    capitalClass,
-    owner: member.publicKey,
+  const backstopLineLedger = deriveFundingLineLedgerPda({
+    fundingLine: backstopLine,
+    assetMint,
     programId,
   }).toBase58();
 
-  const buildTx = async (
-    methodName: string,
-    params: {
-      args: Record<string, unknown>;
-      accounts: Record<string, string>;
-    },
-  ) => {
-    const method = protocol[methodName];
-    assert.equal(typeof method, 'function', `${methodName} is not available`);
-    return (
-      method as (input: {
-        args: Record<string, unknown>;
-        accounts: Record<string, string>;
-        recentBlockhash: string;
-      }) => unknown
-    )({
-      ...params,
-      recentBlockhash: await rpc.getRecentBlockhash(),
-    });
+  const payableObligation = deriveObligationPda({
+    fundingLine: sponsorLine,
+    obligationId: 'sdk-payable',
+    programId,
+  }).toBase58();
+  const releasedObligation = deriveObligationPda({
+    fundingLine: sponsorLine,
+    obligationId: 'sdk-released',
+    programId,
+  }).toBase58();
+  const claimCase = deriveClaimCasePda({
+    healthPlan,
+    claimId: 'sdk-claim',
+    programId,
+  }).toBase58();
+
+  // Builders set feePayer + recentBlockhash and derive every PDA internally;
+  // we only fetch a fresh blockhash, sign, and broadcast against the validator.
+  const send = async (label: string, tx: Transaction, signers: Keypair[]) => {
+    tx.recentBlockhash = await rpc.getRecentBlockhash();
+    try {
+      await sendAndConfirmTransaction(connection, tx, signers, {
+        commitment: 'confirmed',
+      });
+    } catch (error) {
+      const logs =
+        error && typeof error === 'object' && 'logs' in error
+          ? `\n${(error as { logs?: string[] }).logs?.join('\n') ?? ''}`
+          : '';
+      throw new Error(
+        `${label} failed: ${
+          error instanceof Error ? error.message : String(error)
+        }${logs}`,
+      );
+    }
   };
 
-  await simulateAndBroadcast({
-    label: 'initialize_protocol_governance',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildInitializeProtocolGovernanceTx', {
-      args: {
-        protocol_fee_bps: 150,
-        emergency_pause: false,
-      },
-      accounts: {
-        governance_authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        program_data: programData,
-      },
-    })) as never,
-  });
+  const blockhash = () => rpc.getRecentBlockhash();
 
-  await simulateAndBroadcast({
-    label: 'create_reserve_domain',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreateReserveDomainTx', {
-      args: {
-        domain_id: 'sdk-open-domain',
-        display_name: 'SDK Open Domain',
-        domain_admin: admin.publicKey.toBase58(),
-        settlement_mode: 0,
-        legal_structure_hash: fixedHash(1),
-        compliance_baseline_hash: fixedHash(2),
-        allowed_rail_mask: 1,
-        pause_flags: 0,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        reserve_domain: reserveDomain,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'create_domain_asset_vault',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreateDomainAssetVaultTx', {
-      args: {
-        asset_mint: assetMint,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        reserve_domain: reserveDomain,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'configure_reserve_asset_rail',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildConfigureReserveAssetRailTx', {
-      args: {
-        asset_mint: assetMint,
-        oracle_authority: admin.publicKey.toBase58(),
-        asset_symbol: 'USDC',
-        role: 0,
-        payout_priority: 1,
-        oracle_source: 3,
-        oracle_feed_id: fixedHash(18),
-        max_staleness_seconds: 300n,
-        max_confidence_bps: 100,
-        haircut_bps: 0,
-        max_exposure_bps: 10_000,
-        deposit_enabled: true,
-        payout_enabled: true,
-        capacity_enabled: true,
-        active: true,
-        reason_hash: fixedHash(19),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        reserve_domain: reserveDomain,
-        reserve_asset_rail: reserveAssetRail,
-      },
-    })) as never,
-  });
-
-  const reservePricePublishedAtTs = await getClusterUnixTimestamp(connection);
-  await simulateAndBroadcast({
-    label: 'publish_reserve_asset_rail_price',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildPublishReserveAssetRailPriceTx', {
-      args: {
-        price_usd_1e8: 100_000_000n,
-        confidence_bps: 5,
-        published_at_ts: reservePricePublishedAtTs,
-        proof_hash: fixedHash(20),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        reserve_asset_rail: reserveAssetRail,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'create_health_plan',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreateHealthPlanTx', {
-      args: {
-        plan_id: 'sdk-health-plan',
-        display_name: 'SDK Health Plan',
-        organization_ref: 'sdk-smoke',
-        metadata_uri: 'https://docs.omegax.health/sdk/health-plan',
-        sponsor: admin.publicKey.toBase58(),
-        sponsor_operator: admin.publicKey.toBase58(),
-        claims_operator: admin.publicKey.toBase58(),
-        oracle_authority: admin.publicKey.toBase58(),
-        membership_mode: 0,
-        membership_gate_kind: 0,
-        membership_gate_mint: ZERO_PUBKEY,
-        membership_gate_min_amount: 0n,
-        membership_invite_authority: ZERO_PUBKEY,
-        allowed_rail_mask: 1,
-        default_funding_priority: 1,
-        oracle_policy_hash: fixedHash(3),
-        schema_binding_hash: fixedHash(4),
-        compliance_baseline_hash: fixedHash(5),
-        pause_flags: 0,
-      },
-      accounts: {
-        plan_admin: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        reserve_domain: reserveDomain,
-        health_plan: healthPlan,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'create_policy_series',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreatePolicySeriesTx', {
-      args: {
-        series_id: 'sdk-reward-series',
-        display_name: 'SDK Reward Series',
-        metadata_uri: 'https://docs.omegax.health/sdk/policy-series',
-        asset_mint: assetMint,
-        mode: SERIES_MODE_REWARD,
-        status: SERIES_STATUS_ACTIVE,
-        adjudication_mode: 0,
-        terms_hash: fixedHash(6),
-        pricing_hash: fixedHash(7),
-        payout_hash: fixedHash(8),
-        reserve_model_hash: fixedHash(9),
-        evidence_requirements_hash: fixedHash(10),
-        comparability_hash: fixedHash(11),
-        policy_overrides_hash: fixedHash(12),
-        cycle_seconds: 86_400n,
-        terms_version: 1,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        policy_series: policySeries,
-        series_reserve_ledger: seriesReserveLedger,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'open_member_position',
-    rpc,
-    signers: [member],
-    tx: (await buildTx('buildOpenMemberPositionTx', {
-      args: {
-        series_scope: policySeries,
-        subject_commitment: fixedHash(13),
-        eligibility_status: ELIGIBILITY_ELIGIBLE,
-        delegated_rights: 0,
-        proof_mode: 0,
-        token_gate_amount_snapshot: 0n,
-        invite_id_hash: fixedHash(16),
-        invite_expires_at: 0n,
-        anchor_ref: ZERO_PUBKEY,
-      },
-      accounts: {
-        wallet: member.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        policy_series: policySeries,
-        member_position: memberPosition,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'open_funding_line',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildOpenFundingLineTx', {
-      args: {
-        line_id: 'sdk-sponsor-budget',
-        policy_series: policySeries,
-        asset_mint: assetMint,
-        line_type: 0,
-        funding_priority: 1,
-        committed_amount: 500_000n,
-        caps_hash: fixedHash(14),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        policy_series: policySeries,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        funding_line: fundingLine,
-        funding_line_ledger: fundingLineLedger,
-        plan_reserve_ledger: planReserveLedger,
-        series_reserve_ledger: seriesReserveLedger,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'fund_sponsor_budget',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildFundSponsorBudgetTx', {
-      args: {
-        amount: 500_000n,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        funding_line: fundingLine,
-        funding_line_ledger: fundingLineLedger,
-        plan_reserve_ledger: planReserveLedger,
-        series_reserve_ledger: seriesReserveLedger,
-        source_token_account: adminSourceTokenAccount,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'create_obligation',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreateObligationTx', {
-      args: {
-        obligation_id: 'sdk-reward-1',
-        asset_mint: assetMint,
-        policy_series: policySeries,
-        member_wallet: member.publicKey.toBase58(),
-        beneficiary: member.publicKey.toBase58(),
-        claim_case: '11111111111111111111111111111111',
-        liquidity_pool: '11111111111111111111111111111111',
-        capital_class: '11111111111111111111111111111111',
-        allocation_position: '11111111111111111111111111111111',
-        delivery_mode: OBLIGATION_DELIVERY_MODE_CLAIMABLE,
-        amount: 50_000n,
-        creation_reason_hash: fixedHash(15),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        domain_asset_ledger: domainAssetLedger,
-        funding_line: fundingLine,
-        funding_line_ledger: fundingLineLedger,
-        plan_reserve_ledger: planReserveLedger,
-        series_reserve_ledger: seriesReserveLedger,
-        obligation,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'reserve_obligation',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildReserveObligationTx', {
-      args: {
-        amount: 50_000n,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        domain_asset_ledger: domainAssetLedger,
-        funding_line: fundingLine,
-        funding_line_ledger: fundingLineLedger,
-        plan_reserve_ledger: planReserveLedger,
-        series_reserve_ledger: seriesReserveLedger,
-        obligation,
-        member_position: memberPosition,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        recipient_token_account: adminSourceTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'settle_obligation_claimable',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildSettleObligationTx', {
-      args: {
-        next_status: OBLIGATION_STATUS_CLAIMABLE_PAYABLE,
-        amount: 50_000n,
-        settlement_reason_hash: fixedHash(16),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        reserve_asset_rail: reserveAssetRail,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        funding_line: fundingLine,
-        funding_line_ledger: fundingLineLedger,
-        plan_reserve_ledger: planReserveLedger,
-        series_reserve_ledger: seriesReserveLedger,
-        obligation,
-        member_position: memberPosition,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        recipient_token_account: memberSourceTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'settle_obligation_paid',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildSettleObligationTx', {
-      args: {
-        next_status: OBLIGATION_STATUS_SETTLED,
-        amount: 50_000n,
-        settlement_reason_hash: fixedHash(17),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        health_plan: healthPlan,
-        reserve_asset_rail: reserveAssetRail,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        funding_line: fundingLine,
-        funding_line_ledger: fundingLineLedger,
-        plan_reserve_ledger: planReserveLedger,
-        series_reserve_ledger: seriesReserveLedger,
-        obligation,
-        member_position: memberPosition,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        recipient_token_account: adminSourceTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'create_liquidity_pool',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreateLiquidityPoolTx', {
-      args: {
-        pool_id: 'sdk-income-pool',
-        display_name: 'SDK Income Pool',
-        curator: admin.publicKey.toBase58(),
-        allocator: admin.publicKey.toBase58(),
-        sentinel: admin.publicKey.toBase58(),
-        deposit_asset_mint: assetMint,
-        strategy_hash: fixedHash(18),
-        allowed_exposure_hash: fixedHash(19),
-        external_yield_adapter_hash: fixedHash(20),
-        fee_bps: 25,
-        redemption_policy: REDEMPTION_POLICY_QUEUE_ONLY,
-        pause_flags: 0,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        reserve_domain: reserveDomain,
-        domain_asset_vault: domainAssetVault,
-        liquidity_pool: liquidityPool,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'create_capital_class',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildCreateCapitalClassTx', {
-      args: {
-        class_id: 'sdk-open-class',
-        display_name: 'SDK Open Class',
-        share_mint: shareMint,
-        priority: 1,
-        impairment_rank: 1,
-        restriction_mode: CAPITAL_CLASS_RESTRICTION_OPEN,
-        redemption_terms_mode: 1,
-        wrapper_metadata_hash: fixedHash(21),
-        permissioning_hash: fixedHash(22),
-        fee_bps: 15,
-        min_lockup_seconds: 0n,
-        pause_flags: 0,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        liquidity_pool: liquidityPool,
-        capital_class: capitalClass,
-        pool_class_ledger: poolClassLedger,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'init_pool_treasury_vault',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildInitPoolTreasuryVaultTx', {
-      args: {
-        asset_mint: assetMint,
-        fee_recipient: admin.publicKey.toBase58(),
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        liquidity_pool: liquidityPool,
-        domain_asset_vault: domainAssetVault,
-        pool_treasury_vault: poolTreasuryVault,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'deposit_into_capital_class',
-    rpc,
-    signers: [member],
-    tx: (await buildTx('buildDepositIntoCapitalClassTx', {
-      args: {
-        amount: 200_000n,
-        shares: 199_700n,
-        credentialed: true,
-      },
-      accounts: {
-        owner: member.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        liquidity_pool: liquidityPool,
-        capital_class: capitalClass,
-        pool_class_ledger: poolClassLedger,
-        lp_position: lpPosition,
-        pool_treasury_vault: poolTreasuryVault,
-        source_token_account: memberSourceTokenAccount,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'request_redemption',
-    rpc,
-    signers: [member],
-    tx: (await buildTx('buildRequestRedemptionTx', {
-      args: {
-        shares: 50_000n,
-      },
-      accounts: {
-        owner: member.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        liquidity_pool: liquidityPool,
-        capital_class: capitalClass,
-        pool_class_ledger: poolClassLedger,
-        domain_asset_ledger: domainAssetLedger,
-        lp_position: lpPosition,
-      },
-    })) as never,
-  });
-
-  await simulateAndBroadcast({
-    label: 'process_redemption_queue',
-    rpc,
-    signers: [admin],
-    tx: (await buildTx('buildProcessRedemptionQueueTx', {
-      args: {
-        shares: 50_000n,
-      },
-      accounts: {
-        authority: admin.publicKey.toBase58(),
-        protocol_governance: protocolGovernance,
-        domain_asset_vault: domainAssetVault,
-        domain_asset_ledger: domainAssetLedger,
-        liquidity_pool: liquidityPool,
-        capital_class: capitalClass,
-        pool_class_ledger: poolClassLedger,
-        lp_position: lpPosition,
-        pool_treasury_vault: poolTreasuryVault,
-        asset_mint: assetMint,
-        vault_token_account: vaultTokenAccount,
-        recipient_token_account: memberSourceTokenAccount,
-        token_program: tokenProgram,
-      },
-    })) as never,
-  });
-
-  const governance = await protocol.fetchProtocolGovernance();
-  assert.ok(governance, 'expected live ProtocolGovernance account');
-  assert.equal(
-    (governance as { governance_authority: string }).governance_authority,
-    admin.publicKey.toBase58(),
+  // 1. create_reserve_domain
+  await send(
+    'create_reserve_domain',
+    buildCreateReserveDomainTx({
+      authority: admin.publicKey,
+      recentBlockhash: await blockhash(),
+      domainId: 'sdk-domain',
+      displayName: 'SDK Domain',
+      settlementMode: 0,
+      legalStructureHashHex: HASH(1),
+      complianceBaselineHashHex: HASH(2),
+      allowedRailMask: 1,
+      pauseFlags: 0,
+      programId,
+    }),
+    [admin],
   );
 
-  const fetchedDomain = await protocol.fetchReserveDomain(reserveDomain);
+  // 2. create_domain_asset_vault (binds the real SPL mint to a PDA vault).
+  await send(
+    'create_domain_asset_vault',
+    buildCreateDomainAssetVaultTx({
+      authority: admin.publicKey,
+      reserveDomainAddress: reserveDomain,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 3. create_health_plan
+  await send(
+    'create_health_plan',
+    buildCreateHealthPlanTx({
+      planAdmin: admin.publicKey,
+      reserveDomainAddress: reserveDomain,
+      recentBlockhash: await blockhash(),
+      planId: 'sdk-plan',
+      displayName: 'SDK Health Plan',
+      organizationRef: 'sdk-smoke',
+      metadataUri: 'https://docs.omegax.health/sdk/health-plan',
+      sponsor: admin.publicKey,
+      sponsorOperator: admin.publicKey,
+      claimsOperator: admin.publicKey,
+      oracleAuthority: admin.publicKey,
+      allowedRailMask: 1,
+      defaultFundingPriority: 1,
+      oraclePolicyHashHex: HASH(3),
+      schemaBindingHashHex: HASH(4),
+      complianceBaselineHashHex: HASH(5),
+      pauseFlags: 0,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 4. create_policy_series
+  await send(
+    'create_policy_series',
+    buildCreatePolicySeriesTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      seriesId: 'sdk-series-v1',
+      displayName: 'SDK Series v1',
+      metadataUri: 'https://docs.omegax.health/sdk/series-v1',
+      mode: SERIES_MODE_REWARD,
+      status: SERIES_STATUS_ACTIVE,
+      adjudicationMode: 0,
+      termsHashHex: HASH(6),
+      pricingHashHex: HASH(7),
+      payoutHashHex: HASH(8),
+      reserveModelHashHex: HASH(9),
+      comparabilityHashHex: HASH(10),
+      policyOverridesHashHex: HASH(11),
+      cycleSeconds: 2_592_000n,
+      termsVersion: 1,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 5. version_policy_series (supersede v1 with v2)
+  await send(
+    'version_policy_series',
+    buildVersionPolicySeriesTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      currentPolicySeriesAddress: policySeries,
+      recentBlockhash: await blockhash(),
+      seriesId: 'sdk-series-v2',
+      displayName: 'SDK Series v2',
+      metadataUri: 'https://docs.omegax.health/sdk/series-v2',
+      status: SERIES_STATUS_ACTIVE,
+      adjudicationMode: 0,
+      termsHashHex: HASH(12),
+      pricingHashHex: HASH(13),
+      payoutHashHex: HASH(14),
+      reserveModelHashHex: HASH(15),
+      comparabilityHashHex: HASH(16),
+      policyOverridesHashHex: HASH(17),
+      cycleSeconds: 2_592_000n,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 6. update_reserve_domain_controls (idempotent control refresh)
+  await send(
+    'update_reserve_domain_controls',
+    buildUpdateReserveDomainControlsTx({
+      authority: admin.publicKey,
+      reserveDomainAddress: reserveDomain,
+      recentBlockhash: await blockhash(),
+      allowedRailMask: 1,
+      pauseFlags: 0,
+      active: true,
+      reasonHashHex: HASH(18),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 7. update_health_plan_controls (idempotent control refresh)
+  await send(
+    'update_health_plan_controls',
+    buildUpdateHealthPlanControlsTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      recentBlockhash: await blockhash(),
+      sponsorOperator: admin.publicKey,
+      claimsOperator: admin.publicKey,
+      oracleAuthority: admin.publicKey,
+      allowedRailMask: 1,
+      defaultFundingPriority: 1,
+      oraclePolicyHashHex: HASH(3),
+      schemaBindingHashHex: HASH(4),
+      complianceBaselineHashHex: HASH(5),
+      pauseFlags: 0,
+      active: true,
+      reasonHashHex: HASH(19),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 8-10. Three funding lines, one per inflow rail type.
+  await send(
+    'open_funding_line:sponsor',
+    buildOpenFundingLineTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      lineId: 'sdk-sponsor',
+      policySeriesAddress: policySeries,
+      lineType: FUNDING_LINE_TYPE_SPONSOR_BUDGET,
+      fundingPriority: 1,
+      committedAmount: 1_000_000n,
+      capsHashHex: HASH(20),
+      programId,
+    }),
+    [admin],
+  );
+  await send(
+    'open_funding_line:premium',
+    buildOpenFundingLineTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      lineId: 'sdk-premium',
+      policySeriesAddress: policySeries,
+      lineType: FUNDING_LINE_TYPE_PREMIUM_INCOME,
+      fundingPriority: 1,
+      committedAmount: 1_000_000n,
+      capsHashHex: HASH(21),
+      programId,
+    }),
+    [admin],
+  );
+  await send(
+    'open_funding_line:backstop',
+    buildOpenFundingLineTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      lineId: 'sdk-backstop',
+      policySeriesAddress: policySeries,
+      lineType: FUNDING_LINE_TYPE_BACKSTOP,
+      fundingPriority: 1,
+      committedAmount: 1_000_000n,
+      capsHashHex: HASH(22),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 11. fund_sponsor_budget: +300_000 into the sponsor line.
+  await send(
+    'fund_sponsor_budget',
+    buildFundSponsorBudgetTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      sourceTokenAccountAddress: adminSourceTokenAccount,
+      recentBlockhash: await blockhash(),
+      amount: 300_000n,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 12. record_premium_payment: +100_000 into the premium line.
+  await send(
+    'record_premium_payment',
+    buildRecordPremiumPaymentTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: premiumLine,
+      assetMint,
+      sourceTokenAccountAddress: adminSourceTokenAccount,
+      recentBlockhash: await blockhash(),
+      amount: 100_000n,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 13. deposit_reserve_capital: +200_000 into the backstop line (admin LP).
+  await send(
+    'deposit_reserve_capital',
+    buildDepositReserveCapitalTx({
+      contributor: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: backstopLine,
+      assetMint,
+      sourceTokenAccountAddress: adminSourceTokenAccount,
+      recentBlockhash: await blockhash(),
+      amount: 200_000n,
+      termsHashHex: HASH(23),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 14. record_reserve_earnings: +50_000 yield into the backstop line.
+  await send(
+    'record_reserve_earnings',
+    buildRecordReserveEarningsTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: backstopLine,
+      assetMint,
+      sourceTokenAccountAddress: adminSourceTokenAccount,
+      recentBlockhash: await blockhash(),
+      amount: 50_000n,
+      earningsRefHashHex: HASH(24),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 15. return_reserve_capital: -50_000 of the admin LP contribution.
+  await send(
+    'return_reserve_capital',
+    buildReturnReserveCapitalTx({
+      authority: admin.publicKey,
+      contributorAddress: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: backstopLine,
+      assetMint,
+      recipientTokenAccountAddress: adminSourceTokenAccount,
+      recentBlockhash: await blockhash(),
+      amount: 50_000n,
+      reasonHashHex: HASH(25),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 16. create_obligation (payable, settled to the admin treasury account).
+  await send(
+    'create_obligation:payable',
+    buildCreateObligationTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      obligationId: 'sdk-payable',
+      policySeriesAddress: policySeries,
+      memberWalletAddress: member.publicKey,
+      beneficiaryAddress: member.publicKey,
+      deliveryMode: OBLIGATION_DELIVERY_MODE_PAYABLE,
+      amount: 60_000n,
+      creationReasonHashHex: HASH(26),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 17. reserve_obligation against the payable obligation.
+  await send(
+    'reserve_obligation:payable',
+    buildReserveObligationTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      obligationAddress: payableObligation,
+      recentBlockhash: await blockhash(),
+      amount: 60_000n,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 18a. settle_obligation: RESERVED -> CLAIMABLE_PAYABLE (move into payable).
+  await send(
+    'settle_obligation:claimable',
+    buildSettleObligationTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      obligationAddress: payableObligation,
+      recentBlockhash: await blockhash(),
+      nextStatus: OBLIGATION_STATUS_CLAIMABLE_PAYABLE,
+      amount: 60_000n,
+      settlementReasonHashHex: HASH(27),
+      memberPositionAddress: member.publicKey,
+      vaultTokenAccountAddress: vaultTokenAccountKey,
+      recipientTokenAccountAddress: adminSourceTokenAccount,
+      tokenProgramId: TOKEN_PROGRAM_ID,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 18b. settle_obligation: CLAIMABLE_PAYABLE -> SETTLED (real SPL outflow).
+  await send(
+    'settle_obligation:settled',
+    buildSettleObligationTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      obligationAddress: payableObligation,
+      recentBlockhash: await blockhash(),
+      nextStatus: OBLIGATION_STATUS_SETTLED,
+      amount: 60_000n,
+      settlementReasonHashHex: HASH(28),
+      memberPositionAddress: member.publicKey,
+      vaultTokenAccountAddress: vaultTokenAccountKey,
+      recipientTokenAccountAddress: adminSourceTokenAccount,
+      tokenProgramId: TOKEN_PROGRAM_ID,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 19. create_obligation (claimable) + reserve, then release the reserve.
+  await send(
+    'create_obligation:released',
+    buildCreateObligationTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      recentBlockhash: await blockhash(),
+      obligationId: 'sdk-released',
+      policySeriesAddress: policySeries,
+      memberWalletAddress: member.publicKey,
+      beneficiaryAddress: member.publicKey,
+      deliveryMode: OBLIGATION_DELIVERY_MODE_CLAIMABLE,
+      amount: 40_000n,
+      creationReasonHashHex: HASH(29),
+      programId,
+    }),
+    [admin],
+  );
+  await send(
+    'reserve_obligation:released',
+    buildReserveObligationTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      obligationAddress: releasedObligation,
+      recentBlockhash: await blockhash(),
+      amount: 40_000n,
+      programId,
+    }),
+    [admin],
+  );
+  // release_reserve: drains the full reserve -> obligation becomes CANCELED.
+  await send(
+    'release_reserve',
+    buildReleaseReserveTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: sponsorLine,
+      assetMint,
+      obligationAddress: releasedObligation,
+      recentBlockhash: await blockhash(),
+      amount: 40_000n,
+      programId,
+    }),
+    [admin],
+  );
+
+  // 20. open_claim_case (direct claim, member is claimant) on the premium line.
+  await send(
+    'open_claim_case',
+    buildOpenClaimCaseTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      fundingLineAddress: premiumLine,
+      recentBlockhash: await blockhash(),
+      claimId: 'sdk-claim',
+      policySeriesAddress: policySeries,
+      claimantAddress: member.publicKey,
+      evidenceRefHashHex: HASH(30),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 21a. authorize_claim_recipient: claimant delegates payout to its own wallet.
+  await send(
+    'authorize_claim_recipient',
+    buildAuthorizeClaimRecipientTx({
+      authority: member.publicKey,
+      claimCaseAddress: claimCase,
+      recentBlockhash: await blockhash(),
+      delegateRecipient: member.publicKey,
+      programId,
+    }),
+    [member],
+  );
+
+  // 21b. adjudicate_claim_case: approve 30_000 with proof fingerprints.
+  await send(
+    'adjudicate_claim_case',
+    buildAdjudicateClaimCaseTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      claimCaseAddress: claimCase,
+      recentBlockhash: await blockhash(),
+      reviewState: 1,
+      approvedAmount: 30_000n,
+      deniedAmount: 0n,
+      reserveAmount: 0n,
+      evidenceRefHashHex: HASH(30),
+      decisionSupportHashHex: HASH(31),
+      programId,
+    }),
+    [admin],
+  );
+
+  // 21c. settle_claim_case: pay 30_000 to the member recipient token account.
+  await send(
+    'settle_claim_case',
+    buildSettleClaimCaseTx({
+      authority: admin.publicKey,
+      healthPlanAddress: healthPlan,
+      reserveDomainAddress: reserveDomain,
+      fundingLineAddress: premiumLine,
+      assetMint,
+      claimCaseAddress: claimCase,
+      recentBlockhash: await blockhash(),
+      amount: 30_000n,
+      memberPositionAddress: member.publicKey,
+      vaultTokenAccountAddress: vaultTokenAccountKey,
+      recipientTokenAccountAddress: memberRecipientTokenAccount,
+      tokenProgramId: TOKEN_PROGRAM_ID,
+      programId,
+    }),
+    [admin],
+  );
+
+  // ----- On-chain state assertions across the surviving account surface -----
+
+  const fetchedDomain = (await protocol.fetchReserveDomain(reserveDomain)) as {
+    domain_id: string;
+    active: boolean;
+  } | null;
   assert.ok(fetchedDomain, 'expected live ReserveDomain account');
-  assert.equal(
-    (fetchedDomain as { domain_id: string }).domain_id,
-    'sdk-open-domain',
-  );
+  assert.equal(fetchedDomain.domain_id, 'sdk-domain');
+  assert.equal(fetchedDomain.active, true);
 
-  const fetchedVault = await protocol.fetchDomainAssetVault(domainAssetVault);
+  const fetchedVault = (await protocol.fetchDomainAssetVault(
+    domainAssetVault,
+  )) as { asset_mint: string; total_assets: bigint } | null;
   assert.ok(fetchedVault, 'expected live DomainAssetVault account');
-  assert.equal((fetchedVault as { asset_mint: string }).asset_mint, assetMint);
-  assert.equal(
-    (fetchedVault as { total_assets: bigint }).total_assets,
-    600_075n,
-  );
+  assert.equal(fetchedVault.asset_mint, assetMint);
+  // Inflows 650_000 - return 50_000 - payable settle 60_000 - claim 30_000.
+  assert.equal(fetchedVault.total_assets, 510_000n);
 
-  const fetchedPlan = await protocol.fetchHealthPlan(healthPlan);
+  const fetchedPlan = (await protocol.fetchHealthPlan(healthPlan)) as {
+    health_plan_id: string;
+    active: boolean;
+  } | null;
   assert.ok(fetchedPlan, 'expected live HealthPlan account');
-  assert.equal(
-    (fetchedPlan as { health_plan_id: string }).health_plan_id,
-    'sdk-health-plan',
-  );
+  assert.equal(fetchedPlan.health_plan_id, 'sdk-plan');
+  assert.equal(fetchedPlan.active, true);
 
-  const fetchedSeries = await protocol.fetchPolicySeries(policySeries);
+  const fetchedSeries = (await protocol.fetchPolicySeries(policySeries)) as {
+    series_id: string;
+    mode: number;
+    successor_series: string;
+  } | null;
   assert.ok(fetchedSeries, 'expected live PolicySeries account');
+  assert.equal(fetchedSeries.series_id, 'sdk-series-v1');
+  assert.equal(fetchedSeries.mode, SERIES_MODE_REWARD);
   assert.equal(
-    (fetchedSeries as { series_id: string }).series_id,
-    'sdk-reward-series',
-  );
-  assert.equal((fetchedSeries as { mode: number }).mode, SERIES_MODE_REWARD);
-
-  const fetchedMember = await protocol.fetchMemberPosition(memberPosition);
-  assert.ok(fetchedMember, 'expected live MemberPosition account');
-  assert.equal(
-    (fetchedMember as { wallet: string }).wallet,
-    member.publicKey.toBase58(),
+    fetchedSeries.successor_series,
+    nextPolicySeries,
+    'v1 should point at its v2 successor',
   );
 
-  const fetchedFundingLine = await protocol.fetchFundingLine(fundingLine);
-  assert.ok(fetchedFundingLine, 'expected live FundingLine account');
+  const fetchedNextSeries = (await protocol.fetchPolicySeries(
+    nextPolicySeries,
+  )) as { series_id: string; prior_series: string } | null;
+  assert.ok(fetchedNextSeries, 'expected live successor PolicySeries account');
+  assert.equal(fetchedNextSeries.series_id, 'sdk-series-v2');
+  assert.equal(fetchedNextSeries.prior_series, policySeries);
+
+  const fetchedSponsorLine = (await protocol.fetchFundingLine(sponsorLine)) as {
+    funded_amount: bigint;
+    spent_amount: bigint;
+  } | null;
+  assert.ok(fetchedSponsorLine, 'expected live sponsor FundingLine account');
+  assert.equal(fetchedSponsorLine.funded_amount, 300_000n);
   assert.equal(
-    (fetchedFundingLine as { funded_amount: bigint }).funded_amount,
-    500_000n,
+    fetchedSponsorLine.spent_amount,
+    60_000n,
+    'sponsor line spent the payable settlement',
   );
 
-  const fetchedObligation = await protocol.fetchObligation(obligation);
-  assert.ok(fetchedObligation, 'expected live Obligation account');
-  assert.equal(
-    (fetchedObligation as { status: number }).status,
-    OBLIGATION_STATUS_SETTLED,
-  );
-  assert.equal(
-    (fetchedObligation as { settled_amount: bigint }).settled_amount,
-    50_000n,
-  );
+  const fetchedBackstopLine = (await protocol.fetchFundingLine(
+    backstopLine,
+  )) as { funded_amount: bigint; returned_amount: bigint } | null;
+  assert.ok(fetchedBackstopLine, 'expected live backstop FundingLine account');
+  // deposit 200_000 + earnings 50_000 - return 50_000.
+  assert.equal(fetchedBackstopLine.funded_amount, 200_000n);
+  assert.equal(fetchedBackstopLine.returned_amount, 50_000n);
 
-  const fetchedLiquidityPool = await protocol.fetchLiquidityPool(liquidityPool);
-  assert.ok(fetchedLiquidityPool, 'expected live LiquidityPool account');
-  assert.equal(
-    (fetchedLiquidityPool as { pool_id: string }).pool_id,
-    'sdk-income-pool',
-  );
-  assert.equal(
-    (fetchedLiquidityPool as { total_value_locked: bigint }).total_value_locked,
-    149_700n,
-  );
+  const fetchedPayable = (await protocol.fetchObligation(
+    payableObligation,
+  )) as { status: number; settled_amount: bigint } | null;
+  assert.ok(fetchedPayable, 'expected live payable Obligation account');
+  assert.equal(fetchedPayable.status, OBLIGATION_STATUS_SETTLED);
+  assert.equal(fetchedPayable.settled_amount, 60_000n);
 
-  const fetchedCapitalClass = await protocol.fetchCapitalClass(capitalClass);
-  assert.ok(fetchedCapitalClass, 'expected live CapitalClass account');
-  assert.equal(
-    (fetchedCapitalClass as { total_shares: bigint }).total_shares,
-    149_700n,
-  );
-  assert.equal(
-    (fetchedCapitalClass as { pending_redemptions: bigint })
-      .pending_redemptions,
-    0n,
-  );
+  const fetchedReleased = (await protocol.fetchObligation(
+    releasedObligation,
+  )) as { status: number; reserved_amount: bigint } | null;
+  assert.ok(fetchedReleased, 'expected live released Obligation account');
+  assert.equal(fetchedReleased.status, OBLIGATION_STATUS_CANCELED);
+  assert.equal(fetchedReleased.reserved_amount, 0n);
 
-  const fetchedLpPosition = await protocol.fetchLPPosition(lpPosition);
-  assert.ok(fetchedLpPosition, 'expected live LPPosition account');
-  assert.equal((fetchedLpPosition as { shares: bigint }).shares, 149_700n);
-  assert.equal(
-    (fetchedLpPosition as { realized_distributions: bigint })
-      .realized_distributions,
-    49_925n,
-  );
+  const fetchedClaim = (await protocol.fetchClaimCase(claimCase)) as {
+    claimant: string;
+    delegate_recipient: string;
+    approved_amount: bigint;
+    paid_amount: bigint;
+    intake_status: number;
+    linked_obligation: string;
+  } | null;
+  assert.ok(fetchedClaim, 'expected live ClaimCase account');
+  assert.equal(fetchedClaim.claimant, member.publicKey.toBase58());
+  assert.equal(fetchedClaim.delegate_recipient, member.publicKey.toBase58());
+  assert.equal(fetchedClaim.approved_amount, 30_000n);
+  assert.equal(fetchedClaim.paid_amount, 30_000n);
+  // CLAIM_INTAKE_SETTLED == 4 once paid_amount reaches approved_amount.
+  assert.equal(fetchedClaim.intake_status, 4);
 
-  const fetchedDomainLedger =
-    await protocol.fetchDomainAssetLedger(domainAssetLedger);
-  const domainSheet = recomputeReserveBalanceSheet(
-    (fetchedDomainLedger as { sheet: Record<string, unknown> }).sheet,
-  );
-  assert.equal(domainSheet.funded, 599_700n);
+  // Reserve balance-sheet readers still reconcile via recomputeReserveBalanceSheet.
+  const fetchedDomainLedger = (await protocol.fetchDomainAssetLedger(
+    domainAssetLedger,
+  )) as { sheet: Record<string, unknown> } | null;
+  assert.ok(fetchedDomainLedger, 'expected live DomainAssetLedger account');
+  const domainSheet = recomputeReserveBalanceSheet(fetchedDomainLedger.sheet);
+  // funded = inflows 650_000 - return 50_000 - obligation settle 60_000
+  // - claim payout 30_000; settled = obligation 60_000 + claim 30_000.
+  assert.equal(domainSheet.funded, 510_000n);
+  assert.equal(domainSheet.settled, 90_000n);
   assert.equal(domainSheet.reserved, 0n);
-  assert.equal(domainSheet.pendingRedemption, 0n);
-  assert.equal(domainSheet.impaired, 0n);
 
-  const fetchedPlanLedger =
-    await protocol.fetchPlanReserveLedger(planReserveLedger);
-  const planSheet = recomputeReserveBalanceSheet(
-    (fetchedPlanLedger as { sheet: Record<string, unknown> }).sheet,
-  );
-  assert.equal(planSheet.funded, 450_000n);
-  assert.equal(planSheet.settled, 50_000n);
+  const fetchedPlanLedger = (await protocol.fetchPlanReserveLedger(
+    planReserveLedger,
+  )) as { sheet: Record<string, unknown> } | null;
+  assert.ok(fetchedPlanLedger, 'expected live PlanReserveLedger account');
+  const planSheet = recomputeReserveBalanceSheet(fetchedPlanLedger.sheet);
+  assert.equal(planSheet.funded, 510_000n);
+  assert.equal(planSheet.settled, 90_000n);
+  assert.equal(planSheet.reserved, 0n);
 
-  const fetchedFundingLineLedger =
-    await protocol.fetchFundingLineLedger(fundingLineLedger);
-  const fundingLineSheet = recomputeReserveBalanceSheet(
-    (fetchedFundingLineLedger as { sheet: Record<string, unknown> }).sheet,
+  const fetchedPremiumLedger = (await protocol.fetchFundingLineLedger(
+    premiumLineLedger,
+  )) as { sheet: Record<string, unknown> } | null;
+  assert.ok(
+    fetchedPremiumLedger,
+    'expected live premium FundingLineLedger account',
   );
-  assert.equal(fundingLineSheet.funded, 450_000n);
-  assert.equal(fundingLineSheet.settled, 50_000n);
+  const premiumSheet = recomputeReserveBalanceSheet(fetchedPremiumLedger.sheet);
+  // premium funded 100_000 - claim payout 30_000.
+  assert.equal(premiumSheet.funded, 70_000n);
+  assert.equal(premiumSheet.settled, 30_000n);
 
-  const fetchedClassLedger =
-    await protocol.fetchPoolClassLedger(poolClassLedger);
-  const classSheet = recomputeReserveBalanceSheet(
-    (fetchedClassLedger as { sheet: Record<string, unknown> }).sheet,
+  const fetchedSponsorLedger = (await protocol.fetchFundingLineLedger(
+    sponsorLineLedger,
+  )) as { sheet: Record<string, unknown> } | null;
+  assert.ok(
+    fetchedSponsorLedger,
+    'expected live sponsor FundingLineLedger account',
   );
-  assert.equal(classSheet.funded, 149_700n);
-  assert.equal(classSheet.pendingRedemption, 0n);
-  assert.equal(classSheet.redeemable, 149_700n);
+  const sponsorSheet = recomputeReserveBalanceSheet(fetchedSponsorLedger.sheet);
+  // sponsor funded 300_000 - payable obligation settle 60_000.
+  assert.equal(sponsorSheet.funded, 240_000n);
+  assert.equal(sponsorSheet.settled, 60_000n);
+  assert.equal(sponsorSheet.reserved, 0n);
+
+  const fetchedBackstopLedger = (await protocol.fetchFundingLineLedger(
+    backstopLineLedger,
+  )) as { sheet: Record<string, unknown> } | null;
+  assert.ok(
+    fetchedBackstopLedger,
+    'expected live backstop FundingLineLedger account',
+  );
+  const backstopSheet = recomputeReserveBalanceSheet(
+    fetchedBackstopLedger.sheet,
+  );
+  assert.equal(backstopSheet.funded, 200_000n);
+
+  // Real SPL token movement: vault custodies inflows net of every outflow, the
+  // member received the claim payout, and the admin treasury reflects funding,
+  // the returned LP capital, and the payable obligation settlement.
+  assert.equal(
+    await tokenBalance(connection, vaultTokenAccountKey),
+    510_000n,
+    'vault token account holds net custody balance',
+  );
+  assert.equal(
+    await tokenBalance(connection, memberRecipientTokenAccountKey),
+    30_000n,
+    'member received the settled claim payout',
+  );
+  // 1_000_000 minted - 300_000 sponsor - 100_000 premium - 200_000 deposit
+  // - 50_000 earnings + 50_000 returned + 60_000 payable settle.
+  assert.equal(
+    await tokenBalance(connection, adminSourceTokenAccountKey),
+    460_000n,
+    'admin treasury reflects net funding and inbound settlements',
+  );
 });

@@ -8,7 +8,7 @@
 
 > **buildCreateDomainAssetVaultTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:790](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L790)
+Defined in: [src/protocol.ts:523](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L523)
 
 ## Parameters
 

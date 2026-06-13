@@ -8,7 +8,7 @@
 
 > **deriveReserveAssetRailPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:205](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L205)
+Defined in: [src/protocol\_seeds.ts:206](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L206)
 
 ## Parameters
 

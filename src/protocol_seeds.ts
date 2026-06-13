@@ -29,6 +29,7 @@ export const SEED_CLAIM_CASE = 'claim_case';
 export const SEED_OBLIGATION = 'obligation';
 export const SEED_LIQUIDITY_POOL = 'liquidity_pool';
 export const SEED_CAPITAL_CLASS = 'capital_class';
+export const SEED_CAPITAL_CONTRIBUTION = 'capital_contribution';
 export const SEED_POOL_CLASS_LEDGER = 'pool_class_ledger';
 export const SEED_LP_POSITION = 'lp_position';
 export const SEED_ALLOCATION_POSITION = 'allocation_position';
@@ -364,6 +365,21 @@ export function deriveObligationPda(params: {
       TEXT_ENCODER.encode(SEED_OBLIGATION),
       toPublicKey(params.fundingLine).toBytes(),
       stringSeed(params.obligationId, 'obligation id'),
+    ],
+    params.programId ?? PROGRAM_ID,
+  );
+}
+
+export function deriveCapitalContributionPda(params: {
+  fundingLine: PublicKeyish;
+  contributor: PublicKeyish;
+  programId?: PublicKeyish;
+}): PublicKey {
+  return derivePda(
+    [
+      TEXT_ENCODER.encode(SEED_CAPITAL_CONTRIBUTION),
+      toPublicKey(params.fundingLine).toBytes(),
+      toPublicKey(params.contributor).toBytes(),
     ],
     params.programId ?? PROGRAM_ID,
   );

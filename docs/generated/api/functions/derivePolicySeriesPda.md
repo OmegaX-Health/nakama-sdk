@@ -8,7 +8,7 @@
 
 > **derivePolicySeriesPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:250](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L250)
+Defined in: [src/protocol\_seeds.ts:251](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L251)
 
 ## Parameters
 

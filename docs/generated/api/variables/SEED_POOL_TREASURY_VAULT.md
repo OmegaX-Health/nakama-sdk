@@ -8,4 +8,4 @@
 
 > `const` **SEED\_POOL\_TREASURY\_VAULT**: `"pool_treasury_vault"` = `'pool_treasury_vault'`
 
-Defined in: [src/protocol\_seeds.ts:41](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L41)
+Defined in: [src/protocol\_seeds.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L42)

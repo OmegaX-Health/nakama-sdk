@@ -6,6 +6,6 @@
 
 # Variable: PROTOCOL\_PROGRAM\_ID
 
-> `const` **PROTOCOL\_PROGRAM\_ID**: `"Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B"`
+> `const` **PROTOCOL\_PROGRAM\_ID**: `"6EXiDfGVbG7V1X2xaEALDZ7CtSuezkM8ZvXXFpk5WxQM"`
 
-Defined in: [src/generated/protocol\_contract.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L83)
+Defined in: [src/generated/protocol\_contract.ts:42](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L42)

@@ -6,7 +6,7 @@
 
 # Interface: ObligationStatusChangedEvent
 
-Defined in: [src/generated/protocol\_types.ts:658](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L658)
+Defined in: [src/generated/protocol\_types.ts:295](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L295)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:658](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:662](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L662)
+Defined in: [src/generated/protocol\_types.ts:299](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L299)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:662](https://github.com/OmegaX-Hea
 
 > **funding\_line**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:660](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L660)
+Defined in: [src/generated/protocol\_types.ts:297](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L297)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:660](https://github.com/OmegaX-Hea
 
 > **obligation**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:659](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L659)
+Defined in: [src/generated/protocol\_types.ts:296](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L296)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:659](https://github.com/OmegaX-Hea
 
 > **status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:661](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L661)
+Defined in: [src/generated/protocol\_types.ts:298](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L298)

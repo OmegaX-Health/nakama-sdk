@@ -6,7 +6,7 @@
 
 # Interface: SettleObligationArgs
 
-Defined in: [src/generated/protocol\_types.ts:1153](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1153)
+Defined in: [src/generated/protocol\_types.ts:435](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L435)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1153](https://github.com/OmegaX-He
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1155](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1155)
+Defined in: [src/generated/protocol\_types.ts:437](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L437)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1155](https://github.com/OmegaX-He
 
 > **next\_status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1154](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1154)
+Defined in: [src/generated/protocol\_types.ts:436](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L436)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:1154](https://github.com/OmegaX-He
 
 > **settlement\_reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:1156](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1156)
+Defined in: [src/generated/protocol\_types.ts:438](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L438)

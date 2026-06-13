@@ -14,37 +14,17 @@ export type PublicKeyish = PublicKey | string;
 export type BigNumberish = bigint | number | string;
 
 export type ProtocolAccountName =
-  | 'AllocationLedger'
-  | 'AllocationPosition'
-  | 'CapitalClass'
-  | 'ClaimAttestation'
+  | 'CapitalContribution'
   | 'ClaimCase'
   | 'DomainAssetLedger'
   | 'DomainAssetVault'
   | 'FundingLine'
   | 'FundingLineLedger'
   | 'HealthPlan'
-  | 'LPPosition'
-  | 'LiquidityPool'
-  | 'MemberPosition'
-  | 'MembershipAnchorSeat'
   | 'Obligation'
-  | 'OracleProfile'
-  | 'OutcomeSchema'
   | 'PlanReserveLedger'
   | 'PolicySeries'
-  | 'PoolClassLedger'
-  | 'PoolOracleApproval'
-  | 'PoolOracleFeeVault'
-  | 'PoolOraclePermissionSet'
-  | 'PoolOraclePolicy'
-  | 'PoolTreasuryVault'
-  | 'ProtocolFeeVault'
-  | 'ProtocolGovernance'
-  | 'ReserveAssetRail'
-  | 'ReserveDomain'
-  | 'SchemaDependencyLedger'
-  | 'SeriesReserveLedger';
+  | 'ReserveDomain';
 
 export type GenericInstructionAccounts = Record<
   string,
@@ -72,123 +52,23 @@ export interface AdjudicateClaimCaseArgs {
   approved_amount: BigNumberish;
   denied_amount: BigNumberish;
   reserve_amount: BigNumberish;
-  decision_support_hash: Uint8Array | number[];
-}
-
-export interface AllocateCapitalArgs {
-  amount: BigNumberish;
-}
-
-export interface AllocationLedger {
-  allocation_position: string;
-  asset_mint: string;
-  sheet: ReserveBalanceSheet;
-  realized_pnl: BigNumberish;
-  bump: number;
-}
-
-export interface AllocationPosition {
-  reserve_domain: string;
-  liquidity_pool: string;
-  capital_class: string;
-  health_plan: string;
-  policy_series: string;
-  funding_line: string;
-  cap_amount: BigNumberish;
-  weight_bps: number;
-  allocation_mode: number;
-  allocated_amount: BigNumberish;
-  utilized_amount: BigNumberish;
-  reserved_capacity: BigNumberish;
-  realized_pnl: BigNumberish;
-  impaired_amount: BigNumberish;
-  deallocation_only: boolean;
-  active: boolean;
-  bump: number;
-}
-
-export interface AllocationUpdatedEvent {
-  allocation_position: string;
-  capital_class: string;
-  funding_line: string;
-  allocated_amount: BigNumberish;
-  reserved_capacity: BigNumberish;
-}
-
-export interface AttachClaimEvidenceRefArgs {
   evidence_ref_hash: Uint8Array | number[];
   decision_support_hash: Uint8Array | number[];
-}
-
-export interface AttestClaimCaseArgs {
-  decision: number;
-  attestation_hash: Uint8Array | number[];
-  attestation_ref_hash: Uint8Array | number[];
-  schema_key_hash: Uint8Array | number[];
 }
 
 export interface AuthorizeClaimRecipientArgs {
   delegate_recipient: PublicKeyish;
 }
 
-export interface BackfillSchemaDependencyLedgerArgs {
-  schema_key_hash: Uint8Array | number[];
-  pool_rule_addresses: Array<PublicKeyish>;
-}
-
-export interface CapitalClass {
+export interface CapitalContribution {
   reserve_domain: string;
-  liquidity_pool: string;
-  share_mint: string;
-  class_id: string;
-  display_name: string;
-  priority: number;
-  impairment_rank: number;
-  restriction_mode: number;
-  redemption_terms_mode: number;
-  wrapper_metadata_hash: Uint8Array | number[];
-  permissioning_hash: Uint8Array | number[];
-  fee_bps: number;
-  min_lockup_seconds: BigNumberish;
-  pause_flags: number;
-  queue_only_redemptions: boolean;
-  total_shares: BigNumberish;
-  nav_assets: BigNumberish;
-  allocated_assets: BigNumberish;
-  reserved_assets: BigNumberish;
-  impaired_assets: BigNumberish;
-  pending_redemptions: BigNumberish;
-  next_redemption_sequence: BigNumberish;
-  next_redemption_to_process: BigNumberish;
-  active: boolean;
-  bump: number;
-}
-
-export interface CapitalClassDepositEvent {
-  capital_class: string;
-  owner: string;
-  asset_amount: BigNumberish;
-  shares: BigNumberish;
-}
-
-export interface ClaimAttestation {
-  oracle: string;
-  oracle_profile: string;
-  claim_case: string;
   health_plan: string;
-  policy_series: string;
-  decision: number;
-  attestation_hash: Uint8Array | number[];
-  attestation_ref_hash: Uint8Array | number[];
-  evidence_ref_hash: Uint8Array | number[];
-  decision_support_hash: Uint8Array | number[];
-  schema_key_hash: Uint8Array | number[];
-  schema_hash: Uint8Array | number[];
-  schema_version: number;
-  liquidity_pool: string;
-  allocation_position: string;
-  created_at_ts: BigNumberish;
-  updated_at_ts: BigNumberish;
+  funding_line: string;
+  contributor: string;
+  asset_mint: string;
+  contributed_amount: BigNumberish;
+  returned_amount: BigNumberish;
+  terms_hash: Uint8Array | number[];
   bump: number;
 }
 
@@ -196,7 +76,6 @@ export interface ClaimCase {
   reserve_domain: string;
   health_plan: string;
   policy_series: string;
-  member_position: string;
   funding_line: string;
   asset_mint: string;
   claim_id: string;
@@ -213,7 +92,6 @@ export interface ClaimCase {
   reserved_amount: BigNumberish;
   recovered_amount: BigNumberish;
   appeal_count: number;
-  attestation_count: number;
   linked_obligation: string;
   opened_at: BigNumberish;
   updated_at: BigNumberish;
@@ -221,70 +99,10 @@ export interface ClaimCase {
   bump: number;
 }
 
-export interface ClaimCaseAttestedEvent {
-  claim_attestation: string;
-  claim_case: string;
-  oracle_profile: string;
-  oracle: string;
-  decision: number;
-  attestation_hash: Uint8Array | number[];
-}
-
-export interface ClaimCaseSelectedAssetPayoutEvent {
-  claim_case: string;
-  claim_asset_mint: string;
-  payout_asset_mint: string;
-  claim_credit_amount: BigNumberish;
-  payout_amount: BigNumberish;
-  settlement_reason_hash: Uint8Array | number[];
-}
-
 export interface ClaimCaseStateChangedEvent {
   claim_case: string;
   intake_status: number;
   approved_amount: BigNumberish;
-}
-
-export interface ConfigureReserveAssetRailArgs {
-  asset_mint: PublicKeyish;
-  oracle_authority: PublicKeyish;
-  asset_symbol: string;
-  role: number;
-  payout_priority: number;
-  oracle_source: number;
-  oracle_feed_id: Uint8Array | number[];
-  max_staleness_seconds: BigNumberish;
-  max_confidence_bps: number;
-  haircut_bps: number;
-  max_exposure_bps: number;
-  deposit_enabled: boolean;
-  payout_enabled: boolean;
-  capacity_enabled: boolean;
-  active: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
-export interface CreateAllocationPositionArgs {
-  policy_series: PublicKeyish;
-  cap_amount: BigNumberish;
-  weight_bps: number;
-  allocation_mode: number;
-  deallocation_only: boolean;
-}
-
-export interface CreateCapitalClassArgs {
-  class_id: string;
-  display_name: string;
-  share_mint: PublicKeyish;
-  priority: number;
-  impairment_rank: number;
-  restriction_mode: number;
-  redemption_terms_mode: number;
-  wrapper_metadata_hash: Uint8Array | number[];
-  permissioning_hash: Uint8Array | number[];
-  fee_bps: number;
-  min_lockup_seconds: BigNumberish;
-  pause_flags: number;
 }
 
 export interface CreateDomainAssetVaultArgs {
@@ -300,31 +118,11 @@ export interface CreateHealthPlanArgs {
   sponsor_operator: PublicKeyish;
   claims_operator: PublicKeyish;
   oracle_authority: PublicKeyish;
-  membership_mode: number;
-  membership_gate_kind: number;
-  membership_gate_mint: PublicKeyish;
-  membership_gate_min_amount: BigNumberish;
-  membership_invite_authority: PublicKeyish;
   allowed_rail_mask: number;
   default_funding_priority: number;
   oracle_policy_hash: Uint8Array | number[];
   schema_binding_hash: Uint8Array | number[];
   compliance_baseline_hash: Uint8Array | number[];
-  pause_flags: number;
-}
-
-export interface CreateLiquidityPoolArgs {
-  pool_id: string;
-  display_name: string;
-  curator: PublicKeyish;
-  allocator: PublicKeyish;
-  sentinel: PublicKeyish;
-  deposit_asset_mint: PublicKeyish;
-  strategy_hash: Uint8Array | number[];
-  allowed_exposure_hash: Uint8Array | number[];
-  external_yield_adapter_hash: Uint8Array | number[];
-  fee_bps: number;
-  redemption_policy: number;
   pause_flags: number;
 }
 
@@ -335,9 +133,6 @@ export interface CreateObligationArgs {
   member_wallet: PublicKeyish;
   beneficiary: PublicKeyish;
   claim_case: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  allocation_position: PublicKeyish;
   delivery_mode: number;
   amount: BigNumberish;
   creation_reason_hash: Uint8Array | number[];
@@ -355,7 +150,6 @@ export interface CreatePolicySeriesArgs {
   pricing_hash: Uint8Array | number[];
   payout_hash: Uint8Array | number[];
   reserve_model_hash: Uint8Array | number[];
-  evidence_requirements_hash: Uint8Array | number[];
   comparability_hash: Uint8Array | number[];
   policy_overrides_hash: Uint8Array | number[];
   cycle_seconds: BigNumberish;
@@ -373,13 +167,9 @@ export interface CreateReserveDomainArgs {
   pause_flags: number;
 }
 
-export interface DeallocateCapitalArgs {
+export interface DepositReserveCapitalArgs {
   amount: BigNumberish;
-}
-
-export interface DepositIntoCapitalClassArgs {
-  amount: BigNumberish;
-  shares: BigNumberish;
+  terms_hash: Uint8Array | number[];
 }
 
 export interface DomainAssetLedger {
@@ -397,30 +187,6 @@ export interface DomainAssetVault {
   bump: number;
 }
 
-export interface FeeAccruedEvent {
-  vault: string;
-  asset_mint: string;
-  amount: BigNumberish;
-  accrued_total: BigNumberish;
-}
-
-export interface FeeVaultInitializedEvent {
-  vault: string;
-  scope: string;
-  asset_mint: string;
-  fee_recipient: string;
-  rail: number;
-}
-
-export interface FeeWithdrawnEvent {
-  vault: string;
-  asset_mint: string;
-  amount: BigNumberish;
-  configured_recipient: string;
-  recipient: string;
-  withdrawn_total: BigNumberish;
-}
-
 export interface FundSponsorBudgetArgs {
   amount: BigNumberish;
 }
@@ -429,6 +195,7 @@ export interface FundingFlowRecordedEvent {
   funding_line: string;
   amount: BigNumberish;
   flow_kind: number;
+  reference_hash: Uint8Array | number[];
 }
 
 export interface FundingLine {
@@ -475,11 +242,6 @@ export interface HealthPlan {
   display_name: string;
   organization_ref: string;
   metadata_uri: string;
-  membership_mode: number;
-  membership_gate_kind: number;
-  membership_gate_mint: string;
-  membership_gate_min_amount: BigNumberish;
-  membership_invite_authority: string;
   allowed_rail_mask: number;
   default_funding_priority: number;
   oracle_policy_hash: Uint8Array | number[];
@@ -497,132 +259,10 @@ export interface HealthPlanCreatedEvent {
   sponsor: string;
 }
 
-export interface ImpairmentRecordedEvent {
-  funding_line: string;
-  obligation: string;
-  amount: BigNumberish;
-  reason_hash: Uint8Array | number[];
-}
-
-export interface InitPoolOracleFeeVaultArgs {
-  oracle: PublicKeyish;
-  asset_mint: PublicKeyish;
-  fee_recipient: PublicKeyish;
-}
-
-export interface InitPoolTreasuryVaultArgs {
-  asset_mint: PublicKeyish;
-  fee_recipient: PublicKeyish;
-}
-
-export interface InitProtocolFeeVaultArgs {
-  asset_mint: PublicKeyish;
-  fee_recipient: PublicKeyish;
-}
-
-export interface InitializeProtocolGovernanceArgs {
-  protocol_fee_bps: number;
-  emergency_pause: boolean;
-}
-
-export interface InitializeSeriesReserveLedgerArgs {
-  asset_mint: PublicKeyish;
-}
-
-export interface LPPosition {
-  capital_class: string;
-  owner: string;
-  shares: BigNumberish;
-  subscription_basis: BigNumberish;
-  pending_redemption_shares: BigNumberish;
-  pending_redemption_assets: BigNumberish;
-  realized_distributions: BigNumberish;
-  impaired_principal: BigNumberish;
-  lockup_ends_at: BigNumberish;
-  credentialed: boolean;
-  queue_status: number;
-  redemption_sequence: BigNumberish;
-  redemption_requested_at: BigNumberish;
-  bump: number;
-}
-
-export interface LPPositionCredentialingUpdatedEvent {
-  capital_class: string;
-  owner: string;
-  authority: string;
-  credentialed: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
 export interface LedgerInitializedEvent {
   scope_kind: number;
   scope: string;
   asset_mint: string;
-}
-
-export interface LiquidityPool {
-  reserve_domain: string;
-  curator: string;
-  allocator: string;
-  sentinel: string;
-  pool_id: string;
-  display_name: string;
-  deposit_asset_mint: string;
-  strategy_hash: Uint8Array | number[];
-  allowed_exposure_hash: Uint8Array | number[];
-  external_yield_adapter_hash: Uint8Array | number[];
-  fee_bps: number;
-  redemption_policy: number;
-  pause_flags: number;
-  total_value_locked: BigNumberish;
-  total_allocated: BigNumberish;
-  total_reserved: BigNumberish;
-  total_impaired: BigNumberish;
-  total_pending_redemptions: BigNumberish;
-  active: boolean;
-  audit_nonce: BigNumberish;
-  bump: number;
-}
-
-export interface LiquidityPoolCreatedEvent {
-  reserve_domain: string;
-  liquidity_pool: string;
-  asset_mint: string;
-}
-
-export interface MarkImpairmentArgs {
-  amount: BigNumberish;
-  reason_hash: Uint8Array | number[];
-}
-
-export interface MemberPosition {
-  health_plan: string;
-  policy_series: string;
-  wallet: string;
-  subject_commitment: Uint8Array | number[];
-  eligibility_status: number;
-  delegated_rights: number;
-  enrollment_proof_mode: number;
-  membership_gate_kind: number;
-  membership_anchor_ref: string;
-  gate_amount_snapshot: BigNumberish;
-  invite_id_hash: Uint8Array | number[];
-  active: boolean;
-  opened_at: BigNumberish;
-  updated_at: BigNumberish;
-  bump: number;
-}
-
-export interface MembershipAnchorSeat {
-  health_plan: string;
-  anchor_ref: string;
-  gate_kind: number;
-  holder_wallet: string;
-  member_position: string;
-  active: boolean;
-  opened_at: BigNumberish;
-  updated_at: BigNumberish;
-  bump: number;
 }
 
 export interface Obligation {
@@ -634,9 +274,6 @@ export interface Obligation {
   beneficiary: string;
   funding_line: string;
   claim_case: string;
-  liquidity_pool: string;
-  capital_class: string;
-  allocation_position: string;
   obligation_id: string;
   creation_reason_hash: Uint8Array | number[];
   settlement_reason_hash: Uint8Array | number[];
@@ -679,94 +316,6 @@ export interface OpenFundingLineArgs {
   caps_hash: Uint8Array | number[];
 }
 
-export interface OpenMemberPositionArgs {
-  series_scope: PublicKeyish;
-  subject_commitment: Uint8Array | number[];
-  eligibility_status: number;
-  delegated_rights: number;
-  proof_mode: number;
-  token_gate_amount_snapshot: BigNumberish;
-  invite_id_hash: Uint8Array | number[];
-  invite_expires_at: BigNumberish;
-  anchor_ref: PublicKeyish;
-}
-
-export interface OracleProfile {
-  oracle: string;
-  admin: string;
-  oracle_type: number;
-  display_name: string;
-  legal_name: string;
-  website_url: string;
-  app_url: string;
-  logo_uri: string;
-  webhook_url: string;
-  supported_schema_count: number;
-  supported_schema_key_hashes: ReadonlyArray<Uint8Array | number[]>;
-  active: boolean;
-  claimed: boolean;
-  created_at_ts: BigNumberish;
-  updated_at_ts: BigNumberish;
-  bump: number;
-}
-
-export interface OracleProfileClaimedEvent {
-  oracle_profile: string;
-  oracle: string;
-  admin: string;
-}
-
-export interface OracleProfileRegisteredEvent {
-  oracle_profile: string;
-  oracle: string;
-  admin: string;
-  oracle_type: number;
-  claimed: boolean;
-}
-
-export interface OracleProfileUpdatedEvent {
-  oracle_profile: string;
-  oracle: string;
-  authority: string;
-  oracle_type: number;
-}
-
-export interface OutcomeSchema {
-  publisher: string;
-  schema_key_hash: Uint8Array | number[];
-  schema_key: string;
-  version: number;
-  schema_hash: Uint8Array | number[];
-  schema_family: number;
-  visibility: number;
-  metadata_uri: string;
-  verified: boolean;
-  created_at_ts: BigNumberish;
-  updated_at_ts: BigNumberish;
-  bump: number;
-}
-
-export interface OutcomeSchemaClosedEvent {
-  outcome_schema: string;
-  governance_authority: string;
-  schema_key_hash: Uint8Array | number[];
-  recipient: string;
-}
-
-export interface OutcomeSchemaRegisteredEvent {
-  outcome_schema: string;
-  publisher: string;
-  schema_key_hash: Uint8Array | number[];
-  version: number;
-}
-
-export interface OutcomeSchemaStateChangedEvent {
-  outcome_schema: string;
-  governance_authority: string;
-  schema_key_hash: Uint8Array | number[];
-  verified: boolean;
-}
-
 export interface PlanReserveLedger {
   health_plan: string;
   asset_mint: string;
@@ -788,7 +337,6 @@ export interface PolicySeries {
   pricing_hash: Uint8Array | number[];
   payout_hash: Uint8Array | number[];
   reserve_model_hash: Uint8Array | number[];
-  evidence_requirements_hash: Uint8Array | number[];
   comparability_hash: Uint8Array | number[];
   policy_overrides_hash: Uint8Array | number[];
   cycle_seconds: BigNumberish;
@@ -814,233 +362,17 @@ export interface PolicySeriesVersionedEvent {
   new_terms_version: number;
 }
 
-export interface PoolClassLedger {
-  capital_class: string;
-  asset_mint: string;
-  sheet: ReserveBalanceSheet;
-  total_shares: BigNumberish;
-  realized_yield_amount: BigNumberish;
-  realized_loss_amount: BigNumberish;
-  bump: number;
-}
-
-export interface PoolOracleApproval {
-  liquidity_pool: string;
-  oracle: string;
-  active: boolean;
-  updated_at_ts: BigNumberish;
-  bump: number;
-}
-
-export interface PoolOracleApprovalChangedEvent {
-  liquidity_pool: string;
-  oracle: string;
-  authority: string;
-  active: boolean;
-}
-
-export interface PoolOracleFeeVault {
-  liquidity_pool: string;
-  oracle: string;
-  asset_mint: string;
-  fee_recipient: string;
-  accrued_fees: BigNumberish;
-  withdrawn_fees: BigNumberish;
-  bump: number;
-}
-
-export interface PoolOraclePermissionSet {
-  liquidity_pool: string;
-  oracle: string;
-  permissions: number;
-  updated_at_ts: BigNumberish;
-  bump: number;
-}
-
-export interface PoolOraclePermissionsChangedEvent {
-  liquidity_pool: string;
-  oracle: string;
-  authority: string;
-  permissions: number;
-}
-
-export interface PoolOraclePolicy {
-  liquidity_pool: string;
-  quorum_m: number;
-  quorum_n: number;
-  require_verified_schema: boolean;
-  oracle_fee_bps: number;
-  allow_delegate_claim: boolean;
-  challenge_window_secs: number;
-  updated_at_ts: BigNumberish;
-  bump: number;
-}
-
-export interface PoolOraclePolicyChangedEvent {
-  liquidity_pool: string;
-  authority: string;
-  quorum_m: number;
-  quorum_n: number;
-  oracle_fee_bps: number;
-}
-
-export interface PoolTreasuryVault {
-  liquidity_pool: string;
-  asset_mint: string;
-  fee_recipient: string;
-  accrued_fees: BigNumberish;
-  withdrawn_fees: BigNumberish;
-  bump: number;
-}
-
-export interface ProcessRedemptionQueueArgs {
-  shares: BigNumberish;
-}
-
-export interface ProtocolFeeVault {
-  reserve_domain: string;
-  asset_mint: string;
-  fee_recipient: string;
-  accrued_fees: BigNumberish;
-  withdrawn_fees: BigNumberish;
-  bump: number;
-}
-
-export interface ProtocolGovernance {
-  governance_authority: string;
-  pending_governance_authority: string;
-  pending_governance_proposed_at: BigNumberish;
-  pending_governance_expires_at: BigNumberish;
-  protocol_fee_bps: number;
-  emergency_pause: boolean;
-  audit_nonce: BigNumberish;
-  bump: number;
-}
-
-export interface ProtocolGovernanceAuthorityRotatedEvent {
-  previous_governance_authority: string;
-  new_governance_authority: string;
-  authority: string;
-  audit_nonce: BigNumberish;
-}
-
-export interface ProtocolGovernanceAuthorityTransferCanceledEvent {
-  governance_authority: string;
-  canceled_governance_authority: string;
-  authority: string;
-  audit_nonce: BigNumberish;
-}
-
-export interface ProtocolGovernanceAuthorityTransferProposedEvent {
-  current_governance_authority: string;
-  pending_governance_authority: string;
-  authority: string;
-  proposed_at_ts: BigNumberish;
-  expires_at_ts: BigNumberish;
-  audit_nonce: BigNumberish;
-}
-
-export interface ProtocolGovernanceInitializedEvent {
-  governance_authority: string;
-  protocol_fee_bps: number;
-  emergency_pause: boolean;
-}
-
-export interface PublishReserveAssetRailPriceArgs {
-  price_usd_1e8: BigNumberish;
-  confidence_bps: number;
-  published_at_ts: BigNumberish;
-  proof_hash: Uint8Array | number[];
-}
-
 export interface RecordPremiumPaymentArgs {
   amount: BigNumberish;
 }
 
-export interface RedemptionRequestedEvent {
-  capital_class: string;
-  owner: string;
-  shares: BigNumberish;
-  asset_amount: BigNumberish;
-  redemption_sequence: BigNumberish;
-  requested_at_ts: BigNumberish;
-}
-
-export interface RegisterOracleArgs {
-  oracle: PublicKeyish;
-  oracle_type: number;
-  display_name: string;
-  legal_name: string;
-  website_url: string;
-  app_url: string;
-  logo_uri: string;
-  webhook_url: string;
-  supported_schema_key_hashes: Array<Uint8Array | number[]>;
-}
-
-export interface RegisterOutcomeSchemaArgs {
-  schema_key_hash: Uint8Array | number[];
-  schema_key: string;
-  version: number;
-  schema_hash: Uint8Array | number[];
-  schema_family: number;
-  visibility: number;
-  metadata_uri: string;
+export interface RecordReserveEarningsArgs {
+  amount: BigNumberish;
+  earnings_ref_hash: Uint8Array | number[];
 }
 
 export interface ReleaseReserveArgs {
   amount: BigNumberish;
-}
-
-export interface RequestRedemptionArgs {
-  shares: BigNumberish;
-}
-
-export interface ReserveAssetRail {
-  reserve_domain: string;
-  asset_mint: string;
-  oracle_authority: string;
-  asset_symbol: string;
-  role: number;
-  payout_priority: number;
-  oracle_source: number;
-  oracle_feed_id: Uint8Array | number[];
-  max_staleness_seconds: BigNumberish;
-  max_confidence_bps: number;
-  haircut_bps: number;
-  max_exposure_bps: number;
-  deposit_enabled: boolean;
-  payout_enabled: boolean;
-  capacity_enabled: boolean;
-  active: boolean;
-  last_price_usd_1e8: BigNumberish;
-  last_price_confidence_bps: number;
-  last_price_published_at_ts: BigNumberish;
-  last_price_slot: BigNumberish;
-  last_price_proof_hash: Uint8Array | number[];
-  audit_nonce: BigNumberish;
-  bump: number;
-}
-
-export interface ReserveAssetRailConfiguredEvent {
-  reserve_domain: string;
-  reserve_asset_rail: string;
-  asset_mint: string;
-  role: number;
-  payout_priority: number;
-  oracle_source: number;
-  active: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
-export interface ReserveAssetRailPricePublishedEvent {
-  reserve_asset_rail: string;
-  asset_mint: string;
-  oracle_authority: string;
-  price_usd_1e8: BigNumberish;
-  confidence_bps: number;
-  published_at_ts: BigNumberish;
-  proof_hash: Uint8Array | number[];
 }
 
 export interface ReserveBalanceSheet {
@@ -1059,7 +391,6 @@ export interface ReserveBalanceSheet {
 }
 
 export interface ReserveDomain {
-  protocol_governance: string;
   domain_admin: string;
   domain_id: string;
   display_name: string;
@@ -1083,22 +414,9 @@ export interface ReserveObligationArgs {
   amount: BigNumberish;
 }
 
-export interface RotateProtocolGovernanceAuthorityArgs {
-  new_governance_authority: PublicKeyish;
-}
-
-export interface SchemaDependencyLedger {
-  schema_key_hash: Uint8Array | number[];
-  pool_rule_addresses: Array<string>;
-  updated_at_ts: BigNumberish;
-  bump: number;
-}
-
-export interface SchemaDependencyLedgerUpdatedEvent {
-  schema_dependency_ledger: string;
-  governance_authority: string;
-  schema_key_hash: Uint8Array | number[];
-  dependency_count: number;
+export interface ReturnReserveCapitalArgs {
+  amount: BigNumberish;
+  reason_hash: Uint8Array | number[];
 }
 
 export interface ScopedControlChangedEvent {
@@ -1110,44 +428,8 @@ export interface ScopedControlChangedEvent {
   audit_nonce: BigNumberish;
 }
 
-export interface SeriesReserveLedger {
-  policy_series: string;
-  asset_mint: string;
-  sheet: ReserveBalanceSheet;
-  bump: number;
-}
-
-export interface SetPoolOracleArgs {
-  active: boolean;
-}
-
-export interface SetPoolOraclePermissionsArgs {
-  permissions: number;
-}
-
-export interface SetPoolOraclePolicyArgs {
-  quorum_m: number;
-  quorum_n: number;
-  require_verified_schema: boolean;
-  oracle_fee_bps: number;
-  allow_delegate_claim: boolean;
-  challenge_window_secs: number;
-}
-
-export interface SetProtocolEmergencyPauseArgs {
-  emergency_pause: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
 export interface SettleClaimCaseArgs {
   amount: BigNumberish;
-}
-
-export interface SettleClaimCaseSelectedAssetArgs {
-  claim_credit_amount: BigNumberish;
-  payout_amount: BigNumberish;
-  max_overpay_bps: number;
-  settlement_reason_hash: Uint8Array | number[];
 }
 
 export interface SettleObligationArgs {
@@ -1156,30 +438,10 @@ export interface SettleObligationArgs {
   settlement_reason_hash: Uint8Array | number[];
 }
 
-export interface UpdateAllocationCapsArgs {
-  cap_amount: BigNumberish;
-  weight_bps: number;
-  deallocation_only: boolean;
-  active: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
-export interface UpdateCapitalClassControlsArgs {
-  pause_flags: number;
-  queue_only_redemptions: boolean;
-  active: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
 export interface UpdateHealthPlanControlsArgs {
   sponsor_operator: PublicKeyish;
   claims_operator: PublicKeyish;
   oracle_authority: PublicKeyish;
-  membership_mode: number;
-  membership_gate_kind: number;
-  membership_gate_mint: PublicKeyish;
-  membership_gate_min_amount: BigNumberish;
-  membership_invite_authority: PublicKeyish;
   allowed_rail_mask: number;
   default_funding_priority: number;
   oracle_policy_hash: Uint8Array | number[];
@@ -1190,38 +452,11 @@ export interface UpdateHealthPlanControlsArgs {
   reason_hash: Uint8Array | number[];
 }
 
-export interface UpdateLpPositionCredentialingArgs {
-  owner: PublicKeyish;
-  credentialed: boolean;
-  reason_hash: Uint8Array | number[];
-}
-
-export interface UpdateMemberEligibilityArgs {
-  eligibility_status: number;
-  delegated_rights: number;
-  active: boolean;
-}
-
-export interface UpdateOracleProfileArgs {
-  oracle_type: number;
-  display_name: string;
-  legal_name: string;
-  website_url: string;
-  app_url: string;
-  logo_uri: string;
-  webhook_url: string;
-  supported_schema_key_hashes: Array<Uint8Array | number[]>;
-}
-
 export interface UpdateReserveDomainControlsArgs {
   allowed_rail_mask: number;
   pause_flags: number;
   active: boolean;
   reason_hash: Uint8Array | number[];
-}
-
-export interface VerifyOutcomeSchemaArgs {
-  verified: boolean;
 }
 
 export interface VersionPolicySeriesArgs {
@@ -1234,300 +469,98 @@ export interface VersionPolicySeriesArgs {
   pricing_hash: Uint8Array | number[];
   payout_hash: Uint8Array | number[];
   reserve_model_hash: Uint8Array | number[];
-  evidence_requirements_hash: Uint8Array | number[];
   comparability_hash: Uint8Array | number[];
   policy_overrides_hash: Uint8Array | number[];
   cycle_seconds: BigNumberish;
 }
 
-export interface WithdrawArgs {
-  amount: BigNumberish;
-}
-
-export interface AcceptProtocolGovernanceAuthorityAccounts {
-  pending_authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-}
-
 export interface AdjudicateClaimCaseAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   claim_case: PublicKeyish;
   obligation?: PublicKeyish;
 }
 
-export interface AllocateCapitalAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  pool_class_ledger: PublicKeyish;
-  funding_line: PublicKeyish;
-  allocation_position: PublicKeyish;
-  allocation_ledger: PublicKeyish;
-}
-
-export interface AttachClaimEvidenceRefAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  claim_case: PublicKeyish;
-}
-
-export interface AttestClaimCaseAccounts {
-  oracle: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  claim_case: PublicKeyish;
-  funding_line: PublicKeyish;
-  outcome_schema: PublicKeyish;
-  liquidity_pool?: PublicKeyish;
-  capital_class?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  pool_oracle_approval?: PublicKeyish;
-  pool_oracle_permission_set?: PublicKeyish;
-  pool_oracle_policy?: PublicKeyish;
-  claim_attestation: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
 export interface AuthorizeClaimRecipientAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  member_position: PublicKeyish;
   claim_case: PublicKeyish;
-}
-
-export interface BackfillSchemaDependencyLedgerAccounts {
-  governance_authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  outcome_schema: PublicKeyish;
-  schema_dependency_ledger: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface CancelProtocolGovernanceAuthorityTransferAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-}
-
-export interface ClaimOracleAccounts {
-  oracle: PublicKeyish;
-  oracle_profile: PublicKeyish;
-}
-
-export interface CloseOutcomeSchemaAccounts {
-  governance_authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  outcome_schema: PublicKeyish;
-  schema_dependency_ledger: PublicKeyish;
-  recipient_system_account: PublicKeyish;
-}
-
-export interface ConfigureReserveAssetRailAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  reserve_domain: PublicKeyish;
-  reserve_asset_rail: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface CreateAllocationPositionAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  health_plan: PublicKeyish;
-  funding_line: PublicKeyish;
-  allocation_position: PublicKeyish;
-  allocation_ledger: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface CreateCapitalClassAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  pool_class_ledger: PublicKeyish;
-  system_program?: PublicKeyish;
 }
 
 export interface CreateDomainAssetVaultAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   reserve_domain: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
-  token_program: PublicKeyish;
+  token_program?: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
 export interface CreateHealthPlanAccounts {
   plan_admin: PublicKeyish;
-  protocol_governance: PublicKeyish;
   reserve_domain: PublicKeyish;
   health_plan: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface CreateLiquidityPoolAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  reserve_domain: PublicKeyish;
-  domain_asset_vault: PublicKeyish;
-  liquidity_pool: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
 export interface CreateObligationAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  liquidity_pool?: PublicKeyish;
-  capital_class?: PublicKeyish;
-  pool_class_ledger?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  allocation_ledger?: PublicKeyish;
   obligation: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
 export interface CreatePolicySeriesAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   policy_series: PublicKeyish;
-  series_reserve_ledger: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
 export interface CreateReserveDomainAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   reserve_domain: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
-export interface DeallocateCapitalAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  pool_class_ledger: PublicKeyish;
-  funding_line: PublicKeyish;
-  allocation_position: PublicKeyish;
-  allocation_ledger: PublicKeyish;
-}
-
-export interface DepositIntoCapitalClassAccounts {
-  owner: PublicKeyish;
-  protocol_governance: PublicKeyish;
+export interface DepositReserveCapitalAccounts {
+  contributor: PublicKeyish;
+  health_plan: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  pool_class_ledger: PublicKeyish;
-  lp_position: PublicKeyish;
-  pool_treasury_vault: PublicKeyish;
+  funding_line: PublicKeyish;
+  capital_contribution: PublicKeyish;
+  funding_line_ledger: PublicKeyish;
+  plan_reserve_ledger: PublicKeyish;
   source_token_account: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
-  token_program: PublicKeyish;
+  token_program?: PublicKeyish;
   system_program?: PublicKeyish;
 }
 
 export interface FundSponsorBudgetAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
   source_token_account: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
-  token_program: PublicKeyish;
-}
-
-export interface InitPoolOracleFeeVaultAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  pool_oracle_approval: PublicKeyish;
-  domain_asset_vault?: PublicKeyish;
-  pool_oracle_fee_vault: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface InitPoolTreasuryVaultAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  domain_asset_vault?: PublicKeyish;
-  pool_treasury_vault: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface InitProtocolFeeVaultAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  reserve_domain: PublicKeyish;
-  domain_asset_vault?: PublicKeyish;
-  protocol_fee_vault: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface InitializeProtocolGovernanceAccounts {
-  governance_authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  program?: PublicKeyish;
-  program_data: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface InitializeSeriesReserveLedgerAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  policy_series: PublicKeyish;
-  series_reserve_ledger: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface MarkImpairmentAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  domain_asset_ledger: PublicKeyish;
-  funding_line: PublicKeyish;
-  funding_line_ledger: PublicKeyish;
-  plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  pool_class_ledger?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  allocation_ledger?: PublicKeyish;
-  obligation?: PublicKeyish;
+  token_program?: PublicKeyish;
 }
 
 export interface OpenClaimCaseAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
-  member_position: PublicKeyish;
   funding_line: PublicKeyish;
   claim_case: PublicKeyish;
   system_program?: PublicKeyish;
@@ -1535,7 +568,6 @@ export interface OpenClaimCaseAccounts {
 
 export interface OpenFundingLineAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
@@ -1543,358 +575,122 @@ export interface OpenFundingLineAccounts {
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
   policy_series?: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
   system_program?: PublicKeyish;
-}
-
-export interface OpenMemberPositionAccounts {
-  wallet: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  policy_series?: PublicKeyish;
-  member_position: PublicKeyish;
-  membership_anchor_seat?: PublicKeyish;
-  token_gate_account?: PublicKeyish;
-  invite_authority?: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface ProcessRedemptionQueueAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  domain_asset_vault: PublicKeyish;
-  domain_asset_ledger: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  pool_class_ledger: PublicKeyish;
-  lp_position: PublicKeyish;
-  pool_treasury_vault: PublicKeyish;
-  asset_mint: PublicKeyish;
-  vault_token_account: PublicKeyish;
-  recipient_token_account: PublicKeyish;
-  token_program: PublicKeyish;
-}
-
-export interface PublishReserveAssetRailPriceAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  reserve_asset_rail: PublicKeyish;
 }
 
 export interface RecordPremiumPaymentAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  protocol_fee_vault: PublicKeyish;
   source_token_account: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
-  token_program: PublicKeyish;
+  token_program?: PublicKeyish;
 }
 
-export interface RegisterOracleAccounts {
-  admin: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface RegisterOutcomeSchemaAccounts {
-  publisher: PublicKeyish;
-  outcome_schema: PublicKeyish;
-  schema_dependency_ledger: PublicKeyish;
-  system_program?: PublicKeyish;
+export interface RecordReserveEarningsAccounts {
+  authority: PublicKeyish;
+  health_plan: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  domain_asset_ledger: PublicKeyish;
+  funding_line: PublicKeyish;
+  funding_line_ledger: PublicKeyish;
+  plan_reserve_ledger: PublicKeyish;
+  source_token_account: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  token_program?: PublicKeyish;
 }
 
 export interface ReleaseReserveAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  pool_class_ledger?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  allocation_ledger?: PublicKeyish;
   obligation: PublicKeyish;
   claim_case?: PublicKeyish;
-}
-
-export interface RequestRedemptionAccounts {
-  owner: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  pool_class_ledger: PublicKeyish;
-  domain_asset_ledger: PublicKeyish;
-  lp_position: PublicKeyish;
 }
 
 export interface ReserveObligationAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  pool_class_ledger?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  allocation_ledger?: PublicKeyish;
   obligation: PublicKeyish;
   claim_case?: PublicKeyish;
 }
 
-export interface RotateProtocolGovernanceAuthorityAccounts {
+export interface ReturnReserveCapitalAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-}
-
-export interface SetPoolOracleAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  pool_oracle_approval: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface SetPoolOraclePermissionsAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  pool_oracle_approval: PublicKeyish;
-  pool_oracle_permission_set: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface SetPoolOraclePolicyAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  pool_oracle_policy: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface SetProtocolEmergencyPauseAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
+  health_plan: PublicKeyish;
+  domain_asset_vault: PublicKeyish;
+  domain_asset_ledger: PublicKeyish;
+  funding_line: PublicKeyish;
+  capital_contribution: PublicKeyish;
+  funding_line_ledger: PublicKeyish;
+  plan_reserve_ledger: PublicKeyish;
+  asset_mint: PublicKeyish;
+  vault_token_account: PublicKeyish;
+  recipient_token_account: PublicKeyish;
+  token_program?: PublicKeyish;
 }
 
 export interface SettleClaimCaseAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
-  reserve_asset_rail: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  pool_class_ledger?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  allocation_ledger?: PublicKeyish;
   claim_case: PublicKeyish;
   obligation?: PublicKeyish;
-  protocol_fee_vault: PublicKeyish;
-  pool_oracle_fee_vault?: PublicKeyish;
-  pool_oracle_policy?: PublicKeyish;
-  oracle_fee_attestation?: PublicKeyish;
-  member_position: PublicKeyish;
   asset_mint: PublicKeyish;
   vault_token_account: PublicKeyish;
   recipient_token_account: PublicKeyish;
-  token_program: PublicKeyish;
-}
-
-export interface SettleClaimCaseSelectedAssetAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  claim_asset_rail: PublicKeyish;
-  payout_asset_rail: PublicKeyish;
-  payout_domain_asset_vault: PublicKeyish;
-  payout_domain_asset_ledger: PublicKeyish;
-  payout_funding_line: PublicKeyish;
-  payout_funding_line_ledger: PublicKeyish;
-  payout_plan_reserve_ledger: PublicKeyish;
-  payout_series_reserve_ledger?: PublicKeyish;
-  claim_case: PublicKeyish;
-  member_position: PublicKeyish;
-  claim_asset_mint: PublicKeyish;
-  payout_asset_mint: PublicKeyish;
-  payout_vault_token_account: PublicKeyish;
-  recipient_token_account: PublicKeyish;
-  token_program: PublicKeyish;
+  token_program?: PublicKeyish;
 }
 
 export interface SettleObligationAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
-  reserve_asset_rail: PublicKeyish;
   domain_asset_vault: PublicKeyish;
   domain_asset_ledger: PublicKeyish;
   funding_line: PublicKeyish;
   funding_line_ledger: PublicKeyish;
   plan_reserve_ledger: PublicKeyish;
-  series_reserve_ledger?: PublicKeyish;
-  pool_class_ledger?: PublicKeyish;
-  allocation_position?: PublicKeyish;
-  allocation_ledger?: PublicKeyish;
   obligation: PublicKeyish;
   claim_case?: PublicKeyish;
-  member_position?: PublicKeyish;
   asset_mint?: PublicKeyish;
   vault_token_account?: PublicKeyish;
   recipient_token_account?: PublicKeyish;
   token_program?: PublicKeyish;
-  pool_oracle_fee_vault?: PublicKeyish;
-  pool_oracle_policy?: PublicKeyish;
-  oracle_fee_attestation?: PublicKeyish;
-}
-
-export interface UpdateAllocationCapsAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  allocation_position: PublicKeyish;
-}
-
-export interface UpdateCapitalClassControlsAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
 }
 
 export interface UpdateHealthPlanControlsAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
-}
-
-export interface UpdateLpPositionCredentialingAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  capital_class: PublicKeyish;
-  lp_position: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface UpdateMemberEligibilityAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  health_plan: PublicKeyish;
-  member_position: PublicKeyish;
-  membership_anchor_seat?: PublicKeyish;
-}
-
-export interface UpdateOracleProfileAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  oracle_profile: PublicKeyish;
 }
 
 export interface UpdateReserveDomainControlsAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   reserve_domain: PublicKeyish;
-}
-
-export interface VerifyOutcomeSchemaAccounts {
-  governance_authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  outcome_schema: PublicKeyish;
 }
 
 export interface VersionPolicySeriesAccounts {
   authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
   health_plan: PublicKeyish;
   current_policy_series: PublicKeyish;
   next_policy_series: PublicKeyish;
-  next_series_reserve_ledger: PublicKeyish;
   system_program?: PublicKeyish;
-}
-
-export interface WithdrawPoolOracleFeeSolAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  pool_oracle_fee_vault: PublicKeyish;
-  recipient: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface WithdrawPoolOracleFeeSplAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  oracle_profile: PublicKeyish;
-  pool_oracle_fee_vault: PublicKeyish;
-  domain_asset_vault: PublicKeyish;
-  domain_asset_ledger: PublicKeyish;
-  asset_mint: PublicKeyish;
-  vault_token_account: PublicKeyish;
-  recipient_token_account: PublicKeyish;
-  token_program: PublicKeyish;
-}
-
-export interface WithdrawPoolTreasurySolAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  pool_treasury_vault: PublicKeyish;
-  recipient: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface WithdrawPoolTreasurySplAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  liquidity_pool: PublicKeyish;
-  pool_treasury_vault: PublicKeyish;
-  domain_asset_vault: PublicKeyish;
-  domain_asset_ledger: PublicKeyish;
-  asset_mint: PublicKeyish;
-  vault_token_account: PublicKeyish;
-  recipient_token_account: PublicKeyish;
-  token_program: PublicKeyish;
-}
-
-export interface WithdrawProtocolFeeSolAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  reserve_domain: PublicKeyish;
-  protocol_fee_vault: PublicKeyish;
-  recipient: PublicKeyish;
-  system_program?: PublicKeyish;
-}
-
-export interface WithdrawProtocolFeeSplAccounts {
-  authority: PublicKeyish;
-  protocol_governance: PublicKeyish;
-  reserve_domain: PublicKeyish;
-  protocol_fee_vault: PublicKeyish;
-  domain_asset_vault: PublicKeyish;
-  domain_asset_ledger: PublicKeyish;
-  asset_mint: PublicKeyish;
-  vault_token_account: PublicKeyish;
-  recipient_token_account: PublicKeyish;
-  token_program: PublicKeyish;
 }
 
 export interface ProtocolClient {
@@ -1925,18 +721,6 @@ export interface ProtocolClient {
     accountName: ProtocolAccountName,
     address: PublicKeyish,
   ): Promise<T | null>;
-  buildAcceptProtocolGovernanceAuthorityInstruction(
-    params: BuildInstructionParams<
-      Record<string, unknown>,
-      AcceptProtocolGovernanceAuthorityAccounts
-    >,
-  ): TransactionInstruction;
-  buildAcceptProtocolGovernanceAuthorityTx(
-    params: BuildTransactionParams<
-      Record<string, unknown>,
-      AcceptProtocolGovernanceAuthorityAccounts
-    >,
-  ): Transaction;
   buildAdjudicateClaimCaseInstruction(
     params: BuildInstructionParams<
       AdjudicateClaimCaseArgs,
@@ -1949,42 +733,6 @@ export interface ProtocolClient {
       AdjudicateClaimCaseAccounts
     >,
   ): Transaction;
-  buildAllocateCapitalInstruction(
-    params: BuildInstructionParams<
-      AllocateCapitalArgs,
-      AllocateCapitalAccounts
-    >,
-  ): TransactionInstruction;
-  buildAllocateCapitalTx(
-    params: BuildTransactionParams<
-      AllocateCapitalArgs,
-      AllocateCapitalAccounts
-    >,
-  ): Transaction;
-  buildAttachClaimEvidenceRefInstruction(
-    params: BuildInstructionParams<
-      AttachClaimEvidenceRefArgs,
-      AttachClaimEvidenceRefAccounts
-    >,
-  ): TransactionInstruction;
-  buildAttachClaimEvidenceRefTx(
-    params: BuildTransactionParams<
-      AttachClaimEvidenceRefArgs,
-      AttachClaimEvidenceRefAccounts
-    >,
-  ): Transaction;
-  buildAttestClaimCaseInstruction(
-    params: BuildInstructionParams<
-      AttestClaimCaseArgs,
-      AttestClaimCaseAccounts
-    >,
-  ): TransactionInstruction;
-  buildAttestClaimCaseTx(
-    params: BuildTransactionParams<
-      AttestClaimCaseArgs,
-      AttestClaimCaseAccounts
-    >,
-  ): Transaction;
   buildAuthorizeClaimRecipientInstruction(
     params: BuildInstructionParams<
       AuthorizeClaimRecipientArgs,
@@ -1995,90 +743,6 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       AuthorizeClaimRecipientArgs,
       AuthorizeClaimRecipientAccounts
-    >,
-  ): Transaction;
-  buildBackfillSchemaDependencyLedgerInstruction(
-    params: BuildInstructionParams<
-      BackfillSchemaDependencyLedgerArgs,
-      BackfillSchemaDependencyLedgerAccounts
-    >,
-  ): TransactionInstruction;
-  buildBackfillSchemaDependencyLedgerTx(
-    params: BuildTransactionParams<
-      BackfillSchemaDependencyLedgerArgs,
-      BackfillSchemaDependencyLedgerAccounts
-    >,
-  ): Transaction;
-  buildCancelProtocolGovernanceAuthorityTransferInstruction(
-    params: BuildInstructionParams<
-      Record<string, unknown>,
-      CancelProtocolGovernanceAuthorityTransferAccounts
-    >,
-  ): TransactionInstruction;
-  buildCancelProtocolGovernanceAuthorityTransferTx(
-    params: BuildTransactionParams<
-      Record<string, unknown>,
-      CancelProtocolGovernanceAuthorityTransferAccounts
-    >,
-  ): Transaction;
-  buildClaimOracleInstruction(
-    params: BuildInstructionParams<
-      Record<string, unknown>,
-      ClaimOracleAccounts
-    >,
-  ): TransactionInstruction;
-  buildClaimOracleTx(
-    params: BuildTransactionParams<
-      Record<string, unknown>,
-      ClaimOracleAccounts
-    >,
-  ): Transaction;
-  buildCloseOutcomeSchemaInstruction(
-    params: BuildInstructionParams<
-      Record<string, unknown>,
-      CloseOutcomeSchemaAccounts
-    >,
-  ): TransactionInstruction;
-  buildCloseOutcomeSchemaTx(
-    params: BuildTransactionParams<
-      Record<string, unknown>,
-      CloseOutcomeSchemaAccounts
-    >,
-  ): Transaction;
-  buildConfigureReserveAssetRailInstruction(
-    params: BuildInstructionParams<
-      ConfigureReserveAssetRailArgs,
-      ConfigureReserveAssetRailAccounts
-    >,
-  ): TransactionInstruction;
-  buildConfigureReserveAssetRailTx(
-    params: BuildTransactionParams<
-      ConfigureReserveAssetRailArgs,
-      ConfigureReserveAssetRailAccounts
-    >,
-  ): Transaction;
-  buildCreateAllocationPositionInstruction(
-    params: BuildInstructionParams<
-      CreateAllocationPositionArgs,
-      CreateAllocationPositionAccounts
-    >,
-  ): TransactionInstruction;
-  buildCreateAllocationPositionTx(
-    params: BuildTransactionParams<
-      CreateAllocationPositionArgs,
-      CreateAllocationPositionAccounts
-    >,
-  ): Transaction;
-  buildCreateCapitalClassInstruction(
-    params: BuildInstructionParams<
-      CreateCapitalClassArgs,
-      CreateCapitalClassAccounts
-    >,
-  ): TransactionInstruction;
-  buildCreateCapitalClassTx(
-    params: BuildTransactionParams<
-      CreateCapitalClassArgs,
-      CreateCapitalClassAccounts
     >,
   ): Transaction;
   buildCreateDomainAssetVaultInstruction(
@@ -2103,18 +767,6 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       CreateHealthPlanArgs,
       CreateHealthPlanAccounts
-    >,
-  ): Transaction;
-  buildCreateLiquidityPoolInstruction(
-    params: BuildInstructionParams<
-      CreateLiquidityPoolArgs,
-      CreateLiquidityPoolAccounts
-    >,
-  ): TransactionInstruction;
-  buildCreateLiquidityPoolTx(
-    params: BuildTransactionParams<
-      CreateLiquidityPoolArgs,
-      CreateLiquidityPoolAccounts
     >,
   ): Transaction;
   buildCreateObligationInstruction(
@@ -2153,28 +805,16 @@ export interface ProtocolClient {
       CreateReserveDomainAccounts
     >,
   ): Transaction;
-  buildDeallocateCapitalInstruction(
+  buildDepositReserveCapitalInstruction(
     params: BuildInstructionParams<
-      DeallocateCapitalArgs,
-      DeallocateCapitalAccounts
+      DepositReserveCapitalArgs,
+      DepositReserveCapitalAccounts
     >,
   ): TransactionInstruction;
-  buildDeallocateCapitalTx(
+  buildDepositReserveCapitalTx(
     params: BuildTransactionParams<
-      DeallocateCapitalArgs,
-      DeallocateCapitalAccounts
-    >,
-  ): Transaction;
-  buildDepositIntoCapitalClassInstruction(
-    params: BuildInstructionParams<
-      DepositIntoCapitalClassArgs,
-      DepositIntoCapitalClassAccounts
-    >,
-  ): TransactionInstruction;
-  buildDepositIntoCapitalClassTx(
-    params: BuildTransactionParams<
-      DepositIntoCapitalClassArgs,
-      DepositIntoCapitalClassAccounts
+      DepositReserveCapitalArgs,
+      DepositReserveCapitalAccounts
     >,
   ): Transaction;
   buildFundSponsorBudgetInstruction(
@@ -2188,72 +828,6 @@ export interface ProtocolClient {
       FundSponsorBudgetArgs,
       FundSponsorBudgetAccounts
     >,
-  ): Transaction;
-  buildInitPoolOracleFeeVaultInstruction(
-    params: BuildInstructionParams<
-      InitPoolOracleFeeVaultArgs,
-      InitPoolOracleFeeVaultAccounts
-    >,
-  ): TransactionInstruction;
-  buildInitPoolOracleFeeVaultTx(
-    params: BuildTransactionParams<
-      InitPoolOracleFeeVaultArgs,
-      InitPoolOracleFeeVaultAccounts
-    >,
-  ): Transaction;
-  buildInitPoolTreasuryVaultInstruction(
-    params: BuildInstructionParams<
-      InitPoolTreasuryVaultArgs,
-      InitPoolTreasuryVaultAccounts
-    >,
-  ): TransactionInstruction;
-  buildInitPoolTreasuryVaultTx(
-    params: BuildTransactionParams<
-      InitPoolTreasuryVaultArgs,
-      InitPoolTreasuryVaultAccounts
-    >,
-  ): Transaction;
-  buildInitProtocolFeeVaultInstruction(
-    params: BuildInstructionParams<
-      InitProtocolFeeVaultArgs,
-      InitProtocolFeeVaultAccounts
-    >,
-  ): TransactionInstruction;
-  buildInitProtocolFeeVaultTx(
-    params: BuildTransactionParams<
-      InitProtocolFeeVaultArgs,
-      InitProtocolFeeVaultAccounts
-    >,
-  ): Transaction;
-  buildInitializeProtocolGovernanceInstruction(
-    params: BuildInstructionParams<
-      InitializeProtocolGovernanceArgs,
-      InitializeProtocolGovernanceAccounts
-    >,
-  ): TransactionInstruction;
-  buildInitializeProtocolGovernanceTx(
-    params: BuildTransactionParams<
-      InitializeProtocolGovernanceArgs,
-      InitializeProtocolGovernanceAccounts
-    >,
-  ): Transaction;
-  buildInitializeSeriesReserveLedgerInstruction(
-    params: BuildInstructionParams<
-      InitializeSeriesReserveLedgerArgs,
-      InitializeSeriesReserveLedgerAccounts
-    >,
-  ): TransactionInstruction;
-  buildInitializeSeriesReserveLedgerTx(
-    params: BuildTransactionParams<
-      InitializeSeriesReserveLedgerArgs,
-      InitializeSeriesReserveLedgerAccounts
-    >,
-  ): Transaction;
-  buildMarkImpairmentInstruction(
-    params: BuildInstructionParams<MarkImpairmentArgs, MarkImpairmentAccounts>,
-  ): TransactionInstruction;
-  buildMarkImpairmentTx(
-    params: BuildTransactionParams<MarkImpairmentArgs, MarkImpairmentAccounts>,
   ): Transaction;
   buildOpenClaimCaseInstruction(
     params: BuildInstructionParams<OpenClaimCaseArgs, OpenClaimCaseAccounts>,
@@ -2273,42 +847,6 @@ export interface ProtocolClient {
       OpenFundingLineAccounts
     >,
   ): Transaction;
-  buildOpenMemberPositionInstruction(
-    params: BuildInstructionParams<
-      OpenMemberPositionArgs,
-      OpenMemberPositionAccounts
-    >,
-  ): TransactionInstruction;
-  buildOpenMemberPositionTx(
-    params: BuildTransactionParams<
-      OpenMemberPositionArgs,
-      OpenMemberPositionAccounts
-    >,
-  ): Transaction;
-  buildProcessRedemptionQueueInstruction(
-    params: BuildInstructionParams<
-      ProcessRedemptionQueueArgs,
-      ProcessRedemptionQueueAccounts
-    >,
-  ): TransactionInstruction;
-  buildProcessRedemptionQueueTx(
-    params: BuildTransactionParams<
-      ProcessRedemptionQueueArgs,
-      ProcessRedemptionQueueAccounts
-    >,
-  ): Transaction;
-  buildPublishReserveAssetRailPriceInstruction(
-    params: BuildInstructionParams<
-      PublishReserveAssetRailPriceArgs,
-      PublishReserveAssetRailPriceAccounts
-    >,
-  ): TransactionInstruction;
-  buildPublishReserveAssetRailPriceTx(
-    params: BuildTransactionParams<
-      PublishReserveAssetRailPriceArgs,
-      PublishReserveAssetRailPriceAccounts
-    >,
-  ): Transaction;
   buildRecordPremiumPaymentInstruction(
     params: BuildInstructionParams<
       RecordPremiumPaymentArgs,
@@ -2321,22 +859,16 @@ export interface ProtocolClient {
       RecordPremiumPaymentAccounts
     >,
   ): Transaction;
-  buildRegisterOracleInstruction(
-    params: BuildInstructionParams<RegisterOracleArgs, RegisterOracleAccounts>,
-  ): TransactionInstruction;
-  buildRegisterOracleTx(
-    params: BuildTransactionParams<RegisterOracleArgs, RegisterOracleAccounts>,
-  ): Transaction;
-  buildRegisterOutcomeSchemaInstruction(
+  buildRecordReserveEarningsInstruction(
     params: BuildInstructionParams<
-      RegisterOutcomeSchemaArgs,
-      RegisterOutcomeSchemaAccounts
+      RecordReserveEarningsArgs,
+      RecordReserveEarningsAccounts
     >,
   ): TransactionInstruction;
-  buildRegisterOutcomeSchemaTx(
+  buildRecordReserveEarningsTx(
     params: BuildTransactionParams<
-      RegisterOutcomeSchemaArgs,
-      RegisterOutcomeSchemaAccounts
+      RecordReserveEarningsArgs,
+      RecordReserveEarningsAccounts
     >,
   ): Transaction;
   buildReleaseReserveInstruction(
@@ -2344,18 +876,6 @@ export interface ProtocolClient {
   ): TransactionInstruction;
   buildReleaseReserveTx(
     params: BuildTransactionParams<ReleaseReserveArgs, ReleaseReserveAccounts>,
-  ): Transaction;
-  buildRequestRedemptionInstruction(
-    params: BuildInstructionParams<
-      RequestRedemptionArgs,
-      RequestRedemptionAccounts
-    >,
-  ): TransactionInstruction;
-  buildRequestRedemptionTx(
-    params: BuildTransactionParams<
-      RequestRedemptionArgs,
-      RequestRedemptionAccounts
-    >,
   ): Transaction;
   buildReserveObligationInstruction(
     params: BuildInstructionParams<
@@ -2369,58 +889,16 @@ export interface ProtocolClient {
       ReserveObligationAccounts
     >,
   ): Transaction;
-  buildRotateProtocolGovernanceAuthorityInstruction(
+  buildReturnReserveCapitalInstruction(
     params: BuildInstructionParams<
-      RotateProtocolGovernanceAuthorityArgs,
-      RotateProtocolGovernanceAuthorityAccounts
+      ReturnReserveCapitalArgs,
+      ReturnReserveCapitalAccounts
     >,
   ): TransactionInstruction;
-  buildRotateProtocolGovernanceAuthorityTx(
+  buildReturnReserveCapitalTx(
     params: BuildTransactionParams<
-      RotateProtocolGovernanceAuthorityArgs,
-      RotateProtocolGovernanceAuthorityAccounts
-    >,
-  ): Transaction;
-  buildSetPoolOracleInstruction(
-    params: BuildInstructionParams<SetPoolOracleArgs, SetPoolOracleAccounts>,
-  ): TransactionInstruction;
-  buildSetPoolOracleTx(
-    params: BuildTransactionParams<SetPoolOracleArgs, SetPoolOracleAccounts>,
-  ): Transaction;
-  buildSetPoolOraclePermissionsInstruction(
-    params: BuildInstructionParams<
-      SetPoolOraclePermissionsArgs,
-      SetPoolOraclePermissionsAccounts
-    >,
-  ): TransactionInstruction;
-  buildSetPoolOraclePermissionsTx(
-    params: BuildTransactionParams<
-      SetPoolOraclePermissionsArgs,
-      SetPoolOraclePermissionsAccounts
-    >,
-  ): Transaction;
-  buildSetPoolOraclePolicyInstruction(
-    params: BuildInstructionParams<
-      SetPoolOraclePolicyArgs,
-      SetPoolOraclePolicyAccounts
-    >,
-  ): TransactionInstruction;
-  buildSetPoolOraclePolicyTx(
-    params: BuildTransactionParams<
-      SetPoolOraclePolicyArgs,
-      SetPoolOraclePolicyAccounts
-    >,
-  ): Transaction;
-  buildSetProtocolEmergencyPauseInstruction(
-    params: BuildInstructionParams<
-      SetProtocolEmergencyPauseArgs,
-      SetProtocolEmergencyPauseAccounts
-    >,
-  ): TransactionInstruction;
-  buildSetProtocolEmergencyPauseTx(
-    params: BuildTransactionParams<
-      SetProtocolEmergencyPauseArgs,
-      SetProtocolEmergencyPauseAccounts
+      ReturnReserveCapitalArgs,
+      ReturnReserveCapitalAccounts
     >,
   ): Transaction;
   buildSettleClaimCaseInstruction(
@@ -2435,18 +913,6 @@ export interface ProtocolClient {
       SettleClaimCaseAccounts
     >,
   ): Transaction;
-  buildSettleClaimCaseSelectedAssetInstruction(
-    params: BuildInstructionParams<
-      SettleClaimCaseSelectedAssetArgs,
-      SettleClaimCaseSelectedAssetAccounts
-    >,
-  ): TransactionInstruction;
-  buildSettleClaimCaseSelectedAssetTx(
-    params: BuildTransactionParams<
-      SettleClaimCaseSelectedAssetArgs,
-      SettleClaimCaseSelectedAssetAccounts
-    >,
-  ): Transaction;
   buildSettleObligationInstruction(
     params: BuildInstructionParams<
       SettleObligationArgs,
@@ -2457,30 +923,6 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       SettleObligationArgs,
       SettleObligationAccounts
-    >,
-  ): Transaction;
-  buildUpdateAllocationCapsInstruction(
-    params: BuildInstructionParams<
-      UpdateAllocationCapsArgs,
-      UpdateAllocationCapsAccounts
-    >,
-  ): TransactionInstruction;
-  buildUpdateAllocationCapsTx(
-    params: BuildTransactionParams<
-      UpdateAllocationCapsArgs,
-      UpdateAllocationCapsAccounts
-    >,
-  ): Transaction;
-  buildUpdateCapitalClassControlsInstruction(
-    params: BuildInstructionParams<
-      UpdateCapitalClassControlsArgs,
-      UpdateCapitalClassControlsAccounts
-    >,
-  ): TransactionInstruction;
-  buildUpdateCapitalClassControlsTx(
-    params: BuildTransactionParams<
-      UpdateCapitalClassControlsArgs,
-      UpdateCapitalClassControlsAccounts
     >,
   ): Transaction;
   buildUpdateHealthPlanControlsInstruction(
@@ -2495,42 +937,6 @@ export interface ProtocolClient {
       UpdateHealthPlanControlsAccounts
     >,
   ): Transaction;
-  buildUpdateLpPositionCredentialingInstruction(
-    params: BuildInstructionParams<
-      UpdateLpPositionCredentialingArgs,
-      UpdateLpPositionCredentialingAccounts
-    >,
-  ): TransactionInstruction;
-  buildUpdateLpPositionCredentialingTx(
-    params: BuildTransactionParams<
-      UpdateLpPositionCredentialingArgs,
-      UpdateLpPositionCredentialingAccounts
-    >,
-  ): Transaction;
-  buildUpdateMemberEligibilityInstruction(
-    params: BuildInstructionParams<
-      UpdateMemberEligibilityArgs,
-      UpdateMemberEligibilityAccounts
-    >,
-  ): TransactionInstruction;
-  buildUpdateMemberEligibilityTx(
-    params: BuildTransactionParams<
-      UpdateMemberEligibilityArgs,
-      UpdateMemberEligibilityAccounts
-    >,
-  ): Transaction;
-  buildUpdateOracleProfileInstruction(
-    params: BuildInstructionParams<
-      UpdateOracleProfileArgs,
-      UpdateOracleProfileAccounts
-    >,
-  ): TransactionInstruction;
-  buildUpdateOracleProfileTx(
-    params: BuildTransactionParams<
-      UpdateOracleProfileArgs,
-      UpdateOracleProfileAccounts
-    >,
-  ): Transaction;
   buildUpdateReserveDomainControlsInstruction(
     params: BuildInstructionParams<
       UpdateReserveDomainControlsArgs,
@@ -2541,18 +947,6 @@ export interface ProtocolClient {
     params: BuildTransactionParams<
       UpdateReserveDomainControlsArgs,
       UpdateReserveDomainControlsAccounts
-    >,
-  ): Transaction;
-  buildVerifyOutcomeSchemaInstruction(
-    params: BuildInstructionParams<
-      VerifyOutcomeSchemaArgs,
-      VerifyOutcomeSchemaAccounts
-    >,
-  ): TransactionInstruction;
-  buildVerifyOutcomeSchemaTx(
-    params: BuildTransactionParams<
-      VerifyOutcomeSchemaArgs,
-      VerifyOutcomeSchemaAccounts
     >,
   ): Transaction;
   buildVersionPolicySeriesInstruction(
@@ -2567,88 +961,9 @@ export interface ProtocolClient {
       VersionPolicySeriesAccounts
     >,
   ): Transaction;
-  buildWithdrawPoolOracleFeeSolInstruction(
-    params: BuildInstructionParams<
-      WithdrawArgs,
-      WithdrawPoolOracleFeeSolAccounts
-    >,
-  ): TransactionInstruction;
-  buildWithdrawPoolOracleFeeSolTx(
-    params: BuildTransactionParams<
-      WithdrawArgs,
-      WithdrawPoolOracleFeeSolAccounts
-    >,
-  ): Transaction;
-  buildWithdrawPoolOracleFeeSplInstruction(
-    params: BuildInstructionParams<
-      WithdrawArgs,
-      WithdrawPoolOracleFeeSplAccounts
-    >,
-  ): TransactionInstruction;
-  buildWithdrawPoolOracleFeeSplTx(
-    params: BuildTransactionParams<
-      WithdrawArgs,
-      WithdrawPoolOracleFeeSplAccounts
-    >,
-  ): Transaction;
-  buildWithdrawPoolTreasurySolInstruction(
-    params: BuildInstructionParams<
-      WithdrawArgs,
-      WithdrawPoolTreasurySolAccounts
-    >,
-  ): TransactionInstruction;
-  buildWithdrawPoolTreasurySolTx(
-    params: BuildTransactionParams<
-      WithdrawArgs,
-      WithdrawPoolTreasurySolAccounts
-    >,
-  ): Transaction;
-  buildWithdrawPoolTreasurySplInstruction(
-    params: BuildInstructionParams<
-      WithdrawArgs,
-      WithdrawPoolTreasurySplAccounts
-    >,
-  ): TransactionInstruction;
-  buildWithdrawPoolTreasurySplTx(
-    params: BuildTransactionParams<
-      WithdrawArgs,
-      WithdrawPoolTreasurySplAccounts
-    >,
-  ): Transaction;
-  buildWithdrawProtocolFeeSolInstruction(
-    params: BuildInstructionParams<
-      WithdrawArgs,
-      WithdrawProtocolFeeSolAccounts
-    >,
-  ): TransactionInstruction;
-  buildWithdrawProtocolFeeSolTx(
-    params: BuildTransactionParams<
-      WithdrawArgs,
-      WithdrawProtocolFeeSolAccounts
-    >,
-  ): Transaction;
-  buildWithdrawProtocolFeeSplInstruction(
-    params: BuildInstructionParams<
-      WithdrawArgs,
-      WithdrawProtocolFeeSplAccounts
-    >,
-  ): TransactionInstruction;
-  buildWithdrawProtocolFeeSplTx(
-    params: BuildTransactionParams<
-      WithdrawArgs,
-      WithdrawProtocolFeeSplAccounts
-    >,
-  ): Transaction;
-  fetchAllocationLedger(
+  fetchCapitalContribution(
     address: PublicKeyish,
-  ): Promise<AllocationLedger | null>;
-  fetchAllocationPosition(
-    address: PublicKeyish,
-  ): Promise<AllocationPosition | null>;
-  fetchCapitalClass(address: PublicKeyish): Promise<CapitalClass | null>;
-  fetchClaimAttestation(
-    address: PublicKeyish,
-  ): Promise<ClaimAttestation | null>;
+  ): Promise<CapitalContribution | null>;
   fetchClaimCase(address: PublicKeyish): Promise<ClaimCase | null>;
   fetchDomainAssetLedger(
     address: PublicKeyish,
@@ -2661,49 +976,10 @@ export interface ProtocolClient {
     address: PublicKeyish,
   ): Promise<FundingLineLedger | null>;
   fetchHealthPlan(address: PublicKeyish): Promise<HealthPlan | null>;
-  fetchLPPosition(address: PublicKeyish): Promise<LPPosition | null>;
-  fetchLiquidityPool(address: PublicKeyish): Promise<LiquidityPool | null>;
-  fetchMemberPosition(address: PublicKeyish): Promise<MemberPosition | null>;
-  fetchMembershipAnchorSeat(
-    address: PublicKeyish,
-  ): Promise<MembershipAnchorSeat | null>;
   fetchObligation(address: PublicKeyish): Promise<Obligation | null>;
-  fetchOracleProfile(address: PublicKeyish): Promise<OracleProfile | null>;
-  fetchOutcomeSchema(address: PublicKeyish): Promise<OutcomeSchema | null>;
   fetchPlanReserveLedger(
     address: PublicKeyish,
   ): Promise<PlanReserveLedger | null>;
   fetchPolicySeries(address: PublicKeyish): Promise<PolicySeries | null>;
-  fetchPoolClassLedger(address: PublicKeyish): Promise<PoolClassLedger | null>;
-  fetchPoolOracleApproval(
-    address: PublicKeyish,
-  ): Promise<PoolOracleApproval | null>;
-  fetchPoolOracleFeeVault(
-    address: PublicKeyish,
-  ): Promise<PoolOracleFeeVault | null>;
-  fetchPoolOraclePermissionSet(
-    address: PublicKeyish,
-  ): Promise<PoolOraclePermissionSet | null>;
-  fetchPoolOraclePolicy(
-    address: PublicKeyish,
-  ): Promise<PoolOraclePolicy | null>;
-  fetchPoolTreasuryVault(
-    address: PublicKeyish,
-  ): Promise<PoolTreasuryVault | null>;
-  fetchProtocolFeeVault(
-    address: PublicKeyish,
-  ): Promise<ProtocolFeeVault | null>;
-  fetchProtocolGovernance(
-    address?: PublicKeyish,
-  ): Promise<ProtocolGovernance | null>;
-  fetchReserveAssetRail(
-    address: PublicKeyish,
-  ): Promise<ReserveAssetRail | null>;
   fetchReserveDomain(address: PublicKeyish): Promise<ReserveDomain | null>;
-  fetchSchemaDependencyLedger(
-    address: PublicKeyish,
-  ): Promise<SchemaDependencyLedger | null>;
-  fetchSeriesReserveLedger(
-    address: PublicKeyish,
-  ): Promise<SeriesReserveLedger | null>;
 }

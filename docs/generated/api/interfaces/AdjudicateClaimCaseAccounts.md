@@ -6,7 +6,7 @@
 
 # Interface: AdjudicateClaimCaseAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1252](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1252)
+Defined in: [src/generated/protocol\_types.ts:477](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L477)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1252](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1253](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1253)
+Defined in: [src/generated/protocol\_types.ts:478](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L478)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1253](https://github.com/OmegaX-He
 
 > **claim\_case**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1256](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1256)
+Defined in: [src/generated/protocol\_types.ts:480](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L480)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1256](https://github.com/OmegaX-He
 
 > **health\_plan**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1255](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1255)
+Defined in: [src/generated/protocol\_types.ts:479](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L479)
 
 ***
 
@@ -38,12 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:1255](https://github.com/OmegaX-He
 
 > `optional` **obligation?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1257](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1257)
-
-***
-
-### protocol\_governance
-
-> **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1254](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1254)
+Defined in: [src/generated/protocol\_types.ts:481](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L481)

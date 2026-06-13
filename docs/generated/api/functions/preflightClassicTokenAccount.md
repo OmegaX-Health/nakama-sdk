@@ -8,7 +8,7 @@
 
 > **preflightClassicTokenAccount**(`params`): `Promise`\<`void`\>
 
-Defined in: [src/protocol.ts:3303](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3303)
+Defined in: [src/protocol.ts:1777](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1777)
 
 ## Parameters
 

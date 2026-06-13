@@ -12,7 +12,7 @@ Use this page as the navigation hub for builders and release maintainers.
   - `GETTING_STARTED.md`
   - `WORKFLOWS.md`
   - `TROUBLESHOOTING.md`
-- Sponsor and capital integrators:
+- Sponsor and reserve integrators:
   - `WORKFLOWS.md`
   - `API_REFERENCE.md`
   - `RELEASE_NOTES.md`
@@ -20,7 +20,7 @@ Use this page as the navigation hub for builders and release maintainers.
 ## Core docs
 
 - `GETTING_STARTED.md` for client setup, path selection, and the shared unsigned transaction pattern
-- `WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
+- `WORKFLOWS.md` for oracle, app, sponsor, and reserve flows on the canonical surface
 - `TOP_APIS.md` for the shortest API list by builder lane
 - `RECIPES.md` for Node, Next.js, oracle-worker, and read-only frontend snippets
 - `ERROR_CATALOG.md` for stable `OMEGAX_*` error codes, causes, and fixes

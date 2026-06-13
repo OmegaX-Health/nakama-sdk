@@ -46,14 +46,11 @@ Safe-client public types:
 - `SafeProtocolClient`
 - `SafeFundSponsorBudgetTxParams`
 - `SafeRecordPremiumPaymentTxParams`
-- `SafeDepositIntoCapitalClassTxParams`
-- `SafeRequestRedemptionTxParams`
-- `SafeProcessRedemptionQueueTxParams`
+- `SafeOpenClaimCaseTxParams`
+- `SafeReserveObligationTxParams`
+- `SafeReleaseReserveTxParams`
 - `SafeSettleObligationTxParams`
 - `SafeSettleClaimCaseTxParams`
-- `SafeSettleClaimCaseSelectedAssetTxParams`
-- `SafeRegisterOracleTxParams`
-- `SafeAttestClaimCaseTxParams`
 
 ## RPC client
 
@@ -105,9 +102,8 @@ Raw generated builders are returned by `createProtocolClient(...)`.
 Use `createSafeProtocolClient(...)` for product and operator flows. It wraps the
 checked convenience builders, pins the canonical program ID by default, and
 preflights classic SPL token custody accounts when a `Connection` is available.
-The safe layer covers claim and settlement flows plus sponsor funding, premium
-payments, LP deposits, redemption requests, redemption queue processing, and
-protocol/pool/oracle fee-withdrawal builders.
+The safe layer covers claim-case intake, claim settlement, and obligation
+reserve/release/settle flows plus sponsor funding and premium payments.
 Safe settlement calls additionally require `recipientOwnerAddress` so the SDK
 can preflight the payout token-account owner, not only the vault and mint.
 `buildProtocolInstruction(...)`, `buildProtocolTransaction(...)`, and the raw
@@ -115,125 +111,73 @@ dynamic builders remain advanced APIs for protocol engineering and tests; they
 reject permissive numeric coercion and fixed-array length drift before Borsh
 encoding.
 
-### Governance and scoped controls
+The protocol surface is 21 instructions, grouped by lifecycle:
+reserve domains and asset vaults, health plans and policy series, funding lines,
+reserve capital movements, obligations, and the claim-case lifecycle.
 
-- `buildInitializeProtocolGovernanceTx(...)`
-- `buildRotateProtocolGovernanceAuthorityTx(...)`
-- `buildAcceptProtocolGovernanceAuthorityTx(...)`
-- `buildCancelProtocolGovernanceAuthorityTransferTx(...)`
-- `buildSetProtocolEmergencyPauseTx(...)`
+### Reserve domains and asset vaults
+
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
-- `buildConfigureReserveAssetRailTx(...)`
-- `buildPublishReserveAssetRailPriceTx(...)`
-- `buildInitProtocolFeeVaultTx(...)`
-- `buildWithdrawProtocolFeeSolTx(...)`
-- `buildWithdrawProtocolFeeSplTx(...)`
+
+### Health plans and policy series
+
 - `buildCreateHealthPlanTx(...)`
 - `buildUpdateHealthPlanControlsTx(...)`
 - `buildCreatePolicySeriesTx(...)`
-- `buildInitializeSeriesReserveLedgerTx(...)`
 - `buildVersionPolicySeriesTx(...)`
-- `buildOpenMemberPositionTx(...)`
-- `buildUpdateMemberEligibilityTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
 
-### Plan-side funding and obligations
+### Plan-side funding and reserve capital
 
 - `buildOpenFundingLineTx(...)`
 - `buildFundSponsorBudgetTx(...)`
 - `buildRecordPremiumPaymentTx(...)`
+- `buildDepositReserveCapitalTx(...)`
+- `buildRecordReserveEarningsTx(...)`
+- `buildReturnReserveCapitalTx(...)`
+
+### Obligations
+
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
-- `buildSettleObligationTx(...)`
 - `buildReleaseReserveTx(...)`
+- `buildSettleObligationTx(...)`
 
 ### Claim-case lifecycle
 
 - `buildOpenClaimCaseTx(...)`
-- `buildAttachClaimEvidenceRefTx(...)`
+- `buildAuthorizeClaimRecipientTx(...)`
 - `buildAdjudicateClaimCaseTx(...)`
 - `buildSettleClaimCaseTx(...)`
-- `buildSettleClaimCaseSelectedAssetTx(...)`
-- `buildAttestClaimCaseTx(...)`
-
-### LP capital and class lifecycle
-
-- `buildCreateLiquidityPoolTx(...)`
-- `buildInitPoolTreasuryVaultTx(...)`
-- `buildWithdrawPoolTreasurySolTx(...)`
-- `buildWithdrawPoolTreasurySplTx(...)`
-- `buildCreateCapitalClassTx(...)`
-- `buildUpdateCapitalClassControlsTx(...)`
-- `buildDepositIntoCapitalClassTx(...)`
-- `buildUpdateLpPositionCredentialingTx(...)`
-- `buildRequestRedemptionTx(...)`
-- `buildProcessRedemptionQueueTx(...)`
-
-### Allocation and impairment
-
-- `buildCreateAllocationPositionTx(...)`
-- `buildUpdateAllocationCapsTx(...)`
-- `buildAllocateCapitalTx(...)`
-- `buildDeallocateCapitalTx(...)`
-- `buildMarkImpairmentTx(...)`
-
-### Oracle and schema registry
-
-- `buildRegisterOracleTx(...)`
-- `buildClaimOracleTx(...)`
-- `buildUpdateOracleProfileTx(...)`
-- `buildSetPoolOracleTx(...)`
-- `buildSetPoolOraclePermissionsTx(...)`
-- `buildSetPoolOraclePolicyTx(...)`
-- `buildInitPoolOracleFeeVaultTx(...)`
-- `buildWithdrawPoolOracleFeeSolTx(...)`
-- `buildWithdrawPoolOracleFeeSplTx(...)`
-- `buildRegisterOutcomeSchemaTx(...)`
-- `buildVerifyOutcomeSchemaTx(...)`
-- `buildBackfillSchemaDependencyLedgerTx(...)`
-- `buildCloseOutcomeSchemaTx(...)`
 
 Every instruction also exposes a sibling `build...Instruction(...)` helper.
 
-Custody-sensitive builders now mirror the on-chain custody requirements directly. `buildCreateDomainAssetVaultTx(...)` derives the protocol-owned `domain_asset_vault_token` PDA, while sponsor funding, premium payments, obligation settlement, LP capital deposits, and redemption processing require source or recipient token accounts, the canonical vault token account, asset mint, and token program accounts. LP allocation reserve/release/settle/impairment helpers require pool class ledger, allocation position, and allocation ledger scope together rather than accepting partial optional account sets.
+Custody-sensitive builders mirror the on-chain custody requirements directly.
+`buildCreateDomainAssetVaultTx(...)` derives the protocol-owned
+`domain_asset_vault_token` PDA, while sponsor funding, premium payments, reserve
+capital deposits/returns/earnings, obligation settlement, and claim settlement
+require source or recipient token accounts, the canonical vault token account,
+asset mint, and token program accounts.
 
 ## Canonical account readers
 
-Returned by `createProtocolClient(...)`.
+Returned by `createProtocolClient(...)`. Each reader returns the typed account
+shape or `null` for an empty account. `fetchAccount(...)` and `decodeAccount(...)`
+provide a generic path keyed by account name, and `listProtocolAccountNames()`
+enumerates the same set at runtime.
 
-- `fetchProtocolGovernance(...)`
 - `fetchReserveDomain(...)`
 - `fetchDomainAssetVault(...)`
 - `fetchDomainAssetLedger(...)`
-- `fetchReserveAssetRail(...)`
 - `fetchHealthPlan(...)`
 - `fetchPlanReserveLedger(...)`
 - `fetchPolicySeries(...)`
-- `fetchSeriesReserveLedger(...)`
-- `fetchMemberPosition(...)`
-- `fetchMembershipAnchorSeat(...)`
 - `fetchFundingLine(...)`
 - `fetchFundingLineLedger(...)`
-- `fetchClaimCase(...)`
-- `fetchClaimAttestation(...)`
+- `fetchCapitalContribution(...)`
 - `fetchObligation(...)`
-- `fetchLiquidityPool(...)`
-- `fetchCapitalClass(...)`
-- `fetchPoolClassLedger(...)`
-- `fetchLPPosition(...)`
-- `fetchAllocationPosition(...)`
-- `fetchAllocationLedger(...)`
-- `fetchOracleProfile(...)`
-- `fetchPoolOracleApproval(...)`
-- `fetchPoolOracleFeeVault(...)`
-- `fetchPoolOraclePolicy(...)`
-- `fetchPoolOraclePermissionSet(...)`
-- `fetchPoolTreasuryVault(...)`
-- `fetchProtocolFeeVault(...)`
-- `fetchOutcomeSchema(...)`
-- `fetchSchemaDependencyLedger(...)`
+- `fetchClaimCase(...)`
 
 ## PDA helpers
 

@@ -26,35 +26,9 @@ Runnable starting points:
 
 ## Path A: Oracle and event producers
 
-Use this path when your service needs to normalize private inputs into OmegaX-compatible outcome events and policy-bound oracle actions.
+Use this path when your service needs to sign OmegaX-compatible outcome events and feed settlement-grade evidence into the claim lifecycle.
 
-### Workflow A1: Oracle and schema registry operations
-
-Use this when an operator needs to register oracle metadata, configure pool oracle controls, or manage the schema registry through the canonical protocol surface.
-
-Builders:
-
-- `buildRegisterOracleTx(...)`
-- `buildClaimOracleTx(...)`
-- `buildUpdateOracleProfileTx(...)`
-- `buildSetPoolOracleTx(...)`
-- `buildSetPoolOraclePermissionsTx(...)`
-- `buildSetPoolOraclePolicyTx(...)`
-- `buildRegisterOutcomeSchemaTx(...)`
-- `buildVerifyOutcomeSchemaTx(...)`
-- `buildBackfillSchemaDependencyLedgerTx(...)`
-- `buildCloseOutcomeSchemaTx(...)`
-
-Readers:
-
-- `fetchOracleProfile(...)`
-- `fetchPoolOracleApproval(...)`
-- `fetchPoolOraclePolicy(...)`
-- `fetchPoolOraclePermissionSet(...)`
-- `fetchOutcomeSchema(...)`
-- `fetchSchemaDependencyLedger(...)`
-
-### Workflow A2: Oracle attestation services
+### Workflow A1: Oracle attestation services
 
 Use this when an external oracle worker or service needs a stable signing surface for outcome attestations before it forwards them into downstream transport or settlement systems.
 
@@ -72,26 +46,16 @@ the signed payload to network, program ID, health plan, funding line, claim
 case, schema key hash, audience, nonce, issue time, as-of time, and expiry.
 Use `verifyProtocolOracleAttestation(...)` before settlement intake so the SDK
 checks signature, trusted expected verifier identity, expiry, expected
-network/program/account IDs, audience, nonce, and optional
-pool/class/allocation scope together. Generic
+network/program/account IDs, audience, and nonce together. Generic
 `attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
 non-settlement telemetry.
-Verifier calls reject unexpected optional policy/pool/class/allocation scope by
-default; pass the expected scope fields for settlement, or set
-`allowUnexpectedOptionalScope` only for non-settlement wildcard consumers.
+
+Off-chain attestations bind to a claim case by hash; the on-chain decision is
+recorded by the plan's claims operator through `buildAdjudicateClaimCaseTx(...)`,
+which carries the evidence and decision-support hashes into protocol state.
 
 See `examples/oracle-attestation.ts` for an offline KMS-adapter example that
 does not require secrets or a funded signer.
-
-On-chain claim-case attestations use `buildAttestClaimCaseTx(...)`. The helper now mirrors the expanded protocol account list: pass the oracle signer, `healthPlanAddress`, writable `claimCaseAddress`, `fundingLineAddress`, and schema hashes. When the claim is scoped to pool capital, also pass the liquidity pool and capital class so the SDK can derive the allocation and pool-oracle scope accounts together; partial pool scope is rejected.
-
-Useful constants:
-
-- `CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE`
-- `CLAIM_ATTESTATION_DECISION_SUPPORT_DENY`
-- `CLAIM_ATTESTATION_DECISION_REQUEST_REVIEW`
-- `CLAIM_ATTESTATION_DECISION_ABSTAIN`
-- `POOL_ORACLE_PERMISSION_ATTEST_CLAIM`
 
 ## Path B: Health / wallet / app builders
 
@@ -105,12 +69,12 @@ Builders:
 
 - `buildRecordPremiumPaymentTx(...)`
 - `buildOpenClaimCaseTx(...)`
-- `buildAttachClaimEvidenceRefTx(...)`
+- `buildAuthorizeClaimRecipientTx(...)`
 - `buildAdjudicateClaimCaseTx(...)`
 - `buildSettleClaimCaseTx(...)`
-- `buildSettleClaimCaseSelectedAssetTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
+- `buildReleaseReserveTx(...)`
 - `buildSettleObligationTx(...)`
 
 Readers:
@@ -119,7 +83,6 @@ Readers:
 - `fetchObligation(...)`
 - `fetchFundingLineLedger(...)`
 - `fetchPlanReserveLedger(...)`
-- `fetchSeriesReserveLedger(...)`
 
 Failure helpers:
 
@@ -144,72 +107,50 @@ Helpers:
 - `describeObligationStatus(...)`
 - `shortenAddress(...)`
 
-Note:
+## Path C: Sponsor and reserve integrators
 
-- `buildOpenMemberPositionTx(...)` lives in the sponsor-funded plan workflow below because the same canonical builder can be used by app-facing products or sponsor-controlled products depending on plan configuration.
+Use this path when you need to create the settlement boundary, launch sponsor programs, and fund plan reserves.
 
-## Path C: Sponsor and capital integrators
-
-Use this path when you need to create the settlement boundary, launch sponsor programs, or connect LP capital to those lanes.
-
-### Workflow C1: Governance and reserve-domain bootstrap
+### Workflow C1: Reserve-domain and asset-vault bootstrap
 
 Use this when preparing the settlement boundary for a new domain and asset.
 
 `buildCreateDomainAssetVaultTx(...)` derives the protocol-owned SPL vault token account at the canonical `domain_asset_vault_token` PDA. Do not create or pass an admin-owned token account; the protocol initializes the PDA-owned account inline.
 
-Reserve asset rails are first-class protocol objects. Use `buildConfigureReserveAssetRailTx(...)` to set the role, oracle source, decimals, and bounds for an asset, then `buildPublishReserveAssetRailPriceTx(...)` when a governance or oracle source publishes the current reserve price. `deriveReserveAssetRailPda(...)` gives clients the canonical rail address for reads and instruction accounts.
-
 Builders:
 
-- `buildInitializeProtocolGovernanceTx(...)`
-- `buildRotateProtocolGovernanceAuthorityTx(...)`
-- `buildAcceptProtocolGovernanceAuthorityTx(...)`
-- `buildCancelProtocolGovernanceAuthorityTransferTx(...)`
-- `buildSetProtocolEmergencyPauseTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildUpdateReserveDomainControlsTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
-- `buildConfigureReserveAssetRailTx(...)`
-- `buildPublishReserveAssetRailPriceTx(...)`
-- `buildInitProtocolFeeVaultTx(...)`
-- `buildWithdrawProtocolFeeSolTx(...)`
-- `buildWithdrawProtocolFeeSplTx(...)`
-- `buildInitPoolTreasuryVaultTx(...)`
-- `buildInitPoolOracleFeeVaultTx(...)`
 
 Readers:
 
-- `fetchProtocolGovernance(...)`
 - `fetchReserveDomain(...)`
 - `fetchDomainAssetVault(...)`
 - `fetchDomainAssetLedger(...)`
-- `fetchReserveAssetRail(...)`
 
 PDA helpers:
 
-- `deriveReserveAssetRailPda(...)`
-- `deriveProtocolFeeVaultPda(...)`
-- `derivePoolTreasuryVaultPda(...)`
-- `derivePoolOracleFeeVaultPda(...)`
+- `deriveReserveDomainPda(...)`
+- `deriveDomainAssetVaultPda(...)`
+- `deriveDomainAssetVaultTokenAccountPda(...)`
+- `deriveDomainAssetLedgerPda(...)`
 
 ### Workflow C2: Sponsor-funded health plan
 
-Use this for sponsor budgets, reward programs, or early-stage plans that do not need LP capital.
+Use this for sponsor budgets, reward programs, and plans funded from sponsor budgets, premium income, and reserve capital contributions.
 
-Sponsor budget, premium, and obligation-settlement builders now move tokens as
+Sponsor budget, premium, reserve-capital, and settlement builders move tokens as
 part of the instruction. Provide the payer source or payout recipient token
 account, the canonical domain vault token account, the asset mint, and the token
-program alongside the reserve ledgers. Premium and claim-settlement fee flows
-also require the matching protocol or oracle fee-vault accounts when fees are
-configured.
+program alongside the reserve ledgers.
 
 Product integrations should prefer `createSafeProtocolClient(...)` for sponsor
-funding, premium payment, settlement, fee withdrawal, and treasury withdrawal
-flows. The safe layer derives PDA-owned vaults, enforces classic SPL Token
-accounts, and preflights token-account mint/owner where a `Connection` is
-available. Safe settlement additionally requires `recipientOwnerAddress` so the
-payout token account owner is checked before signing.
+funding, premium payment, and settlement flows. The safe layer derives
+PDA-owned vaults, enforces classic SPL Token accounts, and preflights
+token-account mint/owner where a `Connection` is available. Safe settlement
+additionally requires `recipientOwnerAddress` so the payout token account owner
+is checked before signing.
 
 `buildOpenClaimCaseTx(...)` requires an explicit `claimantAddress` or
 `memberWalletAddress`; operator-submitted claims never default the claimant to
@@ -220,97 +161,38 @@ Builders:
 - `buildCreateHealthPlanTx(...)`
 - `buildUpdateHealthPlanControlsTx(...)`
 - `buildCreatePolicySeriesTx(...)`
-- `buildInitializeSeriesReserveLedgerTx(...)`
 - `buildVersionPolicySeriesTx(...)`
-- `buildOpenMemberPositionTx(...)`
-- `buildUpdateMemberEligibilityTx(...)`
 - `buildOpenFundingLineTx(...)`
 - `buildFundSponsorBudgetTx(...)`
 - `buildRecordPremiumPaymentTx(...)`
+- `buildDepositReserveCapitalTx(...)`
+- `buildRecordReserveEarningsTx(...)`
+- `buildReturnReserveCapitalTx(...)`
 - `buildOpenClaimCaseTx(...)`
+- `buildAuthorizeClaimRecipientTx(...)`
 - `buildAdjudicateClaimCaseTx(...)`
 - `buildSettleClaimCaseTx(...)`
-- `buildSettleClaimCaseSelectedAssetTx(...)`
 - `buildCreateObligationTx(...)`
 - `buildReserveObligationTx(...)`
-- `buildSettleObligationTx(...)`
 - `buildReleaseReserveTx(...)`
+- `buildSettleObligationTx(...)`
 
 Readers:
 
 - `fetchHealthPlan(...)`
 - `fetchPolicySeries(...)`
-- `fetchMemberPosition(...)`
 - `fetchFundingLine(...)`
 - `fetchFundingLineLedger(...)`
+- `fetchCapitalContribution(...)`
 - `fetchClaimCase(...)`
 - `fetchPlanReserveLedger(...)`
-- `fetchSeriesReserveLedger(...)`
 - `fetchObligation(...)`
 
 Reserve helpers:
 
 - `recomputeReserveBalanceSheet(...)`
 - `buildSponsorReadModel(...)`
-
-### Workflow C3: LP capital, classes, and redemptions
-
-Use this when capital providers enter through canonical liquidity pools and capital classes.
-
-LP deposits now transfer the deposited asset into the configured domain vault before shares are credited. Redemption requests and queue processing pass shares only; the program derives asset payout from class NAV and queued redemption state.
-
-Product integrations should use `createSafeProtocolClient(...)` for LP deposits,
-redemption requests, and redemption queue processing so pool class ledger, LP
-position, vault, and treasury accounts are derived consistently instead of being
-supplied piecemeal.
-
-Builders:
-
-- `buildCreateLiquidityPoolTx(...)`
-- `buildCreateCapitalClassTx(...)`
-- `buildUpdateCapitalClassControlsTx(...)`
-- `buildDepositIntoCapitalClassTx(...)`
-- `buildUpdateLpPositionCredentialingTx(...)`
-- `buildRequestRedemptionTx(...)`
-- `buildProcessRedemptionQueueTx(...)`
-
-Readers:
-
-- `fetchLiquidityPool(...)`
-- `fetchCapitalClass(...)`
-- `fetchPoolClassLedger(...)`
-- `fetchLPPosition(...)`
-- `fetchDomainAssetLedger(...)`
-
-Reserve helpers:
-
-- `recomputeReserveBalanceSheet(...)`
 - `buildCapitalReadModel(...)`
-
-### Workflow C4: Allocation and impairment
-
-Use this when LP capital is bridged into plan-side funding lines.
-
-Reserve, release, settlement, and impairment builders reject partial LP
-allocation scope. Provide capital class, allocation position, and pool asset
-mint together so the SDK can include the matching `PoolClassLedger`,
-`AllocationPosition`, and `AllocationLedger` accounts together.
-
-Builders:
-
-- `buildCreateAllocationPositionTx(...)`
-- `buildUpdateAllocationCapsTx(...)`
-- `buildAllocateCapitalTx(...)`
-- `buildDeallocateCapitalTx(...)`
-- `buildMarkImpairmentTx(...)`
-
-Readers:
-
-- `fetchAllocationPosition(...)`
-- `fetchAllocationLedger(...)`
-- `fetchCapitalClass(...)`
-- `fetchFundingLine(...)`
-- `fetchObligation(...)`
 
 ## Local release preflight
 

@@ -6,7 +6,7 @@
 
 # Interface: ReserveDomainCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:1076](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1076)
+Defined in: [src/generated/protocol\_types.ts:407](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L407)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1076](https://github.com/OmegaX-He
 
 > **domain\_admin**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1078](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1078)
+Defined in: [src/generated/protocol\_types.ts:409](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L409)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1078](https://github.com/OmegaX-He
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:1077](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1077)
+Defined in: [src/generated/protocol\_types.ts:408](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L408)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:1077](https://github.com/OmegaX-He
 
 > **settlement\_mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:1079](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1079)
+Defined in: [src/generated/protocol\_types.ts:410](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L410)

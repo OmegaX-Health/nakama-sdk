@@ -6,7 +6,7 @@
 
 # Interface: RecordPremiumPaymentArgs
 
-Defined in: [src/generated/protocol\_types.ts:956](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L956)
+Defined in: [src/generated/protocol\_types.ts:365](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L365)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:956](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:957](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L957)
+Defined in: [src/generated/protocol\_types.ts:366](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L366)

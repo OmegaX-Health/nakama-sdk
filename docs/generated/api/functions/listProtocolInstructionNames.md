@@ -8,7 +8,7 @@
 
 > **listProtocolInstructionNames**(): [`ProtocolInstructionName`](../type-aliases/ProtocolInstructionName.md)[]
 
-Defined in: [src/protocol.ts:271](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L271)
+Defined in: [src/protocol.ts:237](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L237)
 
 ## Returns
 

@@ -6,7 +6,7 @@
 
 # Interface: ReserveObligationArgs
 
-Defined in: [src/generated/protocol\_types.ts:1082](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1082)
+Defined in: [src/generated/protocol\_types.ts:413](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L413)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:1082](https://github.com/OmegaX-He
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1083](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1083)
+Defined in: [src/generated/protocol\_types.ts:414](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L414)
