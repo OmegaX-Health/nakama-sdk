@@ -8,7 +8,7 @@
 
 > **deriveMemberPositionPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:280](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L280)
+Defined in: [src/protocol\_seeds.ts:281](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L281)
 
 ## Parameters
 

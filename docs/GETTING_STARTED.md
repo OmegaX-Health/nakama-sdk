@@ -46,9 +46,9 @@ npx tsx devnet-smoke.ts
 
 ## Choose your builder path
 
-- Oracle and event producers: register oracle operators, configure pool policy, and package compatible outcome attestations.
-- Health / wallet / app builders: read member, claim, and payout state, then build user-facing enrollment or claim flows.
-- Sponsor and capital integrators: launch reserve domains, reserve asset rails, plans, funding lines, pools, classes, allocation flows, and reserve-backed settlement on the canonical surface.
+- Oracle and event producers: sign compatible outcome attestations and feed settlement-grade evidence into the claim lifecycle.
+- Health / wallet / app builders: read claim, obligation, and payout state, then build user-facing claim flows.
+- Sponsor and reserve integrators: launch reserve domains, asset vaults, plans, policy series, funding lines, reserve capital, and reserve-backed settlement on the canonical surface.
 
 ## Create clients
 
@@ -147,19 +147,13 @@ allow blockhash-only refresh when every non-blockhash byte still matches.
 
 Start here when your service needs to turn private or messy inputs into OmegaX-compatible outcome events.
 
-Relevant builders and helpers:
+Relevant helpers:
 
-- `buildRegisterOracleTx(...)`
-- `buildClaimOracleTx(...)`
-- `buildUpdateOracleProfileTx(...)`
-- `buildSetPoolOracleTx(...)`
-- `buildSetPoolOraclePermissionsTx(...)`
-- `buildSetPoolOraclePolicyTx(...)`
-- `buildAttestClaimCaseTx(...)`
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
 - `attestOutcome(...)`
 - `attestProtocolOutcome(...)`
+- `verifyOracleAttestation(...)`
 - `verifyProtocolOracleAttestation(...)`
 
 Then continue with:
@@ -174,9 +168,8 @@ Start here when your product needs to show users what they hold, what happened, 
 
 Relevant builders and helpers:
 
-- `buildOpenMemberPositionTx(...)`
 - `buildOpenClaimCaseTx(...)`
-- `buildAttachClaimEvidenceRefTx(...)`
+- `buildAuthorizeClaimRecipientTx(...)`
 - `buildMemberReadModel(...)`
 - `describeEligibilityStatus(...)`
 - `describeClaimStatus(...)`
@@ -188,26 +181,23 @@ Then continue with:
 - [API Reference](API_REFERENCE.md)
 - [Troubleshooting](TROUBLESHOOTING.md)
 
-## Path C: Sponsor and capital integrators
+## Path C: Sponsor and reserve integrators
 
-Start here when you need to create settlement boundaries, plan lanes, or LP capital flows on the canonical model.
+Start here when you need to create settlement boundaries, plan lanes, and reserve-backed settlement on the canonical model.
 
-Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, provide source and vault token accounts for funding or deposits, and let redemption payout amounts be derived by the protocol instead of supplying asset amounts from the client. Use the safe client for sponsor funding, premium payments, settlement, LP deposits, redemption requests, queue processing, and fee/treasury withdrawals so PDA derivation, classic SPL token guards, and token-account preflights stay in one place. Safe settlement calls also require `recipientOwnerAddress` to preflight payout token-account ownership before signing.
+Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, then provide source and vault token accounts for sponsor funding, premium payments, and reserve capital deposits. Use the safe client for sponsor funding, premium payments, and settlement so PDA derivation, classic SPL token guards, and token-account preflights stay in one place. Safe settlement calls also require `recipientOwnerAddress` to preflight payout token-account ownership before signing.
 
 Example: derive canonical addresses for a sponsor-side deployment:
 
 ```ts
 import {
-  deriveProtocolGovernancePda,
   deriveReserveDomainPda,
-  deriveReserveAssetRailPda,
   deriveDomainAssetVaultTokenAccountPda,
   deriveHealthPlanPda,
   derivePolicySeriesPda,
   deriveFundingLinePda,
 } from '@omegax/protocol-sdk';
 
-const protocolGovernance = deriveProtocolGovernancePda(programId).toBase58();
 const reserveDomain = deriveReserveDomainPda({
   domainId: 'open-usdc-domain',
   programId,
@@ -218,11 +208,6 @@ const healthPlan = deriveHealthPlanPda({
   programId,
 }).toBase58();
 const vaultTokenAccount = deriveDomainAssetVaultTokenAccountPda({
-  reserveDomain,
-  assetMint: process.env.ASSET_MINT!,
-  programId,
-}).toBase58();
-const reserveAssetRail = deriveReserveAssetRailPda({
   reserveDomain,
   assetMint: process.env.ASSET_MINT!,
   programId,
@@ -241,21 +226,15 @@ const fundingLine = deriveFundingLinePda({
 
 Relevant builders and helpers:
 
-- `buildInitializeProtocolGovernanceTx(...)`
-- `buildAcceptProtocolGovernanceAuthorityTx(...)`
-- `buildCancelProtocolGovernanceAuthorityTransferTx(...)`
 - `buildCreateReserveDomainTx(...)`
 - `buildCreateDomainAssetVaultTx(...)`
-- `buildConfigureReserveAssetRailTx(...)`
 - `buildCreateHealthPlanTx(...)`
 - `buildCreatePolicySeriesTx(...)`
-- `buildInitializeSeriesReserveLedgerTx(...)`
+- `buildVersionPolicySeriesTx(...)`
 - `buildOpenFundingLineTx(...)`
+- `buildDepositReserveCapitalTx(...)`
 - `buildSettleClaimCaseTx(...)`
-- `buildSettleClaimCaseSelectedAssetTx(...)`
-- `buildCreateLiquidityPoolTx(...)`
-- `buildCreateCapitalClassTx(...)`
-- `buildCreateAllocationPositionTx(...)`
+- `buildSettleObligationTx(...)`
 - `recomputeReserveBalanceSheet(...)`
 
 Then continue with:

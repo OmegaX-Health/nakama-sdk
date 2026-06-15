@@ -6,7 +6,7 @@
 
 # Interface: CreateDomainAssetVaultAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1358](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1358)
+Defined in: [src/generated/protocol\_types.ts:489](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L489)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1358](https://github.com/OmegaX-He
 
 > **asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1364](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1364)
+Defined in: [src/generated/protocol\_types.ts:494](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L494)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:1364](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1359](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1359)
+Defined in: [src/generated/protocol\_types.ts:490](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L490)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:1359](https://github.com/OmegaX-He
 
 > **domain\_asset\_ledger**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1363](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1363)
+Defined in: [src/generated/protocol\_types.ts:493](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L493)
 
 ***
 
@@ -38,15 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:1363](https://github.com/OmegaX-He
 
 > **domain\_asset\_vault**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1362](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1362)
-
-***
-
-### protocol\_governance
-
-> **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1360](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1360)
+Defined in: [src/generated/protocol\_types.ts:492](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L492)
 
 ***
 
@@ -54,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:1360](https://github.com/OmegaX-He
 
 > **reserve\_domain**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1361](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1361)
+Defined in: [src/generated/protocol\_types.ts:491](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L491)
 
 ***
 
@@ -62,15 +54,15 @@ Defined in: [src/generated/protocol\_types.ts:1361](https://github.com/OmegaX-He
 
 > `optional` **system\_program?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1367](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1367)
+Defined in: [src/generated/protocol\_types.ts:497](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L497)
 
 ***
 
-### token\_program
+### token\_program?
 
-> **token\_program**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
+> `optional` **token\_program?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1366](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1366)
+Defined in: [src/generated/protocol\_types.ts:496](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L496)
 
 ***
 
@@ -78,4 +70,4 @@ Defined in: [src/generated/protocol\_types.ts:1366](https://github.com/OmegaX-He
 
 > **vault\_token\_account**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1365](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1365)
+Defined in: [src/generated/protocol\_types.ts:495](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L495)

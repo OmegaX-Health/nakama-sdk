@@ -8,4 +8,4 @@
 
 > **SafeReleaseReserveTxParams** = `Omit`\<`Parameters`\<*typeof* [`buildReleaseReserveTx`](../functions/buildReleaseReserveTx.md)\>\[`0`\], `"programId"`\>
 
-Defined in: [src/protocol.ts:3441](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3441)
+Defined in: [src/protocol.ts:1879](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1879)

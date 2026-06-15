@@ -8,4 +8,4 @@
 
 > `const` **SEED\_POOL\_ORACLE\_PERMISSION\_SET**: `"pool_oracle_permission_set"` = `'pool_oracle_permission_set'`
 
-Defined in: [src/protocol\_seeds.ts:39](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L39)
+Defined in: [src/protocol\_seeds.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L40)

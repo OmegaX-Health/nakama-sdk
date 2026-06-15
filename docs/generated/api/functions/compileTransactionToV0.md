@@ -8,7 +8,7 @@
 
 > **compileTransactionToV0**(`transaction`, `lookupTableAccounts`): `VersionedTransaction`
 
-Defined in: [src/protocol.ts:3279](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L3279)
+Defined in: [src/protocol.ts:1753](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1753)
 
 ## Parameters
 

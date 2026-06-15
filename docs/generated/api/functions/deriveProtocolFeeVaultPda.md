@@ -8,7 +8,7 @@
 
 > **deriveProtocolFeeVaultPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:518](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L518)
+Defined in: [src/protocol\_seeds.ts:534](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L534)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **buildAdjudicateClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:2083](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L2083)
+Defined in: [src/protocol.ts:961](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L961)
 
 ## Parameters
 
@@ -33,6 +33,10 @@ Defined in: [src/protocol.ts:2083](https://github.com/OmegaX-Health/omegax-sdk/b
 #### deniedAmount
 
 `bigint`
+
+#### evidenceRefHashHex?
+
+`string` \| `null`
 
 #### healthPlanAddress
 

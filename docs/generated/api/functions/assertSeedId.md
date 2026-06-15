@@ -8,7 +8,7 @@
 
 > **assertSeedId**(`value`, `label?`): `void`
 
-Defined in: [src/protocol\_seeds.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L60)
+Defined in: [src/protocol\_seeds.ts:61](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L61)
 
 ## Parameters
 

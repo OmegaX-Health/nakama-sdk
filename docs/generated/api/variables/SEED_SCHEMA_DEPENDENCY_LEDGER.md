@@ -8,4 +8,4 @@
 
 > `const` **SEED\_SCHEMA\_DEPENDENCY\_LEDGER**: `"schema_dependency_ledger"` = `'schema_dependency_ledger'`
 
-Defined in: [src/protocol\_seeds.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L44)
+Defined in: [src/protocol\_seeds.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L45)

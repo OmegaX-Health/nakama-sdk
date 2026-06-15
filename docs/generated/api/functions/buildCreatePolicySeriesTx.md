@@ -8,7 +8,7 @@
 
 > **buildCreatePolicySeriesTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:964](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L964)
+Defined in: [src/protocol.ts:570](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L570)
 
 ## Parameters
 

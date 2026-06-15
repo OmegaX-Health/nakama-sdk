@@ -62,6 +62,21 @@ read-only unless their own help text says otherwise:
 - `npm run verify:protocol:local`
 - `npm run docs:sync:update`
 
+## Review And Governance Routing
+
+Release governance checks are not SDK PR code-review requests. They verify the
+protected branch and publish environment when release state matters.
+
+- Do not ask Codex, GitHub Copilot, or another automated review bot to review a
+  routine SDK PR by default.
+- Do not leave quota, usage-limit, or "review unavailable" comments as blockers;
+  skip the bot request and report the local commands that ran.
+- Use `npm run security:release-governance` for static workflow/governance
+  validation, and `npm run security:release-governance:live` only when live
+  GitHub release evidence is needed.
+- Use human review through CODEOWNERS, branch protection, or `npm-production`
+  approval only where those protected paths require it.
+
 ## Mutating Live Setup
 
 These commands can change external configuration only when explicit apply flags

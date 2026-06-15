@@ -6,7 +6,7 @@
 
 # Interface: LedgerInitializedEvent
 
-Defined in: [src/generated/protocol\_types.ts:557](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L557)
+Defined in: [src/generated/protocol\_types.ts:262](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L262)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:557](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:560](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L560)
+Defined in: [src/generated/protocol\_types.ts:265](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L265)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:560](https://github.com/OmegaX-Hea
 
 > **scope**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:559](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L559)
+Defined in: [src/generated/protocol\_types.ts:264](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L264)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:559](https://github.com/OmegaX-Hea
 
 > **scope\_kind**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:558](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L558)
+Defined in: [src/generated/protocol\_types.ts:263](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L263)

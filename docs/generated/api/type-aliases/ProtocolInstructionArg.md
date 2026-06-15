@@ -8,7 +8,7 @@
 
 > **ProtocolInstructionArg** = `object`
 
-Defined in: [src/generated/protocol\_contract.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L69)
+Defined in: [src/generated/protocol\_contract.ts:28](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L28)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/generated/protocol\_contract.ts:69](https://github.com/OmegaX-H
 
 > **name**: `string`
 
-Defined in: [src/generated/protocol\_contract.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L70)
+Defined in: [src/generated/protocol\_contract.ts:29](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L29)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [src/generated/protocol\_contract.ts:70](https://github.com/OmegaX-H
 
 > **type**: `unknown`
 
-Defined in: [src/generated/protocol\_contract.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L71)
+Defined in: [src/generated/protocol\_contract.ts:30](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L30)

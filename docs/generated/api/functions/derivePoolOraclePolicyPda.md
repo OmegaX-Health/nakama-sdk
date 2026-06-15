@@ -8,7 +8,7 @@
 
 > **derivePoolOraclePolicyPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:490](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L490)
+Defined in: [src/protocol\_seeds.ts:506](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L506)
 
 ## Parameters
 

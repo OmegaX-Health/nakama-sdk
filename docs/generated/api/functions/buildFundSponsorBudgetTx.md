@@ -8,7 +8,7 @@
 
 > **buildFundSponsorBudgetTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1272](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1272)
+Defined in: [src/protocol.ts:795](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L795)
 
 ## Parameters
 

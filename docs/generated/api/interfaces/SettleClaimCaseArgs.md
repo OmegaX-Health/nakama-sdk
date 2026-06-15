@@ -6,7 +6,7 @@
 
 # Interface: SettleClaimCaseArgs
 
-Defined in: [src/generated/protocol\_types.ts:1142](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1142)
+Defined in: [src/generated/protocol\_types.ts:431](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L431)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:1142](https://github.com/OmegaX-He
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1143](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1143)
+Defined in: [src/generated/protocol\_types.ts:432](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L432)

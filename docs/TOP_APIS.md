@@ -11,7 +11,7 @@ Start here for member-facing apps, wallets, and agent surfaces.
 - `createSafeProtocolClient(...)`
 - `deriveReserveDomainPda(...)`
 - `deriveHealthPlanPda(...)`
-- `deriveMemberPositionPda(...)`
+- `derivePolicySeriesPda(...)`
 - `deriveClaimCasePda(...)`
 - `buildMemberReadModel(...)`
 - `validateSignedClaimTx(...)`
@@ -39,7 +39,8 @@ claim state, and typed SDK failures.
 - `listProtocolInstructionNames(...)`
 - `listProtocolAccountNames(...)`
 - `buildOpenClaimCaseTx(...)`
-- `buildAttestClaimCaseTx(...)`
+- `buildAuthorizeClaimRecipientTx(...)`
+- `buildAdjudicateClaimCaseTx(...)`
 - `OmegaXError`
 - `OmegaXProgramMismatchError`
 - `OmegaXAccountNotFoundError`
@@ -56,12 +57,10 @@ Start here for services that attest outcomes or claim-case evidence.
 
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
+- `attestOutcome(...)`
 - `attestProtocolOutcome(...)`
+- `verifyOracleAttestation(...)`
 - `verifyProtocolOracleAttestation(...)`
-- `buildRegisterOracleTx(...)`
-- `buildClaimOracleTx(...)`
-- `buildSetPoolOraclePolicyTx(...)`
-- `buildAttestClaimCaseTx(...)`
 
 Starter:
 
@@ -69,21 +68,20 @@ Starter:
 npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
 ```
 
-## Sponsor / Capital Operator
+## Sponsor / Reserve Operator
 
-Start here for reserve, sponsor, premium, LP, allocation, and redemption flows.
+Start here for reserve domain, sponsor, premium, reserve-capital, and settlement flows.
 
 - `createSafeProtocolClient(...)`
 - `deriveDomainAssetVaultPda(...)`
 - `deriveDomainAssetVaultTokenAccountPda(...)`
-- `deriveReserveAssetRailPda(...)`
 - `buildSponsorReadModel(...)`
 - `buildCapitalReadModel(...)`
 - `buildFundSponsorBudgetTx(...)`
 - `buildRecordPremiumPaymentTx(...)`
-- `buildDepositIntoCapitalClassTx(...)`
-- `buildRequestRedemptionTx(...)`
-- `buildProcessRedemptionQueueTx(...)`
+- `buildDepositReserveCapitalTx(...)`
+- `buildRecordReserveEarningsTx(...)`
+- `buildReturnReserveCapitalTx(...)`
 - `buildSettleObligationTx(...)`
 
 Use the safe client for these flows. Raw `createProtocolClient(...)`,

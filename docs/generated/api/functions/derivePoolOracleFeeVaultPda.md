@@ -8,7 +8,7 @@
 
 > **derivePoolOracleFeeVaultPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:548](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L548)
+Defined in: [src/protocol\_seeds.ts:564](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L564)
 
 ## Parameters
 

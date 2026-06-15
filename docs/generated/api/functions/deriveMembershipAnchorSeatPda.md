@@ -8,7 +8,7 @@
 
 > **deriveMembershipAnchorSeatPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:297](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L297)
+Defined in: [src/protocol\_seeds.ts:298](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L298)
 
 ## Parameters
 

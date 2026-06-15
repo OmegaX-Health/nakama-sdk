@@ -8,13 +8,13 @@
   },
   "protocol": {
     "sourceRepo": "../omegax-protocol",
-    "bindingRefreshCommit": "763c7da",
-    "programId": "Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B",
-    "contractSha256": "f95822562b0c1f1b2d5bddde10f63d98d49dca7135c879011e432d0706735222",
+    "bindingRefreshCommit": "434ee42d",
+    "programId": "6EXiDfGVbG7V1X2xaEALDZ7CtSuezkM8ZvXXFpk5WxQM",
+    "contractSha256": "9c7eb5d1484f21c064e560d7ecd80060b61f564496565fb28036e074952bb9fc",
     "surface": {
-      "instructions": 62,
-      "accounts": 31,
-      "types": 122
+      "instructions": 21,
+      "accounts": 11,
+      "types": 43
     },
     "parityCommand": "npm run verify:protocol:local"
   },

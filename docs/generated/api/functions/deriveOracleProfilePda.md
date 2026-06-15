@@ -8,7 +8,7 @@
 
 > **deriveOracleProfilePda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:462](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L462)
+Defined in: [src/protocol\_seeds.ts:478](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L478)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: AuthorizeClaimRecipientArgs
 
-Defined in: [src/generated/protocol\_types.ts:130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L130)
+Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L59)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:130](https://github.com/OmegaX-Hea
 
 > **delegate\_recipient**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L131)
+Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L60)

@@ -8,7 +8,7 @@
 
 > **SettlementOutflowAccounts** = `object`
 
-Defined in: [src/protocol.ts:596](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L596)
+Defined in: [src/protocol.ts:423](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L423)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol.ts:596](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > **memberPositionAddress**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/protocol.ts:597](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L597)
+Defined in: [src/protocol.ts:424](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L424)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol.ts:597](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **oracleFeeAttestationAddress?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/protocol.ts:604](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L604)
+Defined in: [src/protocol.ts:431](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L431)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol.ts:604](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **poolOracleFeeVaultAddress?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/protocol.ts:602](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L602)
+Defined in: [src/protocol.ts:429](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L429)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol.ts:602](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **poolOraclePolicyAddress?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/protocol.ts:603](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L603)
+Defined in: [src/protocol.ts:430](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L430)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/protocol.ts:603](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > **recipientTokenAccountAddress**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/protocol.ts:600](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L600)
+Defined in: [src/protocol.ts:427](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L427)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol.ts:600](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **reserveAssetRailAddress?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/protocol.ts:598](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L598)
+Defined in: [src/protocol.ts:425](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L425)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/protocol.ts:598](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > **tokenProgramId**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/protocol.ts:601](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L601)
+Defined in: [src/protocol.ts:428](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L428)
 
 ***
 
@@ -72,4 +72,4 @@ Defined in: [src/protocol.ts:601](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > **vaultTokenAccountAddress**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/protocol.ts:599](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L599)
+Defined in: [src/protocol.ts:426](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L426)

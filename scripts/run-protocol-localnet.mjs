@@ -33,7 +33,12 @@ const localnetPhaseAttempts = Math.max(
 const protocolProgramId =
   process.env.PROTOCOL_PROGRAM_ID ??
   process.env.NEXT_PUBLIC_PROTOCOL_PROGRAM_ID ??
-  'Bn6eixac1QEEVErGBvBjxAd6pgB9e2q4XHvAkinQ5y1B';
+  JSON.parse(
+    readFileSync(
+      resolve(sdkRoot, 'src/generated/omegax_protocol.idl.json'),
+      'utf8',
+    ),
+  ).address;
 const classicTokenProgramId = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
 const zeroPubkey = new PublicKey('11111111111111111111111111111111');
 let cachedProtocolPaths = null;

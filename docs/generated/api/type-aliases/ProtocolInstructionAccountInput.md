@@ -8,7 +8,7 @@
 
 > **ProtocolInstructionAccountInput** = `object`
 
-Defined in: [src/protocol.ts:443](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L443)
+Defined in: [src/protocol.ts:409](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L409)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol.ts:443](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **isSigner?**: `boolean`
 
-Defined in: [src/protocol.ts:445](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L445)
+Defined in: [src/protocol.ts:411](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L411)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol.ts:445](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **isWritable?**: `boolean`
 
-Defined in: [src/protocol.ts:446](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L446)
+Defined in: [src/protocol.ts:412](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L412)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [src/protocol.ts:446](https://github.com/OmegaX-Health/omegax-sdk/bl
 
 > `optional` **pubkey?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/protocol.ts:444](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L444)
+Defined in: [src/protocol.ts:410](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L410)

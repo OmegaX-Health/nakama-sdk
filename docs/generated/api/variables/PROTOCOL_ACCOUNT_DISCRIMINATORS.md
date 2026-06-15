@@ -8,4 +8,4 @@
 
 > `const` **PROTOCOL\_ACCOUNT\_DISCRIMINATORS**: `Record`\<`string`, `Uint8Array`\>
 
-Defined in: [src/generated/protocol\_contract.ts:6650](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L6650)
+Defined in: [src/generated/protocol\_contract.ts:2238](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_contract.ts#L2238)

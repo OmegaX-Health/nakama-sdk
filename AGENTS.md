@@ -26,6 +26,14 @@
 - Refresh `tests/fixtures/omegax_protocol.idl.json` with `npm run sync:idl-fixture` when the canonical IDL changes.
 - Validate docs parity through `docs/OMEGAX_DOCS_SYNC.json` instead of leaving release-doc path or version drift behind.
 
+## Review Routing
+
+- Do not request Codex, GitHub Copilot, or other automated code-review bots as a default SDK PR step.
+- If an automated review request would create only a usage-limit, quota, or "review unavailable" comment, skip it and report the local validation that actually ran.
+- Use CODEOWNERS, branch protection, and `npm-production` environment approval only for the protected release and publish paths where they are required.
+- Ask for human review only when branch protection requires it, when a release/publish approval is needed, or when a security/protocol trust-boundary change cannot be validated locally.
+- Treat ignored `.superstack/` review artifacts and old one-off audit snapshots as historical context, not active blockers or instructions to request another review.
+
 ## Validation
 
 - Run `npm test` for normal SDK validation.

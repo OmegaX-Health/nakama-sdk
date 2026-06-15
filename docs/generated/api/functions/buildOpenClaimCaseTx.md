@@ -8,7 +8,7 @@
 
 > **buildOpenClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1990](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1990)
+Defined in: [src/protocol.ts:909](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L909)
 
 ## Parameters
 
@@ -38,9 +38,9 @@ Defined in: [src/protocol.ts:1990](https://github.com/OmegaX-Health/omegax-sdk/b
 
 [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-#### memberPositionAddress
+#### memberPositionAddress?
 
-[`PublicKeyish`](../type-aliases/PublicKeyish.md)
+[`PublicKeyish`](../type-aliases/PublicKeyish.md) \| `null`
 
 #### memberWalletAddress?
 

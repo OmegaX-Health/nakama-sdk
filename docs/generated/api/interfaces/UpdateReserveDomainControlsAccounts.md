@@ -6,7 +6,7 @@
 
 # Interface: UpdateReserveDomainControlsAccounts
 
-Defined in: [src/generated/protocol\_types.ts:1810](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1810)
+Defined in: [src/generated/protocol\_types.ts:683](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L683)
 
 ## Properties
 
@@ -14,15 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:1810](https://github.com/OmegaX-He
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1811](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1811)
-
-***
-
-### protocol\_governance
-
-> **protocol\_governance**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
-
-Defined in: [src/generated/protocol\_types.ts:1812](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1812)
+Defined in: [src/generated/protocol\_types.ts:684](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L684)
 
 ***
 
@@ -30,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:1812](https://github.com/OmegaX-He
 
 > **reserve\_domain**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:1813](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L1813)
+Defined in: [src/generated/protocol\_types.ts:685](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L685)

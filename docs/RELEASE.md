@@ -19,12 +19,14 @@ This is the maintainer flow for publishing the canonical SDK release.
 - Local protocol parity is green against the intended sibling `omegax-protocol` workspace.
 - The SDK release tag is annotated, signed, and matches `package.json`.
 - SDK commits include `Signed-off-by` trailers because CI enforces DCO.
-- GitHub `main` branch protection requires at least one approving review and
-  CODEOWNERS review before release tags are cut.
+- GitHub `main` branch protection requires the approving review and CODEOWNERS
+  review needed to protect release-sensitive changes before release tags are
+  cut. This is not a standing instruction to request automated Codex or Copilot
+  code reviews on ordinary SDK PRs.
 - GitHub `main` branch protection requires strict status checks, does not allow
   force pushes, and does not allow branch deletion.
 - The `npm-production` environment requires at least two reviewers and prevents
-  self-review.
+  self-review for the protected publish job.
 - A repository Actions secret named `OMEGAX_GOVERNANCE_READ_TOKEN` is available
   to the unprotected `verify` job and can read repository branch and environment
   protection settings.
@@ -105,6 +107,11 @@ documented exception rather than forced transitive overrides.
 
 Release governance setup is a live GitHub admin change. The helper defaults to a
 dry run and requires explicit reviewer input before it can mutate anything:
+
+Use this flow only when preparing or repairing release governance. For routine
+SDK PRs, prefer the smallest relevant local validation and the normal
+branch-protection review path; do not create automated code-review requests just
+to satisfy this release checklist.
 
 ```bash
 GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \

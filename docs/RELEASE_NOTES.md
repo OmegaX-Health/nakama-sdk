@@ -32,9 +32,8 @@
   expanded governance-transfer lifecycle.
 - Updated reserve asset rail configuration for the current protocol account and
   argument shape, including `maxConfidenceBps`.
-- Added direct `buildSettleClaimCaseTx(...)` and selected-asset
-  `buildSettleClaimCaseSelectedAssetTx(...)` helpers, plus safe-client parameter
-  aliases and preflight-aware safe-client methods.
+- Added the direct `buildSettleClaimCaseTx(...)` helper, plus safe-client
+  parameter aliases and preflight-aware safe-client methods.
 - Realigned funding-line, member-position, obligation, and settlement builders
   with the latest optional account slots and reserve-asset-rail requirements.
 - Fixed the packed `omegax-sdk` CLI entrypoint so installs invoked through
@@ -91,9 +90,9 @@
 - Refreshed generated IDL, contract, and type bindings against the local `omegax-protocol` surface at commit `2326371`, covering 67 instructions, 35 accounts, and 134 types.
 - Added PDA helper coverage for reserve asset rails and the then-current commitment
   account model.
-- Added `buildInitializeSeriesReserveLedgerTx(...)` for initializing extra-asset series reserve accounting.
+- Added a builder for initializing extra-asset series reserve accounting.
 - Exported canonical commitment, reserve asset role/source, membership mode/gate/proof, claim-attestation decision, pool-oracle permission, oracle type, schema family/visibility, and native SOL mint constants from the root package and protocol-model module.
-- Updated `buildAttestClaimCaseTx(...)` for the expanded local protocol account list, including `protocol_governance`, `health_plan`, `funding_line`, optional pool oracle scope accounts, writable `claim_case`, and the current `ClaimAttestation` fields.
+- Updated the on-chain claim-case attestation builder for the expanded local protocol account list, including `protocol_governance`, `health_plan`, `funding_line`, optional pool oracle scope accounts, writable `claim_case`, and the then-current `ClaimAttestation` fields.
 - Added `createSafeProtocolClient(...)`, canonical program ID enforcement with an explicit unsafe override for dev/test usage, SPL custody preflights, stricter raw argument encoding, and fail-closed optional account scope checks.
 - Hardened `validateSignedClaimTx(...)` with claim-intent IDs, nonces, expiry, signer binding, blockhash-only refresh support, and exact-message mode for operator flows.
 - Added protocol-bound oracle attestations with local Ed25519 verification and rejection of non-canonical JSON payloads, partial pool scopes, and malformed signer output.
@@ -121,7 +120,7 @@
 
 ## `0.8.2`
 
-- Fixed `buildOpenMemberPositionTx(...)` so invite-only enrollment keeps `inviteAuthorityAddress` as an optional signer account, matching the canonical `open_member_position` contract.
+- Fixed the member-position enrollment builder so invite-only enrollment kept `inviteAuthorityAddress` as an optional signer account, matching the then-current `open_member_position` contract.
 - Added regression coverage for invite-authority account metas so token/invite-gated member builders do not silently degrade back to open-member posture.
 - Kept the package on the devnet-first public release track while preserving the current `omegax-protocol v0.3.0` contract target.
 
@@ -135,7 +134,7 @@
 
 - Added first-class SDK coverage for the current oracle and schema registry surface, including canonical builders and generated contract parity for oracle profiles, pool oracle controls, outcome schemas, and schema dependency ledgers.
 - Exported the new `@omegax/protocol-sdk/oracle` module for attestation workflows, including `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, and `attestOutcome(...)`.
-- Added `buildAttestClaimCaseTx(...)` plus the supporting generated bindings and PDA helpers so oracle services can anchor schema-bound claim-case attestations on-chain without dropping to custom instruction packing.
+- Added an on-chain claim-case attestation builder plus the supporting generated bindings and PDA helpers so oracle services could anchor schema-bound claim-case attestations on-chain without dropping to custom instruction packing.
 - Refreshed protocol bindings, PDA helpers, and parity tests so the SDK matches the latest canonical `omegax-protocol` `main` surface and passes the local protocol verification gate.
 - Kept the package on the devnet-first public release track while preserving the current `omegax-protocol v0.3.0` contract target.
 

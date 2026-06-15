@@ -8,4 +8,4 @@
 
 > `const` **SEED\_ORACLE\_PROFILE**: `"oracle_profile"` = `'oracle_profile'`
 
-Defined in: [src/protocol\_seeds.ts:36](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L36)
+Defined in: [src/protocol\_seeds.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L37)

@@ -149,11 +149,11 @@ Fix:
 
 Cause:
 
-- The `MemberPosition` is not eligible for the requested claim or payout.
+- The claim case is not eligible for the requested payout under the bound policy series.
 
 Fix:
 
-- Verify `fetchMemberPosition(...)` and `describeEligibilityStatus(...)`.
+- Verify `fetchClaimCase(...)` state and `describeClaimStatus(...)`.
 
 ### `funding_exhausted`
 
@@ -164,26 +164,6 @@ Cause:
 Fix:
 
 - Inspect `fetchFundingLineLedger(...)`, `fetchPlanReserveLedger(...)`, and `recomputeReserveBalanceSheet(...)`.
-
-### `allocation_frozen`
-
-Cause:
-
-- Allocation controls are in deallocation-only or freeze mode.
-
-Fix:
-
-- Check allocation and capital-class controls before attempting new utilization.
-
-### `queue_only`
-
-Cause:
-
-- A capital surface is operating in queue-only mode.
-
-Fix:
-
-- Use `buildRequestRedemptionTx(...)` and wait for `buildProcessRedemptionQueueTx(...)` rather than expecting immediate exit.
 
 ### `invalid_claim_state`
 
@@ -201,7 +181,7 @@ Fix:
 
 Cause:
 
-- A plan, series, funding-line, pool, class, or obligation identifier exceeds PDA seed limits.
+- A domain, plan, series, funding-line, or obligation identifier exceeds PDA seed limits.
 
 Fix:
 
@@ -236,26 +216,26 @@ Fix:
 
 ## Reserve and capital issues
 
-### Capital subscriptions fail unexpectedly
+### Reserve capital deposits or returns fail unexpectedly
 
 Cause:
 
-- The capital class may be paused, restricted, or credential gating may be missing.
+- The reserve domain or health plan may be paused, or the funding line may be closed.
 
 Fix:
 
-- Inspect `fetchCapitalClass(...)`.
-- Check `describeCapitalRestriction(...)`.
+- Inspect `fetchReserveDomain(...)` and `fetchFundingLine(...)`.
+- Check `describeFundingLineType(...)` and the relevant pause flags.
 
-### Redemptions do not process
+### Reserve balances look off
 
 Cause:
 
-- The position may still be locked, queue-only controls may apply, or redeemable capital may be insufficient.
+- You may be reading gross vault balance instead of attributed ledger state.
 
 Fix:
 
-- Inspect `fetchLPPosition(...)`, `fetchPoolClassLedger(...)`, and `fetchDomainAssetLedger(...)`.
+- Inspect `fetchFundingLineLedger(...)`, `fetchPlanReserveLedger(...)`, and `fetchDomainAssetLedger(...)`.
 - Recompute the reserve sheet with `recomputeReserveBalanceSheet(...)`.
 
 ### Sponsor budget or premium math looks wrong

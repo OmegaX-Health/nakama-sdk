@@ -14,6 +14,6 @@ test('test runner discovers sorted TypeScript test files across the test tree', 
   assert.ok(testFiles.every((filePath) => filePath.startsWith('tests/')));
   assert.ok(testFiles.every((filePath) => filePath.endsWith('.test.ts')));
   assert.ok(testFiles.includes('tests/claims.test.ts'));
-  assert.ok(testFiles.includes('tests/protocol.test.ts'));
+  assert.ok(testFiles.includes('tests/protocol-builders.test.ts'));
   assert.ok(testFiles.includes('tests/test-runner.test.ts'));
 });

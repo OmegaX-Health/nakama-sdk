@@ -8,4 +8,4 @@
 
 > `const` **PROTOCOL\_IDL\_VERSION**: `string` = `INTERNAL_PROTOCOL_IDL_VERSION`
 
-Defined in: [src/protocol.ts:152](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L152)
+Defined in: [src/protocol.ts:124](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L124)
