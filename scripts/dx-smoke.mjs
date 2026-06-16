@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const root = resolve('.');
-const smokeDir = mkdtempSync(join(tmpdir(), 'omegax-sdk-dx-'));
+const smokeDir = mkdtempSync(join(tmpdir(), 'nakama-sdk-dx-'));
 const expectedVersion = JSON.parse(
   readFileSync(resolve(root, 'package.json'), 'utf8'),
 ).version;

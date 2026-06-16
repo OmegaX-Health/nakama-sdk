@@ -144,7 +144,7 @@ export function createConnection(
   const networkInfo = getOmegaXNetworkInfo(options.network);
 
   if (!networkInfo.isAvailable && (options.warnOnComingSoon ?? true)) {
-    console.warn(`[omegax-sdk] ${networkInfo.statusMessage}`);
+    console.warn(`[nakama-sdk] ${networkInfo.statusMessage}`);
   }
 
   const rpcUrl = options.rpcUrl ?? networkInfo.defaultRpcUrl;

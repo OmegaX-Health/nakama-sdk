@@ -46,7 +46,7 @@ async function main() {
   const tarballPath = parsePackedTarball(
     run('npm', ['pack', '--ignore-scripts', '--json'], { capture: true }),
   );
-  const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-dogfood-'));
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-dogfood-'));
   const appRoot = join(tempRoot, 'consumer-app');
 
   try {

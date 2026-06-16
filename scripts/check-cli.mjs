@@ -81,7 +81,7 @@ async function main() {
 
   run(process.execPath, [cliPath, 'examples'], { capture: true });
 
-  const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-cli-check-'));
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-cli-check-'));
   try {
     const binPath = join(tempRoot, 'nakama-sdk');
     symlinkSync(cliPath, binPath);

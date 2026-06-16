@@ -90,7 +90,7 @@ export async function runTemplateChecks() {
   const tarballPath = parsePackedTarball(
     run('npm', ['pack', '--ignore-scripts', '--json'], { capture: true }),
   );
-  const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-templates-'));
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-templates-'));
 
   try {
     for (const template of templates) {

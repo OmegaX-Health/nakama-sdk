@@ -12,7 +12,7 @@ import {
 import { resolve as resolveProtocolSdkAdapter } from '../scripts/protocol-sdk-adapter-loader.mjs';
 
 function createProtocolFixture() {
-  const root = mkdtempSync(join(tmpdir(), 'omegax-sdk-loader-'));
+  const root = mkdtempSync(join(tmpdir(), 'nakama-sdk-loader-'));
   const protocolRoot = join(root, 'omegax-protocol');
   const libRoot = join(protocolRoot, 'frontend/lib');
   mkdirSync(libRoot, { recursive: true });

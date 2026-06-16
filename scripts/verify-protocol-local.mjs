@@ -20,20 +20,20 @@ function nowStamp() {
 
 export function formatProtocolWorkspaceStateLines(params) {
   const lines = [
-    `[omegax-sdk] Protocol repo: ${params.protocolRepo}`,
-    `[omegax-sdk] Protocol branch: ${params.workspaceState.branch ?? 'unknown'}`,
-    `[omegax-sdk] Protocol commit: ${params.workspaceState.commit ?? 'unknown'}`,
-    `[omegax-sdk] Protocol workspace changes: ${params.workspaceState.hasLocalChanges ? 'present' : 'none'}`,
-    `[omegax-sdk] Protocol workspace fingerprint: ${params.workspaceState.workspaceFingerprint}`,
+    `[nakama-sdk] Protocol repo: ${params.protocolRepo}`,
+    `[nakama-sdk] Protocol branch: ${params.workspaceState.branch ?? 'unknown'}`,
+    `[nakama-sdk] Protocol commit: ${params.workspaceState.commit ?? 'unknown'}`,
+    `[nakama-sdk] Protocol workspace changes: ${params.workspaceState.hasLocalChanges ? 'present' : 'none'}`,
+    `[nakama-sdk] Protocol workspace fingerprint: ${params.workspaceState.workspaceFingerprint}`,
   ];
 
   if (params.workspaceState.hasLocalChanges) {
     const summary = params.workspaceState.changeSummary;
     lines.push(
-      `[omegax-sdk] Protocol workspace change summary: staged=${summary.staged} unstaged=${summary.unstaged} untracked=${summary.untracked}`,
+      `[nakama-sdk] Protocol workspace change summary: staged=${summary.staged} unstaged=${summary.unstaged} untracked=${summary.untracked}`,
     );
     if (params.workspaceState.porcelain) {
-      lines.push('[omegax-sdk] Protocol workspace file changes:');
+      lines.push('[nakama-sdk] Protocol workspace file changes:');
       lines.push(params.workspaceState.porcelain);
     }
   }
@@ -165,7 +165,7 @@ export async function verifyProtocolLocal() {
       `Ended with fingerprint ${finalProtocolWorkspaceState.workspaceFingerprint}.`,
       'Re-run verification so build, tests, and localnet all validate the same protocol workspace state.',
     ].join(' ');
-    console.error(`[omegax-sdk] ${verificationError}`);
+    console.error(`[nakama-sdk] ${verificationError}`);
   }
 
   const summary = buildVerificationSummary({
@@ -182,7 +182,7 @@ export async function verifyProtocolLocal() {
     'utf8',
   );
   console.log(
-    `[omegax-sdk] Verification summary written to ${verificationSummaryPath}`,
+    `[nakama-sdk] Verification summary written to ${verificationSummaryPath}`,
   );
 
   if (verificationError !== null) {
