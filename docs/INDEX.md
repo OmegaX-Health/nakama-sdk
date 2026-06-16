@@ -1,4 +1,4 @@
-# Documentation Index — `@omegax/protocol-sdk`
+# Documentation Index — `@nakama-health/protocol-sdk`
 
 Use this page as the navigation hub for builders and release maintainers.
 

@@ -1,4 +1,4 @@
-# API Reference — `@omegax/protocol-sdk`
+# API Reference — `@nakama-health/protocol-sdk`
 
 This page documents the public SDK surface shipped in `0.8.10`.
 
@@ -26,7 +26,7 @@ Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
 
 Typed SDK errors:
 
-Available from the root package and `@omegax/protocol-sdk/errors`.
+Available from the root package and `@nakama-health/protocol-sdk/errors`.
 See `docs/ERROR_CATALOG.md` for likely causes and fixes.
 
 - `OmegaXError`
@@ -73,7 +73,7 @@ results.
 
 ## MagicBlock adjunct helpers
 
-Available from `@omegax/protocol-sdk/magicblock`; intentionally not exported
+Available from `@nakama-health/protocol-sdk/magicblock`; intentionally not exported
 from the root package.
 
 - `derivePrivateReviewRegistryPda(...)`
@@ -181,7 +181,7 @@ enumerates the same set at runtime.
 
 ## PDA helpers
 
-Available from the root package and `@omegax/protocol-sdk/protocol_seeds`.
+Available from the root package and `@nakama-health/protocol-sdk/protocol_seeds`.
 
 - `getProgramId()`
 - `toPublicKey(...)`
@@ -262,7 +262,7 @@ Seed constants:
 
 ## Reserve-model helpers
 
-Available from the root package and `@omegax/protocol-sdk/protocol_models`.
+Available from the root package and `@nakama-health/protocol-sdk/protocol_models`.
 
 - `toBigIntAmount(...)`
 - `recomputeReserveBalanceSheet(...)`
@@ -377,7 +377,7 @@ Constants:
 
 ## Claims helpers
 
-Available from the root package and `@omegax/protocol-sdk/claims`.
+Available from the root package and `@nakama-health/protocol-sdk/claims`.
 
 - `normalizeClaimSimulationFailure(...)`
 - `normalizeClaimRpcFailure(...)`
@@ -403,7 +403,7 @@ The claims module also re-exports:
 
 ## Oracle helpers
 
-Available from the root package and `@omegax/protocol-sdk/oracle`.
+Available from the root package and `@nakama-health/protocol-sdk/oracle`.
 
 - `createOracleSignerFromEnv(...)`
 - `createOracleSignerFromKmsAdapter(...)`
@@ -426,7 +426,7 @@ telemetry-style wildcard matching.
 
 ## Shared utilities
 
-Available from the root package and `@omegax/protocol-sdk/utils`.
+Available from the root package and `@nakama-health/protocol-sdk/utils`.
 
 - `stableStringify(...)`
 - `sha256Hex(...)`
@@ -451,7 +451,7 @@ Available from the root package and `@omegax/protocol-sdk/utils`.
 
 ## Transaction helpers
 
-Available from the root package and `@omegax/protocol-sdk/transactions`.
+Available from the root package and `@nakama-health/protocol-sdk/transactions`.
 
 - `decodeSolanaTransaction(...)`
 - `serializeSolanaTransaction(...)`

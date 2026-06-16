@@ -1,4 +1,4 @@
-# Error Catalog - `@omegax/protocol-sdk`
+# Error Catalog - `@nakama-health/protocol-sdk`
 
 Public SDK errors extend `OmegaXError` and include a stable `code`, optional
 `details`, and optional `cause`. Branch on `instanceof` or `code`; do not parse
@@ -34,7 +34,7 @@ Retry: no, unless input changed.
 
 ## `OMEGAX_PROGRAM_MISMATCH`
 
-Meaning: the requested program ID does not match the canonical OmegaX program
+Meaning: the requested program ID does not match the canonical Nakama program
 for safe production flows.
 
 Likely causes:

@@ -7,7 +7,7 @@ import {
   attestProtocolOutcome,
   createOracleSignerFromKmsAdapter,
   verifyProtocolOracleAttestation,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const oracleKeypair = Keypair.generate();
 const keyId = 'demo-oracle-key';

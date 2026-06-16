@@ -1,27 +1,27 @@
-# Getting Started — `@omegax/protocol-sdk`
+# Getting Started — `@nakama-health/protocol-sdk`
 
-This guide gets you from install to a usable OmegaX client on Solana devnet beta, then points you into the right builder path.
+This guide gets you from install to a usable Nakama client on Solana devnet beta, then points you into the right builder path.
 
 ## Prerequisites
 
 - Node.js `>=20`
 - ESM runtime
 - A Solana RPC endpoint
-- The canonical deployed OmegaX `programId` for your target cluster
+- The canonical deployed Nakama `programId` for your target cluster
 
-Public integrations should target devnet beta until OmegaX announces public mainnet availability.
+Public integrations should target devnet beta until Nakama announces public mainnet availability.
 
 ## Install
 
 ```bash
-npm install @omegax/protocol-sdk
+npm install @nakama-health/protocol-sdk
 npm install --save-dev tsx
 ```
 
 ## Check Your Environment
 
 ```bash
-npx @omegax/protocol-sdk doctor
+npx @nakama-health/protocol-sdk doctor
 ```
 
 `doctor` checks Node, ESM, package imports, network metadata, the canonical
@@ -59,7 +59,7 @@ import {
   createSafeProtocolClient,
   createRpcClient,
   getOmegaXNetworkInfo,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const network =
   (process.env.OMEGAX_NETWORK as 'devnet' | 'mainnet' | undefined) ?? 'devnet';
@@ -77,7 +77,7 @@ const protocol = createSafeProtocolClient(connection, {
 const rpc = createRpcClient(connection);
 ```
 
-Production clients default to the canonical OmegaX program. Custom program IDs
+Production clients default to the canonical Nakama program. Custom program IDs
 are rejected unless `unsafeAllowCustomProgramId: true` or
 `OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` is used for devnet, localnet, or
 tests.
@@ -92,7 +92,7 @@ For framework-specific snippets, see `docs/RECIPES.md`.
 Use the SDK to inspect the live contract shape before choosing builders.
 
 ```ts
-import { listProtocolInstructionNames } from '@omegax/protocol-sdk';
+import { listProtocolInstructionNames } from '@nakama-health/protocol-sdk';
 
 const instructions = listProtocolInstructionNames();
 ```
@@ -145,7 +145,7 @@ allow blockhash-only refresh when every non-blockhash byte still matches.
 
 ## Path A: Oracle and event producers
 
-Start here when your service needs to turn private or messy inputs into OmegaX-compatible outcome events.
+Start here when your service needs to turn private or messy inputs into Nakama-compatible outcome events.
 
 Relevant helpers:
 
@@ -160,7 +160,7 @@ Then continue with:
 
 - [SDK Workflows](WORKFLOWS.md)
 - [API Reference](API_REFERENCE.md)
-- [Oracle Event Production](https://docs.omegax.health/docs/oracle/event-production)
+- [Oracle Event Production](https://docs.nakama.health/docs/oracle/event-production)
 
 ## Path B: Health / wallet / app builders
 
@@ -196,7 +196,7 @@ import {
   deriveHealthPlanPda,
   derivePolicySeriesPda,
   deriveFundingLinePda,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const reserveDomain = deriveReserveDomainPda({
   domainId: 'open-usdc-domain',

@@ -91,4 +91,4 @@ and maintainer-controlled environment variables are provided:
 - `docs/OMEGAX_DOCS_SYNC.json` belongs to `npm run docs:sync:update` once the
   matching `omegax-docs` commit exists.
 - Template package manifests should keep their tracked
-  `@omegax/protocol-sdk` dependency on the current root SDK version policy.
+  `@nakama-health/protocol-sdk` dependency on the current root SDK version policy.

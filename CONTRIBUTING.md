@@ -1,6 +1,6 @@
-# Contributing to `@omegax/protocol-sdk`
+# Contributing to `@nakama-health/protocol-sdk`
 
-Thanks for helping improve the OmegaX SDK.
+Thanks for helping improve the Nakama SDK.
 
 ## Development setup
 

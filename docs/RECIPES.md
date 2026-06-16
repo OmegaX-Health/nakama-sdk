@@ -1,4 +1,4 @@
-# SDK Recipes — `@omegax/protocol-sdk`
+# SDK Recipes — `@nakama-health/protocol-sdk`
 
 These recipes are copy-paste starting points for common external integrations.
 Use `createSafeProtocolClient(...)` by default. Use raw builders, dynamic
@@ -8,10 +8,10 @@ localnet, or test workflows.
 ## Start With The CLI
 
 ```bash
-npx @omegax/protocol-sdk doctor
-npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
-npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
-npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
+npx @nakama-health/protocol-sdk doctor
+npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
+npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
+npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
 ```
 
 Expected output: `doctor` should report passing checks without requiring a
@@ -25,8 +25,8 @@ Next step: choose one scaffold and run `npm install`, `npm run typecheck`,
 Install:
 
 ```bash
-npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
-cd omegax-provider-backend
+npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
+cd nakama-provider-backend
 npm install
 ```
 
@@ -37,7 +37,7 @@ import {
   createSafeProtocolClient,
   deriveReserveDomainPda,
   getOmegaXNetworkInfo,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const networkInfo = getOmegaXNetworkInfo('devnet');
 const connection = createConnection({
@@ -68,7 +68,7 @@ signing/funded flows behind explicit product review.
 Install:
 
 ```bash
-npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
+npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
 ```
 
 ```ts
@@ -79,7 +79,7 @@ import {
   createSafeProtocolClient,
   listProtocolAccountNames,
   listProtocolInstructionNames,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 export async function GET() {
   const protocol = createSafeProtocolClient(
@@ -100,7 +100,7 @@ export async function GET() {
 
 Expected output: the GET route returns protocol metadata without any signer.
 
-Next step: move the generated route into `app/api/omegax/status/route.ts` and
+Next step: move the generated route into `app/api/nakama/status/route.ts` and
 swap demo IDs for your product IDs.
 
 ## Oracle Worker
@@ -108,8 +108,8 @@ swap demo IDs for your product IDs.
 Install:
 
 ```bash
-npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
-cd omegax-oracle-worker
+npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
+cd nakama-oracle-worker
 npm install
 ```
 
@@ -118,7 +118,7 @@ import {
   PROTOCOL_PROGRAM_ID,
   attestProtocolOutcome,
   createOracleSignerFromEnv,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const signer = createOracleSignerFromEnv();
 
@@ -164,7 +164,7 @@ and keep signer material out of tracked files.
 Install:
 
 ```bash
-npm install @omegax/protocol-sdk
+npm install @nakama-health/protocol-sdk
 ```
 
 ```ts
@@ -174,7 +174,7 @@ import {
   deriveReserveDomainPda,
   getOmegaXNetworkInfo,
   listProtocolAccountNames,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const networkInfo = getOmegaXNetworkInfo('devnet');
 const connection = createConnection({
@@ -209,7 +209,7 @@ import {
   OmegaXProgramMismatchError,
   createConnection,
   createSafeProtocolClient,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 try {
   createSafeProtocolClient(createConnection(), {

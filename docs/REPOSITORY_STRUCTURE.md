@@ -1,7 +1,7 @@
 # Repository Structure
 
 This repo has one main job: keep the TypeScript SDK aligned with the canonical
-OmegaX protocol surface while making the public integration surface easy to
+Nakama protocol surface while making the public integration surface easy to
 inspect, test, and package.
 
 ## Source Ownership

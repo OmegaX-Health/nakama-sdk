@@ -83,12 +83,12 @@ async function main() {
 
   const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-cli-check-'));
   try {
-    const binPath = join(tempRoot, 'omegax-sdk');
+    const binPath = join(tempRoot, 'nakama-sdk');
     symlinkSync(cliPath, binPath);
     const symlinkHelp = run(process.execPath, [binPath, 'help'], {
       capture: true,
     });
-    if (!symlinkHelp.stdout.includes('omegax-sdk doctor')) {
+    if (!symlinkHelp.stdout.includes('nakama-sdk doctor')) {
       throw new Error('symlinked CLI bin did not print usage output');
     }
 

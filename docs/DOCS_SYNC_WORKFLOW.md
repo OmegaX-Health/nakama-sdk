@@ -1,6 +1,6 @@
 # SDK ↔ `omegax-docs` Sync Workflow
 
-This workflow keeps `@omegax/protocol-sdk` and `docs.omegax.health` on the same public surface.
+This workflow keeps `@nakama-health/protocol-sdk` and `docs.nakama.health` on the same public surface.
 
 ## Ownership model
 

@@ -1,4 +1,4 @@
-# OmegaX SDK Examples
+# Nakama SDK Examples
 
 These examples are safe first-run checks for external builders. They do not
 require funded signers, private keys, or live transaction submission.
@@ -21,10 +21,10 @@ SOLANA_RPC_URL=https://api.devnet.solana.com npm run example:smoke
 In an installed consumer project, use the packaged examples and CLI:
 
 ```bash
-npm install @omegax/protocol-sdk
+npm install @nakama-health/protocol-sdk
 npm install --save-dev tsx
-npx @omegax/protocol-sdk examples
-npx tsx node_modules/@omegax/protocol-sdk/examples/devnet-smoke.ts
+npx @nakama-health/protocol-sdk examples
+npx tsx node_modules/@nakama-health/protocol-sdk/examples/devnet-smoke.ts
 ```
 
 ## App Builder Read Model
@@ -68,7 +68,7 @@ smokes.
 ## Public CLI
 
 ```bash
-npx @omegax/protocol-sdk doctor
-npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
-npx @omegax/protocol-sdk examples
+npx @nakama-health/protocol-sdk doctor
+npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
+npx @nakama-health/protocol-sdk examples
 ```

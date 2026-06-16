@@ -1,7 +1,7 @@
-# OmegaX Next.js Route Starter
+# Nakama Next.js Route Starter
 
 Drop `src/route.ts` into a Next.js route such as
-`app/api/omegax/status/route.ts`.
+`app/api/nakama/status/route.ts`.
 
 ```bash
 npm install

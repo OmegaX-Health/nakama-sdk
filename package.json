@@ -1,13 +1,13 @@
 {
-  "name": "@omegax/protocol-sdk",
+  "name": "@nakama-health/protocol-sdk",
   "version": "0.8.10",
-  "description": "TypeScript SDK for the canonical OmegaX health capital markets protocol surface on Solana devnet.",
+  "description": "TypeScript SDK for the canonical Nakama health capital markets protocol surface on Solana devnet.",
   "author": "OMEGAX HEALTH FZCO",
   "contributors": [
     "Marino Sabijan, MD"
   ],
   "keywords": [
-    "omegax",
+    "nakama",
     "solana",
     "protocol",
     "oracle",
@@ -22,17 +22,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OmegaX-Health/omegax-sdk.git"
+    "url": "git+https://github.com/OmegaX-Health/nakama-sdk.git"
   },
-  "homepage": "https://github.com/OmegaX-Health/omegax-sdk#readme",
+  "homepage": "https://github.com/OmegaX-Health/nakama-sdk#readme",
   "bugs": {
-    "url": "https://github.com/OmegaX-Health/omegax-sdk/issues"
+    "url": "https://github.com/OmegaX-Health/nakama-sdk/issues"
   },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "omegax-sdk": "dist/cli.js"
+    "nakama-sdk": "dist/cli.js"
   },
   "exports": {
     ".": {

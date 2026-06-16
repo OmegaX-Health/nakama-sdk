@@ -1,6 +1,6 @@
-# Troubleshooting — `@omegax/protocol-sdk`
+# Troubleshooting — `@nakama-health/protocol-sdk`
 
-This page maps common integration failures to likely causes in the canonical OmegaX model.
+This page maps common integration failures to likely causes in the canonical Nakama model.
 
 ## Fast triage
 
@@ -12,7 +12,7 @@ This page maps common integration failures to likely causes in the canonical Ome
 5. Run the installed-package doctor:
 
 ```bash
-npx @omegax/protocol-sdk doctor
+npx @nakama-health/protocol-sdk doctor
 ```
 
 6. In the SDK repo, run the no-signature smoke:
@@ -43,7 +43,7 @@ npm run dogfood:consumer
 ## Typed SDK errors
 
 Public failure paths that app builders can act on now throw typed errors from
-`@omegax/protocol-sdk/errors`. Branch on `instanceof` or the stable `code`
+`@nakama-health/protocol-sdk/errors`. Branch on `instanceof` or the stable `code`
 field instead of parsing message text.
 
 Common codes:
@@ -208,9 +208,9 @@ Cause:
 Fix:
 
 - Use one of the documented public subpaths such as
-  `@omegax/protocol-sdk/protocol_models`,
-  `@omegax/protocol-sdk/protocol_seeds`, or
-  `@omegax/protocol-sdk/transactions`.
+  `@nakama-health/protocol-sdk/protocol_models`,
+  `@nakama-health/protocol-sdk/protocol_seeds`, or
+  `@nakama-health/protocol-sdk/transactions`.
 - Run `npm run dx:smoke` before release when adding docs that mention a new
   package subpath.
 

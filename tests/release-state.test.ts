@@ -8,7 +8,7 @@ import {
 
 test('release state classifier reports the current unpublished release shape', () => {
   const state = classifyReleaseState({
-    packageName: '@omegax/protocol-sdk',
+    packageName: '@nakama-health/protocol-sdk',
     packageVersion: '0.8.10',
     git: {
       branch: 'main',
@@ -46,7 +46,7 @@ test('release state classifier reports the current unpublished release shape', (
 
 test('release state classifier accepts a synced published release', () => {
   const state = classifyReleaseState({
-    packageName: '@omegax/protocol-sdk',
+    packageName: '@nakama-health/protocol-sdk',
     packageVersion: '0.8.10',
     git: {
       branch: 'main',
@@ -77,7 +77,7 @@ test('release state classifier accepts a synced published release', () => {
 
 test('release state classifier flags partial publish drift', () => {
   const state = classifyReleaseState({
-    packageName: '@omegax/protocol-sdk',
+    packageName: '@nakama-health/protocol-sdk',
     packageVersion: '0.8.10',
     git: {
       branch: 'main',
@@ -112,7 +112,7 @@ test('release state classifier flags partial publish drift', () => {
 
 test('release state classifier fails closed on missing upstream and unavailable npm', () => {
   const state = classifyReleaseState({
-    packageName: '@omegax/protocol-sdk',
+    packageName: '@nakama-health/protocol-sdk',
     packageVersion: '0.8.10',
     git: {
       branch: 'detached',
@@ -152,7 +152,7 @@ test('release state classifier fails closed on missing upstream and unavailable 
 
 test('release state report does not call unavailable external probes missing', () => {
   const state = classifyReleaseState({
-    packageName: '@omegax/protocol-sdk',
+    packageName: '@nakama-health/protocol-sdk',
     packageVersion: '0.8.10',
     git: {
       branch: 'main',

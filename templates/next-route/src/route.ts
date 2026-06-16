@@ -7,7 +7,7 @@ import {
   getOmegaXNetworkInfo,
   listProtocolAccountNames,
   listProtocolInstructionNames,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 export function buildOmegaXStatus() {
   const networkInfo = getOmegaXNetworkInfo('devnet');
