@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / AdjudicateClaimCaseAccounts
+[@nakama-health/protocol-sdk](../README.md) / AdjudicateClaimCaseAccounts
 
 # Interface: AdjudicateClaimCaseAccounts
 
-Defined in: [src/generated/protocol\_types.ts:477](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L477)
+Defined in: [src/generated/protocol\_types.ts:477](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L477)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:477](https://github.com/OmegaX-Hea
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:478](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L478)
+Defined in: [src/generated/protocol\_types.ts:478](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L478)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:478](https://github.com/OmegaX-Hea
 
 > **claim\_case**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:480](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L480)
+Defined in: [src/generated/protocol\_types.ts:480](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L480)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:480](https://github.com/OmegaX-Hea
 
 > **health\_plan**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:479](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L479)
+Defined in: [src/generated/protocol\_types.ts:479](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L479)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:479](https://github.com/OmegaX-Hea
 
 > `optional` **obligation?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:481](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L481)
+Defined in: [src/generated/protocol\_types.ts:481](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L481)

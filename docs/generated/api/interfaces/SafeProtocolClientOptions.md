@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / SafeProtocolClientOptions
+[@nakama-health/protocol-sdk](../README.md) / SafeProtocolClientOptions
 
 # Interface: SafeProtocolClientOptions
 
-Defined in: [src/protocol.ts:1858](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1858)
+Defined in: [src/protocol.ts:1858](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1858)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/protocol.ts:1858](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > `optional` **programId?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/protocol.ts:1859](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1859)
+Defined in: [src/protocol.ts:1859](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1859)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/protocol.ts:1859](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > `optional` **unsafeAllowCustomProgramId?**: `boolean`
 
-Defined in: [src/protocol.ts:1860](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1860)
+Defined in: [src/protocol.ts:1860](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1860)

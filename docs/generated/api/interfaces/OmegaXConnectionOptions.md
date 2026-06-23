@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OmegaXConnectionOptions
+[@nakama-health/protocol-sdk](../README.md) / OmegaXConnectionOptions
 
 # Interface: OmegaXConnectionOptions
 
-Defined in: [src/rpc.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L69)
+Defined in: [src/rpc.ts:69](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L69)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/rpc.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/mai
 
 > `optional` **commitment?**: `Commitment`
 
-Defined in: [src/rpc.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L72)
+Defined in: [src/rpc.ts:72](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L72)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/rpc.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/mai
 
 > `optional` **network?**: [`OmegaXNetworkInput`](../type-aliases/OmegaXNetworkInput.md)
 
-Defined in: [src/rpc.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L70)
+Defined in: [src/rpc.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L70)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/rpc.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/mai
 
 > `optional` **rpcUrl?**: `string`
 
-Defined in: [src/rpc.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L71)
+Defined in: [src/rpc.ts:71](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L71)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/rpc.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/mai
 
 > `optional` **warnOnComingSoon?**: `boolean`
 
-Defined in: [src/rpc.ts:73](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L73)
+Defined in: [src/rpc.ts:73](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L73)

@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / DomainAssetVault
+[@nakama-health/protocol-sdk](../README.md) / DomainAssetVault
 
 # Interface: DomainAssetVault
 
-Defined in: [src/generated/protocol\_types.ts:182](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L182)
+Defined in: [src/generated/protocol\_types.ts:182](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L182)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:182](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L184)
+Defined in: [src/generated/protocol\_types.ts:184](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L184)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:184](https://github.com/OmegaX-Hea
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:187](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L187)
+Defined in: [src/generated/protocol\_types.ts:187](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L187)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:187](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:183](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L183)
+Defined in: [src/generated/protocol\_types.ts:183](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L183)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:183](https://github.com/OmegaX-Hea
 
 > **total\_assets**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L186)
+Defined in: [src/generated/protocol\_types.ts:186](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L186)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/generated/protocol\_types.ts:186](https://github.com/OmegaX-Hea
 
 > **vault\_token\_account**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L185)
+Defined in: [src/generated/protocol\_types.ts:185](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L185)

@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / PartialReserveBalanceSheet
+[@nakama-health/protocol-sdk](../README.md) / PartialReserveBalanceSheet
 
 # Type Alias: PartialReserveBalanceSheet
 
 > **PartialReserveBalanceSheet** = `Partial`\<[`NormalizedReserveBalanceSheet`](NormalizedReserveBalanceSheet.md)\> & `object`
 
-Defined in: [src/protocol\_models.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L131)
+Defined in: [src/protocol\_models.ts:131](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L131)
 
 ## Type Declaration
 

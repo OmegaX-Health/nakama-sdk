@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OmegaXAccountNotFoundError
+[@nakama-health/protocol-sdk](../README.md) / OmegaXAccountNotFoundError
 
 # Class: OmegaXAccountNotFoundError
 
-Defined in: [src/errors.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L48)
+Defined in: [src/errors.ts:52](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L52)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/errors.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **new OmegaXAccountNotFoundError**(`message`, `options?`): `OmegaXAccountNotFoundError`
 
-Defined in: [src/errors.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L49)
+Defined in: [src/errors.ts:53](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L53)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
+Defined in: [src/errors.ts:14](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L14)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
+Defined in: [src/errors.ts:15](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L15)
 
 #### Inherited from
 

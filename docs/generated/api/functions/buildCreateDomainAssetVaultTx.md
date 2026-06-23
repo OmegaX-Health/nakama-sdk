@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildCreateDomainAssetVaultTx
+[@nakama-health/protocol-sdk](../README.md) / buildCreateDomainAssetVaultTx
 
 # Function: buildCreateDomainAssetVaultTx()
 
 > **buildCreateDomainAssetVaultTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:523](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L523)
+Defined in: [src/protocol.ts:523](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L523)
 
 ## Parameters
 

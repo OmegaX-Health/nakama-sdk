@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ValidateSignedClaimTxResult
+[@nakama-health/protocol-sdk](../README.md) / ValidateSignedClaimTxResult
 
 # Interface: ValidateSignedClaimTxResult
 
-Defined in: [src/types.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L129)
+Defined in: [src/types.ts:129](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L129)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **reason**: [`ValidateSignedClaimTxReason`](../type-aliases/ValidateSignedClaimTxReason.md) \| `null`
 
-Defined in: [src/types.ts:132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L132)
+Defined in: [src/types.ts:132](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L132)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:132](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signer**: `string` \| `null`
 
-Defined in: [src/types.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L133)
+Defined in: [src/types.ts:133](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L133)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **txSignature**: `string` \| `null`
 
-Defined in: [src/types.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L131)
+Defined in: [src/types.ts:131](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L131)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/types.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **valid**: `boolean`
 
-Defined in: [src/types.ts:130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L130)
+Defined in: [src/types.ts:130](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L130)

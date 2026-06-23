@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OracleKmsSignerAdapter
+[@nakama-health/protocol-sdk](../README.md) / OracleKmsSignerAdapter
 
 # Type Alias: OracleKmsSignerAdapter
 
 > **OracleKmsSignerAdapter** = `object`
 
-Defined in: [src/types.ts:100](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L100)
+Defined in: [src/types.ts:100](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L100)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:100](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **keyId**: `string`
 
-Defined in: [src/types.ts:101](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L101)
+Defined in: [src/types.ts:101](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L101)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:101](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **publicKeyBase58**: `string`
 
-Defined in: [src/types.ts:102](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L102)
+Defined in: [src/types.ts:102](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L102)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:102](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signWithKms**: (`message`) => `Promise`\<`Uint8Array`\>
 
-Defined in: [src/types.ts:103](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L103)
+Defined in: [src/types.ts:103](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L103)
 
 #### Parameters
 

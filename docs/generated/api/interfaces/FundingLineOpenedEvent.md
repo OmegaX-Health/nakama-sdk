@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / FundingLineOpenedEvent
+[@nakama-health/protocol-sdk](../README.md) / FundingLineOpenedEvent
 
 # Interface: FundingLineOpenedEvent
 
-Defined in: [src/generated/protocol\_types.ts:227](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L227)
+Defined in: [src/generated/protocol\_types.ts:227](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L227)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:227](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:230](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L230)
+Defined in: [src/generated/protocol\_types.ts:230](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L230)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:230](https://github.com/OmegaX-Hea
 
 > **funding\_line**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:229](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L229)
+Defined in: [src/generated/protocol\_types.ts:229](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L229)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:229](https://github.com/OmegaX-Hea
 
 > **health\_plan**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:228](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L228)
+Defined in: [src/generated/protocol\_types.ts:228](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L228)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:228](https://github.com/OmegaX-Hea
 
 > **line\_type**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:231](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L231)
+Defined in: [src/generated/protocol\_types.ts:231](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L231)

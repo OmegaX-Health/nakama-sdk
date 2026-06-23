@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / GetSignatureStatusResult
+[@nakama-health/protocol-sdk](../README.md) / GetSignatureStatusResult
 
 # Interface: GetSignatureStatusResult
 
-Defined in: [src/types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L176)
+Defined in: [src/types.ts:176](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L176)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **confirmations**: `number` \| `null`
 
-Defined in: [src/types.ts:179](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L179)
+Defined in: [src/types.ts:179](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L179)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:179](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **err**: `unknown`
 
-Defined in: [src/types.ts:181](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L181)
+Defined in: [src/types.ts:181](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L181)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:181](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signature**: `string`
 
-Defined in: [src/types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L177)
+Defined in: [src/types.ts:177](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L177)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:177](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **slot**: `number` \| `null`
 
-Defined in: [src/types.ts:180](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L180)
+Defined in: [src/types.ts:180](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L180)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:180](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **status**: `"unknown"` \| `"processed"` \| `"confirmed"` \| `"finalized"` \| `"failed"`
 
-Defined in: [src/types.ts:178](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L178)
+Defined in: [src/types.ts:178](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L178)

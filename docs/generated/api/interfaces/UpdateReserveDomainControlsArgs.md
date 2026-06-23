@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / UpdateReserveDomainControlsArgs
+[@nakama-health/protocol-sdk](../README.md) / UpdateReserveDomainControlsArgs
 
 # Interface: UpdateReserveDomainControlsArgs
 
-Defined in: [src/generated/protocol\_types.ts:455](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L455)
+Defined in: [src/generated/protocol\_types.ts:455](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L455)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:455](https://github.com/OmegaX-Hea
 
 > **active**: `boolean`
 
-Defined in: [src/generated/protocol\_types.ts:458](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L458)
+Defined in: [src/generated/protocol\_types.ts:458](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L458)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:458](https://github.com/OmegaX-Hea
 
 > **allowed\_rail\_mask**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:456](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L456)
+Defined in: [src/generated/protocol\_types.ts:456](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L456)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:456](https://github.com/OmegaX-Hea
 
 > **pause\_flags**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:457](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L457)
+Defined in: [src/generated/protocol\_types.ts:457](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L457)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/generated/protocol\_types.ts:457](https://github.com/OmegaX-Hea
 
 > **reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:459](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L459)
+Defined in: [src/generated/protocol\_types.ts:459](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L459)

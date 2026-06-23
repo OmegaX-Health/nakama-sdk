@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / listProtocolAccountNames
+[@nakama-health/protocol-sdk](../README.md) / listProtocolAccountNames
 
 # Function: listProtocolAccountNames()
 
 > **listProtocolAccountNames**(): [`ProtocolAccountName`](../type-aliases/ProtocolAccountName.md)[]
 
-Defined in: [src/protocol.ts:249](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L249)
+Defined in: [src/protocol.ts:249](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L249)
 
 ## Returns
 

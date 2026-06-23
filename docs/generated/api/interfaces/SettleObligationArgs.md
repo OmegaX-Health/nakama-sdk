@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / SettleObligationArgs
+[@nakama-health/protocol-sdk](../README.md) / SettleObligationArgs
 
 # Interface: SettleObligationArgs
 
-Defined in: [src/generated/protocol\_types.ts:435](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L435)
+Defined in: [src/generated/protocol\_types.ts:435](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L435)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:435](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:437](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L437)
+Defined in: [src/generated/protocol\_types.ts:437](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L437)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:437](https://github.com/OmegaX-Hea
 
 > **next\_status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:436](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L436)
+Defined in: [src/generated/protocol\_types.ts:436](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L436)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:436](https://github.com/OmegaX-Hea
 
 > **settlement\_reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:438](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L438)
+Defined in: [src/generated/protocol\_types.ts:438](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L438)

@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / derivePolicySeriesPda
+[@nakama-health/protocol-sdk](../README.md) / derivePolicySeriesPda
 
 # Function: derivePolicySeriesPda()
 
 > **derivePolicySeriesPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:251](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L251)
+Defined in: [src/protocol\_seeds.ts:251](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L251)
 
 ## Parameters
 

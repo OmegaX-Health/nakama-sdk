@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / SafeProtocolClient
+[@nakama-health/protocol-sdk](../README.md) / SafeProtocolClient
 
 # Interface: SafeProtocolClient
 
-Defined in: [src/protocol.ts:1896](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1896)
+Defined in: [src/protocol.ts:1896](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1896)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/protocol.ts:1896](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **connection**: `Connection`
 
-Defined in: [src/protocol.ts:1897](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1897)
+Defined in: [src/protocol.ts:1897](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1897)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/protocol.ts:1897](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **programId**: `PublicKey`
 
-Defined in: [src/protocol.ts:1898](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1898)
+Defined in: [src/protocol.ts:1898](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1898)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/protocol.ts:1898](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **raw**: [`ProtocolClient`](ProtocolClient.md)
 
-Defined in: [src/protocol.ts:1899](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1899)
+Defined in: [src/protocol.ts:1899](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1899)
 
 ## Methods
 
@@ -38,7 +38,7 @@ Defined in: [src/protocol.ts:1899](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildFundSponsorBudgetTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:1901](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1901)
+Defined in: [src/protocol.ts:1901](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1901)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol.ts:1901](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildOpenClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1907](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1907)
+Defined in: [src/protocol.ts:1907](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1907)
 
 #### Parameters
 
@@ -74,7 +74,7 @@ Defined in: [src/protocol.ts:1907](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildRecordPremiumPaymentTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:1904](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1904)
+Defined in: [src/protocol.ts:1904](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1904)
 
 #### Parameters
 
@@ -92,7 +92,7 @@ Defined in: [src/protocol.ts:1904](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildReleaseReserveTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1909](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1909)
+Defined in: [src/protocol.ts:1909](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1909)
 
 #### Parameters
 
@@ -110,7 +110,7 @@ Defined in: [src/protocol.ts:1909](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildReserveObligationTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1908](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1908)
+Defined in: [src/protocol.ts:1908](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1908)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [src/protocol.ts:1908](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildSettleClaimCaseTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:1913](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1913)
+Defined in: [src/protocol.ts:1913](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1913)
 
 #### Parameters
 
@@ -146,7 +146,7 @@ Defined in: [src/protocol.ts:1913](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **buildSettleObligationTx**(`params`): `Promise`\<`Transaction`\>
 
-Defined in: [src/protocol.ts:1910](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1910)
+Defined in: [src/protocol.ts:1910](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1910)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ Defined in: [src/protocol.ts:1910](https://github.com/OmegaX-Health/omegax-sdk/b
 
 > **getProgramId**(): `PublicKey`
 
-Defined in: [src/protocol.ts:1900](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1900)
+Defined in: [src/protocol.ts:1900](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1900)
 
 #### Returns
 

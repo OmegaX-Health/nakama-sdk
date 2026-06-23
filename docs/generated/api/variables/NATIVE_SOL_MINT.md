@@ -1,11 +1,11 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / NATIVE\_SOL\_MINT
+[@nakama-health/protocol-sdk](../README.md) / NATIVE\_SOL\_MINT
 
 # Variable: NATIVE\_SOL\_MINT
 
 > `const` **NATIVE\_SOL\_MINT**: `"So11111111111111111111111111111111111111112"` = `'So11111111111111111111111111111111111111112'`
 
-Defined in: [src/protocol\_models.ts:114](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L114)
+Defined in: [src/protocol\_models.ts:114](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L114)

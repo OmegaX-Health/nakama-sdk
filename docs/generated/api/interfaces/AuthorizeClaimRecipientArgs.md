@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / AuthorizeClaimRecipientArgs
+[@nakama-health/protocol-sdk](../README.md) / AuthorizeClaimRecipientArgs
 
 # Interface: AuthorizeClaimRecipientArgs
 
-Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L59)
+Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L59)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [src/generated/protocol\_types.ts:59](https://github.com/OmegaX-Heal
 
 > **delegate\_recipient**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L60)
+Defined in: [src/generated/protocol\_types.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L60)

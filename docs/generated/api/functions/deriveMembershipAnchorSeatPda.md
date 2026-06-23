@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / deriveMembershipAnchorSeatPda
+[@nakama-health/protocol-sdk](../README.md) / deriveMembershipAnchorSeatPda
 
 # Function: deriveMembershipAnchorSeatPda()
 
 > **deriveMembershipAnchorSeatPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:298](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L298)
+Defined in: [src/protocol\_seeds.ts:298](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L298)
 
 ## Parameters
 

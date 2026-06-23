@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildProtocolInstruction
+[@nakama-health/protocol-sdk](../README.md) / buildProtocolInstruction
 
 # Function: buildProtocolInstruction()
 
 > **buildProtocolInstruction**(`params`): `TransactionInstruction`
 
-Defined in: [src/protocol.ts:320](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L320)
+Defined in: [src/protocol.ts:320](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L320)
 
 ## Parameters
 

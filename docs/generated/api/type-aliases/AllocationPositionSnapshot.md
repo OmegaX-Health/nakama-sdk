@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / AllocationPositionSnapshot
+[@nakama-health/protocol-sdk](../README.md) / AllocationPositionSnapshot
 
 # Type Alias: AllocationPositionSnapshot
 
 > **AllocationPositionSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:304](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L304)
+Defined in: [src/protocol\_models.ts:304](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L304)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:304](https://github.com/OmegaX-Health/omega
 
 > **active**: `boolean`
 
-Defined in: [src/protocol\_models.ts:320](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L320)
+Defined in: [src/protocol\_models.ts:320](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L320)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:320](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:305](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L305)
+Defined in: [src/protocol\_models.ts:305](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L305)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:305](https://github.com/OmegaX-Health/omega
 
 > `optional` **allocatedAmount?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:314](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L314)
+Defined in: [src/protocol\_models.ts:314](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L314)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol\_models.ts:314](https://github.com/OmegaX-Health/omega
 
 > **capAmount**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:312](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L312)
+Defined in: [src/protocol\_models.ts:312](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L312)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/protocol\_models.ts:312](https://github.com/OmegaX-Health/omega
 
 > **capitalClass**: `string`
 
-Defined in: [src/protocol\_models.ts:308](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L308)
+Defined in: [src/protocol\_models.ts:308](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L308)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/protocol\_models.ts:308](https://github.com/OmegaX-Health/omega
 
 > `optional` **deallocationOnly?**: `boolean`
 
-Defined in: [src/protocol\_models.ts:319](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L319)
+Defined in: [src/protocol\_models.ts:319](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L319)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/protocol\_models.ts:319](https://github.com/OmegaX-Health/omega
 
 > **fundingLine**: `string`
 
-Defined in: [src/protocol\_models.ts:311](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L311)
+Defined in: [src/protocol\_models.ts:311](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L311)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/protocol\_models.ts:311](https://github.com/OmegaX-Health/omega
 
 > **healthPlan**: `string`
 
-Defined in: [src/protocol\_models.ts:309](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L309)
+Defined in: [src/protocol\_models.ts:309](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L309)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/protocol\_models.ts:309](https://github.com/OmegaX-Health/omega
 
 > `optional` **impairedAmount?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:318](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L318)
+Defined in: [src/protocol\_models.ts:318](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L318)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/protocol\_models.ts:318](https://github.com/OmegaX-Health/omega
 
 > **liquidityPool**: `string`
 
-Defined in: [src/protocol\_models.ts:307](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L307)
+Defined in: [src/protocol\_models.ts:307](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L307)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [src/protocol\_models.ts:307](https://github.com/OmegaX-Health/omega
 
 > `optional` **policySeries?**: `string` \| `null`
 
-Defined in: [src/protocol\_models.ts:310](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L310)
+Defined in: [src/protocol\_models.ts:310](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L310)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/protocol\_models.ts:310](https://github.com/OmegaX-Health/omega
 
 > `optional` **realizedPnl?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:317](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L317)
+Defined in: [src/protocol\_models.ts:317](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L317)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [src/protocol\_models.ts:317](https://github.com/OmegaX-Health/omega
 
 > `optional` **reservedCapacity?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:316](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L316)
+Defined in: [src/protocol\_models.ts:316](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L316)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/protocol\_models.ts:316](https://github.com/OmegaX-Health/omega
 
 > **reserveDomain**: `string`
 
-Defined in: [src/protocol\_models.ts:306](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L306)
+Defined in: [src/protocol\_models.ts:306](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L306)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [src/protocol\_models.ts:306](https://github.com/OmegaX-Health/omega
 
 > `optional` **utilizedAmount?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:315](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L315)
+Defined in: [src/protocol\_models.ts:315](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L315)
 
 ***
 
@@ -136,4 +136,4 @@ Defined in: [src/protocol\_models.ts:315](https://github.com/OmegaX-Health/omega
 
 > **weightBps**: `number`
 
-Defined in: [src/protocol\_models.ts:313](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L313)
+Defined in: [src/protocol\_models.ts:313](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L313)

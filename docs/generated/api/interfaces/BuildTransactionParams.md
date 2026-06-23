@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / BuildTransactionParams
+[@nakama-health/protocol-sdk](../README.md) / BuildTransactionParams
 
 # Interface: BuildTransactionParams\<Args, Accounts\>
 
-Defined in: [src/generated/protocol\_types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L40)
+Defined in: [src/generated/protocol\_types.ts:40](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L40)
 
 ## Extends
 
@@ -28,7 +28,7 @@ Defined in: [src/generated/protocol\_types.ts:40](https://github.com/OmegaX-Heal
 
 > **accounts**: `Accounts`
 
-Defined in: [src/generated/protocol\_types.ts:36](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L36)
+Defined in: [src/generated/protocol\_types.ts:36](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L36)
 
 #### Inherited from
 
@@ -40,7 +40,7 @@ Defined in: [src/generated/protocol\_types.ts:36](https://github.com/OmegaX-Heal
 
 > `optional` **appendInstructions?**: `TransactionInstruction`[]
 
-Defined in: [src/generated/protocol\_types.ts:47](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L47)
+Defined in: [src/generated/protocol\_types.ts:47](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L47)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/generated/protocol\_types.ts:47](https://github.com/OmegaX-Heal
 
 > **args**: `Args`
 
-Defined in: [src/generated/protocol\_types.ts:35](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L35)
+Defined in: [src/generated/protocol\_types.ts:35](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L35)
 
 #### Inherited from
 
@@ -60,7 +60,7 @@ Defined in: [src/generated/protocol\_types.ts:35](https://github.com/OmegaX-Heal
 
 > `optional` **feePayer?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L45)
+Defined in: [src/generated/protocol\_types.ts:45](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L45)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [src/generated/protocol\_types.ts:45](https://github.com/OmegaX-Heal
 
 > `optional` **prependInstructions?**: `TransactionInstruction`[]
 
-Defined in: [src/generated/protocol\_types.ts:46](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L46)
+Defined in: [src/generated/protocol\_types.ts:46](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L46)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [src/generated/protocol\_types.ts:46](https://github.com/OmegaX-Heal
 
 > `optional` **programId?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L37)
+Defined in: [src/generated/protocol\_types.ts:37](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L37)
 
 #### Inherited from
 
@@ -88,4 +88,4 @@ Defined in: [src/generated/protocol\_types.ts:37](https://github.com/OmegaX-Heal
 
 > **recentBlockhash**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L44)
+Defined in: [src/generated/protocol\_types.ts:44](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L44)

@@ -1,8 +1,8 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / createConnection
+[@nakama-health/protocol-sdk](../README.md) / createConnection
 
 # Function: createConnection()
 
@@ -10,7 +10,7 @@
 
 > **createConnection**(`rpcUrl`, `commitment?`): `Connection`
 
-Defined in: [src/rpc.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L129)
+Defined in: [src/rpc.ts:129](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L129)
 
 ### Parameters
 
@@ -30,7 +30,7 @@ Defined in: [src/rpc.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/ma
 
 > **createConnection**(`options?`): `Connection`
 
-Defined in: [src/rpc.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/rpc.ts#L133)
+Defined in: [src/rpc.ts:133](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/rpc.ts#L133)
 
 ### Parameters
 

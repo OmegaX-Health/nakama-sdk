@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildMemberReadModel
+[@nakama-health/protocol-sdk](../README.md) / buildMemberReadModel
 
 # Function: buildMemberReadModel()
 
 > **buildMemberReadModel**(`params`): [`MemberReadModel`](../type-aliases/MemberReadModel.md)
 
-Defined in: [src/protocol\_models.ts:794](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L794)
+Defined in: [src/protocol\_models.ts:794](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L794)
 
 ## Parameters
 

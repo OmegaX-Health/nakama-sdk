@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ReserveDomainCreatedEvent
+[@nakama-health/protocol-sdk](../README.md) / ReserveDomainCreatedEvent
 
 # Interface: ReserveDomainCreatedEvent
 
-Defined in: [src/generated/protocol\_types.ts:407](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L407)
+Defined in: [src/generated/protocol\_types.ts:407](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L407)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:407](https://github.com/OmegaX-Hea
 
 > **domain\_admin**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:409](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L409)
+Defined in: [src/generated/protocol\_types.ts:409](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L409)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:409](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:408](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L408)
+Defined in: [src/generated/protocol\_types.ts:408](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L408)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:408](https://github.com/OmegaX-Hea
 
 > **settlement\_mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:410](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L410)
+Defined in: [src/generated/protocol\_types.ts:410](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L410)

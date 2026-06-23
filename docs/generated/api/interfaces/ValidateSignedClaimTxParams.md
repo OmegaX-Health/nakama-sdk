@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ValidateSignedClaimTxParams
+[@nakama-health/protocol-sdk](../README.md) / ValidateSignedClaimTxParams
 
 # Interface: ValidateSignedClaimTxParams
 
-Defined in: [src/types.ts:117](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L117)
+Defined in: [src/types.ts:117](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L117)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:117](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **allowBlockhashRefresh?**: `boolean`
 
-Defined in: [src/types.ts:125](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L125)
+Defined in: [src/types.ts:125](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L125)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:125](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **claimIntent?**: [`ClaimIntent`](../type-aliases/ClaimIntent.md)
 
-Defined in: [src/types.ts:121](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L121)
+Defined in: [src/types.ts:121](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L121)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:121](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedIntentId?**: `string`
 
-Defined in: [src/types.ts:122](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L122)
+Defined in: [src/types.ts:122](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L122)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:122](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedNonce?**: `string`
 
-Defined in: [src/types.ts:123](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L123)
+Defined in: [src/types.ts:123](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L123)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/types.ts:123](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedUnsignedTxBase64**: `string`
 
-Defined in: [src/types.ts:120](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L120)
+Defined in: [src/types.ts:120](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L120)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/types.ts:120](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **nowIso?**: `string` \| `Date`
 
-Defined in: [src/types.ts:124](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L124)
+Defined in: [src/types.ts:124](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L124)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/types.ts:124](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **requiredSigner?**: `string`
 
-Defined in: [src/types.ts:119](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L119)
+Defined in: [src/types.ts:119](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L119)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/types.ts:119](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **requireExactMessage?**: `boolean`
 
-Defined in: [src/types.ts:126](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L126)
+Defined in: [src/types.ts:126](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L126)
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: [src/types.ts:126](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signedTxBase64**: `string`
 
-Defined in: [src/types.ts:118](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L118)
+Defined in: [src/types.ts:118](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L118)

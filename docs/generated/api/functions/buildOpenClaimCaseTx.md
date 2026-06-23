@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildOpenClaimCaseTx
+[@nakama-health/protocol-sdk](../README.md) / buildOpenClaimCaseTx
 
 # Function: buildOpenClaimCaseTx()
 
 > **buildOpenClaimCaseTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:909](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L909)
+Defined in: [src/protocol.ts:909](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L909)
 
 ## Parameters
 

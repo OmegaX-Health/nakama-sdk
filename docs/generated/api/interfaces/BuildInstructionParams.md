@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / BuildInstructionParams
+[@nakama-health/protocol-sdk](../README.md) / BuildInstructionParams
 
 # Interface: BuildInstructionParams\<Args, Accounts\>
 
-Defined in: [src/generated/protocol\_types.ts:34](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L34)
+Defined in: [src/generated/protocol\_types.ts:34](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L34)
 
 ## Extended by
 
@@ -28,7 +28,7 @@ Defined in: [src/generated/protocol\_types.ts:34](https://github.com/OmegaX-Heal
 
 > **accounts**: `Accounts`
 
-Defined in: [src/generated/protocol\_types.ts:36](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L36)
+Defined in: [src/generated/protocol\_types.ts:36](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L36)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [src/generated/protocol\_types.ts:36](https://github.com/OmegaX-Heal
 
 > **args**: `Args`
 
-Defined in: [src/generated/protocol\_types.ts:35](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L35)
+Defined in: [src/generated/protocol\_types.ts:35](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L35)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [src/generated/protocol\_types.ts:35](https://github.com/OmegaX-Heal
 
 > `optional` **programId?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L37)
+Defined in: [src/generated/protocol\_types.ts:37](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L37)

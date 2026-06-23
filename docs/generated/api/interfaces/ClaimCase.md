@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ClaimCase
+[@nakama-health/protocol-sdk](../README.md) / ClaimCase
 
 # Interface: ClaimCase
 
-Defined in: [src/generated/protocol\_types.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L75)
+Defined in: [src/generated/protocol\_types.ts:75](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L75)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:75](https://github.com/OmegaX-Heal
 
 > **adjudicator**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L83)
+Defined in: [src/generated/protocol\_types.ts:83](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L83)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:83](https://github.com/OmegaX-Heal
 
 > **appeal\_count**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:94](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L94)
+Defined in: [src/generated/protocol\_types.ts:94](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L94)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:94](https://github.com/OmegaX-Heal
 
 > **approved\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:89](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L89)
+Defined in: [src/generated/protocol\_types.ts:89](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L89)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:89](https://github.com/OmegaX-Heal
 
 > **asset\_mint**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L80)
+Defined in: [src/generated/protocol\_types.ts:80](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L80)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:80](https://github.com/OmegaX-Heal
 
 > **bump**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:99](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L99)
+Defined in: [src/generated/protocol\_types.ts:99](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L99)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:99](https://github.com/OmegaX-Heal
 
 > **claim\_id**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L81)
+Defined in: [src/generated/protocol\_types.ts:81](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L81)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/generated/protocol\_types.ts:81](https://github.com/OmegaX-Heal
 
 > **claimant**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L82)
+Defined in: [src/generated/protocol\_types.ts:82](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L82)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/generated/protocol\_types.ts:82](https://github.com/OmegaX-Heal
 
 > **closed\_at**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:98](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L98)
+Defined in: [src/generated/protocol\_types.ts:98](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L98)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [src/generated/protocol\_types.ts:98](https://github.com/OmegaX-Heal
 
 > **decision\_support\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L86)
+Defined in: [src/generated/protocol\_types.ts:86](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L86)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [src/generated/protocol\_types.ts:86](https://github.com/OmegaX-Heal
 
 > **delegate\_recipient**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L84)
+Defined in: [src/generated/protocol\_types.ts:84](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L84)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [src/generated/protocol\_types.ts:84](https://github.com/OmegaX-Heal
 
 > **denied\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:90](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L90)
+Defined in: [src/generated/protocol\_types.ts:90](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L90)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [src/generated/protocol\_types.ts:90](https://github.com/OmegaX-Heal
 
 > **evidence\_ref\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L85)
+Defined in: [src/generated/protocol\_types.ts:85](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L85)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [src/generated/protocol\_types.ts:85](https://github.com/OmegaX-Heal
 
 > **funding\_line**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L79)
+Defined in: [src/generated/protocol\_types.ts:79](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L79)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: [src/generated/protocol\_types.ts:79](https://github.com/OmegaX-Heal
 
 > **health\_plan**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L77)
+Defined in: [src/generated/protocol\_types.ts:77](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L77)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: [src/generated/protocol\_types.ts:77](https://github.com/OmegaX-Heal
 
 > **intake\_status**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L87)
+Defined in: [src/generated/protocol\_types.ts:87](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L87)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: [src/generated/protocol\_types.ts:87](https://github.com/OmegaX-Heal
 
 > **linked\_obligation**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:95](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L95)
+Defined in: [src/generated/protocol\_types.ts:95](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L95)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: [src/generated/protocol\_types.ts:95](https://github.com/OmegaX-Heal
 
 > **opened\_at**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:96](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L96)
+Defined in: [src/generated/protocol\_types.ts:96](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L96)
 
 ***
 
@@ -150,7 +150,7 @@ Defined in: [src/generated/protocol\_types.ts:96](https://github.com/OmegaX-Heal
 
 > **paid\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:91](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L91)
+Defined in: [src/generated/protocol\_types.ts:91](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L91)
 
 ***
 
@@ -158,7 +158,7 @@ Defined in: [src/generated/protocol\_types.ts:91](https://github.com/OmegaX-Heal
 
 > **policy\_series**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L78)
+Defined in: [src/generated/protocol\_types.ts:78](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L78)
 
 ***
 
@@ -166,7 +166,7 @@ Defined in: [src/generated/protocol\_types.ts:78](https://github.com/OmegaX-Heal
 
 > **recovered\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:93](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L93)
+Defined in: [src/generated/protocol\_types.ts:93](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L93)
 
 ***
 
@@ -174,7 +174,7 @@ Defined in: [src/generated/protocol\_types.ts:93](https://github.com/OmegaX-Heal
 
 > **reserve\_domain**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L76)
+Defined in: [src/generated/protocol\_types.ts:76](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L76)
 
 ***
 
@@ -182,7 +182,7 @@ Defined in: [src/generated/protocol\_types.ts:76](https://github.com/OmegaX-Heal
 
 > **reserved\_amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:92](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L92)
+Defined in: [src/generated/protocol\_types.ts:92](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L92)
 
 ***
 
@@ -190,7 +190,7 @@ Defined in: [src/generated/protocol\_types.ts:92](https://github.com/OmegaX-Heal
 
 > **review\_state**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:88](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L88)
+Defined in: [src/generated/protocol\_types.ts:88](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L88)
 
 ***
 
@@ -198,4 +198,4 @@ Defined in: [src/generated/protocol\_types.ts:88](https://github.com/OmegaX-Heal
 
 > **updated\_at**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:97](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L97)
+Defined in: [src/generated/protocol\_types.ts:97](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L97)

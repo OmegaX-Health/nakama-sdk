@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ProtocolBoundAttestationContext
+[@nakama-health/protocol-sdk](../README.md) / ProtocolBoundAttestationContext
 
 # Type Alias: ProtocolBoundAttestationContext
 
 > **ProtocolBoundAttestationContext** = `object`
 
-Defined in: [src/types.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L69)
+Defined in: [src/types.ts:69](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L69)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **allocationPosition?**: `string` \| `null`
 
-Defined in: [src/types.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L78)
+Defined in: [src/types.ts:78](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L78)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/types.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **asOfIso**: `string`
 
-Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L86)
+Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L86)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:86](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **audience**: `string`
 
-Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L83)
+Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L83)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/types.ts:83](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **capitalClass?**: `string` \| `null`
 
-Defined in: [src/types.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L77)
+Defined in: [src/types.ts:77](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L77)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/types.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **claimCase**: `string`
 
-Defined in: [src/types.ts:74](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L74)
+Defined in: [src/types.ts:74](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L74)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/types.ts:74](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **expiresAtIso**: `string`
 
-Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L87)
+Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L87)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/types.ts:87](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **fundingLine**: `string`
 
-Defined in: [src/types.ts:73](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L73)
+Defined in: [src/types.ts:73](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L73)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/types.ts:73](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **healthPlan**: `string`
 
-Defined in: [src/types.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L72)
+Defined in: [src/types.ts:72](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L72)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/types.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **issuedAtIso**: `string`
 
-Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L85)
+Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L85)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/types.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **liquidityPool?**: `string` \| `null`
 
-Defined in: [src/types.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L76)
+Defined in: [src/types.ts:76](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L76)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [src/types.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **network**: `string`
 
-Defined in: [src/types.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L70)
+Defined in: [src/types.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L70)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/types.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **nonce**: `string`
 
-Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L84)
+Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L84)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [src/types.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **policySeries?**: `string` \| `null`
 
-Defined in: [src/types.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L75)
+Defined in: [src/types.ts:75](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L75)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/types.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **poolOracleApproval?**: `string` \| `null`
 
-Defined in: [src/types.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L79)
+Defined in: [src/types.ts:79](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L79)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [src/types.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **poolOraclePermissionSet?**: `string` \| `null`
 
-Defined in: [src/types.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L80)
+Defined in: [src/types.ts:80](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L80)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [src/types.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **poolOraclePolicy?**: `string` \| `null`
 
-Defined in: [src/types.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L81)
+Defined in: [src/types.ts:81](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L81)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: [src/types.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **programId**: `string`
 
-Defined in: [src/types.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L71)
+Defined in: [src/types.ts:71](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L71)
 
 ***
 
@@ -152,4 +152,4 @@ Defined in: [src/types.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **schemaKeyHashHex**: `string`
 
-Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L82)
+Defined in: [src/types.ts:82](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L82)

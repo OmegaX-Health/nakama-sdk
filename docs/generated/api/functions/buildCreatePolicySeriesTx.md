@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildCreatePolicySeriesTx
+[@nakama-health/protocol-sdk](../README.md) / buildCreatePolicySeriesTx
 
 # Function: buildCreatePolicySeriesTx()
 
 > **buildCreatePolicySeriesTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:570](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L570)
+Defined in: [src/protocol.ts:570](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L570)
 
 ## Parameters
 

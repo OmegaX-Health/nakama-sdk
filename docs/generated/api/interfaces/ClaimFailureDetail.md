@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ClaimFailureDetail
+[@nakama-health/protocol-sdk](../README.md) / ClaimFailureDetail
 
 # Interface: ClaimFailureDetail
 
-Defined in: [src/types.ts:35](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L35)
+Defined in: [src/types.ts:35](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L35)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:35](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **code**: [`ClaimFailureCode`](../type-aliases/ClaimFailureCode.md)
 
-Defined in: [src/types.ts:36](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L36)
+Defined in: [src/types.ts:36](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L36)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:36](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **logs**: `string`[]
 
-Defined in: [src/types.ts:39](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L39)
+Defined in: [src/types.ts:39](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L39)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:39](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **message**: `string`
 
-Defined in: [src/types.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L37)
+Defined in: [src/types.ts:37](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L37)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **reason**: `string`
 
-Defined in: [src/types.ts:38](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L38)
+Defined in: [src/types.ts:38](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L38)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:38](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **retryable**: `boolean`
 
-Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L40)
+Defined in: [src/types.ts:40](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L40)

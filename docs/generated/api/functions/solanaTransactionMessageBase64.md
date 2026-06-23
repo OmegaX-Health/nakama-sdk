@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / solanaTransactionMessageBase64
+[@nakama-health/protocol-sdk](../README.md) / solanaTransactionMessageBase64
 
 # Function: solanaTransactionMessageBase64()
 
 > **solanaTransactionMessageBase64**(`input`): `string`
 
-Defined in: [src/transactions.ts:159](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/transactions.ts#L159)
+Defined in: [src/transactions.ts:159](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/transactions.ts#L159)
 
 ## Parameters
 
