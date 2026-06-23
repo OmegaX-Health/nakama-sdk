@@ -264,7 +264,7 @@ test('live governance wrapper defaults to the SDK repo and authenticated gh toke
   );
 
   assert.deepEqual(buildLiveReleaseGovernanceEnv({}, 'gh-token-for-test'), {
-    GITHUB_REPOSITORY: 'OmegaX-Health/omegax-sdk',
+    GITHUB_REPOSITORY: 'OmegaX-Health/nakama-sdk',
     OMEGAX_REQUIRE_GITHUB_GOVERNANCE: '1',
     GITHUB_TOKEN: 'gh-token-for-test',
   });
@@ -296,14 +296,14 @@ test('live governance wrapper forwards structured-output flags', () => {
 test('release governance report exposes structured blocker evidence', () => {
   assert.deepEqual(
     buildReleaseGovernanceReport({
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       liveChecked: true,
       failures: ['branch protection missing'],
       warnings: ['org secret visibility unavailable'],
     }),
     {
       ok: false,
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       liveChecked: true,
       failures: ['branch protection missing'],
       warnings: ['org secret visibility unavailable'],
@@ -418,14 +418,14 @@ test('release governance evidence summarizes live reviewer inventory safely', ()
 
   assert.deepEqual(
     buildReleaseGovernanceReport({
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       liveChecked: true,
       failures: ['blocked'],
       evidence,
     }),
     {
       ok: false,
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       liveChecked: true,
       failures: ['blocked'],
       warnings: [],
@@ -509,7 +509,7 @@ test('release setup preserves existing branch protection safety settings', () =>
 test('release setup report supports pure JSON automation output', () => {
   assert.deepEqual(
     buildReleaseGovernanceSetupReport({
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       branch: 'main',
       environment: 'npm-production',
       apply: false,
@@ -521,7 +521,7 @@ test('release setup report supports pure JSON automation output', () => {
     }),
     {
       ok: true,
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       branch: 'main',
       environment: 'npm-production',
       apply: false,
@@ -536,14 +536,14 @@ test('release setup report supports pure JSON automation output', () => {
 
   assert.deepEqual(
     buildReleaseGovernanceSetupReport({
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       branch: 'main',
       environment: 'npm-production',
       failures: ['Set at least two distinct release reviewers.'],
     }),
     {
       ok: false,
-      repository: 'OmegaX-Health/omegax-sdk',
+      repository: 'OmegaX-Health/nakama-sdk',
       branch: 'main',
       environment: 'npm-production',
       apply: false,

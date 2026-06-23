@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-export const DEFAULT_RELEASE_REPOSITORY = 'OmegaX-Health/omegax-sdk';
+export const DEFAULT_RELEASE_REPOSITORY = 'OmegaX-Health/nakama-sdk';
 
 export function needsGitHubToken(env) {
   return !env.OMEGAX_GOVERNANCE_TOKEN && !env.GITHUB_TOKEN;

@@ -1,4 +1,4 @@
-# Release Guide — `@omegax/protocol-sdk`
+# Release Guide — `@nakama-health/protocol-sdk`
 
 This is the maintainer flow for publishing the canonical SDK release.
 
@@ -7,8 +7,8 @@ This is the maintainer flow for publishing the canonical SDK release.
 - Protocol: `omegax-protocol` commit `763c7da`
 - Protocol contract hash:
   `f95822562b0c1f1b2d5bddde10f63d98d49dca7135c879011e432d0706735222`
-- SDK: `@omegax/protocol-sdk v0.8.10`
-- Docs portal: `docs.omegax.health` content synced to the matching SDK surface
+- SDK: `@nakama-health/protocol-sdk v0.8.10`
+- Docs portal: `docs.nakama.health` content synced to the matching SDK surface
 
 ## Preconditions
 
@@ -246,15 +246,15 @@ security review.
 
 ```bash
 npm run release:state
-npm view @omegax/protocol-sdk version
+npm view @nakama-health/protocol-sdk version
 ```
 
 Then run a clean install/import smoke test:
 
 ```bash
 npm init -y
-npm install @omegax/protocol-sdk@0.8.10
-node --input-type=module -e "const m = await import('@omegax/protocol-sdk'); console.log(Object.keys(m).length)"
+npm install @nakama-health/protocol-sdk@0.8.10
+node --input-type=module -e "const m = await import('@nakama-health/protocol-sdk'); console.log(Object.keys(m).length)"
 ```
 
 The `v0.8.9` package is published. Its release workflow failed after publish in

@@ -7,21 +7,21 @@ import {
   createConnection,
   createSafeProtocolClient,
   getOmegaXNetworkInfo,
-} from '@omegax/protocol-sdk';
-import { OmegaXProgramMismatchError } from '@omegax/protocol-sdk/errors';
+} from '@nakama-health/protocol-sdk';
+import { OmegaXProgramMismatchError } from '@nakama-health/protocol-sdk/errors';
 import {
   attestProtocolOutcome,
   createOracleSignerFromKmsAdapter,
   verifyProtocolOracleAttestation,
-} from '@omegax/protocol-sdk/oracle';
+} from '@nakama-health/protocol-sdk/oracle';
 import {
   listProtocolAccountNames,
   listProtocolInstructionNames,
-} from '@omegax/protocol-sdk/protocol';
+} from '@nakama-health/protocol-sdk/protocol';
 import {
   deriveHealthPlanPda,
   deriveReserveDomainPda,
-} from '@omegax/protocol-sdk/protocol_seeds';
+} from '@nakama-health/protocol-sdk/protocol_seeds';
 
 const networkInfo = getOmegaXNetworkInfo('devnet');
 const connection = createConnection({
@@ -122,7 +122,7 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      packageImport: '@omegax/protocol-sdk',
+      packageImport: '@nakama-health/protocol-sdk',
       network: networkInfo.network,
       programId: protocol.getProgramId().toBase58(),
       reserveDomain: reserveDomain.toBase58(),

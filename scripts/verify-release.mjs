@@ -42,7 +42,7 @@ if (protocol) {
 }
 
 for (const { command, args, env } of checks) {
-  console.log(`[omegax-sdk] ${command} ${args.join(' ')}`);
+  console.log(`[nakama-sdk] ${command} ${args.join(' ')}`);
   const result = spawnSync(command, args, {
     stdio: 'inherit',
     env: {
@@ -57,5 +57,5 @@ for (const { command, args, env } of checks) {
 }
 
 console.log(
-  `[omegax-sdk] Release verification passed (${strict ? 'strict' : 'standard'}${protocol ? ', protocol' : ''}).`,
+  `[nakama-sdk] Release verification passed (${strict ? 'strict' : 'standard'}${protocol ? ', protocol' : ''}).`,
 );

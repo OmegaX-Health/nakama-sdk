@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / BroadcastSignedTxParams
+[@nakama-health/protocol-sdk](../README.md) / BroadcastSignedTxParams
 
 # Interface: BroadcastSignedTxParams
 
-Defined in: [src/types.ts:138](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L138)
+Defined in: [src/types.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L138)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:138](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **commitment?**: `Commitment`
 
-Defined in: [src/types.ts:142](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L142)
+Defined in: [src/types.ts:142](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L142)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:142](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **maxRetries?**: `number`
 
-Defined in: [src/types.ts:141](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L141)
+Defined in: [src/types.ts:141](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L141)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:141](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signedTxBase64**: `string`
 
-Defined in: [src/types.ts:139](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L139)
+Defined in: [src/types.ts:139](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L139)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/types.ts:139](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **skipPreflight?**: `boolean`
 
-Defined in: [src/types.ts:140](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L140)
+Defined in: [src/types.ts:140](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L140)

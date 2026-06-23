@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / deriveReserveAssetRailPda
+[@nakama-health/protocol-sdk](../README.md) / deriveReserveAssetRailPda
 
 # Function: deriveReserveAssetRailPda()
 
 > **deriveReserveAssetRailPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:206](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L206)
+Defined in: [src/protocol\_seeds.ts:206](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L206)
 
 ## Parameters
 

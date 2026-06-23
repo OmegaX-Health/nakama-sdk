@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildSponsorReadModel
+[@nakama-health/protocol-sdk](../README.md) / buildSponsorReadModel
 
 # Function: buildSponsorReadModel()
 
 > **buildSponsorReadModel**(`params`): [`SponsorReadModel`](../type-aliases/SponsorReadModel.md)
 
-Defined in: [src/protocol\_models.ts:600](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L600)
+Defined in: [src/protocol\_models.ts:600](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L600)
 
 ## Parameters
 

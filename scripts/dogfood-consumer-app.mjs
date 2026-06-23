@@ -46,14 +46,15 @@ async function main() {
   const tarballPath = parsePackedTarball(
     run('npm', ['pack', '--ignore-scripts', '--json'], { capture: true }),
   );
-  const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-dogfood-'));
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-dogfood-'));
   const appRoot = join(tempRoot, 'consumer-app');
 
   try {
     await cp(fixtureRoot, appRoot, { recursive: true });
     const packageJsonPath = join(appRoot, 'package.json');
     const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
-    packageJson.dependencies['@omegax/protocol-sdk'] = `file:${tarballPath}`;
+    packageJson.dependencies['@nakama-health/protocol-sdk'] =
+      `file:${tarballPath}`;
     await writeFile(
       packageJsonPath,
       `${JSON.stringify(packageJson, null, 2)}\n`,

@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / deriveClaimAttestationPda
+[@nakama-health/protocol-sdk](../README.md) / deriveClaimAttestationPda
 
 # Function: deriveClaimAttestationPda()
 
 > **deriveClaimAttestationPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:607](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L607)
+Defined in: [src/protocol\_seeds.ts:607](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L607)
 
 ## Parameters
 

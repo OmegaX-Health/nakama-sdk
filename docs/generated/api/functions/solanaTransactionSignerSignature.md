@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / solanaTransactionSignerSignature
+[@nakama-health/protocol-sdk](../README.md) / solanaTransactionSignerSignature
 
 # Function: solanaTransactionSignerSignature()
 
 > **solanaTransactionSignerSignature**(`transaction`, `signer`): `Uint8Array`\<`ArrayBufferLike`\> \| `null`
 
-Defined in: [src/transactions.ts:199](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/transactions.ts#L199)
+Defined in: [src/transactions.ts:199](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/transactions.ts#L199)
 
 ## Parameters
 

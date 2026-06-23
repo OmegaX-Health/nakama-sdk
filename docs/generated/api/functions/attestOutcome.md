@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / attestOutcome
+[@nakama-health/protocol-sdk](../README.md) / attestOutcome
 
 # Function: attestOutcome()
 
 > **attestOutcome**(`params`): `Promise`\<[`AttestOutcomeResult`](../type-aliases/AttestOutcomeResult.md)\>
 
-Defined in: [src/oracle.ts:537](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L537)
+Defined in: [src/oracle.ts:537](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L537)
 
 ## Parameters
 

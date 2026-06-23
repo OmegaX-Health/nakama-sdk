@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / VerifyProtocolOracleAttestationParams
+[@nakama-health/protocol-sdk](../README.md) / VerifyProtocolOracleAttestationParams
 
 # Type Alias: VerifyProtocolOracleAttestationParams
 
 > **VerifyProtocolOracleAttestationParams** = `object`
 
-Defined in: [src/oracle.ts:63](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L63)
+Defined in: [src/oracle.ts:63](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L63)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/oracle.ts:63](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **allowUnexpectedOptionalScope?**: `boolean`
 
-Defined in: [src/oracle.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L81)
+Defined in: [src/oracle.ts:81](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L81)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/oracle.ts:81](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedAllocationPosition?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L77)
+Defined in: [src/oracle.ts:77](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L77)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/oracle.ts:77](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedAudience**: `string`
 
-Defined in: [src/oracle.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L72)
+Defined in: [src/oracle.ts:72](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L72)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/oracle.ts:72](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedCapitalClass?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L76)
+Defined in: [src/oracle.ts:76](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L76)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/oracle.ts:76](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedClaimCase**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/oracle.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L71)
+Defined in: [src/oracle.ts:71](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L71)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/oracle.ts:71](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedFundingLine**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/oracle.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L70)
+Defined in: [src/oracle.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L70)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/oracle.ts:70](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedHealthPlan**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/oracle.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L69)
+Defined in: [src/oracle.ts:69](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L69)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/oracle.ts:69](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedLiquidityPool?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L75)
+Defined in: [src/oracle.ts:75](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L75)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [src/oracle.ts:75](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedNetwork**: `string`
 
-Defined in: [src/oracle.ts:67](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L67)
+Defined in: [src/oracle.ts:67](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L67)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [src/oracle.ts:67](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedNonce?**: `string`
 
-Defined in: [src/oracle.ts:73](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L73)
+Defined in: [src/oracle.ts:73](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L73)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [src/oracle.ts:73](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedPolicySeries?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:74](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L74)
+Defined in: [src/oracle.ts:74](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L74)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [src/oracle.ts:74](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedPoolOracleApproval?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L78)
+Defined in: [src/oracle.ts:78](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L78)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [src/oracle.ts:78](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedPoolOraclePermissionSet?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L79)
+Defined in: [src/oracle.ts:79](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L79)
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: [src/oracle.ts:79](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedPoolOraclePolicy?**: [`PublicKeyish`](PublicKeyish.md) \| `null`
 
-Defined in: [src/oracle.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L80)
+Defined in: [src/oracle.ts:80](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L80)
 
 ***
 
@@ -128,7 +128,7 @@ Defined in: [src/oracle.ts:80](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedProgramId**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/oracle.ts:68](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L68)
+Defined in: [src/oracle.ts:68](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L68)
 
 ***
 
@@ -136,7 +136,7 @@ Defined in: [src/oracle.ts:68](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **expectedVerifierKeyId?**: `string`
 
-Defined in: [src/oracle.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L66)
+Defined in: [src/oracle.ts:66](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L66)
 
 ***
 
@@ -144,7 +144,7 @@ Defined in: [src/oracle.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **expectedVerifierPublicKeyBase58**: [`PublicKeyish`](PublicKeyish.md)
 
-Defined in: [src/oracle.ts:65](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L65)
+Defined in: [src/oracle.ts:65](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L65)
 
 ***
 
@@ -152,4 +152,4 @@ Defined in: [src/oracle.ts:65](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **nowIso?**: `string` \| `Date`
 
-Defined in: [src/oracle.ts:64](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L64)
+Defined in: [src/oracle.ts:64](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L64)

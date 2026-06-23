@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildReserveObligationTx
+[@nakama-health/protocol-sdk](../README.md) / buildReserveObligationTx
 
 # Function: buildReserveObligationTx()
 
 > **buildReserveObligationTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1173](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1173)
+Defined in: [src/protocol.ts:1173](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1173)
 
 ## Parameters
 

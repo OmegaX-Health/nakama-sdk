@@ -1,4 +1,4 @@
-# Top APIs - `@omegax/protocol-sdk`
+# Top APIs - `@nakama-health/protocol-sdk`
 
 Use this page when you know your builder lane and want the shortest route to the
 right SDK surface.
@@ -19,13 +19,13 @@ Start here for member-facing apps, wallets, and agent surfaces.
 First command:
 
 ```bash
-npx @omegax/protocol-sdk doctor
+npx @nakama-health/protocol-sdk doctor
 ```
 
 Starter:
 
 ```bash
-npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
+npx @nakama-health/protocol-sdk scaffold next-route --out omegax-health-route
 ```
 
 ## Hospital / Provider Backend
@@ -48,7 +48,7 @@ claim state, and typed SDK failures.
 Starter:
 
 ```bash
-npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
+npx @nakama-health/protocol-sdk scaffold node-backend --out omegax-provider-backend
 ```
 
 ## Oracle Worker
@@ -65,7 +65,7 @@ Start here for services that attest outcomes or claim-case evidence.
 Starter:
 
 ```bash
-npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
+npx @nakama-health/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
 ```
 
 ## Sponsor / Reserve Operator

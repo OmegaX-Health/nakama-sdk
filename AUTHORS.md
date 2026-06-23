@@ -1,6 +1,6 @@
 # Authors
 
-`@omegax/protocol-sdk` is maintained by `OMEGAX HEALTH FZCO` with open-source contributors.
+`@nakama-health/protocol-sdk` is maintained by `OMEGAX HEALTH FZCO` with open-source contributors.
 
 Initial project lead:
 

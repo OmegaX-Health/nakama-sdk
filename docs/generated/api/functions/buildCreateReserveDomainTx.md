@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildCreateReserveDomainTx
+[@nakama-health/protocol-sdk](../README.md) / buildCreateReserveDomainTx
 
 # Function: buildCreateReserveDomainTx()
 
 > **buildCreateReserveDomainTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:472](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L472)
+Defined in: [src/protocol.ts:472](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L472)
 
 ## Parameters
 

@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / AllocationLedgerSnapshot
+[@nakama-health/protocol-sdk](../README.md) / AllocationLedgerSnapshot
 
 # Type Alias: AllocationLedgerSnapshot
 
 > **AllocationLedgerSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:323](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L323)
+Defined in: [src/protocol\_models.ts:323](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L323)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:323](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:324](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L324)
+Defined in: [src/protocol\_models.ts:324](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L324)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:324](https://github.com/OmegaX-Health/omega
 
 > **allocationPosition**: `string`
 
-Defined in: [src/protocol\_models.ts:325](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L325)
+Defined in: [src/protocol\_models.ts:325](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L325)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:325](https://github.com/OmegaX-Health/omega
 
 > **assetMint**: `string`
 
-Defined in: [src/protocol\_models.ts:326](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L326)
+Defined in: [src/protocol\_models.ts:326](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L326)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/protocol\_models.ts:326](https://github.com/OmegaX-Health/omega
 
 > `optional` **realizedPnl?**: [`BigNumberish`](BigNumberish.md)
 
-Defined in: [src/protocol\_models.ts:328](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L328)
+Defined in: [src/protocol\_models.ts:328](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L328)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [src/protocol\_models.ts:328](https://github.com/OmegaX-Health/omega
 
 > **sheet**: [`PartialReserveBalanceSheet`](PartialReserveBalanceSheet.md)
 
-Defined in: [src/protocol\_models.ts:327](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L327)
+Defined in: [src/protocol\_models.ts:327](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L327)

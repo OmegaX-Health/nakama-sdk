@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / mapValidationReasonToClaimFailure
+[@nakama-health/protocol-sdk](../README.md) / mapValidationReasonToClaimFailure
 
 # Function: mapValidationReasonToClaimFailure()
 
 > **mapValidationReasonToClaimFailure**(`reason`): [`ClaimFailureCode`](../type-aliases/ClaimFailureCode.md) \| `null`
 
-Defined in: [src/claims.ts:266](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/claims.ts#L266)
+Defined in: [src/claims.ts:266](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/claims.ts#L266)
 
 ## Parameters
 

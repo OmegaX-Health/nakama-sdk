@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildRecordReserveEarningsTx
+[@nakama-health/protocol-sdk](../README.md) / buildRecordReserveEarningsTx
 
 # Function: buildRecordReserveEarningsTx()
 
 > **buildRecordReserveEarningsTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:1331](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L1331)
+Defined in: [src/protocol.ts:1331](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L1331)
 
 ## Parameters
 

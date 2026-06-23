@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OmegaXErrorOptions
+[@nakama-health/protocol-sdk](../README.md) / OmegaXErrorOptions
 
 # Interface: OmegaXErrorOptions
 
-Defined in: [src/errors.ts:3](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L3)
+Defined in: [src/errors.ts:7](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L7)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/errors.ts:3](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **cause?**: `unknown`
 
-Defined in: [src/errors.ts:6](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L6)
+Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L10)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/errors.ts:6](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **code**: `string`
 
-Defined in: [src/errors.ts:4](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L4)
+Defined in: [src/errors.ts:8](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L8)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/errors.ts:4](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: [src/errors.ts:5](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L5)
+Defined in: [src/errors.ts:9](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L9)

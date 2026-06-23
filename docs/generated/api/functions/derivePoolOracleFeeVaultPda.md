@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / derivePoolOracleFeeVaultPda
+[@nakama-health/protocol-sdk](../README.md) / derivePoolOracleFeeVaultPda
 
 # Function: derivePoolOracleFeeVaultPda()
 
 > **derivePoolOracleFeeVaultPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:564](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L564)
+Defined in: [src/protocol\_seeds.ts:564](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L564)
 
 ## Parameters
 

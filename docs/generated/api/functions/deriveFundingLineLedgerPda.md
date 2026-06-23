@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / deriveFundingLineLedgerPda
+[@nakama-health/protocol-sdk](../README.md) / deriveFundingLineLedgerPda
 
 # Function: deriveFundingLineLedgerPda()
 
 > **deriveFundingLineLedgerPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:328](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L328)
+Defined in: [src/protocol\_seeds.ts:328](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L328)
 
 ## Parameters
 

@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OmegaXError
+[@nakama-health/protocol-sdk](../README.md) / OmegaXError
 
 # Class: OmegaXError
 
-Defined in: [src/errors.ts:9](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L9)
+Defined in: [src/errors.ts:13](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L13)
 
 ## Extends
 
@@ -30,7 +30,7 @@ Defined in: [src/errors.ts:9](https://github.com/OmegaX-Health/omegax-sdk/blob/m
 
 > **new OmegaXError**(`message`, `options`): `OmegaXError`
 
-Defined in: [src/errors.ts:13](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L13)
+Defined in: [src/errors.ts:17](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L17)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
+Defined in: [src/errors.ts:14](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L14)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
+Defined in: [src/errors.ts:15](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L15)
 
 ***
 

@@ -10,7 +10,7 @@ import {
   getOmegaXNetworkInfo,
   listProtocolAccountNames,
   listProtocolInstructionNames,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 export function buildProtocolStatus() {
   const networkInfo = getOmegaXNetworkInfo('devnet');
@@ -79,7 +79,7 @@ export function startServer(port = Number(process.env.PORT ?? '8787')) {
   });
 
   server.listen(port, () => {
-    console.log(`OmegaX status endpoint listening on :${port}/status`);
+    console.log(`Nakama status endpoint listening on :${port}/status`);
   });
   return server;
 }

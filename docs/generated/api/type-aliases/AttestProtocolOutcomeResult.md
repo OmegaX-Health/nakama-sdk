@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / AttestProtocolOutcomeResult
+[@nakama-health/protocol-sdk](../README.md) / AttestProtocolOutcomeResult
 
 # Type Alias: AttestProtocolOutcomeResult
 
 > **AttestProtocolOutcomeResult** = `object`
 
-Defined in: [src/oracle.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L58)
+Defined in: [src/oracle.ts:58](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L58)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/oracle.ts:58](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **attestation**: [`ProtocolBoundOutcomeAttestation`](ProtocolBoundOutcomeAttestation.md)
 
-Defined in: [src/oracle.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L59)
+Defined in: [src/oracle.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L59)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [src/oracle.ts:59](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **txSignature**: `string` \| `null`
 
-Defined in: [src/oracle.ts:60](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L60)
+Defined in: [src/oracle.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L60)

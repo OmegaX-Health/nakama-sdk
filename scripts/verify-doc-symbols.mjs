@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path';
 const DOCS_ROOT = resolve('docs');
 const SOURCE_ROOT = resolve('src');
 const REFERENCE_REGEX = /`([A-Za-z_][A-Za-z0-9_]*)\([^`]*\)`/g;
-const SDK_SUBPATH_REGEX = /@omegax\/protocol-sdk(\/[A-Za-z0-9_-]+)?/g;
+const SDK_SUBPATH_REGEX = /@nakama-health\/protocol-sdk(\/[A-Za-z0-9_-]+)?/g;
 
 async function listFilesRecursively(rootPath, extension) {
   const entries = await readdir(rootPath, { withFileTypes: true });
@@ -120,7 +120,7 @@ async function main() {
     );
     for (const subpath of missingSubpaths) {
       console.error(
-        `- @omegax/protocol-sdk${subpath === '.' ? '' : subpath.slice(1)}`,
+        `- @nakama-health/protocol-sdk${subpath === '.' ? '' : subpath.slice(1)}`,
       );
     }
     process.exitCode = 1;

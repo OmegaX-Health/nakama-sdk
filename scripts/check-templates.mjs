@@ -9,7 +9,7 @@ import { join, resolve } from 'node:path';
 const sdkRoot = process.cwd();
 const cliPath = resolve(sdkRoot, 'dist/cli.js');
 const templates = ['node-backend', 'next-route', 'oracle-worker'];
-const sdkPackageName = '@omegax/protocol-sdk';
+const sdkPackageName = '@nakama-health/protocol-sdk';
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -47,7 +47,8 @@ function parsePackedTarball(stdout) {
 async function patchSdkDependency(appRoot, tarballPath) {
   const packageJsonPath = join(appRoot, 'package.json');
   const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
-  packageJson.dependencies['@omegax/protocol-sdk'] = `file:${tarballPath}`;
+  packageJson.dependencies['@nakama-health/protocol-sdk'] =
+    `file:${tarballPath}`;
   await writeFile(
     packageJsonPath,
     `${JSON.stringify(packageJson, null, 2)}\n`,
@@ -90,7 +91,7 @@ export async function runTemplateChecks() {
   const tarballPath = parsePackedTarball(
     run('npm', ['pack', '--ignore-scripts', '--json'], { capture: true }),
   );
-  const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-templates-'));
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-templates-'));
 
   try {
     for (const template of templates) {

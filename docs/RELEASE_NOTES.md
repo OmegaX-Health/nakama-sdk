@@ -1,4 +1,4 @@
-# Release Notes — `@omegax/protocol-sdk`
+# Release Notes — `@nakama-health/protocol-sdk`
 
 ## `0.8.10`
 
@@ -47,9 +47,9 @@
 - Added the full onboarding DX pass for external app/backend and oracle-service
   builders, including safe-client-first docs, runnable smoke/app/oracle
   examples, and a packed consumer import smoke.
-- Exported `@omegax/protocol-sdk/protocol_models` and
-  `@omegax/protocol-sdk/transactions` as documented public subpaths.
-- Added public typed SDK errors through `@omegax/protocol-sdk/errors`.
+- Exported `@nakama-health/protocol-sdk/protocol_models` and
+  `@nakama-health/protocol-sdk/transactions` as documented public subpaths.
+- Added public typed SDK errors through `@nakama-health/protocol-sdk/errors`.
 - Added named safe-client public types such as `SafeProtocolClient`,
   `SafeProtocolClientOptions`, and safe builder parameter aliases so IDE hover
   output exposes stable SDK concepts instead of anonymous inferred types.
@@ -133,7 +133,7 @@
 ## `0.8.0`
 
 - Added first-class SDK coverage for the current oracle and schema registry surface, including canonical builders and generated contract parity for oracle profiles, pool oracle controls, outcome schemas, and schema dependency ledgers.
-- Exported the new `@omegax/protocol-sdk/oracle` module for attestation workflows, including `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, and `attestOutcome(...)`.
+- Exported the new `@nakama-health/protocol-sdk/oracle` module for attestation workflows, including `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, and `attestOutcome(...)`.
 - Added an on-chain claim-case attestation builder plus the supporting generated bindings and PDA helpers so oracle services could anchor schema-bound claim-case attestations on-chain without dropping to custom instruction packing.
 - Refreshed protocol bindings, PDA helpers, and parity tests so the SDK matches the latest canonical `omegax-protocol` `main` surface and passes the local protocol verification gate.
 - Kept the package on the devnet-first public release track while preserving the current `omegax-protocol v0.3.0` contract target.

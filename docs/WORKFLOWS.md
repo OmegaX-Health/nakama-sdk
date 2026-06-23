@@ -1,6 +1,6 @@
-# Integration Workflows — `@omegax/protocol-sdk`
+# Integration Workflows — `@nakama-health/protocol-sdk`
 
-These workflows map the canonical OmegaX economic model to the actual SDK builders and readers.
+These workflows map the canonical Nakama economic model to the actual SDK builders and readers.
 
 Use them by builder lane rather than reading the entire catalog in protocol-object order.
 
@@ -26,7 +26,7 @@ Runnable starting points:
 
 ## Path A: Oracle and event producers
 
-Use this path when your service needs to sign OmegaX-compatible outcome events and feed settlement-grade evidence into the claim lifecycle.
+Use this path when your service needs to sign Nakama-compatible outcome events and feed settlement-grade evidence into the claim lifecycle.
 
 ### Workflow A1: Oracle attestation services
 

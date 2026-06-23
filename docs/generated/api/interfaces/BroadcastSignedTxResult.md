@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / BroadcastSignedTxResult
+[@nakama-health/protocol-sdk](../README.md) / BroadcastSignedTxResult
 
 # Interface: BroadcastSignedTxResult
 
-Defined in: [src/types.ts:145](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L145)
+Defined in: [src/types.ts:145](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L145)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:145](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signature**: `string`
 
-Defined in: [src/types.ts:146](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L146)
+Defined in: [src/types.ts:146](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L146)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:146](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **slot**: `number` \| `null`
 
-Defined in: [src/types.ts:148](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L148)
+Defined in: [src/types.ts:148](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L148)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/types.ts:148](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **status**: `"confirmed"` \| `"failed"` \| `"submitted"`
 
-Defined in: [src/types.ts:147](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L147)
+Defined in: [src/types.ts:147](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L147)

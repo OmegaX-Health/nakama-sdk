@@ -1,6 +1,6 @@
 # Cross-Repo Release Order
 
-Use this sequence to publish the canonical OmegaX protocol release train without docs or SDK drift.
+Use this sequence to publish the canonical Nakama protocol release train without docs or SDK drift.
 
 ## Target versions
 

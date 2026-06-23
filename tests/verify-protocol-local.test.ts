@@ -11,7 +11,7 @@ import {
 
 test('verification reporting uses workspace-state language and avoids stale status wording', () => {
   const surfaceSummaryRoot = mkdtempSync(
-    join(tmpdir(), 'omegax-sdk-verify-summary-'),
+    join(tmpdir(), 'nakama-sdk-verify-summary-'),
   );
   const surfaceSummaryPath = join(surfaceSummaryRoot, 'surface-summary.json');
   writeFileSync(surfaceSummaryPath, JSON.stringify({ ok: true }), 'utf8');

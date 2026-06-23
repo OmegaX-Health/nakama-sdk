@@ -78,7 +78,7 @@ export function formatLocalnetFailure(params) {
   return [
     message,
     params.validatorLogTail
-      ? `\n[omegax-sdk] Validator log tail:\n${params.validatorLogTail}`
+      ? `\n[nakama-sdk] Validator log tail:\n${params.validatorLogTail}`
       : '',
   ]
     .filter(Boolean)
@@ -541,7 +541,7 @@ async function runPhaseWithRetry(params) {
     try {
       if (localnetPhaseAttempts > 1) {
         console.log(
-          `[omegax-sdk] ${params.name} attempt ${attempt}/${localnetPhaseAttempts}`,
+          `[nakama-sdk] ${params.name} attempt ${attempt}/${localnetPhaseAttempts}`,
         );
       }
       await runPhase(params);
@@ -552,7 +552,7 @@ async function runPhaseWithRetry(params) {
         throw error;
       }
       console.warn(
-        `[omegax-sdk] ${params.name} hit retryable localnet startup failure; retrying (${attempt}/${localnetPhaseAttempts})`,
+        `[nakama-sdk] ${params.name} hit retryable localnet startup failure; retrying (${attempt}/${localnetPhaseAttempts})`,
       );
       console.warn(error instanceof Error ? error.message : String(error));
     }
@@ -568,7 +568,7 @@ async function main() {
   }
 
   if (!skipBuild) {
-    console.log(`[omegax-sdk] Building protocol program in ${protocolRepo}`);
+    console.log(`[nakama-sdk] Building protocol program in ${protocolRepo}`);
     await runCommand({
       command: 'npm',
       args: ['run', 'anchor:build:checked'],
@@ -587,7 +587,7 @@ async function main() {
     preloadFundedSignerFixtures: true,
     run: async (context) => {
       console.log(
-        `[omegax-sdk] Running SDK localnet smoke against ${context.rpcUrl}`,
+        `[nakama-sdk] Running SDK localnet smoke against ${context.rpcUrl}`,
       );
       await runCommand({
         command: 'node',
@@ -624,7 +624,7 @@ async function main() {
             `sdk-protocol-surface-summary-${nowStamp()}.json`,
           );
       console.log(
-        `[omegax-sdk] Running protocol surface matrix through SDK adapter against ${context.rpcUrl}`,
+        `[nakama-sdk] Running protocol surface matrix through SDK adapter against ${context.rpcUrl}`,
       );
       await runCommand({
         command: 'node',
@@ -656,7 +656,7 @@ async function main() {
             context.legacySchemaFixture?.schemaKeyHashHex ?? '',
         },
       });
-      console.log(`[omegax-sdk] Surface summary written to ${summaryPath}`);
+      console.log(`[nakama-sdk] Surface summary written to ${summaryPath}`);
     },
   });
 }

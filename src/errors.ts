@@ -1,3 +1,7 @@
+// FROZEN runtime contract — TODO(NAKAMA-REBRAND-07): the exported OmegaX* symbols and the
+// OMEGAX_* error.code strings in this file are public API that consumers key off via
+// `instanceof` + error.code. Do NOT rename piecemeal during the rebrand; rename only as a
+// coordinated breaking major across producers + consumers.
 export type OmegaXErrorDetails = Record<string, unknown>;
 
 export interface OmegaXErrorOptions {

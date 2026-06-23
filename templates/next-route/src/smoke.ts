@@ -12,7 +12,7 @@ const payload = (await response.json()) as {
 };
 
 if (!payload.ok || !payload.instructions || !payload.accounts) {
-  throw new Error('OmegaX route smoke did not return protocol metadata.');
+  throw new Error('Nakama route smoke did not return protocol metadata.');
 }
 
 console.log(JSON.stringify(payload, null, 2));

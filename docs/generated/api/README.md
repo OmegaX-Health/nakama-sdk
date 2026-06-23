@@ -1,8 +1,8 @@
-**@omegax/protocol-sdk**
+**@nakama-health/protocol-sdk**
 
 ***
 
-# @omegax/protocol-sdk
+# @nakama-health/protocol-sdk
 
 ## Classes
 

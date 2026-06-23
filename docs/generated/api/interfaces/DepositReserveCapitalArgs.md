@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / DepositReserveCapitalArgs
+[@nakama-health/protocol-sdk](../README.md) / DepositReserveCapitalArgs
 
 # Interface: DepositReserveCapitalArgs
 
-Defined in: [src/generated/protocol\_types.ts:170](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L170)
+Defined in: [src/generated/protocol\_types.ts:170](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L170)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:170](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:171](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L171)
+Defined in: [src/generated/protocol\_types.ts:171](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L171)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:171](https://github.com/OmegaX-Hea
 
 > **terms\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:172](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L172)
+Defined in: [src/generated/protocol\_types.ts:172](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L172)

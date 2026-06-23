@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": {
-    "name": "@omegax/protocol-sdk",
+    "name": "@nakama-health/protocol-sdk",
     "version": "0.8.10",
     "module": "module",
     "node": ">=20"

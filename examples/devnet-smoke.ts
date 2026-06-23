@@ -8,7 +8,7 @@ import {
   getOmegaXNetworkInfo,
   listProtocolAccountNames,
   listProtocolInstructionNames,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const network = 'devnet' as const;
 const networkInfo = getOmegaXNetworkInfo(network);
@@ -38,7 +38,7 @@ const instructionNames = listProtocolInstructionNames();
 const accountNames = listProtocolAccountNames();
 
 if (instructionNames.length === 0 || accountNames.length === 0) {
-  throw new Error('OmegaX protocol surface did not load.');
+  throw new Error('Nakama protocol surface did not load.');
 }
 
 console.log(

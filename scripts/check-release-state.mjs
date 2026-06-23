@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-export const DEFAULT_RELEASE_REPOSITORY = 'OmegaX-Health/omegax-sdk';
+export const DEFAULT_RELEASE_REPOSITORY = 'OmegaX-Health/nakama-sdk';
 export const DEFAULT_COMMAND_TIMEOUT_MS = 15_000;
 
 function commandTimeoutMs() {

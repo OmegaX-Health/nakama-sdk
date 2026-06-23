@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OmegaXTokenAccountPreflightError
+[@nakama-health/protocol-sdk](../README.md) / OmegaXTokenAccountPreflightError
 
 # Class: OmegaXTokenAccountPreflightError
 
-Defined in: [src/errors.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L66)
+Defined in: [src/errors.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L70)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/errors.ts:66](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **new OmegaXTokenAccountPreflightError**(`message`, `options?`): `OmegaXTokenAccountPreflightError`
 
-Defined in: [src/errors.ts:67](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L67)
+Defined in: [src/errors.ts:71](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L71)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
+Defined in: [src/errors.ts:14](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L14)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
+Defined in: [src/errors.ts:15](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L15)
 
 #### Inherited from
 

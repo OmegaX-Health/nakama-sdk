@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / RpcClient
+[@nakama-health/protocol-sdk](../README.md) / RpcClient
 
 # Interface: RpcClient
 
-Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L184)
+Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L184)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [src/types.ts:184](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **broadcastSignedTx**(`params`): `Promise`\<[`BroadcastSignedTxResult`](BroadcastSignedTxResult.md)\>
 
-Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L186)
+Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L186)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [src/types.ts:186](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **getRecentBlockhash**(): `Promise`\<`string`\>
 
-Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L185)
+Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L185)
 
 #### Returns
 
@@ -44,7 +44,7 @@ Defined in: [src/types.ts:185](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **getSignatureStatus**(`params`): `Promise`\<[`GetSignatureStatusResult`](GetSignatureStatusResult.md)\>
 
-Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L192)
+Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L192)
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: [src/types.ts:192](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **simulateSignedTx**(`params`): `Promise`\<[`SimulateSignedTxResult`](SimulateSignedTxResult.md)\>
 
-Defined in: [src/types.ts:189](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/types.ts#L189)
+Defined in: [src/types.ts:189](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/types.ts#L189)
 
 #### Parameters
 

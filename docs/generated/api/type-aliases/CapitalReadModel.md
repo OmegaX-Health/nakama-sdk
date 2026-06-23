@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / CapitalReadModel
+[@nakama-health/protocol-sdk](../README.md) / CapitalReadModel
 
 # Type Alias: CapitalReadModel
 
 > **CapitalReadModel** = `object`
 
-Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L355)
+Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L355)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:355](https://github.com/OmegaX-Health/omega
 
 > **classes**: `object`[]
 
-Defined in: [src/protocol\_models.ts:362](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L362)
+Defined in: [src/protocol\_models.ts:362](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L362)
 
 #### allocated
 
@@ -68,7 +68,7 @@ Defined in: [src/protocol\_models.ts:362](https://github.com/OmegaX-Health/omega
 
 > **liquidityPoolAddress**: `string`
 
-Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L356)
+Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L356)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [src/protocol\_models.ts:356](https://github.com/OmegaX-Health/omega
 
 > **poolId**: `string`
 
-Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L357)
+Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L357)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [src/protocol\_models.ts:357](https://github.com/OmegaX-Health/omega
 
 > **totalAllocated**: `bigint`
 
-Defined in: [src/protocol\_models.ts:359](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L359)
+Defined in: [src/protocol\_models.ts:359](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L359)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [src/protocol\_models.ts:359](https://github.com/OmegaX-Health/omega
 
 > **totalNav**: `bigint`
 
-Defined in: [src/protocol\_models.ts:358](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L358)
+Defined in: [src/protocol\_models.ts:358](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L358)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [src/protocol\_models.ts:358](https://github.com/OmegaX-Health/omega
 
 > **totalPendingRedemptions**: `bigint`
 
-Defined in: [src/protocol\_models.ts:361](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L361)
+Defined in: [src/protocol\_models.ts:361](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L361)
 
 ***
 
@@ -108,4 +108,4 @@ Defined in: [src/protocol\_models.ts:361](https://github.com/OmegaX-Health/omega
 
 > **totalUnallocated**: `bigint`
 
-Defined in: [src/protocol\_models.ts:360](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L360)
+Defined in: [src/protocol\_models.ts:360](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L360)

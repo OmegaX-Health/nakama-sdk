@@ -42,7 +42,7 @@ function runTypeDoc(outDir) {
 }
 
 async function main() {
-  const tempRoot = await mkdtemp(join(tmpdir(), 'omegax-sdk-api-docs-'));
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-api-docs-'));
   try {
     runTypeDoc(tempRoot);
 

@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / deriveDomainAssetVaultTokenAccountPda
+[@nakama-health/protocol-sdk](../README.md) / deriveDomainAssetVaultTokenAccountPda
 
 # Function: deriveDomainAssetVaultTokenAccountPda()
 
 > **deriveDomainAssetVaultTokenAccountPda**(`params`): `PublicKey`
 
-Defined in: [src/protocol\_seeds.ts:176](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L176)
+Defined in: [src/protocol\_seeds.ts:176](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L176)
 
 ## Parameters
 

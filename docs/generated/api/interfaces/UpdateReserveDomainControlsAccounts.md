@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / UpdateReserveDomainControlsAccounts
+[@nakama-health/protocol-sdk](../README.md) / UpdateReserveDomainControlsAccounts
 
 # Interface: UpdateReserveDomainControlsAccounts
 
-Defined in: [src/generated/protocol\_types.ts:683](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L683)
+Defined in: [src/generated/protocol\_types.ts:683](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L683)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:683](https://github.com/OmegaX-Hea
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:684](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L684)
+Defined in: [src/generated/protocol\_types.ts:684](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L684)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/generated/protocol\_types.ts:684](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:685](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L685)
+Defined in: [src/generated/protocol\_types.ts:685](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L685)

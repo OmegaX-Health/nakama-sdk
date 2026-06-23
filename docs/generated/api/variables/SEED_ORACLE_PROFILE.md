@@ -1,11 +1,11 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / SEED\_ORACLE\_PROFILE
+[@nakama-health/protocol-sdk](../README.md) / SEED\_ORACLE\_PROFILE
 
 # Variable: SEED\_ORACLE\_PROFILE
 
 > `const` **SEED\_ORACLE\_PROFILE**: `"oracle_profile"` = `'oracle_profile'`
 
-Defined in: [src/protocol\_seeds.ts:37](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_seeds.ts#L37)
+Defined in: [src/protocol\_seeds.ts:37](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_seeds.ts#L37)

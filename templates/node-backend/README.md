@@ -1,4 +1,4 @@
-# OmegaX Node Backend Starter
+# Nakama Node Backend Starter
 
 Read-only starter for health apps, hospital/provider backends, and integration
 services.

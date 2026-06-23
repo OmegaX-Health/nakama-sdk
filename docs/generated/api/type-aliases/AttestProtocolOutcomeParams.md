@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / AttestProtocolOutcomeParams
+[@nakama-health/protocol-sdk](../README.md) / AttestProtocolOutcomeParams
 
 # Type Alias: AttestProtocolOutcomeParams
 
 > **AttestProtocolOutcomeParams** = `object`
 
-Defined in: [src/oracle.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L44)
+Defined in: [src/oracle.ts:44](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L44)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/oracle.ts:44](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **context**: `Omit`\<[`ProtocolBoundAttestationContext`](ProtocolBoundAttestationContext.md), `"issuedAtIso"`\> & `object`
 
-Defined in: [src/oracle.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L49)
+Defined in: [src/oracle.ts:49](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L49)
 
 #### Type Declaration
 
@@ -30,7 +30,7 @@ Defined in: [src/oracle.ts:49](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **cycleId**: `string`
 
-Defined in: [src/oracle.ts:46](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L46)
+Defined in: [src/oracle.ts:46](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L46)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/oracle.ts:46](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **outcomeId**: `string`
 
-Defined in: [src/oracle.ts:47](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L47)
+Defined in: [src/oracle.ts:47](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L47)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/oracle.ts:47](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **payload**: `Record`\<`string`, `unknown`\>
 
-Defined in: [src/oracle.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L48)
+Defined in: [src/oracle.ts:48](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L48)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/oracle.ts:48](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **signer**: [`OracleSigner`](OracleSigner.md)
 
-Defined in: [src/oracle.ts:52](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L52)
+Defined in: [src/oracle.ts:52](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L52)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/oracle.ts:52](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `optional` **submitAttestation?**: (`attestation`) => `Promise`\<\{ `txSignature?`: `string`; \}\>
 
-Defined in: [src/oracle.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L53)
+Defined in: [src/oracle.ts:53](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L53)
 
 #### Parameters
 
@@ -80,4 +80,4 @@ Defined in: [src/oracle.ts:53](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **userId**: `string`
 
-Defined in: [src/oracle.ts:45](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/oracle.ts#L45)
+Defined in: [src/oracle.ts:45](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/oracle.ts#L45)

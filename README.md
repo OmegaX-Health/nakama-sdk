@@ -1,8 +1,8 @@
-# @omegax/protocol-sdk
+# @nakama-health/protocol-sdk
 
-Build health apps, oracle services, and outcome-triggered settlement flows on Solana devnet beta with the canonical OmegaX Protocol SDK.
+Build health apps, oracle services, and outcome-triggered settlement flows on Solana devnet beta with the canonical Nakama Protocol SDK.
 
-`@omegax/protocol-sdk` gives builders unsigned transaction builders, readers, PDA helpers, reserve-aware read models, and oracle attestation helpers for the current public OmegaX surface.
+`@nakama-health/protocol-sdk` gives builders unsigned transaction builders, readers, PDA helpers, reserve-aware read models, and oracle attestation helpers for the current public Nakama surface.
 
 ## What you can build today
 
@@ -20,13 +20,13 @@ Build health apps, oracle services, and outcome-triggered settlement flows on So
 
 ### Oracle and event producers
 
-Use `@omegax/protocol-sdk/oracle` to sign outcome and settlement-grade claim attestations.
+Use `@nakama-health/protocol-sdk/oracle` to sign outcome and settlement-grade claim attestations.
 
 Start with:
 
 - `/docs/GETTING_STARTED.md`
 - `/docs/WORKFLOWS.md`
-- [Oracle Event Production](https://docs.omegax.health/docs/oracle/event-production)
+- [Oracle Event Production](https://docs.nakama.health/docs/oracle/event-production)
 
 ### Health / wallet / app builders
 
@@ -51,7 +51,7 @@ Start with:
 ## Install
 
 ```bash
-npm install @omegax/protocol-sdk
+npm install @nakama-health/protocol-sdk
 ```
 
 ## Runtime basics
@@ -60,7 +60,7 @@ npm install @omegax/protocol-sdk
 - ESM-only package
 - Protocol builders are unsigned
 - `programId` must be configured explicitly in runtime integrations
-- Public integrations should stay on devnet until OmegaX announces mainnet availability
+- Public integrations should stay on devnet until Nakama announces mainnet availability
 
 ## Quickstart
 
@@ -74,7 +74,7 @@ import {
   createRpcClient,
   getOmegaXNetworkInfo,
   listProtocolInstructionNames,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const network =
   (process.env.OMEGAX_NETWORK as 'devnet' | 'mainnet' | undefined) ?? 'devnet';
@@ -129,7 +129,7 @@ This package exposes the live canonical object model:
 - SDK release target: `0.8.10`
 - Protocol surface target: `omegax-protocol` commit `763c7da`
 - Current public network target: Solana devnet beta
-- Public docs: [docs.omegax.health](https://docs.omegax.health)
+- Public docs: [docs.nakama.health](https://docs.nakama.health)
 
 ## Release notes
 
@@ -143,7 +143,7 @@ This package exposes the live canonical object model:
 - `0.8.2` keeps invite-only member enrollment builders aligned with the protocol account metas by preserving the optional invite-authority signer.
 - `0.8.1` refreshes generated bindings and protocol parity for the latest linked-claim and obligation-settlement hardening on the public `v0.3.0` surface.
 - `0.8.0` adds full parity for the current oracle and schema registry surface, plus a first-class oracle attestation helper module for service-side signing flows.
-- The package now exports `@omegax/protocol-sdk/oracle` alongside the root exports so oracle workers can use a narrower import surface when they only need attestation helpers.
+- The package now exports `@nakama-health/protocol-sdk/oracle` alongside the root exports so oracle workers can use a narrower import surface when they only need attestation helpers.
 - Canonical protocol builders, readers, seeds, generated bindings, and local surface verification are aligned to the current `omegax-protocol` `main` surface.
 
 ## Documentation map
@@ -165,24 +165,24 @@ This package exposes the live canonical object model:
 ## Canonical module map
 
 - Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
-- `@omegax/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
-- `@omegax/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
-- `@omegax/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveDomainAssetVaultPda(...)`, `deriveHealthPlanPda(...)`, `derivePolicySeriesPda(...)`, `deriveFundingLinePda(...)`, `deriveObligationPda(...)`, and `deriveClaimCasePda(...)`
-- `@omegax/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
-- `@omegax/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
-- `@omegax/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)` for service-side signing and settlement-grade evidence verification
-- `@omegax/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
-- `@omegax/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
-- `@omegax/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
-- `@omegax/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
+- `@nakama-health/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
+- `@nakama-health/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
+- `@nakama-health/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveDomainAssetVaultPda(...)`, `deriveHealthPlanPda(...)`, `derivePolicySeriesPda(...)`, `deriveFundingLinePda(...)`, `deriveObligationPda(...)`, and `deriveClaimCasePda(...)`
+- `@nakama-health/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
+- `@nakama-health/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
+- `@nakama-health/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)` for service-side signing and settlement-grade evidence verification
+- `@nakama-health/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
+- `@nakama-health/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
+- `@nakama-health/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
+- `@nakama-health/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
 
 ## CLI
 
 ```bash
-npx @omegax/protocol-sdk doctor
-npx @omegax/protocol-sdk scaffold node-backend --out omegax-provider-backend
-npx @omegax/protocol-sdk scaffold next-route --out omegax-health-route
-npx @omegax/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
+npx @nakama-health/protocol-sdk doctor
+npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
+npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
+npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
 ```
 
 The CLI is no-signature by default. It does not require funded wallets, private

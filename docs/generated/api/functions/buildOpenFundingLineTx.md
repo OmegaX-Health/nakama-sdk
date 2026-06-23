@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / buildOpenFundingLineTx
+[@nakama-health/protocol-sdk](../README.md) / buildOpenFundingLineTx
 
 # Function: buildOpenFundingLineTx()
 
 > **buildOpenFundingLineTx**(`params`): `Transaction`
 
-Defined in: [src/protocol.ts:660](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol.ts#L660)
+Defined in: [src/protocol.ts:660](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol.ts#L660)
 
 ## Parameters
 

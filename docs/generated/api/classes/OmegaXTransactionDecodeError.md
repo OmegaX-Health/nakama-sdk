@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / OmegaXTransactionDecodeError
+[@nakama-health/protocol-sdk](../README.md) / OmegaXTransactionDecodeError
 
 # Class: OmegaXTransactionDecodeError
 
-Defined in: [src/errors.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L84)
+Defined in: [src/errors.ts:88](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L88)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/errors.ts:84](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > **new OmegaXTransactionDecodeError**(`message`, `options?`): `OmegaXTransactionDecodeError`
 
-Defined in: [src/errors.ts:85](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L85)
+Defined in: [src/errors.ts:89](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L89)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L10)
+Defined in: [src/errors.ts:14](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L14)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [src/errors.ts:10](https://github.com/OmegaX-Health/omegax-sdk/blob/
 
 > `readonly` `optional` **details?**: [`OmegaXErrorDetails`](../type-aliases/OmegaXErrorDetails.md)
 
-Defined in: [src/errors.ts:11](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/errors.ts#L11)
+Defined in: [src/errors.ts:15](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/errors.ts#L15)
 
 #### Inherited from
 

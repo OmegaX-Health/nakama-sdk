@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / CreateReserveDomainAccounts
+[@nakama-health/protocol-sdk](../README.md) / CreateReserveDomainAccounts
 
 # Interface: CreateReserveDomainAccounts
 
-Defined in: [src/generated/protocol\_types.ts:525](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L525)
+Defined in: [src/generated/protocol\_types.ts:525](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L525)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:525](https://github.com/OmegaX-Hea
 
 > **authority**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:526](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L526)
+Defined in: [src/generated/protocol\_types.ts:526](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L526)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:526](https://github.com/OmegaX-Hea
 
 > **reserve\_domain**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:527](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L527)
+Defined in: [src/generated/protocol\_types.ts:527](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L527)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/generated/protocol\_types.ts:527](https://github.com/OmegaX-Hea
 
 > `optional` **system\_program?**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:528](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L528)
+Defined in: [src/generated/protocol\_types.ts:528](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L528)

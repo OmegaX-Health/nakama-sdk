@@ -2,7 +2,7 @@
 
 import { pathToFileURL } from 'node:url';
 
-const repository = process.env.GITHUB_REPOSITORY ?? 'OmegaX-Health/omegax-sdk';
+const repository = process.env.GITHUB_REPOSITORY ?? 'OmegaX-Health/nakama-sdk';
 const token = process.env.OMEGAX_GOVERNANCE_TOKEN ?? process.env.GITHUB_TOKEN;
 const branch = process.env.OMEGAX_RELEASE_BRANCH ?? 'main';
 const environmentName =

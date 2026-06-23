@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const root = resolve('.');
-const smokeDir = mkdtempSync(join(tmpdir(), 'omegax-sdk-dx-'));
+const smokeDir = mkdtempSync(join(tmpdir(), 'nakama-sdk-dx-'));
 const expectedVersion = JSON.parse(
   readFileSync(resolve(root, 'package.json'), 'utf8'),
 ).version;
@@ -81,17 +81,17 @@ try {
   type SafeProtocolClient,
   type SafeProtocolClientOptions,
   type SafeSettleObligationTxParams,
-} from '@omegax/protocol-sdk';
-import { validateSignedClaimTx } from '@omegax/protocol-sdk/claims';
-import { OmegaXError } from '@omegax/protocol-sdk/errors';
-import { createOracleSignerFromKmsAdapter } from '@omegax/protocol-sdk/oracle';
-import { createProtocolClient } from '@omegax/protocol-sdk/protocol';
-import { buildMemberReadModel } from '@omegax/protocol-sdk/protocol_models';
-import { deriveHealthPlanPda } from '@omegax/protocol-sdk/protocol_seeds';
-import { createRpcClient } from '@omegax/protocol-sdk/rpc';
-import { serializeSolanaTransactionBase64 } from '@omegax/protocol-sdk/transactions';
-import type { ClaimIntent } from '@omegax/protocol-sdk/types';
-import { sha256Hex } from '@omegax/protocol-sdk/utils';
+} from '@nakama-health/protocol-sdk';
+import { validateSignedClaimTx } from '@nakama-health/protocol-sdk/claims';
+import { OmegaXError } from '@nakama-health/protocol-sdk/errors';
+import { createOracleSignerFromKmsAdapter } from '@nakama-health/protocol-sdk/oracle';
+import { createProtocolClient } from '@nakama-health/protocol-sdk/protocol';
+import { buildMemberReadModel } from '@nakama-health/protocol-sdk/protocol_models';
+import { deriveHealthPlanPda } from '@nakama-health/protocol-sdk/protocol_seeds';
+import { createRpcClient } from '@nakama-health/protocol-sdk/rpc';
+import { serializeSolanaTransactionBase64 } from '@nakama-health/protocol-sdk/transactions';
+import type { ClaimIntent } from '@nakama-health/protocol-sdk/types';
+import { sha256Hex } from '@nakama-health/protocol-sdk/utils';
 
 const options: SafeProtocolClientOptions = { programId: PROTOCOL_PROGRAM_ID };
 const connection = createConnection({ network: 'devnet' });
@@ -136,17 +136,17 @@ if (listProtocolAccountNames().length === 0) {
 
 const require = createRequire(import.meta.url);
 const subpaths = [
-  '@omegax/protocol-sdk',
-  '@omegax/protocol-sdk/claims',
-  '@omegax/protocol-sdk/errors',
-  '@omegax/protocol-sdk/oracle',
-  '@omegax/protocol-sdk/protocol',
-  '@omegax/protocol-sdk/protocol_models',
-  '@omegax/protocol-sdk/protocol_seeds',
-  '@omegax/protocol-sdk/rpc',
-  '@omegax/protocol-sdk/transactions',
-  '@omegax/protocol-sdk/types',
-  '@omegax/protocol-sdk/utils',
+  '@nakama-health/protocol-sdk',
+  '@nakama-health/protocol-sdk/claims',
+  '@nakama-health/protocol-sdk/errors',
+  '@nakama-health/protocol-sdk/oracle',
+  '@nakama-health/protocol-sdk/protocol',
+  '@nakama-health/protocol-sdk/protocol_models',
+  '@nakama-health/protocol-sdk/protocol_seeds',
+  '@nakama-health/protocol-sdk/rpc',
+  '@nakama-health/protocol-sdk/transactions',
+  '@nakama-health/protocol-sdk/types',
+  '@nakama-health/protocol-sdk/utils',
 ];
 
 for (const subpath of subpaths) {
@@ -156,7 +156,7 @@ for (const subpath of subpaths) {
   }
 }
 
-const pkg = require('@omegax/protocol-sdk/package.json');
+const pkg = require('@nakama-health/protocol-sdk/package.json');
 if (pkg.version !== ${JSON.stringify(expectedVersion)}) {
   throw new Error(\`unexpected package version \${pkg.version}\`);
 }

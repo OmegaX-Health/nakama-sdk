@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / ReserveScopedSnapshot
+[@nakama-health/protocol-sdk](../README.md) / ReserveScopedSnapshot
 
 # Type Alias: ReserveScopedSnapshot
 
 > **ReserveScopedSnapshot** = `object`
 
-Defined in: [src/protocol\_models.ts:136](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L136)
+Defined in: [src/protocol\_models.ts:136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L136)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/protocol\_models.ts:136](https://github.com/OmegaX-Health/omega
 
 > **address**: `string`
 
-Defined in: [src/protocol\_models.ts:137](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L137)
+Defined in: [src/protocol\_models.ts:137](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L137)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/protocol\_models.ts:137](https://github.com/OmegaX-Health/omega
 
 > **assetMint**: `string`
 
-Defined in: [src/protocol\_models.ts:139](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L139)
+Defined in: [src/protocol\_models.ts:139](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L139)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/protocol\_models.ts:139](https://github.com/OmegaX-Health/omega
 
 > **reserveDomain**: `string`
 
-Defined in: [src/protocol\_models.ts:138](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L138)
+Defined in: [src/protocol\_models.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L138)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [src/protocol\_models.ts:138](https://github.com/OmegaX-Health/omega
 
 > `optional` **sheet?**: [`PartialReserveBalanceSheet`](PartialReserveBalanceSheet.md)
 
-Defined in: [src/protocol\_models.ts:140](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L140)
+Defined in: [src/protocol\_models.ts:140](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L140)

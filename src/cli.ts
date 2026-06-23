@@ -21,17 +21,17 @@ const templatesRoot = resolve(packageRoot, 'templates');
 const packageJsonPath = resolve(packageRoot, 'package.json');
 const supportedTemplates = ['node-backend', 'next-route', 'oracle-worker'];
 const subpaths = [
-  '@omegax/protocol-sdk',
-  '@omegax/protocol-sdk/claims',
-  '@omegax/protocol-sdk/errors',
-  '@omegax/protocol-sdk/oracle',
-  '@omegax/protocol-sdk/protocol',
-  '@omegax/protocol-sdk/protocol_models',
-  '@omegax/protocol-sdk/protocol_seeds',
-  '@omegax/protocol-sdk/rpc',
-  '@omegax/protocol-sdk/transactions',
-  '@omegax/protocol-sdk/types',
-  '@omegax/protocol-sdk/utils',
+  '@nakama-health/protocol-sdk',
+  '@nakama-health/protocol-sdk/claims',
+  '@nakama-health/protocol-sdk/errors',
+  '@nakama-health/protocol-sdk/oracle',
+  '@nakama-health/protocol-sdk/protocol',
+  '@nakama-health/protocol-sdk/protocol_models',
+  '@nakama-health/protocol-sdk/protocol_seeds',
+  '@nakama-health/protocol-sdk/rpc',
+  '@nakama-health/protocol-sdk/transactions',
+  '@nakama-health/protocol-sdk/types',
+  '@nakama-health/protocol-sdk/utils',
 ];
 
 type CheckStatus = 'pass' | 'fail';
@@ -61,9 +61,9 @@ interface CliOptions {
 function usage(): string {
   return [
     'Usage:',
-    '  omegax-sdk doctor [--network devnet] [--rpc-url <url>] [--json]',
-    '  omegax-sdk scaffold <node-backend|next-route|oracle-worker> [--out <dir>] [--force]',
-    '  omegax-sdk examples',
+    '  nakama-sdk doctor [--network devnet] [--rpc-url <url>] [--json]',
+    '  nakama-sdk scaffold <node-backend|next-route|oracle-worker> [--out <dir>] [--force]',
+    '  nakama-sdk examples',
   ].join('\n');
 }
 
@@ -299,14 +299,14 @@ export async function runDoctor(
 }
 
 function printDoctorHuman(result: DoctorResult): void {
-  console.log(`OmegaX SDK doctor v${result.version}`);
+  console.log(`Nakama SDK doctor v${result.version}`);
   for (const check of result.checks) {
     const label = check.status === 'pass' ? 'PASS' : 'FAIL';
     console.log(`${label} ${check.name}: ${check.message}`);
   }
   if (result.ok) {
     console.log(
-      'Doctor passed. Next: run `npx @omegax/protocol-sdk examples` or scaffold a template.',
+      'Doctor passed. Next: run `npx @nakama-health/protocol-sdk examples` or scaffold a template.',
     );
   } else {
     console.log(
@@ -335,7 +335,7 @@ export async function scaffoldTemplate(params: {
   const sourceDir = resolve(templatesRoot, params.template);
   const outDir = resolve(
     process.cwd(),
-    params.out ?? `omegax-${params.template}`,
+    params.out ?? `nakama-${params.template}`,
   );
   if (!existsSync(sourceDir)) {
     throw new Error(`Template files are missing for ${params.template}`);
@@ -357,17 +357,17 @@ export async function scaffoldTemplate(params: {
 function printExamples(): void {
   console.log(
     [
-      'OmegaX SDK examples:',
+      'Nakama SDK examples:',
       '  npm run example:smoke',
       '  npm run example:app',
       '  npm run example:oracle',
       '  npm run dogfood:consumer',
       '',
       'Public docs:',
-      '  https://docs.omegax.health/docs/sdk/sdk-getting-started',
-      '  https://docs.omegax.health/docs/sdk/sdk-recipes',
-      '  https://docs.omegax.health/docs/sdk/sdk-top-apis',
-      '  https://docs.omegax.health/docs/sdk/sdk-error-catalog',
+      '  https://docs.nakama.health/docs/sdk/sdk-getting-started',
+      '  https://docs.nakama.health/docs/sdk/sdk-recipes',
+      '  https://docs.nakama.health/docs/sdk/sdk-top-apis',
+      '  https://docs.nakama.health/docs/sdk/sdk-error-catalog',
     ].join('\n'),
   );
 }

@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / normalizeClaimSimulationFailure
+[@nakama-health/protocol-sdk](../README.md) / normalizeClaimSimulationFailure
 
 # Function: normalizeClaimSimulationFailure()
 
 > **normalizeClaimSimulationFailure**(`params`): [`ClaimFailureDetail`](../interfaces/ClaimFailureDetail.md)
 
-Defined in: [src/claims.ts:278](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/claims.ts#L278)
+Defined in: [src/claims.ts:278](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/claims.ts#L278)
 
 ## Parameters
 

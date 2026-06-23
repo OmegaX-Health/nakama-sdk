@@ -1,14 +1,14 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / shortenAddress
+[@nakama-health/protocol-sdk](../README.md) / shortenAddress
 
 # Function: shortenAddress()
 
 > **shortenAddress**(`address`, `size?`): `string`
 
-Defined in: [src/protocol\_models.ts:848](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/protocol_models.ts#L848)
+Defined in: [src/protocol\_models.ts:848](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/protocol_models.ts#L848)
 
 ## Parameters
 

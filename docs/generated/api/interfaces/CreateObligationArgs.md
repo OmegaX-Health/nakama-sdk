@@ -1,12 +1,12 @@
-[**@omegax/protocol-sdk**](../README.md)
+[**@nakama-health/protocol-sdk**](../README.md)
 
 ***
 
-[@omegax/protocol-sdk](../README.md) / CreateObligationArgs
+[@nakama-health/protocol-sdk](../README.md) / CreateObligationArgs
 
 # Interface: CreateObligationArgs
 
-Defined in: [src/generated/protocol\_types.ts:129](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L129)
+Defined in: [src/generated/protocol\_types.ts:129](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L129)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/generated/protocol\_types.ts:129](https://github.com/OmegaX-Hea
 
 > **amount**: [`BigNumberish`](../type-aliases/BigNumberish.md)
 
-Defined in: [src/generated/protocol\_types.ts:137](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L137)
+Defined in: [src/generated/protocol\_types.ts:137](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L137)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/generated/protocol\_types.ts:137](https://github.com/OmegaX-Hea
 
 > **asset\_mint**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:131](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L131)
+Defined in: [src/generated/protocol\_types.ts:131](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L131)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/generated/protocol\_types.ts:131](https://github.com/OmegaX-Hea
 
 > **beneficiary**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:134](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L134)
+Defined in: [src/generated/protocol\_types.ts:134](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L134)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/generated/protocol\_types.ts:134](https://github.com/OmegaX-Hea
 
 > **claim\_case**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:135](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L135)
+Defined in: [src/generated/protocol\_types.ts:135](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L135)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/generated/protocol\_types.ts:135](https://github.com/OmegaX-Hea
 
 > **creation\_reason\_hash**: `number`[] \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/generated/protocol\_types.ts:138](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L138)
+Defined in: [src/generated/protocol\_types.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L138)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/generated/protocol\_types.ts:138](https://github.com/OmegaX-Hea
 
 > **delivery\_mode**: `number`
 
-Defined in: [src/generated/protocol\_types.ts:136](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L136)
+Defined in: [src/generated/protocol\_types.ts:136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L136)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/generated/protocol\_types.ts:136](https://github.com/OmegaX-Hea
 
 > **member\_wallet**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:133](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L133)
+Defined in: [src/generated/protocol\_types.ts:133](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L133)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/generated/protocol\_types.ts:133](https://github.com/OmegaX-Hea
 
 > **obligation\_id**: `string`
 
-Defined in: [src/generated/protocol\_types.ts:130](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L130)
+Defined in: [src/generated/protocol\_types.ts:130](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L130)
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: [src/generated/protocol\_types.ts:130](https://github.com/OmegaX-Hea
 
 > **policy\_series**: [`PublicKeyish`](../type-aliases/PublicKeyish.md)
 
-Defined in: [src/generated/protocol\_types.ts:132](https://github.com/OmegaX-Health/omegax-sdk/blob/main/src/generated/protocol_types.ts#L132)
+Defined in: [src/generated/protocol\_types.ts:132](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/generated/protocol_types.ts#L132)

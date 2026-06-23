@@ -9,7 +9,7 @@ import {
   type ClaimCaseSnapshot,
   type MemberPositionSnapshot,
   type ObligationSnapshot,
-} from '@omegax/protocol-sdk';
+} from '@nakama-health/protocol-sdk';
 
 const wallet = '6wZcQdrgL7tM8mYw2h9D6ukgK7GvJ8Fi8dK21DqAq7zC';
 const memberPosition = '7jYwFJgxW26mJmPM6zDoGcYyygyc2XqPq7T9AfvEwU1C';
