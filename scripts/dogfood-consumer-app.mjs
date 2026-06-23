@@ -53,7 +53,8 @@ async function main() {
     await cp(fixtureRoot, appRoot, { recursive: true });
     const packageJsonPath = join(appRoot, 'package.json');
     const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
-    packageJson.dependencies['@nakama-health/protocol-sdk'] = `file:${tarballPath}`;
+    packageJson.dependencies['@nakama-health/protocol-sdk'] =
+      `file:${tarballPath}`;
     await writeFile(
       packageJsonPath,
       `${JSON.stringify(packageJson, null, 2)}\n`,
