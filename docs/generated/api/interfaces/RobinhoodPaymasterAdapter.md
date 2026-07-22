@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodPaymasterAdapter
 
-Defined in: [src/robinhood/wallet.ts:312](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L312)
+Defined in: [src/robinhood/wallet.ts:317](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L317)
 
 Provider-specific paymaster behavior stays outside product code.
 
@@ -16,7 +16,7 @@ Provider-specific paymaster behavior stays outside product code.
 
 > `readonly` **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/wallet.ts:314](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L314)
+Defined in: [src/robinhood/wallet.ts:319](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L319)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/robinhood/wallet.ts:314](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **providerId**: `string`
 
-Defined in: [src/robinhood/wallet.ts:313](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L313)
+Defined in: [src/robinhood/wallet.ts:318](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L318)
 
 ## Methods
 
@@ -32,7 +32,7 @@ Defined in: [src/robinhood/wallet.ts:313](https://github.com/OmegaX-Health/nakam
 
 > **quote**(`params`): `Promise`\<[`RobinhoodPaymasterQuote`](RobinhoodPaymasterQuote.md)\>
 
-Defined in: [src/robinhood/wallet.ts:315](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L315)
+Defined in: [src/robinhood/wallet.ts:320](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L320)
 
 #### Parameters
 

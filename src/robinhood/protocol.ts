@@ -57,6 +57,13 @@ import {
   type RoleSnapshot,
 } from './domain.js';
 import {
+  createNakamaEligibilityRevocationTypedData,
+  createNakamaEligibilityTypedData,
+  hashNakamaEligibilityAuthorization,
+  type EligibilityAuthorization,
+  type EligibilityRevocationAuthorization,
+} from './eligibility.js';
+import {
   NakamaRobinhoodArtifactError,
   NakamaRobinhoodConfigError,
   NakamaRobinhoodContractError,
@@ -120,16 +127,6 @@ export const ROBINHOOD_PAUSE_SCOPE = Object.freeze({
   settlement: 4,
   agentActions: 5,
 } as const);
-
-export interface EligibilityAuthorization {
-  programId: Bytes32;
-  memberCommitment: Bytes32;
-  account: Address;
-  termsCommitment: Bytes32;
-  privacyCommitment: Bytes32;
-  nonce: bigint;
-  validUntil: bigint;
-}
 
 export interface MembershipRecoveryAuthorization {
   programId: Bytes32;
@@ -225,6 +222,13 @@ export interface RobinhoodActionBuilder {
   activateMembership(
     params: PrepareRobinhoodActionContext & {
       eligibility: EligibilityAuthorization;
+      signature: Hex;
+    },
+  ): PreparedRobinhoodAction;
+  revokeEligibilityAuthorization(
+    params: PrepareRobinhoodActionContext & {
+      eligibility: EligibilityAuthorization;
+      revocation: EligibilityRevocationAuthorization;
       signature: Hex;
     },
   ): PreparedRobinhoodAction;
@@ -352,6 +356,7 @@ export const ROBINHOOD_EVENT_NAMES = Object.freeze([
   'DecisionConsumed',
   'DependencyWarningChanged',
   'EIP712DomainChanged',
+  'EligibilityAuthorizationRevoked',
   'EvidenceManifestUpdated',
   'MemberLiabilityChanged',
   'MembershipAccountRecovered',
@@ -849,6 +854,10 @@ export function createRobinhoodActionBuilder(params: {
     manifest.network,
     manifest.settlementAsset,
   );
+  const membershipRegistry = getRobinhoodContractDeployment(
+    manifest,
+    'membershipRegistry',
+  ).address;
   const encode = (
     role: RobinhoodContractRole,
     functionName: string,
@@ -930,42 +939,70 @@ export function createRobinhoodActionBuilder(params: {
       eligibility: EligibilityAuthorization;
     },
   ): EligibilityAuthorization => {
-    const account = requireNonZeroAddress(
-      input.eligibility.account,
-      'eligibility.account',
-    );
+    const eligibility = createNakamaEligibilityTypedData({
+      network: manifest.network,
+      membershipRegistry,
+      message: input.eligibility,
+    }).message;
+    const account = eligibility.account;
     if (
-      input.eligibility.programId.toLowerCase() !== programId.toLowerCase() ||
+      eligibility.programId.toLowerCase() !== programId.toLowerCase() ||
       account !== requireNonZeroAddress(input.account, 'account')
     ) {
       throw new NakamaRobinhoodConfigError(
         'Eligibility authorization must bind the action program and account.',
       );
     }
-    assertUint(input.eligibility.nonce, 'eligibility.nonce');
-    assertUint(input.eligibility.validUntil, 'eligibility.validUntil', 64);
-    if (input.eligibility.validUntil <= actionContextUnixSeconds(input)) {
+    if (eligibility.validUntil <= actionContextUnixSeconds(input)) {
       throw new NakamaRobinhoodConfigError(
         'Eligibility authorization must remain valid at preparation time.',
       );
     }
     return {
-      ...input.eligibility,
+      ...eligibility,
       programId,
       account,
-      memberCommitment: requireNonZeroCommitment(
-        input.eligibility.memberCommitment,
-        'eligibility.memberCommitment',
-      ),
-      termsCommitment: requireNonZeroCommitment(
-        input.eligibility.termsCommitment,
-        'eligibility.termsCommitment',
-      ),
-      privacyCommitment: requireNonZeroCommitment(
-        input.eligibility.privacyCommitment,
-        'eligibility.privacyCommitment',
-      ),
     };
+  };
+  const normalizeEligibilityRevocation = (
+    input: PrepareRobinhoodActionContext & {
+      eligibility: EligibilityAuthorization;
+      revocation: EligibilityRevocationAuthorization;
+    },
+  ) => {
+    const eligibilityTypedData = createNakamaEligibilityTypedData({
+      network: manifest.network,
+      membershipRegistry,
+      message: input.eligibility,
+    });
+    const eligibility = eligibilityTypedData.message;
+    if (eligibility.programId.toLowerCase() !== programId.toLowerCase()) {
+      throw new NakamaRobinhoodConfigError(
+        'Eligibility revocation must bind the action program.',
+      );
+    }
+    const revocation = createNakamaEligibilityRevocationTypedData({
+      network: manifest.network,
+      membershipRegistry,
+      message: input.revocation,
+    }).message;
+    const expectedDigest =
+      hashNakamaEligibilityAuthorization(eligibilityTypedData);
+    if (
+      revocation.programId.toLowerCase() !== programId.toLowerCase() ||
+      revocation.authorizationDigest.toLowerCase() !==
+        expectedDigest.toLowerCase()
+    ) {
+      throw new NakamaRobinhoodConfigError(
+        'Eligibility revocation must bind the exact eligibility digest and action program.',
+      );
+    }
+    if (revocation.validUntil <= actionContextUnixSeconds(input)) {
+      throw new NakamaRobinhoodConfigError(
+        'Eligibility revocation must remain valid at preparation time.',
+      );
+    }
+    return { eligibility, revocation };
   };
   const normalizeRecovery = (
     input: PrepareRobinhoodActionContext & {
@@ -1262,6 +1299,28 @@ export function createRobinhoodActionBuilder(params: {
         explanation:
           'Activate this non-transferable membership against the exact program terms and privacy commitment.',
         expectedStateChanges: [{ field: 'membership.state', to: 'active' }],
+      });
+    },
+    revokeEligibilityAuthorization(input) {
+      const normalized = normalizeEligibilityRevocation(input);
+      return prepare({
+        context: input,
+        action: 'revoke_eligibility_authorization',
+        role: 'membershipRegistry',
+        functionName: 'revokeEligibilityAuthorization',
+        args: [
+          normalized.eligibility,
+          normalized.revocation,
+          requireNonEmptyHex(input.signature, 'signature'),
+        ],
+        explanation:
+          "Relay the eligibility attestor's signed revocation for this exact authorization digest; the relayer receives no eligibility authority.",
+        expectedStateChanges: [
+          {
+            field: 'eligibility.authorizationRevoked',
+            to: normalized.revocation.authorizationDigest,
+          },
+        ],
       });
     },
     recoverMembershipAccount(input) {

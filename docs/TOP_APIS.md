@@ -38,6 +38,10 @@ Robinhood-native surface.
   `invalidateRobinhoodOfflineCacheAfterReorg(...)` discards affected cache.
 - `createRobinhoodActionBuilder(...)` produces immutable, capability-marked
   actions bound to the verified suite and one program ID.
+- `createNakamaEligibilityTypedData(...)` and
+  `createNakamaEligibilityRevocationTypedData(...)` construct the canonical
+  chain/registry-bound envelopes; the revocation action verifies the exact
+  eligibility digest before preparing relayer calldata.
 - `simulateRobinhoodAction(...)` performs the exact chain-pinned simulation.
 - `requestRobinhoodAction(...)` reruns a fresh exact simulation and submits only
   the same action through an EIP-1193 wallet.

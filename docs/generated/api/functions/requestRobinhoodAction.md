@@ -8,7 +8,7 @@
 
 > **requestRobinhoodAction**(`provider`, `simulated`, `options`): `Promise`\<[`RobinhoodEip1193Submission`](../interfaces/RobinhoodEip1193Submission.md)\>
 
-Defined in: [src/robinhood/wallet.ts:353](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L353)
+Defined in: [src/robinhood/wallet.ts:358](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L358)
 
 ## Parameters
 

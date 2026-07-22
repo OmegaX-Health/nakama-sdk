@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodPaymasterClient
 
-Defined in: [src/robinhood/wallet.ts:323](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L323)
+Defined in: [src/robinhood/wallet.ts:328](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L328)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/wallet.ts:323](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/wallet.ts:325](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L325)
+Defined in: [src/robinhood/wallet.ts:330](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L330)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/wallet.ts:325](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **policy**: [`RobinhoodPaymasterPolicy`](RobinhoodPaymasterPolicy.md)
 
-Defined in: [src/robinhood/wallet.ts:326](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L326)
+Defined in: [src/robinhood/wallet.ts:331](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L331)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/wallet.ts:326](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **providerId**: `string`
 
-Defined in: [src/robinhood/wallet.ts:324](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L324)
+Defined in: [src/robinhood/wallet.ts:329](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L329)
 
 ## Methods
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/wallet.ts:324](https://github.com/OmegaX-Health/nakam
 
 > **quote**(`action`, `options?`): `Promise`\<[`RobinhoodPaymasterQuote`](RobinhoodPaymasterQuote.md)\>
 
-Defined in: [src/robinhood/wallet.ts:327](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L327)
+Defined in: [src/robinhood/wallet.ts:332](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L332)
 
 #### Parameters
 

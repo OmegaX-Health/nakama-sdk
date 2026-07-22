@@ -8,7 +8,7 @@
 
 > **hashRobinhoodPaymasterPolicy**(`policy`): `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:653](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L653)
+Defined in: [src/robinhood/wallet.ts:658](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L658)
 
 ## Parameters
 

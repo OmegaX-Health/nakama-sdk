@@ -6,7 +6,7 @@
 
 # Interface: AgentAuthorization
 
-Defined in: [src/robinhood/protocol.ts:142](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L142)
+Defined in: [src/robinhood/protocol.ts:139](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L139)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:142](https://github.com/OmegaX-Health/nak
 
 > **asset**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:147](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L147)
+Defined in: [src/robinhood/protocol.ts:144](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L144)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:147](https://github.com/OmegaX-Health/nak
 
 > **expiresAt**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:152](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L152)
+Defined in: [src/robinhood/protocol.ts:149](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L149)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:152](https://github.com/OmegaX-Health/nak
 
 > **issuedAt**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:151](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L151)
+Defined in: [src/robinhood/protocol.ts:148](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L148)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/protocol.ts:151](https://github.com/OmegaX-Health/nak
 
 > **maxAssetAmountPerAction**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:148](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L148)
+Defined in: [src/robinhood/protocol.ts:145](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L145)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/robinhood/protocol.ts:148](https://github.com/OmegaX-Health/nak
 
 > **maxCallsPerPeriod**: `number`
 
-Defined in: [src/robinhood/protocol.ts:153](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L153)
+Defined in: [src/robinhood/protocol.ts:150](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L150)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/robinhood/protocol.ts:153](https://github.com/OmegaX-Health/nak
 
 > **maxNativeValue**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:146](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L146)
+Defined in: [src/robinhood/protocol.ts:143](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L143)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/robinhood/protocol.ts:146](https://github.com/OmegaX-Health/nak
 
 > **nonce**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:154](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L154)
+Defined in: [src/robinhood/protocol.ts:151](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L151)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/robinhood/protocol.ts:154](https://github.com/OmegaX-Health/nak
 
 > **periodAssetLimit**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:149](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L149)
+Defined in: [src/robinhood/protocol.ts:146](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L146)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [src/robinhood/protocol.ts:149](https://github.com/OmegaX-Health/nak
 
 > **periodSeconds**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:150](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L150)
+Defined in: [src/robinhood/protocol.ts:147](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L147)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [src/robinhood/protocol.ts:150](https://github.com/OmegaX-Health/nak
 
 > **principal**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:143](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L143)
+Defined in: [src/robinhood/protocol.ts:140](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L140)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [src/robinhood/protocol.ts:143](https://github.com/OmegaX-Health/nak
 
 > **purposeCommitment**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:155](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L155)
+Defined in: [src/robinhood/protocol.ts:152](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L152)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [src/robinhood/protocol.ts:155](https://github.com/OmegaX-Health/nak
 
 > **selector**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:145](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L145)
+Defined in: [src/robinhood/protocol.ts:142](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L142)
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: [src/robinhood/protocol.ts:145](https://github.com/OmegaX-Health/nak
 
 > **target**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:144](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L144)
+Defined in: [src/robinhood/protocol.ts:141](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L141)

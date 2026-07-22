@@ -131,10 +131,13 @@ can make indexed or offline state safe for writes.
 ## Typed actions, simulation, and wallets
 
 `createRobinhoodActionBuilder(...)` covers the program lifecycle, exact USDG
-approval/funding, memberships, requests/evidence, initial and appeal decisions,
-settlement, agent authorizations, and guardian controls. Construction requires
-an audited deployment plus live runtime verification, so placeholder addresses
-cannot produce a transaction.
+approval/funding, memberships, exact-digest eligibility revocation,
+requests/evidence, initial and appeal decisions, settlement, agent
+authorizations, and guardian controls. Canonical eligibility/revocation EIP-712
+helpers bind the chain and MembershipRegistry while allowing any wallet to relay
+the attestor's signature without receiving attestor authority. Construction
+requires an audited deployment plus live runtime verification, so placeholder
+addresses cannot produce a transaction.
 
 Every prepared action carries an intent ID, CAIP-10 account, target, selector,
 calldata, expiry, human explanation, and expected state change. It is frozen and

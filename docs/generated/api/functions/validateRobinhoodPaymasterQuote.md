@@ -8,7 +8,7 @@
 
 > **validateRobinhoodPaymasterQuote**(`params`): [`RobinhoodPaymasterQuote`](../interfaces/RobinhoodPaymasterQuote.md)
 
-Defined in: [src/robinhood/wallet.ts:705](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L705)
+Defined in: [src/robinhood/wallet.ts:710](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L710)
 
 ## Parameters
 

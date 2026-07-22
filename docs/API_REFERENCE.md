@@ -82,7 +82,8 @@ frozen `PreparedRobinhoodAction` capabilities for:
 - program review, funding, dual activation/cancellation approvals, activation,
   runoff, close, and pre-promise cancellation;
 - exact USDG approval, funding, and matured refunds;
-- membership activation, recovery, expiry, and cancellation;
+- membership activation, exact-digest attestor revocation, recovery, expiry,
+  and cancellation;
 - request opening, evidence updates, decisions, appeals, no-quorum escalation,
   and denial finalization;
 - obligation settlement;

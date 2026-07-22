@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodActionSimulation
 
-Defined in: [src/robinhood/wallet.ts:188](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L188)
+Defined in: [src/robinhood/wallet.ts:193](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L193)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/wallet.ts:188](https://github.com/OmegaX-Health/nakam
 
 > **blockNumber**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:190](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L190)
+Defined in: [src/robinhood/wallet.ts:195](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L195)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/wallet.ts:190](https://github.com/OmegaX-Health/nakam
 
 > `optional` **decodedError?**: `object`
 
-Defined in: [src/robinhood/wallet.ts:193](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L193)
+Defined in: [src/robinhood/wallet.ts:198](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L198)
 
 #### args
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/wallet.ts:193](https://github.com/OmegaX-Health/nakam
 
 > **gasEstimate**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:191](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L191)
+Defined in: [src/robinhood/wallet.ts:196](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L196)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/robinhood/wallet.ts:191](https://github.com/OmegaX-Health/nakam
 
 > **returnData**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:192](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L192)
+Defined in: [src/robinhood/wallet.ts:197](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L197)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/robinhood/wallet.ts:192](https://github.com/OmegaX-Health/nakam
 
 > **success**: `boolean`
 
-Defined in: [src/robinhood/wallet.ts:189](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L189)
+Defined in: [src/robinhood/wallet.ts:194](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L194)

@@ -18,6 +18,8 @@ import {
   ROBINHOOD_EVENT_NAMES,
   NakamaRobinhoodArtifactError,
   assertRobinhoodDeploymentReady,
+  createNakamaEligibilityRevocationTypedData,
+  createNakamaEligibilityTypedData,
   createRobinhoodActionBuilder,
   createRobinhoodReadClient,
   createRobinhoodSponsorFundingBatch,
@@ -25,6 +27,8 @@ import {
   decodeRobinhoodError,
   getGeneratedRobinhoodArtifactBundle,
   getRobinhoodContractArtifact,
+  hashNakamaEligibilityAuthorization,
+  hashNakamaEligibilityRevocation,
   hashPreparedRobinhoodAction,
   loadRobinhoodDeploymentManifest,
   parseRobinhoodUsdg,
@@ -264,6 +268,96 @@ test('typed event-name set exactly covers every imported Robinhood ABI event', (
     }
   }
   assert.deepEqual([...names].sort(), [...ROBINHOOD_EVENT_NAMES].sort());
+});
+
+test('eligibility revocation helper and action bind the exact digest while allowing a relayer', () => {
+  const { manifest, bundle, runtime } = createReadyRobinhoodFixture();
+  const membershipRegistry = manifest.contracts.membershipRegistry!.address;
+  const eligibility = {
+    programId: TEST_PROGRAM_ID,
+    memberCommitment: `0x${'41'.repeat(32)}` as const,
+    account: '0x00000000000000000000000000000000000000F7' as const,
+    termsCommitment: `0x${'42'.repeat(32)}` as const,
+    privacyCommitment: `0x${'43'.repeat(32)}` as const,
+    nonce: 7n,
+    validUntil: 1n,
+  };
+  const eligibilityTypedData = createNakamaEligibilityTypedData({
+    network: manifest.network,
+    membershipRegistry,
+    message: eligibility,
+  });
+  const authorizationDigest =
+    hashNakamaEligibilityAuthorization(eligibilityTypedData);
+  const revocation = {
+    programId: TEST_PROGRAM_ID,
+    authorizationDigest,
+    nonce: 3n,
+    validUntil: 1_784_765_400n,
+  };
+  const revocationTypedData = createNakamaEligibilityRevocationTypedData({
+    network: manifest.network,
+    membershipRegistry,
+    message: revocation,
+  });
+  assert.equal(eligibilityTypedData.domain.chainId, 4663);
+  assert.equal(revocationTypedData.primaryType, 'EligibilityRevocation');
+  assert.match(hashNakamaEligibilityRevocation(revocationTypedData), /^0x/);
+
+  const builder = createRobinhoodActionBuilder({
+    manifest,
+    bundle,
+    runtime,
+    programId: TEST_PROGRAM_ID,
+  });
+  const context = {
+    account: TEST_ACCOUNT,
+    intentId: 'intent-eligibility-revocation-1',
+    preparedAt: '2026-07-23T00:00:00.000Z',
+    expiresAt: '2026-07-23T00:05:00.000Z',
+  };
+  const action = builder.revokeEligibilityAuthorization({
+    ...context,
+    eligibility,
+    revocation,
+    signature: '0x1234',
+  });
+  assert.equal(action.action, 'revoke_eligibility_authorization');
+  assert.equal(action.accountId, `eip155:4663:${TEST_ACCOUNT}`);
+  assert.equal(
+    decodeFunctionData({
+      abi: getRobinhoodContractArtifact(bundle, 'membershipRegistry').abi,
+      data: action.data,
+    }).functionName,
+    'revokeEligibilityAuthorization',
+  );
+  assert.match(action.explanation, /relayer receives no eligibility authority/);
+
+  assert.throws(
+    () =>
+      builder.revokeEligibilityAuthorization({
+        ...context,
+        intentId: 'intent-eligibility-revocation-substitution',
+        eligibility,
+        revocation: {
+          ...revocation,
+          authorizationDigest: `0x${'99'.repeat(32)}`,
+        },
+        signature: '0x1234',
+      }),
+    /bind the exact eligibility digest/,
+  );
+  assert.throws(
+    () =>
+      builder.revokeEligibilityAuthorization({
+        ...context,
+        intentId: 'intent-eligibility-revocation-expired',
+        eligibility,
+        revocation: { ...revocation, validUntil: 1n },
+        signature: '0x1234',
+      }),
+    /must remain valid at preparation time/,
+  );
 });
 
 test('typed action builder encodes exact approval, funding, request, and pause actions', () => {

@@ -6,10 +6,10 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
   status: 'ready',
   sourceArtifact: 'nakama-protocol/shared/robinhood/protocol_contract.json',
   sourceArtifactSha256:
-    '18890abee0c58ef137d4e4f849a38a9a500b2b38654d6b7e607bd7224a87fc43',
-  sourceCommit: '0cb347f1ac0d790b1fc7053a6c0fcb2e0a53dd75',
+    '4fb4534ac8bf47118a092647edb1a1d47f9023e5826bc3c6b2d1654d8ff94c29',
+  sourceCommit: '906167e68a91b2482d936363395f0aaf2b325d12',
   deploymentCodeCommitment:
-    '0xce06ac68424ff1a9490fdc1629bd9a45936334011d0a91b2ba07cd7470224ad0',
+    '0xba2f28e7888a1d48666ee9c86e713bb4c879699a3f1157f708917aa78cf76374',
   generatedBy: 'scripts/sync-robinhood-artifacts.mjs',
   contracts: {
     assetRegistry: {
@@ -4171,7 +4171,7 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
       contractName: 'MembershipRegistry',
       sourceAbi: 'contracts/robinhood/MembershipRegistry.abi.json',
       abiSha256:
-        '72ac7186bd82a54da9d795e44889c77c60a020bcec212af92a12f49ebec3f818',
+        '0f8ecfb8296257f36d2b148e722c4b35760d3237b13abd86f70729fb6c4c7fc6',
       abi: [
         {
           inputs: [
@@ -4264,6 +4264,17 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           type: 'error',
         },
         {
+          inputs: [
+            {
+              internalType: 'bytes32',
+              name: 'authorizationDigest',
+              type: 'bytes32',
+            },
+          ],
+          name: 'RevokedEligibilityAuthorization',
+          type: 'error',
+        },
+        {
           inputs: [],
           name: 'SignatureAlreadyUsed',
           type: 'error',
@@ -4306,6 +4317,43 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           anonymous: false,
           inputs: [],
           name: 'EIP712DomainChanged',
+          type: 'event',
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: 'bytes32',
+              name: 'programId',
+              type: 'bytes32',
+            },
+            {
+              indexed: true,
+              internalType: 'bytes32',
+              name: 'authorizationDigest',
+              type: 'bytes32',
+            },
+            {
+              indexed: true,
+              internalType: 'address',
+              name: 'eligibilityAttestor',
+              type: 'address',
+            },
+            {
+              indexed: false,
+              internalType: 'address',
+              name: 'submittedBy',
+              type: 'address',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'revocationNonce',
+              type: 'uint256',
+            },
+          ],
+          name: 'EligibilityAuthorizationRevoked',
           type: 'event',
         },
         {
@@ -4418,6 +4466,19 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           ],
           name: 'MembershipStateChanged',
           type: 'event',
+        },
+        {
+          inputs: [],
+          name: 'ELIGIBILITY_REVOCATION_TYPEHASH',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: '',
+              type: 'bytes32',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
         },
         {
           inputs: [],
@@ -4656,6 +4717,38 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           inputs: [
             {
               internalType: 'bytes32',
+              name: 'authorizationDigest',
+              type: 'bytes32',
+            },
+          ],
+          name: 'eligibilityAuthorizationRevoked',
+          outputs: [
+            {
+              internalType: 'bool',
+              name: 'revoked',
+              type: 'bool',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [],
+          name: 'eligibilityRevocationNonce',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [
+            {
+              internalType: 'bytes32',
               name: 'membershipId',
               type: 'bytes32',
             },
@@ -4711,6 +4804,47 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
             },
           ],
           name: 'hashEligibility',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: '',
+              type: 'bytes32',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: 'bytes32',
+                  name: 'programId',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'bytes32',
+                  name: 'authorizationDigest',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'uint256',
+                  name: 'nonce',
+                  type: 'uint256',
+                },
+                {
+                  internalType: 'uint64',
+                  name: 'validUntil',
+                  type: 'uint64',
+                },
+              ],
+              internalType: 'struct RobinhoodTypes.EligibilityRevocation',
+              name: 'revocation',
+              type: 'tuple',
+            },
+          ],
+          name: 'hashEligibilityRevocation',
           outputs: [
             {
               internalType: 'bytes32',
@@ -4958,6 +5092,99 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
             },
           ],
           stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: 'bytes32',
+                  name: 'programId',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'bytes32',
+                  name: 'memberCommitment',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'address',
+                  name: 'account',
+                  type: 'address',
+                },
+                {
+                  internalType: 'bytes32',
+                  name: 'termsCommitment',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'bytes32',
+                  name: 'privacyCommitment',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'uint256',
+                  name: 'nonce',
+                  type: 'uint256',
+                },
+                {
+                  internalType: 'uint64',
+                  name: 'validUntil',
+                  type: 'uint64',
+                },
+              ],
+              internalType: 'struct RobinhoodTypes.Eligibility',
+              name: 'eligibility',
+              type: 'tuple',
+            },
+            {
+              components: [
+                {
+                  internalType: 'bytes32',
+                  name: 'programId',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'bytes32',
+                  name: 'authorizationDigest',
+                  type: 'bytes32',
+                },
+                {
+                  internalType: 'uint256',
+                  name: 'nonce',
+                  type: 'uint256',
+                },
+                {
+                  internalType: 'uint64',
+                  name: 'validUntil',
+                  type: 'uint64',
+                },
+              ],
+              internalType: 'struct RobinhoodTypes.EligibilityRevocation',
+              name: 'revocation',
+              type: 'tuple',
+            },
+            {
+              internalType: 'bytes',
+              name: 'signature',
+              type: 'bytes',
+            },
+          ],
+          name: 'revokeEligibilityAuthorization',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: 'authorizationDigest',
+              type: 'bytes32',
+            },
+            {
+              internalType: 'bool',
+              name: 'changed',
+              type: 'bool',
+            },
+          ],
+          stateMutability: 'nonpayable',
           type: 'function',
         },
         {

@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_PAUSE\_SCOPE**: `Readonly`\<\{ `agentActions`: `5`; `enrollment`: `1`; `newObligations`: `3`; `newRequests`: `2`; `settlement`: `4`; \}\>
 
-Defined in: [src/robinhood/protocol.ts:116](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L116)
+Defined in: [src/robinhood/protocol.ts:123](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L123)

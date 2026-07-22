@@ -6,7 +6,7 @@
 
 # Interface: MembershipRecoveryAuthorization
 
-Defined in: [src/robinhood/protocol.ts:134](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L134)
+Defined in: [src/robinhood/protocol.ts:131](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L131)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:134](https://github.com/OmegaX-Health/nak
 
 > **membershipId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L136)
+Defined in: [src/robinhood/protocol.ts:133](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L133)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:136](https://github.com/OmegaX-Health/nak
 
 > **newAccount**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:137](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L137)
+Defined in: [src/robinhood/protocol.ts:134](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L134)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:137](https://github.com/OmegaX-Health/nak
 
 > **nonce**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L138)
+Defined in: [src/robinhood/protocol.ts:135](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L135)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/protocol.ts:138](https://github.com/OmegaX-Health/nak
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:135](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L135)
+Defined in: [src/robinhood/protocol.ts:132](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L132)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/robinhood/protocol.ts:135](https://github.com/OmegaX-Health/nak
 
 > **validUntil**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:139](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L139)
+Defined in: [src/robinhood/protocol.ts:136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L136)

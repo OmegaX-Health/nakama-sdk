@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodExpectedStateChange
 
-Defined in: [src/robinhood/wallet.ts:163](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L163)
+Defined in: [src/robinhood/wallet.ts:168](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L168)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/wallet.ts:163](https://github.com/OmegaX-Health/nakam
 
 > **field**: `string`
 
-Defined in: [src/robinhood/wallet.ts:164](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L164)
+Defined in: [src/robinhood/wallet.ts:169](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L169)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/wallet.ts:164](https://github.com/OmegaX-Health/nakam
 
 > `optional` **from?**: `string`
 
-Defined in: [src/robinhood/wallet.ts:165](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L165)
+Defined in: [src/robinhood/wallet.ts:170](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L170)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [src/robinhood/wallet.ts:165](https://github.com/OmegaX-Health/nakam
 
 > **to**: `string`
 
-Defined in: [src/robinhood/wallet.ts:166](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L166)
+Defined in: [src/robinhood/wallet.ts:171](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L171)

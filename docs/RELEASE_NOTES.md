@@ -17,6 +17,9 @@
   typed capability-marked actions, exact simulations, EIP-1193 wallet requests,
   immutable protocol EIP-712 decisions, sealed transaction-intent finality, and
   dual-independent L2/L1 economic-finality assessment.
+- Added canonical eligibility and exact-target eligibility-revocation EIP-712
+  helpers, a relayer-safe revocation action builder, exhaustive revocation event
+  decoding, and artifact parity with the hardened MembershipRegistry ABI.
 - Added provider-neutral smart-account simulation and paymaster quote policy
   boundaries while keeping Phase-0 agent submission disabled pending provider
   selection and independent finalized onchain policy proof.

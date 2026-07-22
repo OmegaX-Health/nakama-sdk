@@ -3,6 +3,7 @@ export * from './assets.js';
 export * from './chains.js';
 export * from './decision.js';
 export * from './domain.js';
+export * from './eligibility.js';
 export * from './errors.js';
 export * from './protocol.js';
 export * from './query.js';

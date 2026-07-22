@@ -8,7 +8,7 @@
 
 > **validateRobinhoodPaymasterPolicy**(`policy`): `void`
 
-Defined in: [src/robinhood/wallet.ts:612](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L612)
+Defined in: [src/robinhood/wallet.ts:617](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L617)
 
 ## Parameters
 

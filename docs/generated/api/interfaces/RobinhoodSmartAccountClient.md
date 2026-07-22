@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodSmartAccountClient
 
-Defined in: [src/robinhood/wallet.ts:343](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L343)
+Defined in: [src/robinhood/wallet.ts:348](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L348)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/wallet.ts:343](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **account**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:345](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L345)
+Defined in: [src/robinhood/wallet.ts:350](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L350)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/wallet.ts:345](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/wallet.ts:344](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L344)
+Defined in: [src/robinhood/wallet.ts:349](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L349)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/wallet.ts:344](https://github.com/OmegaX-Health/nakam
 
 > `readonly` **policy**: [`RobinhoodSmartAccountPolicy`](RobinhoodSmartAccountPolicy.md)
 
-Defined in: [src/robinhood/wallet.ts:346](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L346)
+Defined in: [src/robinhood/wallet.ts:351](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L351)
 
 ## Methods
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/wallet.ts:346](https://github.com/OmegaX-Health/nakam
 
 > **simulate**(`action`): `Promise`\<[`RobinhoodActionSimulation`](RobinhoodActionSimulation.md)\>
 
-Defined in: [src/robinhood/wallet.ts:347](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L347)
+Defined in: [src/robinhood/wallet.ts:352](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L352)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [src/robinhood/wallet.ts:347](https://github.com/OmegaX-Health/nakam
 
 > **submit**(`action`): `Promise`\<[`RobinhoodSmartAccountSubmission`](RobinhoodSmartAccountSubmission.md)\>
 
-Defined in: [src/robinhood/wallet.ts:348](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L348)
+Defined in: [src/robinhood/wallet.ts:353](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L353)
 
 #### Parameters
 

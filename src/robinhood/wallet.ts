@@ -61,6 +61,7 @@ export type RobinhoodActionName =
   | 'fund_program'
   | 'claim_matured_refund'
   | 'activate_membership'
+  | 'revoke_eligibility_authorization'
   | 'recover_membership_account'
   | 'expire_membership'
   | 'cancel_membership'
@@ -117,6 +118,10 @@ const ROBINHOOD_ACTION_BINDINGS = {
   fund_program: ['vault', 'fund'],
   claim_matured_refund: ['vault', 'claimMaturedRefund'],
   activate_membership: ['membershipRegistry', 'activateMembership'],
+  revoke_eligibility_authorization: [
+    'membershipRegistry',
+    'revokeEligibilityAuthorization',
+  ],
   recover_membership_account: [
     'membershipRegistry',
     'recoverMembershipAccount',

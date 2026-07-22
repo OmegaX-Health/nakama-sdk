@@ -6,7 +6,7 @@
 
 # Interface: EligibilityAuthorization
 
-Defined in: [src/robinhood/protocol.ts:124](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L124)
+Defined in: [src/robinhood/eligibility.ts:56](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L56)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:124](https://github.com/OmegaX-Health/nak
 
 > **account**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:127](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L127)
+Defined in: [src/robinhood/eligibility.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L59)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:127](https://github.com/OmegaX-Health/nak
 
 > **memberCommitment**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:126](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L126)
+Defined in: [src/robinhood/eligibility.ts:58](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L58)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:126](https://github.com/OmegaX-Health/nak
 
 > **nonce**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:130](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L130)
+Defined in: [src/robinhood/eligibility.ts:62](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L62)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/protocol.ts:130](https://github.com/OmegaX-Health/nak
 
 > **privacyCommitment**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:129](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L129)
+Defined in: [src/robinhood/eligibility.ts:61](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L61)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/robinhood/protocol.ts:129](https://github.com/OmegaX-Health/nak
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:125](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L125)
+Defined in: [src/robinhood/eligibility.ts:57](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L57)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/robinhood/protocol.ts:125](https://github.com/OmegaX-Health/nak
 
 > **termsCommitment**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:128](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L128)
+Defined in: [src/robinhood/eligibility.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L60)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/robinhood/protocol.ts:128](https://github.com/OmegaX-Health/nak
 
 > **validUntil**: `bigint`
 
-Defined in: [src/robinhood/protocol.ts:131](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L131)
+Defined in: [src/robinhood/eligibility.ts:63](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/eligibility.ts#L63)

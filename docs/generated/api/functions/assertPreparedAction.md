@@ -8,7 +8,7 @@
 
 > **assertPreparedAction**(`action`, `now?`): `void`
 
-Defined in: [src/robinhood/wallet.ts:1326](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1326)
+Defined in: [src/robinhood/wallet.ts:1331](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1331)
 
 ## Parameters
 

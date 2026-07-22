@@ -8,7 +8,7 @@
 
 > **requestNakamaDecisionSignature**(`provider`, `payload`): `Promise`\<`` `0x${string}` ``\>
 
-Defined in: [src/robinhood/wallet.ts:470](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L470)
+Defined in: [src/robinhood/wallet.ts:475](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L475)
 
 ## Parameters
 

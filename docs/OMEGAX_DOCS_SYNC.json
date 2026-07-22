@@ -7,7 +7,7 @@
   "pages": [
     {
       "sdkDoc": "README.md",
-      "sdkDocSha256": "399bf28d4b7278f844447f8816b948ae9aee7af1cebd330f6b89c31ed3b0ee40",
+      "sdkDocSha256": "c9ca85c1ea4f8fa53eddbe0b99884d843a76c4ade6b6c71f16c2a60d1c23f747",
       "omegaxDocsPath": "website/docs/sdk/overview.mdx"
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "sdkDoc": "docs/TOP_APIS.md",
-      "sdkDocSha256": "81da53e88b916d8b8c7edec1620d07e9c64a70ae2717ea6b848b1137f92d7cb0",
+      "sdkDocSha256": "99c43b45e1edd1391f77009ca077602d5a6391ccacfc61cbf4d4343d47cdb4be",
       "omegaxDocsPath": "website/docs/sdk/top-apis.md"
     },
     {
@@ -37,12 +37,12 @@
     },
     {
       "sdkDoc": "docs/API_REFERENCE.md",
-      "sdkDocSha256": "2b0d3b9c25d632c62476f274d0ad969ccc4086f03efcc9cf21fe8767f632c45c",
+      "sdkDocSha256": "a658a79a8116698c2ba558e39b7649d30966d29a3d125ac10b0b316f2571f1a5",
       "omegaxDocsPath": "website/docs/sdk/api-reference.md"
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
-      "sdkDocSha256": "63616d29189c42ad57adcadad1c0dcf923362d96bcb9757318c5a34cfce5c63e",
+      "sdkDocSha256": "0249400c69936a6804e6e2aea46178cb3cb68e0aae6ffff6d1ac318c0560e79c",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {
