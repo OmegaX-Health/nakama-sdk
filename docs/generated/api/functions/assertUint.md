@@ -8,7 +8,7 @@
 
 > **assertUint**(`value`, `field`, `bits?`): `bigint`
 
-Defined in: src/robinhood/domain.ts:192
+Defined in: [src/robinhood/domain.ts:192](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L192)
 
 ## Parameters
 

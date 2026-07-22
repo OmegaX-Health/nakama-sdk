@@ -254,6 +254,82 @@ export interface RobinhoodSmartAccountSubmission {
   userOperationHash: Hex;
 }
 
+export interface RobinhoodSponsorFundingBatch {
+  version: 1;
+  network: RobinhoodNetwork;
+  chainId: 4663 | 46630;
+  caip2: 'eip155:4663' | 'eip155:46630';
+  accountId: RobinhoodCaip10;
+  programId: Bytes32;
+  amount: bigint;
+  actions: readonly [PreparedRobinhoodAction, PreparedRobinhoodAction];
+  actionCommitments: readonly [Hex, Hex];
+  batchCommitment: Hex;
+}
+
+/** Provider-neutral sponsorship policy. It authorizes quote validation only. */
+export interface RobinhoodPaymasterPolicy {
+  version: 1;
+  network: RobinhoodNetwork;
+  sponsor: Address;
+  account: Address;
+  programId: Bytes32;
+  allowedActions: readonly RobinhoodActionName[];
+  allowedCalls: readonly {
+    target: Address;
+    selectors: readonly Hex[];
+    maximumNativeValue: bigint;
+  }[];
+  validAfter: bigint;
+  validUntil: bigint;
+  maximumSponsoredCallsPerWindow: number;
+  windowSeconds: number;
+  maximumSponsoredGasPerAction: bigint;
+}
+
+export interface RobinhoodPaymasterQuote {
+  version: 1;
+  providerId: string;
+  network: RobinhoodNetwork;
+  chainId: 4663 | 46630;
+  policyCommitment: Hex;
+  sponsor: Address;
+  account: Address;
+  programId: Bytes32;
+  actionCommitment: Hex;
+  target: Address;
+  selector: Hex;
+  value: bigint;
+  validAfter: bigint;
+  validUntil: bigint;
+  maximumGas: bigint;
+  windowStartedAt: bigint;
+  callsSponsoredInWindow: number;
+  paymasterData: Hex;
+}
+
+/** Provider-specific paymaster behavior stays outside product code. */
+export interface RobinhoodPaymasterAdapter {
+  readonly providerId: string;
+  readonly network: RobinhoodNetwork;
+  quote(params: {
+    action: PreparedRobinhoodAction;
+    actionCommitment: Hex;
+    policyCommitment: Hex;
+    policy: RobinhoodPaymasterPolicy;
+  }): Promise<RobinhoodPaymasterQuote>;
+}
+
+export interface RobinhoodPaymasterClient {
+  readonly providerId: string;
+  readonly network: RobinhoodNetwork;
+  readonly policy: RobinhoodPaymasterPolicy;
+  quote(
+    action: PreparedRobinhoodAction,
+    options?: { now?: Date | number | bigint },
+  ): Promise<RobinhoodPaymasterQuote>;
+}
+
 /** Provider-specific account implementation isolated from product code. */
 export interface RobinhoodSmartAccountAdapter {
   readonly network: RobinhoodNetwork;
@@ -472,6 +548,412 @@ export function createRobinhoodSmartAccountClient(params: {
       );
     },
   };
+}
+
+export function createRobinhoodPaymasterClient(params: {
+  adapter: RobinhoodPaymasterAdapter;
+  policy: RobinhoodPaymasterPolicy;
+  manifest: RobinhoodDeploymentManifest;
+  bundle: RobinhoodProtocolArtifactBundle;
+  runtime: VerifiedRobinhoodDeploymentRuntime;
+}): RobinhoodPaymasterClient {
+  validateRobinhoodPaymasterPolicy(params.policy);
+  const policyCommitment = hashRobinhoodPaymasterPolicy(params.policy);
+  assertRobinhoodDeploymentReady(params.manifest, params.bundle);
+  const providerId = params.adapter.providerId.trim();
+  if (
+    providerId === '' ||
+    providerId.length > 128 ||
+    !/^[a-z0-9][a-z0-9._-]*$/i.test(providerId) ||
+    params.adapter.network !== params.policy.network ||
+    params.policy.network !== params.manifest.network ||
+    params.policy.programId.toLowerCase() !==
+      params.runtime.programId.toLowerCase()
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster adapter identity does not match its policy and verified runtime.',
+    );
+  }
+  return {
+    providerId,
+    network: params.adapter.network,
+    policy: params.policy,
+    async quote(action, options = {}) {
+      assertActionAllowedByPaymasterPolicy({
+        action,
+        policy: params.policy,
+        manifest: params.manifest,
+        bundle: params.bundle,
+        runtime: params.runtime,
+        now: options.now,
+      });
+      const actionCommitment = hashPreparedRobinhoodAction(action);
+      const quote = await params.adapter.quote({
+        action,
+        actionCommitment,
+        policyCommitment,
+        policy: params.policy,
+      });
+      return Object.freeze(
+        validateRobinhoodPaymasterQuote({
+          quote,
+          providerId,
+          action,
+          actionCommitment,
+          policyCommitment,
+          policy: params.policy,
+          now: options.now,
+        }),
+      );
+    },
+  };
+}
+
+export function validateRobinhoodPaymasterPolicy(
+  policy: RobinhoodPaymasterPolicy,
+): void {
+  if (policy.version !== 1) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster policy version must be 1.',
+    );
+  }
+  const sponsor = normalizeRobinhoodAddress(policy.sponsor);
+  const account = normalizeRobinhoodAddress(policy.account);
+  if (sponsor === zeroAddress || account === zeroAddress) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster sponsor and account must be nonzero addresses.',
+    );
+  }
+  const programId = assertBytes32(policy.programId, 'programId');
+  if (programId.toLowerCase() === ZERO_BYTES32) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster policy programId cannot be zero.',
+    );
+  }
+  if (
+    policy.allowedActions.length === 0 ||
+    new Set(policy.allowedActions).size !== policy.allowedActions.length ||
+    policy.allowedActions.some((action) => !ROBINHOOD_ACTION_NAMES.has(action))
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster policy actions must be known, nonempty, and unique.',
+    );
+  }
+  validatePolicyCalls(policy.allowedCalls, 'Paymaster');
+  validatePolicyWindow({
+    validAfter: policy.validAfter,
+    validUntil: policy.validUntil,
+    maximumCallsPerWindow: policy.maximumSponsoredCallsPerWindow,
+    windowSeconds: policy.windowSeconds,
+    maximumGasPerAction: policy.maximumSponsoredGasPerAction,
+    label: 'Paymaster',
+  });
+}
+
+export function hashRobinhoodPaymasterPolicy(
+  policy: RobinhoodPaymasterPolicy,
+): Hex {
+  validateRobinhoodPaymasterPolicy(policy);
+  return keccak256(stringToHex(canonicalJson(policy)));
+}
+
+export function assertActionAllowedByPaymasterPolicy(params: {
+  action: PreparedRobinhoodAction;
+  policy: RobinhoodPaymasterPolicy;
+  manifest: RobinhoodDeploymentManifest;
+  bundle: RobinhoodProtocolArtifactBundle;
+  runtime: VerifiedRobinhoodDeploymentRuntime;
+  now?: Date | number | bigint;
+}): void {
+  assertPreparedAction(params.action, params.now);
+  assertActionBoundToVerifiedDeployment({
+    action: params.action,
+    manifest: params.manifest,
+    bundle: params.bundle,
+    runtime: params.runtime,
+    now: params.now,
+  });
+  validateRobinhoodPaymasterPolicy(params.policy);
+  const now = toUnixSeconds(params.now);
+  if (now < params.policy.validAfter || now > params.policy.validUntil) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster policy is not active at the current time.',
+    );
+  }
+  if (
+    params.action.network !== params.policy.network ||
+    parseRobinhoodCaip10({
+      network: params.action.network,
+      accountId: params.action.accountId,
+    }) !== normalizeRobinhoodAddress(params.policy.account) ||
+    params.action.programId.toLowerCase() !==
+      params.policy.programId.toLowerCase() ||
+    !params.policy.allowedActions.includes(params.action.action)
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Action identity is outside the paymaster policy.',
+    );
+  }
+  const call = findPolicyCall(params.policy.allowedCalls, params.action);
+  if (call == null || params.action.value > call.maximumNativeValue) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Action target, selector, or value is outside the paymaster policy.',
+    );
+  }
+}
+
+export function validateRobinhoodPaymasterQuote(params: {
+  quote: RobinhoodPaymasterQuote;
+  providerId: string;
+  action: PreparedRobinhoodAction;
+  actionCommitment: Hex;
+  policyCommitment: Hex;
+  policy: RobinhoodPaymasterPolicy;
+  now?: Date | number | bigint;
+}): RobinhoodPaymasterQuote {
+  const { quote, action, policy } = params;
+  const now = toUnixSeconds(params.now);
+  requireSelector(quote.selector);
+  if (
+    quote.version !== 1 ||
+    quote.providerId !== params.providerId ||
+    quote.network !== action.network ||
+    quote.chainId !== action.chainId ||
+    typeof quote.policyCommitment !== 'string' ||
+    !/^0x[0-9a-f]{64}$/i.test(quote.policyCommitment) ||
+    quote.policyCommitment.toLowerCase() !==
+      params.policyCommitment.toLowerCase() ||
+    normalizeRobinhoodAddress(quote.sponsor) !==
+      normalizeRobinhoodAddress(policy.sponsor) ||
+    normalizeRobinhoodAddress(quote.account) !==
+      normalizeRobinhoodAddress(policy.account) ||
+    assertBytes32(quote.programId, 'quote.programId').toLowerCase() !==
+      action.programId.toLowerCase() ||
+    typeof quote.actionCommitment !== 'string' ||
+    !/^0x[0-9a-f]{64}$/i.test(quote.actionCommitment) ||
+    quote.actionCommitment.toLowerCase() !==
+      params.actionCommitment.toLowerCase() ||
+    normalizeRobinhoodAddress(quote.target) !== action.target ||
+    quote.selector.toLowerCase() !== action.selector.toLowerCase() ||
+    typeof quote.value !== 'bigint' ||
+    quote.value !== action.value
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster quote does not match the exact prepared action and policy identity.',
+    );
+  }
+  assertUint(quote.validAfter, 'quote.validAfter');
+  assertUint(quote.validUntil, 'quote.validUntil');
+  assertUint(quote.maximumGas, 'quote.maximumGas');
+  assertUint(quote.windowStartedAt, 'quote.windowStartedAt');
+  if (
+    quote.validAfter < policy.validAfter ||
+    quote.validUntil > policy.validUntil ||
+    quote.validUntil <= quote.validAfter ||
+    now < quote.validAfter ||
+    now > quote.validUntil ||
+    quote.maximumGas < 1n ||
+    quote.maximumGas > policy.maximumSponsoredGasPerAction ||
+    quote.windowStartedAt > now ||
+    now - quote.windowStartedAt >= BigInt(policy.windowSeconds) ||
+    !Number.isSafeInteger(quote.callsSponsoredInWindow) ||
+    quote.callsSponsoredInWindow < 0 ||
+    quote.callsSponsoredInWindow >= policy.maximumSponsoredCallsPerWindow ||
+    !isHex(quote.paymasterData) ||
+    quote.paymasterData === '0x'
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Paymaster quote exceeds its gas, rate, payload, or validity policy.',
+    );
+  }
+  return {
+    ...quote,
+    sponsor: normalizeRobinhoodAddress(quote.sponsor),
+    account: normalizeRobinhoodAddress(quote.account),
+    target: normalizeRobinhoodAddress(quote.target),
+  };
+}
+
+/**
+ * Creates a non-submitting exact approval+funding batch plan. A selected smart
+ * account provider may encode it later, but the SDK exposes no generic batch
+ * execution escape hatch.
+ */
+export function createRobinhoodSponsorFundingBatch(params: {
+  approval: PreparedRobinhoodAction;
+  funding: PreparedRobinhoodAction;
+  manifest: RobinhoodDeploymentManifest;
+  bundle: RobinhoodProtocolArtifactBundle;
+  runtime: VerifiedRobinhoodDeploymentRuntime;
+  now?: Date | number | bigint;
+}): RobinhoodSponsorFundingBatch {
+  const { approval, funding } = params;
+  for (const action of [approval, funding]) {
+    assertActionBoundToVerifiedDeployment({
+      action,
+      manifest: params.manifest,
+      bundle: params.bundle,
+      runtime: params.runtime,
+      now: params.now,
+    });
+  }
+  if (
+    approval.action !== 'approve_usdg' ||
+    funding.action !== 'fund_program' ||
+    approval.network !== funding.network ||
+    approval.chainId !== funding.chainId ||
+    approval.caip2 !== funding.caip2 ||
+    approval.accountId !== funding.accountId ||
+    approval.programId.toLowerCase() !== funding.programId.toLowerCase() ||
+    approval.preparedAt !== funding.preparedAt ||
+    approval.expiresAt !== funding.expiresAt ||
+    approval.value !== 0n ||
+    funding.value !== 0n
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Sponsor batch must contain one co-timed exact USDG approval followed by funding for the same account and program.',
+    );
+  }
+  const approvalDecoded = decodeFunctionData({
+    abi: ERC20_APPROVE_ABI,
+    data: approval.data,
+  });
+  const fundingDecoded = decodeFunctionData({
+    abi: getRobinhoodContractArtifact(params.bundle, 'vault').abi,
+    data: funding.data,
+  });
+  const approvalArgs = approvalDecoded.args as readonly [Address, bigint];
+  const fundingArgs = fundingDecoded.args as readonly [bigint, Bytes32];
+  const amount = approvalArgs[1];
+  if (
+    approvalDecoded.functionName !== 'approve' ||
+    fundingDecoded.functionName !== 'fund' ||
+    normalizeRobinhoodAddress(approvalArgs[0]) !== funding.target ||
+    amount <= 0n ||
+    amount === MAX_UINT256 ||
+    fundingArgs[0] !== amount ||
+    assertBytes32(fundingArgs[1], 'fundingReference').toLowerCase() ===
+      ZERO_BYTES32
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Sponsor batch approval and funding calldata must bind the same exact positive finite USDG amount and canonical vault.',
+    );
+  }
+  const actionCommitments = [
+    hashPreparedRobinhoodAction(approval),
+    hashPreparedRobinhoodAction(funding),
+  ] as const;
+  return Object.freeze({
+    version: 1,
+    network: approval.network,
+    chainId: approval.chainId,
+    caip2: approval.caip2,
+    accountId: approval.accountId,
+    programId: approval.programId,
+    amount,
+    actions: Object.freeze([approval, funding]) as readonly [
+      PreparedRobinhoodAction,
+      PreparedRobinhoodAction,
+    ],
+    actionCommitments,
+    batchCommitment: keccak256(stringToHex(canonicalJson(actionCommitments))),
+  });
+}
+
+function validatePolicyCalls(
+  calls: readonly {
+    target: Address;
+    selectors: readonly Hex[];
+    maximumNativeValue: bigint;
+  }[],
+  label: string,
+): void {
+  if (!Array.isArray(calls) || calls.length === 0) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      `${label} policy must enumerate allowed calls.`,
+    );
+  }
+  const allowedCallPairs = new Set<string>();
+  for (const call of calls) {
+    const target = normalizeRobinhoodAddress(call.target);
+    if (target === zeroAddress) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        `${label} allowed call target cannot be the zero address.`,
+      );
+    }
+    assertUint(call.maximumNativeValue, 'maximumNativeValue');
+    if (call.selectors.length === 0 || call.maximumNativeValue < 0n) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        `${label} allowed call requires selectors and a non-negative value cap.`,
+      );
+    }
+    for (const selector of call.selectors) {
+      requireSelector(selector);
+      const pair = `${target.toLowerCase()}:${selector.toLowerCase()}`;
+      if (allowedCallPairs.has(pair)) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          `${label} policy target and selector pairs must be unique.`,
+        );
+      }
+      allowedCallPairs.add(pair);
+    }
+  }
+}
+
+function validatePolicyWindow(params: {
+  validAfter: bigint;
+  validUntil: bigint;
+  maximumCallsPerWindow: number;
+  windowSeconds: number;
+  maximumGasPerAction: bigint;
+  label: string;
+}): void {
+  assertUint(params.validAfter, 'validAfter');
+  assertUint(params.validUntil, 'validUntil');
+  if (params.validAfter < 0n || params.validUntil <= params.validAfter) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      `${params.label} policy requires a bounded validity window.`,
+    );
+  }
+  if (
+    params.validUntil - params.validAfter >
+    BigInt(ROBINHOOD_MAX_SMART_ACCOUNT_POLICY_SECONDS)
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      `${params.label} policy validity exceeds the maximum bounded window.`,
+    );
+  }
+  if (
+    !Number.isSafeInteger(params.maximumCallsPerWindow) ||
+    params.maximumCallsPerWindow < 1 ||
+    params.maximumCallsPerWindow > 10_000 ||
+    !Number.isSafeInteger(params.windowSeconds) ||
+    params.windowSeconds < 1 ||
+    params.windowSeconds > ROBINHOOD_MAX_SMART_ACCOUNT_RATE_WINDOW_SECONDS ||
+    params.maximumGasPerAction < 1n
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      `${params.label} policy rate and gas caps must be positive and bounded.`,
+    );
+  }
+  assertUint(params.maximumGasPerAction, 'maximumGasPerAction');
+}
+
+function findPolicyCall(
+  calls: readonly {
+    target: Address;
+    selectors: readonly Hex[];
+    maximumNativeValue: bigint;
+  }[],
+  action: PreparedRobinhoodAction,
+) {
+  return calls.find(
+    (entry) =>
+      normalizeRobinhoodAddress(entry.target) === action.target &&
+      entry.selectors.some(
+        (selector) => selector.toLowerCase() === action.selector.toLowerCase(),
+      ),
+  );
 }
 
 export function validateRobinhoodSmartAccountPolicy(

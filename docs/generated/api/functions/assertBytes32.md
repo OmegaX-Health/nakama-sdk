@@ -8,7 +8,7 @@
 
 > **assertBytes32**(`value`, `field`): `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:182
+Defined in: [src/robinhood/domain.ts:182](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L182)
 
 ## Parameters
 

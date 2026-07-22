@@ -8,7 +8,7 @@
 
 > **assertRobinhoodWriteStateSafe**(`context`): `void`
 
-Defined in: src/robinhood/query.ts:81
+Defined in: [src/robinhood/query.ts:267](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L267)
 
 ## Parameters
 

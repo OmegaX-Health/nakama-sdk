@@ -6,7 +6,7 @@
 
 # Interface: DecodedRobinhoodError
 
-Defined in: src/robinhood/protocol.ts:401
+Defined in: [src/robinhood/protocol.ts:401](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L401)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/protocol.ts:401
 
 > **args**: readonly `unknown`[]
 
-Defined in: src/robinhood/protocol.ts:404
+Defined in: [src/robinhood/protocol.ts:404](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L404)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/protocol.ts:404
 
 > **data**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:405
+Defined in: [src/robinhood/protocol.ts:405](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L405)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/protocol.ts:405
 
 > **errorName**: `string`
 
-Defined in: src/robinhood/protocol.ts:403
+Defined in: [src/robinhood/protocol.ts:403](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L403)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: src/robinhood/protocol.ts:403
 
 > **role**: `"factory"` \| `"assetRegistry"` \| `"templateRegistry"` \| `"poolRegistry"` \| `"program"` \| `"vault"` \| `"membershipRegistry"` \| `"decisionModule"` \| `"requestManager"` \| `"settlementModule"` \| `"agentAuthorizationRegistry"` \| `"safetyGuardian"`
 
-Defined in: src/robinhood/protocol.ts:402
+Defined in: [src/robinhood/protocol.ts:402](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L402)

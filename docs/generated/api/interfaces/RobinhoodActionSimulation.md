@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodActionSimulation
 
-Defined in: src/robinhood/wallet.ts:188
+Defined in: [src/robinhood/wallet.ts:188](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L188)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/wallet.ts:188
 
 > **blockNumber**: `bigint`
 
-Defined in: src/robinhood/wallet.ts:190
+Defined in: [src/robinhood/wallet.ts:190](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L190)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/wallet.ts:190
 
 > `optional` **decodedError?**: `object`
 
-Defined in: src/robinhood/wallet.ts:193
+Defined in: [src/robinhood/wallet.ts:193](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L193)
 
 #### args
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/wallet.ts:193
 
 > **gasEstimate**: `bigint`
 
-Defined in: src/robinhood/wallet.ts:191
+Defined in: [src/robinhood/wallet.ts:191](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L191)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/wallet.ts:191
 
 > **returnData**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:192
+Defined in: [src/robinhood/wallet.ts:192](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L192)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: src/robinhood/wallet.ts:192
 
 > **success**: `boolean`
 
-Defined in: src/robinhood/wallet.ts:189
+Defined in: [src/robinhood/wallet.ts:189](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L189)

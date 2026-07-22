@@ -8,4 +8,4 @@
 
 > **VirtualsLaunchClass** = `"pegasus"` \| `"unicorn"`
 
-Defined in: src/robinhood/virtuals.ts:16
+Defined in: [src/robinhood/virtuals.ts:16](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L16)

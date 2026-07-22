@@ -6,7 +6,7 @@
 
 # Interface: ProgramSnapshot
 
-Defined in: src/robinhood/domain.ts:82
+Defined in: [src/robinhood/domain.ts:82](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L82)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/domain.ts:82
 
 > **activationChecklistCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:91
+Defined in: [src/robinhood/domain.ts:91](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L91)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/domain.ts:91
 
 > **activeAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:99
+Defined in: [src/robinhood/domain.ts:99](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L99)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/domain.ts:99
 
 > **address**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:83
+Defined in: [src/robinhood/domain.ts:83](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L83)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/domain.ts:83
 
 > **aggregateCap**: [`RobinhoodAssetAmount`](RobinhoodAssetAmount.md)
 
-Defined in: src/robinhood/domain.ts:106
+Defined in: [src/robinhood/domain.ts:106](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L106)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/domain.ts:106
 
 > **appealDecisionWindow**: `bigint`
 
-Defined in: src/robinhood/domain.ts:104
+Defined in: [src/robinhood/domain.ts:104](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L104)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/domain.ts:104
 
 > **appealWindow**: `bigint`
 
-Defined in: src/robinhood/domain.ts:102
+Defined in: [src/robinhood/domain.ts:102](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L102)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/domain.ts:102
 
 > **closesAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:101
+Defined in: [src/robinhood/domain.ts:101](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L101)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: src/robinhood/domain.ts:101
 
 > **decisionModule**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:96
+Defined in: [src/robinhood/domain.ts:96](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L96)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: src/robinhood/domain.ts:96
 
 > **enrollmentOpensAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:98
+Defined in: [src/robinhood/domain.ts:98](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L98)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: src/robinhood/domain.ts:98
 
 > **fundingAsset**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:92
+Defined in: [src/robinhood/domain.ts:92](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L92)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: src/robinhood/domain.ts:92
 
 > **initialDecisionWindow**: `bigint`
 
-Defined in: src/robinhood/domain.ts:103
+Defined in: [src/robinhood/domain.ts:103](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L103)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: src/robinhood/domain.ts:103
 
 > **maxMembers**: `number`
 
-Defined in: src/robinhood/domain.ts:107
+Defined in: [src/robinhood/domain.ts:107](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L107)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: src/robinhood/domain.ts:107
 
 > **membershipRegistry**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:94
+Defined in: [src/robinhood/domain.ts:94](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L94)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: src/robinhood/domain.ts:94
 
 > **metadataCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:87
+Defined in: [src/robinhood/domain.ts:87](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L87)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: src/robinhood/domain.ts:87
 
 > **operationsCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:90
+Defined in: [src/robinhood/domain.ts:90](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L90)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: src/robinhood/domain.ts:90
 
 > **perMemberCap**: [`RobinhoodAssetAmount`](RobinhoodAssetAmount.md)
 
-Defined in: src/robinhood/domain.ts:105
+Defined in: [src/robinhood/domain.ts:105](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L105)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: src/robinhood/domain.ts:105
 
 > **privacyCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:89
+Defined in: [src/robinhood/domain.ts:89](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L89)
 
 ***
 
@@ -150,7 +150,7 @@ Defined in: src/robinhood/domain.ts:89
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:84
+Defined in: [src/robinhood/domain.ts:84](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L84)
 
 ***
 
@@ -158,7 +158,7 @@ Defined in: src/robinhood/domain.ts:84
 
 > **requestManager**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:95
+Defined in: [src/robinhood/domain.ts:95](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L95)
 
 ***
 
@@ -166,7 +166,7 @@ Defined in: src/robinhood/domain.ts:95
 
 > **runoffAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:100
+Defined in: [src/robinhood/domain.ts:100](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L100)
 
 ***
 
@@ -174,7 +174,7 @@ Defined in: src/robinhood/domain.ts:100
 
 > **settlementModule**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:97
+Defined in: [src/robinhood/domain.ts:97](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L97)
 
 ***
 
@@ -182,7 +182,7 @@ Defined in: src/robinhood/domain.ts:97
 
 > **sponsorCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:86
+Defined in: [src/robinhood/domain.ts:86](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L86)
 
 ***
 
@@ -190,7 +190,7 @@ Defined in: src/robinhood/domain.ts:86
 
 > **state**: [`ProgramState`](../type-aliases/ProgramState.md)
 
-Defined in: src/robinhood/domain.ts:108
+Defined in: [src/robinhood/domain.ts:108](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L108)
 
 ***
 
@@ -198,7 +198,7 @@ Defined in: src/robinhood/domain.ts:108
 
 > **suiteId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:85
+Defined in: [src/robinhood/domain.ts:85](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L85)
 
 ***
 
@@ -206,7 +206,7 @@ Defined in: src/robinhood/domain.ts:85
 
 > **termsCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:88
+Defined in: [src/robinhood/domain.ts:88](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L88)
 
 ***
 
@@ -214,4 +214,4 @@ Defined in: src/robinhood/domain.ts:88
 
 > **vault**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:93
+Defined in: [src/robinhood/domain.ts:93](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L93)

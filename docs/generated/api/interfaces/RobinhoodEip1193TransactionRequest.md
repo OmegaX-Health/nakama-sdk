@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodEip1193TransactionRequest
 
-Defined in: src/robinhood/wallet.ts:206
+Defined in: [src/robinhood/wallet.ts:206](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L206)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/wallet.ts:206
 
 > **chainId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:209
+Defined in: [src/robinhood/wallet.ts:209](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L209)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/wallet.ts:209
 
 > **data**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:210
+Defined in: [src/robinhood/wallet.ts:210](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L210)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/wallet.ts:210
 
 > **from**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:207
+Defined in: [src/robinhood/wallet.ts:207](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L207)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/wallet.ts:207
 
 > `optional` **gas?**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:212
+Defined in: [src/robinhood/wallet.ts:212](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L212)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/wallet.ts:212
 
 > **to**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:208
+Defined in: [src/robinhood/wallet.ts:208](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L208)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: src/robinhood/wallet.ts:208
 
 > **value**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:211
+Defined in: [src/robinhood/wallet.ts:211](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L211)

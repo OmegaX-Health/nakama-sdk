@@ -1,6 +1,6 @@
 {
   "name": "@nakama-health/protocol-sdk",
-  "version": "0.8.10",
+  "version": "0.9.0",
   "description": "Robinhood Chain-native SDK for Nakama protection programs, USDG settlement, agent-safe execution, and offline Virtuals launch packet checks.",
   "author": "Nakama Health",
   "contributors": [

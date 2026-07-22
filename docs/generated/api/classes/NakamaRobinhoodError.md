@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodError
 
-Defined in: src/robinhood/errors.ts:4
+Defined in: [src/robinhood/errors.ts:4](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L4)
 
 Base class for the canonical Robinhood Chain SDK surface.
 

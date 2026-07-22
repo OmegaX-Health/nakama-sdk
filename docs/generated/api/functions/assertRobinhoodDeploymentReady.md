@@ -8,7 +8,7 @@
 
 > **assertRobinhoodDeploymentReady**(`manifest`, `bundle`, `options?`): `asserts manifest is RobinhoodDeploymentManifest & { status: "deployed" }`
 
-Defined in: src/robinhood/artifacts.ts:548
+Defined in: [src/robinhood/artifacts.ts:547](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L547)
 
 ## Parameters
 

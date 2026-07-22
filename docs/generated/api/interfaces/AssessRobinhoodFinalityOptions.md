@@ -6,7 +6,7 @@
 
 # Interface: AssessRobinhoodFinalityOptions
 
-Defined in: src/robinhood/receipts.ts:93
+Defined in: [src/robinhood/receipts.ts:93](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L93)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/receipts.ts:93
 
 > `optional` **canonicalBlockHash?**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/receipts.ts:99
+Defined in: [src/robinhood/receipts.ts:99](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L99)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/receipts.ts:99
 
 > `optional` **chainHead?**: `bigint` \| `null`
 
-Defined in: src/robinhood/receipts.ts:96
+Defined in: [src/robinhood/receipts.ts:96](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L96)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/receipts.ts:96
 
 > `optional` **finalizedBlock?**: `bigint` \| `null`
 
-Defined in: src/robinhood/receipts.ts:98
+Defined in: [src/robinhood/receipts.ts:98](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L98)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/receipts.ts:98
 
 > `optional` **l1Posted?**: `boolean` \| `null`
 
-Defined in: src/robinhood/receipts.ts:100
+Defined in: [src/robinhood/receipts.ts:100](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L100)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/receipts.ts:100
 
 > `optional` **observedAt?**: `string` \| `Date`
 
-Defined in: src/robinhood/receipts.ts:104
+Defined in: [src/robinhood/receipts.ts:104](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L104)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/receipts.ts:104
 
 > `optional` **receipt?**: [`RobinhoodMinedReceipt`](RobinhoodMinedReceipt.md) \| `null`
 
-Defined in: src/robinhood/receipts.ts:95
+Defined in: [src/robinhood/receipts.ts:95](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L95)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/receipts.ts:95
 
 > `optional` **replacementHash?**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/receipts.ts:101
+Defined in: [src/robinhood/receipts.ts:101](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L101)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: src/robinhood/receipts.ts:101
 
 > `optional` **safeBlock?**: `bigint` \| `null`
 
-Defined in: src/robinhood/receipts.ts:97
+Defined in: [src/robinhood/receipts.ts:97](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L97)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: src/robinhood/receipts.ts:97
 
 > `optional` **softConfirmations?**: `number`
 
-Defined in: src/robinhood/receipts.ts:103
+Defined in: [src/robinhood/receipts.ts:103](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L103)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: src/robinhood/receipts.ts:103
 
 > `optional` **timedOut?**: `boolean`
 
-Defined in: src/robinhood/receipts.ts:102
+Defined in: [src/robinhood/receipts.ts:102](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L102)
 
 ***
 
@@ -94,4 +94,4 @@ Defined in: src/robinhood/receipts.ts:102
 
 > **transaction**: [`RobinhoodSubmittedTransaction`](RobinhoodSubmittedTransaction.md)
 
-Defined in: src/robinhood/receipts.ts:94
+Defined in: [src/robinhood/receipts.ts:94](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L94)

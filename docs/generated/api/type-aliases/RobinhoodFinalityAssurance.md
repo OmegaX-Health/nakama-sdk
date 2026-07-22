@@ -8,4 +8,4 @@
 
 > **RobinhoodFinalityAssurance** = `"single_provider_display"` \| `"dual_provider_observed"` \| `"dual_provider_economic"`
 
-Defined in: src/robinhood/receipts.ts:28
+Defined in: [src/robinhood/receipts.ts:28](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L28)

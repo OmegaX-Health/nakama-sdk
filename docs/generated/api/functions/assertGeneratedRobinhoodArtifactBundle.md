@@ -8,7 +8,7 @@
 
 > **assertGeneratedRobinhoodArtifactBundle**(`bundle`): `void`
 
-Defined in: src/robinhood/artifacts.ts:508
+Defined in: [src/robinhood/artifacts.ts:506](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L506)
 
 Ensures ABI-dependent operations use the exact generated release bundle.
 

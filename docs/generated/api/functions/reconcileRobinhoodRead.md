@@ -8,7 +8,7 @@
 
 > **reconcileRobinhoodRead**\<`T`\>(`options`): [`RobinhoodRead`](../interfaces/RobinhoodRead.md)\<`T`\>
 
-Defined in: src/robinhood/query.ts:32
+Defined in: [src/robinhood/query.ts:218](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L218)
 
 ## Type Parameters
 

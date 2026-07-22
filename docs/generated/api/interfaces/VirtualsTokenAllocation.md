@@ -6,7 +6,7 @@
 
 # Interface: VirtualsTokenAllocation
 
-Defined in: src/robinhood/virtuals.ts:50
+Defined in: [src/robinhood/virtuals.ts:50](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L50)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/virtuals.ts:50
 
 > **basisPoints**: `number`
 
-Defined in: src/robinhood/virtuals.ts:53
+Defined in: [src/robinhood/virtuals.ts:53](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L53)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/virtuals.ts:53
 
 > **cliffSeconds**: `bigint`
 
-Defined in: src/robinhood/virtuals.ts:55
+Defined in: [src/robinhood/virtuals.ts:55](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L55)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/virtuals.ts:55
 
 > **locked**: `boolean`
 
-Defined in: src/robinhood/virtuals.ts:54
+Defined in: [src/robinhood/virtuals.ts:54](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L54)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/virtuals.ts:54
 
 > **purpose**: `string`
 
-Defined in: src/robinhood/virtuals.ts:52
+Defined in: [src/robinhood/virtuals.ts:52](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L52)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/virtuals.ts:52
 
 > **recipientId**: `string`
 
-Defined in: src/robinhood/virtuals.ts:51
+Defined in: [src/robinhood/virtuals.ts:51](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L51)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: src/robinhood/virtuals.ts:51
 
 > **vestingSeconds**: `bigint`
 
-Defined in: src/robinhood/virtuals.ts:56
+Defined in: [src/robinhood/virtuals.ts:56](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L56)

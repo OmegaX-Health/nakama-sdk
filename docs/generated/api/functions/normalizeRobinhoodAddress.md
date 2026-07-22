@@ -8,7 +8,7 @@
 
 > **normalizeRobinhoodAddress**(`value`): `` `0x${string}` ``
 
-Defined in: src/robinhood/chains.ts:138
+Defined in: [src/robinhood/chains.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L138)
 
 ## Parameters
 

@@ -8,4 +8,4 @@
 
 > `const` **NAKAMA\_DECISION\_DOMAIN\_NAME**: `"Nakama Protection Decision"`
 
-Defined in: src/robinhood/decision.ts:32
+Defined in: [src/robinhood/decision.ts:32](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L32)

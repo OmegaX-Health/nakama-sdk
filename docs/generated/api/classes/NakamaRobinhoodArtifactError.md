@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodArtifactError
 
-Defined in: src/robinhood/errors.ts:30
+Defined in: [src/robinhood/errors.ts:30](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L30)
 
 Base class for the canonical Robinhood Chain SDK surface.
 
@@ -20,7 +20,7 @@ Base class for the canonical Robinhood Chain SDK surface.
 
 > **new NakamaRobinhoodArtifactError**(`message`, `options?`): `NakamaRobinhoodArtifactError`
 
-Defined in: src/robinhood/errors.ts:31
+Defined in: [src/robinhood/errors.ts:31](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L31)
 
 #### Parameters
 

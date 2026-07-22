@@ -6,8 +6,8 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
   status: 'ready',
   sourceArtifact: 'nakama-protocol/shared/robinhood/protocol_contract.json',
   sourceArtifactSha256:
-    'ee8966f183d4826e08c5c594bf07e89aca3385e8423d8a79d3598656e9a3b75d',
-  sourceCommit: null,
+    '18890abee0c58ef137d4e4f849a38a9a500b2b38654d6b7e607bd7224a87fc43',
+  sourceCommit: '0cb347f1ac0d790b1fc7053a6c0fcb2e0a53dd75',
   deploymentCodeCommitment:
     '0xce06ac68424ff1a9490fdc1629bd9a45936334011d0a91b2ba07cd7470224ad0',
   generatedBy: 'scripts/sync-robinhood-artifacts.mjs',

@@ -6,7 +6,7 @@
 
 # Interface: NakamaDecisionPreview
 
-Defined in: src/robinhood/decision.ts:146
+Defined in: [src/robinhood/decision.ts:146](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L146)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/decision.ts:146
 
 > **action**: [`DecisionActionCode`](../type-aliases/DecisionActionCode.md)
 
-Defined in: src/robinhood/decision.ts:158
+Defined in: [src/robinhood/decision.ts:158](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L158)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/decision.ts:158
 
 > **approvedAmountBaseUnits**: `string`
 
-Defined in: src/robinhood/decision.ts:159
+Defined in: [src/robinhood/decision.ts:159](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L159)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/decision.ts:159
 
 > **decisionModule**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:150
+Defined in: [src/robinhood/decision.ts:150](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L150)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/decision.ts:150
 
 > **evidenceManifestCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:154
+Defined in: [src/robinhood/decision.ts:154](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L154)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/decision.ts:154
 
 > **evidenceVersion**: `number`
 
-Defined in: src/robinhood/decision.ts:155
+Defined in: [src/robinhood/decision.ts:155](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L155)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/decision.ts:155
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/decision.ts:148
+Defined in: [src/robinhood/decision.ts:148](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L148)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/decision.ts:148
 
 > **nonce**: `string`
 
-Defined in: src/robinhood/decision.ts:162
+Defined in: [src/robinhood/decision.ts:162](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L162)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: src/robinhood/decision.ts:162
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:151
+Defined in: [src/robinhood/decision.ts:151](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L151)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: src/robinhood/decision.ts:151
 
 > **publicReasonCode**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:161
+Defined in: [src/robinhood/decision.ts:161](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L161)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: src/robinhood/decision.ts:161
 
 > **recipientCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:160
+Defined in: [src/robinhood/decision.ts:160](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L160)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: src/robinhood/decision.ts:160
 
 > **requestId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:152
+Defined in: [src/robinhood/decision.ts:152](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L152)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: src/robinhood/decision.ts:152
 
 > **reviewer**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:149
+Defined in: [src/robinhood/decision.ts:149](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L149)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: src/robinhood/decision.ts:149
 
 > **reviewerRole**: [`DecisionReviewerRoleCode`](../type-aliases/DecisionReviewerRoleCode.md)
 
-Defined in: src/robinhood/decision.ts:157
+Defined in: [src/robinhood/decision.ts:157](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L157)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: src/robinhood/decision.ts:157
 
 > **reviewRound**: [`DecisionReviewRoundCode`](../type-aliases/DecisionReviewRoundCode.md)
 
-Defined in: src/robinhood/decision.ts:156
+Defined in: [src/robinhood/decision.ts:156](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L156)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: src/robinhood/decision.ts:156
 
 > **termsCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:153
+Defined in: [src/robinhood/decision.ts:153](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L153)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: src/robinhood/decision.ts:153
 
 > **title**: `"Program decision"`
 
-Defined in: src/robinhood/decision.ts:147
+Defined in: [src/robinhood/decision.ts:147](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L147)
 
 ***
 
@@ -142,4 +142,4 @@ Defined in: src/robinhood/decision.ts:147
 
 > **validUntilUnixSeconds**: `string`
 
-Defined in: src/robinhood/decision.ts:163
+Defined in: [src/robinhood/decision.ts:163](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L163)

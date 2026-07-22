@@ -8,4 +8,4 @@
 
 > **DecisionReviewRoundCode** = `1` \| `2`
 
-Defined in: src/robinhood/decision.ts:104
+Defined in: [src/robinhood/decision.ts:104](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L104)

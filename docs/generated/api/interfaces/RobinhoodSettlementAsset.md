@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodSettlementAsset
 
-Defined in: src/robinhood/assets.ts:32
+Defined in: [src/robinhood/assets.ts:32](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L32)
 
 ## Extended by
 
@@ -18,7 +18,7 @@ Defined in: src/robinhood/assets.ts:32
 
 > **address**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/assets.ts:36
+Defined in: [src/robinhood/assets.ts:36](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L36)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: src/robinhood/assets.ts:36
 
 > **caip2**: [`RobinhoodCaip2`](../type-aliases/RobinhoodCaip2.md)
 
-Defined in: src/robinhood/assets.ts:35
+Defined in: [src/robinhood/assets.ts:35](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L35)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: src/robinhood/assets.ts:35
 
 > **chainId**: [`RobinhoodChainId`](../type-aliases/RobinhoodChainId.md)
 
-Defined in: src/robinhood/assets.ts:34
+Defined in: [src/robinhood/assets.ts:34](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L34)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: src/robinhood/assets.ts:34
 
 > **decimals**: `6`
 
-Defined in: src/robinhood/assets.ts:39
+Defined in: [src/robinhood/assets.ts:39](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L39)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: src/robinhood/assets.ts:39
 
 > **name**: `"Global Dollar"`
 
-Defined in: src/robinhood/assets.ts:37
+Defined in: [src/robinhood/assets.ts:37](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L37)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: src/robinhood/assets.ts:37
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/assets.ts:33
+Defined in: [src/robinhood/assets.ts:33](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L33)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: src/robinhood/assets.ts:33
 
 > **status**: `"verified"` \| `"unconfigured"`
 
-Defined in: src/robinhood/assets.ts:40
+Defined in: [src/robinhood/assets.ts:40](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L40)
 
 ***
 
@@ -74,4 +74,4 @@ Defined in: src/robinhood/assets.ts:40
 
 > **symbol**: `"USDG"`
 
-Defined in: src/robinhood/assets.ts:38
+Defined in: [src/robinhood/assets.ts:38](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L38)

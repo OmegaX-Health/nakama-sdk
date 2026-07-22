@@ -6,7 +6,7 @@
 
 # Interface: ReconcileRobinhoodReadOptions\<T\>
 
-Defined in: src/robinhood/query.ts:16
+Defined in: [src/robinhood/query.ts:55](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L55)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: src/robinhood/query.ts:16
 
 > **direct**: [`RobinhoodRead`](RobinhoodRead.md)\<`T`\>
 
-Defined in: src/robinhood/query.ts:18
+Defined in: [src/robinhood/query.ts:57](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L57)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: src/robinhood/query.ts:18
 
 > `optional` **equals?**: (`indexed`, `direct`) => `boolean`
 
-Defined in: src/robinhood/query.ts:19
+Defined in: [src/robinhood/query.ts:58](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L58)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: src/robinhood/query.ts:19
 
 > **indexed**: [`RobinhoodRead`](RobinhoodRead.md)\<`T`\>
 
-Defined in: src/robinhood/query.ts:17
+Defined in: [src/robinhood/query.ts:56](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L56)
 
 ***
 
@@ -58,4 +58,4 @@ Defined in: src/robinhood/query.ts:17
 
 > `optional` **maximumIndexerLagBlocks?**: `number`
 
-Defined in: src/robinhood/query.ts:20
+Defined in: [src/robinhood/query.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L59)

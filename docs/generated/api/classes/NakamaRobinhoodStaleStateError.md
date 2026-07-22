@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodStaleStateError
 
-Defined in: src/robinhood/errors.ts:69
+Defined in: [src/robinhood/errors.ts:69](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L69)
 
 Base class for the canonical Robinhood Chain SDK surface.
 
@@ -20,7 +20,7 @@ Base class for the canonical Robinhood Chain SDK surface.
 
 > **new NakamaRobinhoodStaleStateError**(`message`, `options?`): `NakamaRobinhoodStaleStateError`
 
-Defined in: src/robinhood/errors.ts:70
+Defined in: [src/robinhood/errors.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L70)
 
 #### Parameters
 

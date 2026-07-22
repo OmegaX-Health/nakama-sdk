@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "package": {
     "name": "@nakama-health/protocol-sdk",
-    "version": "0.8.10",
+    "version": "0.9.0",
     "module": "module",
     "node": ">=20"
   },
@@ -26,7 +26,8 @@
     },
     "sourceRepo": "../nakama-protocol",
     "sourceArtifact": "shared/robinhood/protocol_contract.json",
-    "sourceArtifactSha256": "ee8966f183d4826e08c5c594bf07e89aca3385e8423d8a79d3598656e9a3b75d",
+    "sourceCommit": "0cb347f1ac0d790b1fc7053a6c0fcb2e0a53dd75",
+    "sourceArtifactSha256": "18890abee0c58ef137d4e4f849a38a9a500b2b38654d6b7e607bd7224a87fc43",
     "deploymentCodeCommitment": "0xce06ac68424ff1a9490fdc1629bd9a45936334011d0a91b2ba07cd7470224ad0",
     "deploymentKind": "factory-authorized-create2",
     "deploymentSchema": "deployments/robinhood-deployment.schema.json",
@@ -161,6 +162,16 @@
           "name": "reconcileRobinhoodRead",
           "kind": "value",
           "subpath": "./robinhood"
+        },
+        {
+          "name": "collectRobinhoodIndexerPages",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "invalidateRobinhoodOfflineCacheAfterReorg",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
       ]
     },
@@ -184,6 +195,26 @@
         },
         {
           "name": "createRobinhoodSmartAccountClient",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodPaymasterClient",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "validateRobinhoodPaymasterPolicy",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "hashRobinhoodPaymasterPolicy",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodSponsorFundingBatch",
           "kind": "value",
           "subpath": "./robinhood"
         }
@@ -236,6 +267,8 @@
     "Prepared actions are builder-issued capabilities, must pass an exact fresh simulation, and cannot be relabeled before wallet submission.",
     "The SDK never accepts a private key, silently selects an RPC, or switches a user's chain.",
     "Phase-0 smart-account submission is disabled until finalized onchain policy installation and revocation can be independently verified.",
+    "Paymaster adapters are quote-only; provider payloads cannot submit or prove sponsorship, and every quote is bound to exact action, canonical policy commitment, gas, rate, and expiry policy.",
+    "Indexer and offline-cache state is public and read-only; page sizes, pagination, and retries are bounded, snapshot changes fail, and reorged descendants invalidate.",
     "Economic finality requires sealed transaction-intent readback plus two independent L2 readers and two independent L1 batch readers.",
     "The Virtuals validator is an offline structural check; it cannot prove platform acceptance, legal eligibility, ownership, code deployment, or launch finality."
   ],

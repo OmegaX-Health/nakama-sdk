@@ -6,7 +6,7 @@
 
 # Interface: MembershipRecoveryAuthorization
 
-Defined in: src/robinhood/protocol.ts:134
+Defined in: [src/robinhood/protocol.ts:134](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L134)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/protocol.ts:134
 
 > **membershipId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:136
+Defined in: [src/robinhood/protocol.ts:136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L136)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/protocol.ts:136
 
 > **newAccount**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:137
+Defined in: [src/robinhood/protocol.ts:137](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L137)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/protocol.ts:137
 
 > **nonce**: `bigint`
 
-Defined in: src/robinhood/protocol.ts:138
+Defined in: [src/robinhood/protocol.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L138)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/protocol.ts:138
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:135
+Defined in: [src/robinhood/protocol.ts:135](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L135)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: src/robinhood/protocol.ts:135
 
 > **validUntil**: `bigint`
 
-Defined in: src/robinhood/protocol.ts:139
+Defined in: [src/robinhood/protocol.ts:139](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L139)

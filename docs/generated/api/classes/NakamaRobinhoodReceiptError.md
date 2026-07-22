@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodReceiptError
 
-Defined in: src/robinhood/errors.ts:48
+Defined in: [src/robinhood/errors.ts:48](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L48)
 
 Base class for the canonical Robinhood Chain SDK surface.
 
@@ -20,7 +20,7 @@ Base class for the canonical Robinhood Chain SDK surface.
 
 > **new NakamaRobinhoodReceiptError**(`message`, `options?`): `NakamaRobinhoodReceiptError`
 
-Defined in: src/robinhood/errors.ts:49
+Defined in: [src/robinhood/errors.ts:49](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L49)
 
 #### Parameters
 

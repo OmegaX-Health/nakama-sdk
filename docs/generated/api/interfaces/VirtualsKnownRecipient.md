@@ -6,7 +6,7 @@
 
 # Interface: VirtualsKnownRecipient
 
-Defined in: src/robinhood/virtuals.ts:41
+Defined in: [src/robinhood/virtuals.ts:41](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L41)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/virtuals.ts:41
 
 > **address**: `` `0x${string}` ``
 
-Defined in: src/robinhood/virtuals.ts:45
+Defined in: [src/robinhood/virtuals.ts:45](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L45)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/virtuals.ts:45
 
 > **beneficialOwnerId**: `string` \| `null`
 
-Defined in: src/robinhood/virtuals.ts:46
+Defined in: [src/robinhood/virtuals.ts:46](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L46)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/virtuals.ts:46
 
 > **id**: `string`
 
-Defined in: src/robinhood/virtuals.ts:42
+Defined in: [src/robinhood/virtuals.ts:42](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L42)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/virtuals.ts:42
 
 > **kind**: `"beneficial_owner"` \| `"verified_contract"` \| `"locked_treasury"`
 
-Defined in: src/robinhood/virtuals.ts:44
+Defined in: [src/robinhood/virtuals.ts:44](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L44)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/virtuals.ts:44
 
 > **label**: `string`
 
-Defined in: src/robinhood/virtuals.ts:43
+Defined in: [src/robinhood/virtuals.ts:43](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L43)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: src/robinhood/virtuals.ts:43
 
 > **verified**: `boolean`
 
-Defined in: src/robinhood/virtuals.ts:47
+Defined in: [src/robinhood/virtuals.ts:47](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L47)

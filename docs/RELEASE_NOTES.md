@@ -1,11 +1,13 @@
 # Release Notes — `@nakama-health/protocol-sdk`
 
-## Unreleased — Robinhood-native protection SDK
+## `0.9.0` — Robinhood-native protection SDK
 
 - Made Robinhood Chain mainnet (`4663`) and testnet (`46630`) the canonical root
   surface, with an explicit `/robinhood` export and no chain-1 fallback.
 - Imported the exact 12-contract protocol artifact/ABIs and added reproducible
-  source, ABI, compiler, component-code, and deployment-commitment checks.
+  source, ABI, compiler, component-code, and deployment-commitment checks. A
+  ready bundle now requires the nonzero committed contract-source revision and
+  rejects null, malformed, zero, or caller-substituted provenance.
 - Added closed, fail-closed deployment manifests; both remain `unconfigured`, so
   no production read/write can be constructed until audited deployment evidence
   and live runtime verification exist.
@@ -15,8 +17,12 @@
   typed capability-marked actions, exact simulations, EIP-1193 wallet requests,
   immutable protocol EIP-712 decisions, sealed transaction-intent finality, and
   dual-independent L2/L1 economic-finality assessment.
-- Added a narrow smart-account simulation policy while keeping Phase-0 agent
-  submission disabled pending independent finalized onchain policy proof.
+- Added provider-neutral smart-account simulation and paymaster quote policy
+  boundaries while keeping Phase-0 agent submission disabled pending provider
+  selection and independent finalized onchain policy proof.
+- Added bounded public indexer pagination/retry validation, cursor-loop
+  detection, finality/reconciliation context, and block-hash reorg cache
+  invalidation; offline or unreconciled state remains read-only.
 - Added offline Virtuals launch-packet structural validation with explicit
   warnings that it performs no platform, legal, identity, RPC, signing,
   broadcast, or launch operation.

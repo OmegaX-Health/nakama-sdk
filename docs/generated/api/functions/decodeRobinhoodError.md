@@ -8,7 +8,7 @@
 
 > **decodeRobinhoodError**(`data`, `bundle`): [`DecodedRobinhoodError`](../interfaces/DecodedRobinhoodError.md) \| `null`
 
-Defined in: src/robinhood/protocol.ts:1620
+Defined in: [src/robinhood/protocol.ts:1620](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L1620)
 
 ## Parameters
 

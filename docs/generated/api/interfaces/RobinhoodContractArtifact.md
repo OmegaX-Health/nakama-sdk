@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodContractArtifact
 
-Defined in: src/robinhood/artifacts.ts:87
+Defined in: [src/robinhood/artifacts.ts:87](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L87)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/artifacts.ts:87
 
 > **abi**: `Abi`
 
-Defined in: src/robinhood/artifacts.ts:92
+Defined in: [src/robinhood/artifacts.ts:92](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L92)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/artifacts.ts:92
 
 > **abiSha256**: `string`
 
-Defined in: src/robinhood/artifacts.ts:91
+Defined in: [src/robinhood/artifacts.ts:91](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L91)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/artifacts.ts:91
 
 > **contractName**: [`RobinhoodContractName`](../type-aliases/RobinhoodContractName.md)
 
-Defined in: src/robinhood/artifacts.ts:89
+Defined in: [src/robinhood/artifacts.ts:89](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L89)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/artifacts.ts:89
 
 > **role**: `"factory"` \| `"assetRegistry"` \| `"templateRegistry"` \| `"poolRegistry"` \| `"program"` \| `"vault"` \| `"membershipRegistry"` \| `"decisionModule"` \| `"requestManager"` \| `"settlementModule"` \| `"agentAuthorizationRegistry"` \| `"safetyGuardian"`
 
-Defined in: src/robinhood/artifacts.ts:88
+Defined in: [src/robinhood/artifacts.ts:88](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L88)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: src/robinhood/artifacts.ts:88
 
 > **sourceAbi**: `string`
 
-Defined in: src/robinhood/artifacts.ts:90
+Defined in: [src/robinhood/artifacts.ts:90](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L90)

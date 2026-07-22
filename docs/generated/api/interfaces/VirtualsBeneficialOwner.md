@@ -6,7 +6,7 @@
 
 # Interface: VirtualsBeneficialOwner
 
-Defined in: src/robinhood/virtuals.ts:32
+Defined in: [src/robinhood/virtuals.ts:32](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L32)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/virtuals.ts:32
 
 > **displayName**: `string`
 
-Defined in: src/robinhood/virtuals.ts:34
+Defined in: [src/robinhood/virtuals.ts:34](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L34)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/virtuals.ts:34
 
 > **id**: `string`
 
-Defined in: src/robinhood/virtuals.ts:33
+Defined in: [src/robinhood/virtuals.ts:33](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L33)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/virtuals.ts:33
 
 > **jurisdiction**: `string`
 
-Defined in: src/robinhood/virtuals.ts:35
+Defined in: [src/robinhood/virtuals.ts:35](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L35)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/virtuals.ts:35
 
 > **malaysiaNexusResolved**: `boolean`
 
-Defined in: src/robinhood/virtuals.ts:38
+Defined in: [src/robinhood/virtuals.ts:38](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L38)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/virtuals.ts:38
 
 > **platformEligible**: `boolean`
 
-Defined in: src/robinhood/virtuals.ts:37
+Defined in: [src/robinhood/virtuals.ts:37](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L37)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: src/robinhood/virtuals.ts:37
 
 > **verified**: `boolean`
 
-Defined in: src/robinhood/virtuals.ts:36
+Defined in: [src/robinhood/virtuals.ts:36](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L36)

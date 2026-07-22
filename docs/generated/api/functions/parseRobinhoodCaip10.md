@@ -8,7 +8,7 @@
 
 > **parseRobinhoodCaip10**(`params`): `` `0x${string}` ``
 
-Defined in: src/robinhood/chains.ts:154
+Defined in: [src/robinhood/chains.ts:154](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L154)
 
 ## Parameters
 

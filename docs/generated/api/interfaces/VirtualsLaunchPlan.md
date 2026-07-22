@@ -6,7 +6,7 @@
 
 # Interface: VirtualsLaunchPlan
 
-Defined in: src/robinhood/virtuals.ts:59
+Defined in: [src/robinhood/virtuals.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L59)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/virtuals.ts:59
 
 > **allocations**: readonly [`VirtualsTokenAllocation`](VirtualsTokenAllocation.md)[]
 
-Defined in: src/robinhood/virtuals.ts:88
+Defined in: [src/robinhood/virtuals.ts:88](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L88)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/virtuals.ts:88
 
 > **assets**: readonly [`VirtualsLaunchAsset`](VirtualsLaunchAsset.md)[]
 
-Defined in: src/robinhood/virtuals.ts:78
+Defined in: [src/robinhood/virtuals.ts:78](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L78)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/virtuals.ts:78
 
 > **beneficialOwners**: readonly [`VirtualsBeneficialOwner`](VirtualsBeneficialOwner.md)[]
 
-Defined in: src/robinhood/virtuals.ts:86
+Defined in: [src/robinhood/virtuals.ts:86](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L86)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/virtuals.ts:86
 
 > **caip2**: `"eip155:4663"`
 
-Defined in: src/robinhood/virtuals.ts:63
+Defined in: [src/robinhood/virtuals.ts:63](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L63)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/virtuals.ts:63
 
 > **chainId**: `4663`
 
-Defined in: src/robinhood/virtuals.ts:62
+Defined in: [src/robinhood/virtuals.ts:62](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L62)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/virtuals.ts:62
 
 > **contracts**: readonly [`VirtualsLaunchContractEvidence`](VirtualsLaunchContractEvidence.md)[]
 
-Defined in: src/robinhood/virtuals.ts:77
+Defined in: [src/robinhood/virtuals.ts:77](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L77)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/virtuals.ts:77
 
 > **fees**: `object`
 
-Defined in: src/robinhood/virtuals.ts:79
+Defined in: [src/robinhood/virtuals.ts:79](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L79)
 
 #### acpFeeRecipientId
 
@@ -90,7 +90,7 @@ Defined in: src/robinhood/virtuals.ts:79
 
 > **finality**: `object`
 
-Defined in: src/robinhood/virtuals.ts:99
+Defined in: [src/robinhood/virtuals.ts:99](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L99)
 
 #### chainHead
 
@@ -122,7 +122,7 @@ Defined in: src/robinhood/virtuals.ts:99
 
 > **gates**: `object`
 
-Defined in: src/robinhood/virtuals.ts:70
+Defined in: [src/robinhood/virtuals.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L70)
 
 #### legalReviewPassed
 
@@ -150,7 +150,7 @@ Defined in: src/robinhood/virtuals.ts:70
 
 > **launchClass**: [`VirtualsLaunchClass`](../type-aliases/VirtualsLaunchClass.md)
 
-Defined in: src/robinhood/virtuals.ts:64
+Defined in: [src/robinhood/virtuals.ts:64](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L64)
 
 ***
 
@@ -158,7 +158,7 @@ Defined in: src/robinhood/virtuals.ts:64
 
 > **network**: `"mainnet"`
 
-Defined in: src/robinhood/virtuals.ts:61
+Defined in: [src/robinhood/virtuals.ts:61](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L61)
 
 ***
 
@@ -166,7 +166,7 @@ Defined in: src/robinhood/virtuals.ts:61
 
 > **recipients**: readonly [`VirtualsKnownRecipient`](VirtualsKnownRecipient.md)[]
 
-Defined in: src/robinhood/virtuals.ts:87
+Defined in: [src/robinhood/virtuals.ts:87](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L87)
 
 ***
 
@@ -174,7 +174,7 @@ Defined in: src/robinhood/virtuals.ts:87
 
 > **schemaVersion**: `1`
 
-Defined in: src/robinhood/virtuals.ts:60
+Defined in: [src/robinhood/virtuals.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L60)
 
 ***
 
@@ -182,7 +182,7 @@ Defined in: src/robinhood/virtuals.ts:60
 
 > **simulation**: `object`
 
-Defined in: src/robinhood/virtuals.ts:89
+Defined in: [src/robinhood/virtuals.ts:89](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L89)
 
 #### blockHash
 
@@ -222,7 +222,7 @@ Defined in: src/robinhood/virtuals.ts:89
 
 > **token**: `object`
 
-Defined in: src/robinhood/virtuals.ts:65
+Defined in: [src/robinhood/virtuals.ts:65](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L65)
 
 #### name
 

@@ -8,7 +8,7 @@
 
 > **waitForRobinhoodFinality**(`options`): `Promise`\<[`RobinhoodTransactionFinality`](../interfaces/RobinhoodTransactionFinality.md)\>
 
-Defined in: src/robinhood/receipts.ts:435
+Defined in: [src/robinhood/receipts.ts:435](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L435)
 
 ## Parameters
 

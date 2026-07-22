@@ -460,9 +460,7 @@ export function validateRobinhoodArtifactBundle(
       bundle.deploymentCodeCommitment,
       'deploymentCodeCommitment',
     );
-    if (bundle.sourceCommit != null) {
-      requireGitCommit(bundle.sourceCommit, 'sourceCommit');
-    }
+    requireGitCommit(bundle.sourceCommit, 'sourceCommit');
     for (const role of ROBINHOOD_CONTRACT_ROLES) {
       if (contracts[role] == null) {
         throw new NakamaRobinhoodArtifactError(
@@ -513,6 +511,7 @@ export function assertGeneratedRobinhoodArtifactBundle(
     canonical.status !== 'ready' ||
     bundle.status !== 'ready' ||
     bundle.sourceArtifactSha256 !== canonical.sourceArtifactSha256 ||
+    bundle.sourceCommit !== canonical.sourceCommit ||
     bundle.deploymentCodeCommitment !== canonical.deploymentCodeCommitment
   ) {
     throw new NakamaRobinhoodArtifactError(
@@ -1121,9 +1120,13 @@ function requireSha256(value: unknown, field: string): string {
 }
 
 function requireGitCommit(value: unknown, field: string): string {
-  if (typeof value !== 'string' || !/^[0-9a-f]{40}$/.test(value)) {
+  if (
+    typeof value !== 'string' ||
+    !/^[0-9a-f]{40}$/.test(value) ||
+    /^0{40}$/.test(value)
+  ) {
     throw new NakamaRobinhoodArtifactError(
-      `${field} must be a full lowercase Git commit SHA.`,
+      `${field} must be a nonzero full lowercase Git commit SHA.`,
     );
   }
   return value;

@@ -8,4 +8,4 @@
 
 > **DecisionActionCode** = `1` \| `2` \| `3`
 
-Defined in: src/robinhood/decision.ts:106
+Defined in: [src/robinhood/decision.ts:106](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L106)

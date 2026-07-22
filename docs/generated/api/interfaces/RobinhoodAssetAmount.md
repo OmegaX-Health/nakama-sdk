@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodAssetAmount
 
-Defined in: src/robinhood/assets.ts:70
+Defined in: [src/robinhood/assets.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L70)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/assets.ts:70
 
 > **asset**: `object`
 
-Defined in: src/robinhood/assets.ts:72
+Defined in: [src/robinhood/assets.ts:72](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L72)
 
 #### address
 
@@ -46,4 +46,4 @@ Defined in: src/robinhood/assets.ts:72
 
 > **units**: `bigint`
 
-Defined in: src/robinhood/assets.ts:71
+Defined in: [src/robinhood/assets.ts:71](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L71)

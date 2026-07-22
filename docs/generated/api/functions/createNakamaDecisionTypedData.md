@@ -8,7 +8,7 @@
 
 > **createNakamaDecisionTypedData**(`params`): [`NakamaDecisionTypedData`](../interfaces/NakamaDecisionTypedData.md)
 
-Defined in: src/robinhood/decision.ts:185
+Defined in: [src/robinhood/decision.ts:185](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L185)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: NakamaDecisionMessage
 
-Defined in: src/robinhood/decision.ts:108
+Defined in: [src/robinhood/decision.ts:108](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L108)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/decision.ts:108
 
 > **action**: [`DecisionActionCode`](../type-aliases/DecisionActionCode.md)
 
-Defined in: src/robinhood/decision.ts:116
+Defined in: [src/robinhood/decision.ts:116](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L116)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/decision.ts:116
 
 > **approvedAmount**: `bigint`
 
-Defined in: src/robinhood/decision.ts:117
+Defined in: [src/robinhood/decision.ts:117](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L117)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/decision.ts:117
 
 > **evidenceManifestCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:112
+Defined in: [src/robinhood/decision.ts:112](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L112)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/decision.ts:112
 
 > **evidenceVersion**: `number`
 
-Defined in: src/robinhood/decision.ts:113
+Defined in: [src/robinhood/decision.ts:113](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L113)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/decision.ts:113
 
 > **nonce**: `bigint`
 
-Defined in: src/robinhood/decision.ts:120
+Defined in: [src/robinhood/decision.ts:120](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L120)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/decision.ts:120
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:109
+Defined in: [src/robinhood/decision.ts:109](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L109)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/decision.ts:109
 
 > **publicReasonCode**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:119
+Defined in: [src/robinhood/decision.ts:119](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L119)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: src/robinhood/decision.ts:119
 
 > **recipientCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:118
+Defined in: [src/robinhood/decision.ts:118](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L118)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: src/robinhood/decision.ts:118
 
 > **requestId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:110
+Defined in: [src/robinhood/decision.ts:110](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L110)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: src/robinhood/decision.ts:110
 
 > **reviewerRole**: [`DecisionReviewerRoleCode`](../type-aliases/DecisionReviewerRoleCode.md)
 
-Defined in: src/robinhood/decision.ts:115
+Defined in: [src/robinhood/decision.ts:115](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L115)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: src/robinhood/decision.ts:115
 
 > **reviewRound**: [`DecisionReviewRoundCode`](../type-aliases/DecisionReviewRoundCode.md)
 
-Defined in: src/robinhood/decision.ts:114
+Defined in: [src/robinhood/decision.ts:114](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L114)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: src/robinhood/decision.ts:114
 
 > **termsCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:111
+Defined in: [src/robinhood/decision.ts:111](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L111)
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: src/robinhood/decision.ts:111
 
 > **validUntil**: `bigint`
 
-Defined in: src/robinhood/decision.ts:121
+Defined in: [src/robinhood/decision.ts:121](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L121)

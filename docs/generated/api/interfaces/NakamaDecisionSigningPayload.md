@@ -6,7 +6,7 @@
 
 # Interface: NakamaDecisionSigningPayload
 
-Defined in: src/robinhood/decision.ts:136
+Defined in: [src/robinhood/decision.ts:136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L136)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/decision.ts:136
 
 > **accountId**: `` `eip155:4663:0x${string}` `` \| `` `eip155:46630:0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:140
+Defined in: [src/robinhood/decision.ts:140](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L140)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/decision.ts:140
 
 > **authorizationType**: `"program_decision"`
 
-Defined in: src/robinhood/decision.ts:142
+Defined in: [src/robinhood/decision.ts:142](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L142)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/decision.ts:142
 
 > **chainId**: `number`
 
-Defined in: src/robinhood/decision.ts:139
+Defined in: [src/robinhood/decision.ts:139](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L139)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/decision.ts:139
 
 > **kind**: `"typed_data"`
 
-Defined in: src/robinhood/decision.ts:141
+Defined in: [src/robinhood/decision.ts:141](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L141)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/decision.ts:141
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/decision.ts:138
+Defined in: [src/robinhood/decision.ts:138](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L138)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/decision.ts:138
 
 > **typedData**: [`NakamaDecisionTypedData`](NakamaDecisionTypedData.md)
 
-Defined in: src/robinhood/decision.ts:143
+Defined in: [src/robinhood/decision.ts:143](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L143)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: src/robinhood/decision.ts:143
 
 > **version**: `1`
 
-Defined in: src/robinhood/decision.ts:137
+Defined in: [src/robinhood/decision.ts:137](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L137)

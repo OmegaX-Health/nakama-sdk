@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodAssetError
 
-Defined in: src/robinhood/errors.ts:24
+Defined in: [src/robinhood/errors.ts:24](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L24)
 
 Base class for the canonical Robinhood Chain SDK surface.
 
@@ -20,7 +20,7 @@ Base class for the canonical Robinhood Chain SDK surface.
 
 > **new NakamaRobinhoodAssetError**(`message`, `options?`): `NakamaRobinhoodAssetError`
 
-Defined in: src/robinhood/errors.ts:25
+Defined in: [src/robinhood/errors.ts:25](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L25)
 
 #### Parameters
 

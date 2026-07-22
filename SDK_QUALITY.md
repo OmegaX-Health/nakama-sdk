@@ -35,9 +35,9 @@ placeholder configuration or self-asserted evidence into authority.
 - `scripts/sync-robinhood-artifacts.mjs` imports the byte-identical canonical
   artifact and ABIs, recomputes every raw SHA-256, and generates the TypeScript
   binding. Generated files are never hand-maintained.
-- The source artifact SHA-256 and factory-authorized CREATE2 deployment-code
-  commitment are declared in `SDK_RUNTIME.json` and verified by
-  `npm run runtime:check`.
+- The nonzero full contract-source Git commit, source artifact SHA-256, and
+  factory-authorized CREATE2 deployment-code commitment are declared in
+  `SDK_RUNTIME.json` and verified by `npm run runtime:check`.
 - Generated artifacts are cloned and recursively frozen behind an internal
   revisioned store, so consumer mutation cannot poison future reads.
 - Deployment manifests use a closed schema. An unconfigured manifest contains
@@ -58,9 +58,13 @@ placeholder configuration or self-asserted evidence into authority.
   `settled`; pause state exposes its review deadline without inventing expiry.
 - Indexers are caches. A write requires a fresh direct-chain observation and an
   explicit safe reconciliation result.
+- The public indexer adapter caps pages/retries, requires chain, finality, and
+  reconciliation context, detects cursor loops and snapshot changes, and never
+  retries errors unless the adapter marks them transient.
 - Offline cache entries accept only bounded public-safe values with canonical
-  timestamps and can never authorize a write. Private health evidence and PHI
-  remain offchain and outside the cache API.
+  timestamps, invalidate conservatively after a reorg, and can never authorize
+  a write. Private health evidence and PHI remain offchain and outside the
+  cache API.
 
 ## Action and wallet integrity
 
@@ -97,6 +101,10 @@ placeholder configuration or self-asserted evidence into authority.
 - Smart-account submission remains disabled until independent finalized reads
   prove module code, installed policy, limits, revocation, target, selector,
   program, and action constraints. Adapter self-attestation is not proof.
+- Paymaster adapters can return quotes only. Policy and quote jointly bind
+  sponsor, account, program, the canonical policy commitment, action commitment,
+  target, selector, native value, gas, rate window, and expiry; no provider
+  payload can enter a submission path in this release.
 
 ## Receipt and finality semantics
 

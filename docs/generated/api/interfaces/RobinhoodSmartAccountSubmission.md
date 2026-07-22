@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodSmartAccountSubmission
 
-Defined in: src/robinhood/wallet.ts:249
+Defined in: [src/robinhood/wallet.ts:249](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L249)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/wallet.ts:249
 
 > **accountId**: `` `eip155:4663:0x${string}` `` \| `` `eip155:46630:0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:253
+Defined in: [src/robinhood/wallet.ts:253](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L253)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/wallet.ts:253
 
 > **intentId**: `string`
 
-Defined in: src/robinhood/wallet.ts:252
+Defined in: [src/robinhood/wallet.ts:252](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L252)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/wallet.ts:252
 
 > **kind**: `"user_operation"`
 
-Defined in: src/robinhood/wallet.ts:250
+Defined in: [src/robinhood/wallet.ts:250](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L250)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/wallet.ts:250
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/wallet.ts:251
+Defined in: [src/robinhood/wallet.ts:251](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L251)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: src/robinhood/wallet.ts:251
 
 > **userOperationHash**: `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:254
+Defined in: [src/robinhood/wallet.ts:254](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L254)

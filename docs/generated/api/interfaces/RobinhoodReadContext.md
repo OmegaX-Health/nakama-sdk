@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodReadContext
 
-Defined in: src/robinhood/domain.ts:63
+Defined in: [src/robinhood/domain.ts:63](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L63)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/domain.ts:63
 
 > **blockHash**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:68
+Defined in: [src/robinhood/domain.ts:68](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L68)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/domain.ts:68
 
 > **blockNumber**: `bigint`
 
-Defined in: src/robinhood/domain.ts:67
+Defined in: [src/robinhood/domain.ts:67](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L67)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/domain.ts:67
 
 > **caip2**: [`RobinhoodCaip2`](../type-aliases/RobinhoodCaip2.md)
 
-Defined in: src/robinhood/domain.ts:66
+Defined in: [src/robinhood/domain.ts:66](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L66)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/domain.ts:66
 
 > **chainHead**: `bigint`
 
-Defined in: src/robinhood/domain.ts:69
+Defined in: [src/robinhood/domain.ts:69](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L69)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/domain.ts:69
 
 > **chainId**: [`RobinhoodChainId`](../type-aliases/RobinhoodChainId.md)
 
-Defined in: src/robinhood/domain.ts:65
+Defined in: [src/robinhood/domain.ts:65](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L65)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/domain.ts:65
 
 > **confirmations**: `number`
 
-Defined in: src/robinhood/domain.ts:72
+Defined in: [src/robinhood/domain.ts:72](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L72)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/domain.ts:72
 
 > **finalizedBlock**: `bigint` \| `null`
 
-Defined in: src/robinhood/domain.ts:71
+Defined in: [src/robinhood/domain.ts:71](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L71)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: src/robinhood/domain.ts:71
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/domain.ts:64
+Defined in: [src/robinhood/domain.ts:64](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L64)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: src/robinhood/domain.ts:64
 
 > **observedAt**: `string`
 
-Defined in: src/robinhood/domain.ts:74
+Defined in: [src/robinhood/domain.ts:74](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L74)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: src/robinhood/domain.ts:74
 
 > **reconciliation**: [`ReconciliationStatus`](../type-aliases/ReconciliationStatus.md)
 
-Defined in: src/robinhood/domain.ts:73
+Defined in: [src/robinhood/domain.ts:73](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L73)
 
 ***
 
@@ -94,4 +94,4 @@ Defined in: src/robinhood/domain.ts:73
 
 > **safeBlock**: `bigint` \| `null`
 
-Defined in: src/robinhood/domain.ts:70
+Defined in: [src/robinhood/domain.ts:70](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L70)

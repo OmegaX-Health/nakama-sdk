@@ -8,7 +8,7 @@
 
 > **verifyRobinhoodUsdg**(`params`): `Promise`\<[`VerifiedRobinhoodUsdg`](../interfaces/VerifiedRobinhoodUsdg.md)\>
 
-Defined in: src/robinhood/assets.ts:237
+Defined in: [src/robinhood/assets.ts:237](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L237)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **assertRobinhoodProviderChain**(`params`): `Promise`\<`void`\>
 
-Defined in: src/robinhood/chains.ts:186
+Defined in: [src/robinhood/chains.ts:186](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L186)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodReceiptReader
 
-Defined in: src/robinhood/receipts.ts:116
+Defined in: [src/robinhood/receipts.ts:116](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L116)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/receipts.ts:116
 
 > `readonly` **identity**: [`RobinhoodReaderIdentity`](RobinhoodReaderIdentity.md)
 
-Defined in: src/robinhood/receipts.ts:117
+Defined in: [src/robinhood/receipts.ts:117](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L117)
 
 ## Methods
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/receipts.ts:117
 
 > **getBlockHash**(`blockNumber`): `Promise`\<`` `0x${string}` `` \| `null`\>
 
-Defined in: src/robinhood/receipts.ts:121
+Defined in: [src/robinhood/receipts.ts:121](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L121)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: src/robinhood/receipts.ts:121
 
 > **getBlockNumber**(): `Promise`\<`bigint`\>
 
-Defined in: src/robinhood/receipts.ts:120
+Defined in: [src/robinhood/receipts.ts:120](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L120)
 
 #### Returns
 
@@ -52,7 +52,7 @@ Defined in: src/robinhood/receipts.ts:120
 
 > **getFinalizedBlockNumber**(): `Promise`\<`bigint` \| `null`\>
 
-Defined in: src/robinhood/receipts.ts:123
+Defined in: [src/robinhood/receipts.ts:123](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L123)
 
 #### Returns
 
@@ -64,7 +64,7 @@ Defined in: src/robinhood/receipts.ts:123
 
 > `optional` **getL1PostingStatus**(`hash`): `Promise`\<`boolean` \| `null`\>
 
-Defined in: src/robinhood/receipts.ts:125
+Defined in: [src/robinhood/receipts.ts:125](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L125)
 
 Optional single-source display signal; never enough for economic finality.
 
@@ -84,7 +84,7 @@ Optional single-source display signal; never enough for economic finality.
 
 > **getReceipt**(`hash`): `Promise`\<[`RobinhoodMinedReceipt`](RobinhoodMinedReceipt.md) \| `null`\>
 
-Defined in: src/robinhood/receipts.ts:119
+Defined in: [src/robinhood/receipts.ts:119](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L119)
 
 #### Parameters
 
@@ -102,7 +102,7 @@ Defined in: src/robinhood/receipts.ts:119
 
 > **getSafeBlockNumber**(): `Promise`\<`bigint` \| `null`\>
 
-Defined in: src/robinhood/receipts.ts:122
+Defined in: [src/robinhood/receipts.ts:122](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L122)
 
 #### Returns
 
@@ -114,7 +114,7 @@ Defined in: src/robinhood/receipts.ts:122
 
 > **getTransaction**(`hash`): `Promise`\<[`RobinhoodObservedTransaction`](RobinhoodObservedTransaction.md) \| `null`\>
 
-Defined in: src/robinhood/receipts.ts:118
+Defined in: [src/robinhood/receipts.ts:118](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L118)
 
 #### Parameters
 

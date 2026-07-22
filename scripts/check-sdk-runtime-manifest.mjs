@@ -97,7 +97,7 @@ const sourceText = listTypeScriptFiles('src')
   .join('\n');
 const rootEntrypoint = readFileSync('src/index.ts', 'utf8');
 
-assertEqual(manifest.schemaVersion, 4, 'SDK runtime schemaVersion');
+assertEqual(manifest.schemaVersion, 5, 'SDK runtime schemaVersion');
 assertEqual(manifest.package.name, packageJson.name, 'package name');
 assertEqual(manifest.package.version, packageJson.version, 'package version');
 assertEqual(manifest.package.node, packageJson.engines?.node, 'node engine');
@@ -186,6 +186,20 @@ const checkedInArtifactRaw = readFileSync(
 
 assertEqual(siblingArtifact.schemaVersion, 1, 'sibling artifact schemaVersion');
 assertEqual(siblingArtifact.chainFamily, 'eip155', 'sibling chain family');
+if (
+  typeof siblingArtifact.sourceCommit !== 'string' ||
+  !/^[0-9a-f]{40}$/.test(siblingArtifact.sourceCommit) ||
+  /^0{40}$/.test(siblingArtifact.sourceCommit)
+) {
+  fail(
+    'Sibling artifact sourceCommit must be a nonzero full lowercase Git SHA.',
+  );
+}
+assertEqual(
+  siblingArtifact.sourceCommit,
+  manifest.protocol.sourceCommit,
+  'sibling artifact sourceCommit',
+);
 assertEqual(
   sha256(siblingArtifactRaw),
   manifest.protocol.sourceArtifactSha256,

@@ -33,6 +33,9 @@ Robinhood-native surface.
   request, obligation, role, and pause state at pinned blocks.
 - `reconcileRobinhoodRead(...)` compares an indexer page with direct-chain
   truth; `assertRobinhoodWriteStateSafe(...)` rejects stale or divergent state.
+- `collectRobinhoodIndexerPages(...)` validates bounded public pagination,
+  retry, finality, cursor, and one-snapshot behavior;
+  `invalidateRobinhoodOfflineCacheAfterReorg(...)` discards affected cache.
 - `createRobinhoodActionBuilder(...)` produces immutable, capability-marked
   actions bound to the verified suite and one program ID.
 - `simulateRobinhoodAction(...)` performs the exact chain-pinned simulation.
@@ -59,6 +62,15 @@ Robinhood-native surface.
 - `validateRobinhoodSmartAccountPolicy(...)` validates narrow policy shape;
   Phase-0 smart-account submission remains disabled pending independent
   finalized onchain policy proof.
+- `createRobinhoodPaymasterClient(...)` validates provider-neutral,
+  action-and-policy-bound sponsorship quotes. It has no submission method and
+  treats the adapter payload as untrusted until an external onchain verifier
+  exists.
+- `hashRobinhoodPaymasterPolicy(...)` canonically commits every sponsorship
+  limit so an adapter cannot quote against a substituted policy.
+- `createRobinhoodSponsorFundingBatch(...)` creates a non-submitting two-action
+  plan only when exact finite USDG approval and funding calldata agree on the
+  canonical vault and amount.
 - `validateVirtualsLaunchPacketStructure(...)` checks a supplied packet for
   internal consistency and explicit Robinhood/USDG identity. It performs no RPC,
   legal, identity, approval, launch, signing, or broadcast operation.

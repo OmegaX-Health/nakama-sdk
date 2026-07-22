@@ -8,7 +8,7 @@
 
 > **getRobinhoodContractDeployment**(`manifest`, `role`): [`RobinhoodContractDeployment`](../interfaces/RobinhoodContractDeployment.md)
 
-Defined in: src/robinhood/artifacts.ts:631
+Defined in: [src/robinhood/artifacts.ts:630](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L630)
 
 ## Parameters
 

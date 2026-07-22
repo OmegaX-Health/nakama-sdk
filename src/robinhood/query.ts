@@ -1,16 +1,55 @@
 import { isHex } from 'viem';
 
-import { getRobinhoodCaip2, getRobinhoodChainId } from './chains.js';
-import type { RobinhoodRead, RobinhoodReadContext } from './domain.js';
+import {
+  getRobinhoodCaip2,
+  getRobinhoodChainId,
+  type RobinhoodNetwork,
+} from './chains.js';
+import type {
+  ReconciliationStatus,
+  RobinhoodRead,
+  RobinhoodReadContext,
+} from './domain.js';
 import { NakamaRobinhoodStaleStateError } from './errors.js';
 
 export interface RobinhoodIndexerPage<T> {
+  scope: 'public_protocol_state';
+  network: RobinhoodNetwork;
+  chainId: 4663 | 46630;
+  caip2: 'eip155:4663' | 'eip155:46630';
   items: readonly T[];
   nextCursor: string | null;
   indexedBlock: bigint;
   indexedBlockHash: `0x${string}`;
   chainHead: bigint;
+  safeBlock: bigint | null;
+  finalizedBlock: bigint | null;
+  confirmations: number;
+  reconciliation: Exclude<
+    ReconciliationStatus,
+    'reconciled' | 'direct_chain_only' | 'offline_cache'
+  >;
   observedAt: string;
+}
+
+/** Provider-specific public indexers implement this isolated adapter. */
+export interface RobinhoodPublicIndexerAdapter<Query, Item> {
+  readonly providerId: string;
+  readonly network: RobinhoodNetwork;
+  readonly scope: 'public_protocol_state';
+  queryPage(params: {
+    query: Query;
+    cursor: string | null;
+    limit: number;
+  }): Promise<RobinhoodIndexerPage<Item>>;
+  isRetryable?(error: unknown): boolean;
+}
+
+export interface RobinhoodIndexerCollection<T> {
+  providerId: string;
+  pages: readonly RobinhoodIndexerPage<T>[];
+  items: readonly T[];
+  retries: number;
 }
 
 export interface ReconcileRobinhoodReadOptions<T> {
@@ -27,6 +66,153 @@ export interface RobinhoodOfflineCacheRecord<T> {
   context: RobinhoodReadContext;
   cachedAt: string;
   expiresAt: string;
+}
+
+export async function collectRobinhoodIndexerPages<Query, Item>(params: {
+  adapter: RobinhoodPublicIndexerAdapter<Query, Item>;
+  query: Query;
+  pageSize?: number;
+  maximumPages?: number;
+  maximumRetriesPerPage?: number;
+  waitBeforeRetry?: (attempt: number) => Promise<void>;
+}): Promise<RobinhoodIndexerCollection<Item>> {
+  const providerId = params.adapter.providerId.trim();
+  const pageSize = params.pageSize ?? 50;
+  const maximumPages = params.maximumPages ?? 100;
+  const maximumRetriesPerPage = params.maximumRetriesPerPage ?? 2;
+  if (
+    providerId === '' ||
+    providerId.length > 128 ||
+    !/^[a-z0-9][a-z0-9._-]*$/i.test(providerId) ||
+    params.adapter.scope !== 'public_protocol_state' ||
+    !Number.isSafeInteger(pageSize) ||
+    pageSize < 1 ||
+    pageSize > 100 ||
+    !Number.isSafeInteger(maximumPages) ||
+    maximumPages < 1 ||
+    maximumPages > 1_000 ||
+    !Number.isSafeInteger(maximumRetriesPerPage) ||
+    maximumRetriesPerPage < 0 ||
+    maximumRetriesPerPage > 5
+  ) {
+    throw new NakamaRobinhoodStaleStateError(
+      'Public indexer adapter identity, pagination, or retry bounds are invalid.',
+    );
+  }
+  const pages: RobinhoodIndexerPage<Item>[] = [];
+  const items: Item[] = [];
+  const seenCursors = new Set<string>();
+  let cursor: string | null = null;
+  let retries = 0;
+  let snapshot: { blockNumber: bigint; blockHash: string } | null = null;
+
+  for (let pageIndex = 0; pageIndex < maximumPages; pageIndex += 1) {
+    let page: RobinhoodIndexerPage<Item> | undefined;
+    for (let attempt = 0; attempt <= maximumRetriesPerPage; attempt += 1) {
+      try {
+        page = validateRobinhoodIndexerPage(
+          await params.adapter.queryPage({
+            query: params.query,
+            cursor,
+            limit: pageSize,
+          }),
+          params.adapter.network,
+        );
+        break;
+      } catch (error) {
+        if (
+          attempt >= maximumRetriesPerPage ||
+          params.adapter.isRetryable?.(error) !== true
+        ) {
+          throw error;
+        }
+        retries += 1;
+        await params.waitBeforeRetry?.(attempt + 1);
+      }
+    }
+    if (page == null) {
+      throw new NakamaRobinhoodStaleStateError(
+        'Public indexer page was not returned.',
+      );
+    }
+    if (page.items.length > pageSize) {
+      throw new NakamaRobinhoodStaleStateError(
+        'Public indexer returned more items than requested page size.',
+      );
+    }
+    if (
+      snapshot != null &&
+      (page.indexedBlock !== snapshot.blockNumber ||
+        page.indexedBlockHash.toLowerCase() !== snapshot.blockHash)
+    ) {
+      throw new NakamaRobinhoodStaleStateError(
+        'Indexer snapshot changed during pagination; cached results are invalid.',
+      );
+    }
+    snapshot ??= {
+      blockNumber: page.indexedBlock,
+      blockHash: page.indexedBlockHash.toLowerCase(),
+    };
+    pages.push(page);
+    items.push(...page.items);
+    if (page.nextCursor == null) {
+      return {
+        providerId,
+        pages: Object.freeze(pages),
+        items: Object.freeze(items),
+        retries,
+      };
+    }
+    if (seenCursors.has(page.nextCursor)) {
+      throw new NakamaRobinhoodStaleStateError(
+        'Indexer pagination cursor repeated; query aborted.',
+      );
+    }
+    seenCursors.add(page.nextCursor);
+    cursor = page.nextCursor;
+  }
+  throw new NakamaRobinhoodStaleStateError(
+    'Indexer pagination exceeded maximumPages without completing.',
+  );
+}
+
+export function validateRobinhoodIndexerPage<T>(
+  page: RobinhoodIndexerPage<T>,
+  expectedNetwork: RobinhoodNetwork,
+): RobinhoodIndexerPage<T> {
+  if (
+    page == null ||
+    page.scope !== 'public_protocol_state' ||
+    page.network !== expectedNetwork ||
+    !Array.isArray(page.items) ||
+    (page.nextCursor !== null &&
+      (typeof page.nextCursor !== 'string' ||
+        page.nextCursor.trim() === '' ||
+        page.nextCursor.length > 512)) ||
+    (page.reconciliation !== 'indexer_behind' &&
+      page.reconciliation !== 'divergent')
+  ) {
+    throw new NakamaRobinhoodStaleStateError(
+      'Public indexer page shape or reconciliation state is invalid.',
+    );
+  }
+  validateReadContext({
+    network: page.network,
+    chainId: page.chainId,
+    caip2: page.caip2,
+    blockNumber: page.indexedBlock,
+    blockHash: page.indexedBlockHash,
+    chainHead: page.chainHead,
+    safeBlock: page.safeBlock,
+    finalizedBlock: page.finalizedBlock,
+    confirmations: page.confirmations,
+    reconciliation: page.reconciliation,
+    observedAt: page.observedAt,
+  });
+  return Object.freeze({
+    ...page,
+    items: Object.freeze([...page.items]),
+  });
 }
 
 export function reconcileRobinhoodRead<T>(
@@ -169,6 +355,52 @@ export function readRobinhoodOfflineCache<T>(
     value: record.value,
     context: { ...context, reconciliation: 'offline_cache' },
   };
+}
+
+export function invalidateRobinhoodOfflineCacheAfterReorg<T>(
+  record: RobinhoodOfflineCacheRecord<T>,
+  params: {
+    reorgedBlock: bigint;
+    canonicalBlockHash?: `0x${string}`;
+  },
+): RobinhoodOfflineCacheRecord<T> | null {
+  if (typeof params.reorgedBlock !== 'bigint' || params.reorgedBlock < 0n) {
+    throw new NakamaRobinhoodStaleStateError(
+      'reorgedBlock must be a non-negative bigint.',
+    );
+  }
+  const context = validateReadContext(record.context);
+  const cachedAt = parseCanonicalTimestamp(record.cachedAt);
+  const expiresAt = parseCanonicalTimestamp(record.expiresAt);
+  if (
+    record.schemaVersion !== 1 ||
+    typeof record.key !== 'string' ||
+    record.key.trim() === '' ||
+    cachedAt == null ||
+    expiresAt == null ||
+    expiresAt <= cachedAt
+  ) {
+    throw new NakamaRobinhoodStaleStateError(
+      'Offline cache record is malformed and cannot be reorg-checked.',
+    );
+  }
+  if (
+    params.canonicalBlockHash != null &&
+    (!isHex(params.canonicalBlockHash) ||
+      !/^0x[0-9a-f]{64}$/iu.test(params.canonicalBlockHash))
+  ) {
+    throw new NakamaRobinhoodStaleStateError(
+      'canonicalBlockHash must be a 32-byte block hash.',
+    );
+  }
+  if (context.blockNumber < params.reorgedBlock) return record;
+  if (
+    context.blockNumber === params.reorgedBlock &&
+    params.canonicalBlockHash?.toLowerCase() === context.blockHash.toLowerCase()
+  ) {
+    return record;
+  }
+  return null;
 }
 
 function parseCanonicalTimestamp(value: unknown): number | null {

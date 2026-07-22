@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodContractDeployment
 
-Defined in: src/robinhood/artifacts.ts:57
+Defined in: [src/robinhood/artifacts.ts:57](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L57)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/artifacts.ts:57
 
 > **abiSha256**: `string`
 
-Defined in: src/robinhood/artifacts.ts:60
+Defined in: [src/robinhood/artifacts.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L60)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/artifacts.ts:60
 
 > **address**: `` `0x${string}` ``
 
-Defined in: src/robinhood/artifacts.ts:59
+Defined in: [src/robinhood/artifacts.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L59)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/artifacts.ts:59
 
 > **contractName**: [`RobinhoodContractName`](../type-aliases/RobinhoodContractName.md)
 
-Defined in: src/robinhood/artifacts.ts:58
+Defined in: [src/robinhood/artifacts.ts:58](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L58)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/artifacts.ts:58
 
 > **runtimeBytecodeHash**: `` `0x${string}` ``
 
-Defined in: src/robinhood/artifacts.ts:61
+Defined in: [src/robinhood/artifacts.ts:61](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L61)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: src/robinhood/artifacts.ts:61
 
 > **verificationUrl**: `string`
 
-Defined in: src/robinhood/artifacts.ts:62
+Defined in: [src/robinhood/artifacts.ts:62](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L62)

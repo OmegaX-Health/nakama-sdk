@@ -8,4 +8,4 @@
 
 > **RobinhoodCaip10** = `` `${RobinhoodCaip2}:${Address}` ``
 
-Defined in: src/robinhood/chains.ts:74
+Defined in: [src/robinhood/chains.ts:74](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L74)

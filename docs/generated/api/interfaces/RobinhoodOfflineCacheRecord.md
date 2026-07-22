@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodOfflineCacheRecord\<T\>
 
-Defined in: src/robinhood/query.ts:23
+Defined in: [src/robinhood/query.ts:62](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L62)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: src/robinhood/query.ts:23
 
 > **cachedAt**: `string`
 
-Defined in: src/robinhood/query.ts:28
+Defined in: [src/robinhood/query.ts:67](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L67)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: src/robinhood/query.ts:28
 
 > **context**: [`RobinhoodReadContext`](RobinhoodReadContext.md)
 
-Defined in: src/robinhood/query.ts:27
+Defined in: [src/robinhood/query.ts:66](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L66)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: src/robinhood/query.ts:27
 
 > **expiresAt**: `string`
 
-Defined in: src/robinhood/query.ts:29
+Defined in: [src/robinhood/query.ts:68](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L68)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: src/robinhood/query.ts:29
 
 > **key**: `string`
 
-Defined in: src/robinhood/query.ts:25
+Defined in: [src/robinhood/query.ts:64](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L64)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: src/robinhood/query.ts:25
 
 > **schemaVersion**: `1`
 
-Defined in: src/robinhood/query.ts:24
+Defined in: [src/robinhood/query.ts:63](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L63)
 
 ***
 
@@ -60,4 +60,4 @@ Defined in: src/robinhood/query.ts:24
 
 > **value**: `T`
 
-Defined in: src/robinhood/query.ts:26
+Defined in: [src/robinhood/query.ts:65](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L65)

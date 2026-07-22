@@ -6,7 +6,7 @@
 
 # Interface: ObligationSnapshot
 
-Defined in: src/robinhood/domain.ts:151
+Defined in: [src/robinhood/domain.ts:151](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L151)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/domain.ts:151
 
 > **amount**: [`RobinhoodAssetAmount`](RobinhoodAssetAmount.md)
 
-Defined in: src/robinhood/domain.ts:156
+Defined in: [src/robinhood/domain.ts:156](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L156)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/domain.ts:156
 
 > **createdAt**: `bigint` \| `null`
 
-Defined in: src/robinhood/domain.ts:157
+Defined in: [src/robinhood/domain.ts:157](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L157)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/domain.ts:157
 
 > **decisionDigest**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/domain.ts:154
+Defined in: [src/robinhood/domain.ts:154](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L154)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/domain.ts:154
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:152
+Defined in: [src/robinhood/domain.ts:152](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L152)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/domain.ts:152
 
 > **recipientCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:155
+Defined in: [src/robinhood/domain.ts:155](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L155)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/domain.ts:155
 
 > **requestId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:153
+Defined in: [src/robinhood/domain.ts:153](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L153)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: src/robinhood/domain.ts:153
 
 > **settledAt**: `bigint` \| `null`
 
-Defined in: src/robinhood/domain.ts:158
+Defined in: [src/robinhood/domain.ts:158](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L158)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: src/robinhood/domain.ts:158
 
 > **settlementTransaction**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/domain.ts:159
+Defined in: [src/robinhood/domain.ts:159](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L159)
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: src/robinhood/domain.ts:159
 
 > **state**: `"settled"` \| `"none"` \| `"approved_unpaid"`
 
-Defined in: src/robinhood/domain.ts:160
+Defined in: [src/robinhood/domain.ts:160](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L160)

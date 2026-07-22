@@ -15,13 +15,15 @@ an old network implementation from silently becoming production behavior.
   runtime proof.
 - `src/robinhood/protocol.ts` owns product reads, typed action builders,
   simulations, event decoding, and protocol-domain mappings.
-- `src/robinhood/wallet.ts` owns EIP-1193 submissions and the disabled-by-default
-  Phase-0 smart-account boundary.
+- `src/robinhood/wallet.ts` owns EIP-1193 submissions, the disabled-by-default
+  Phase-0 smart-account boundary, and provider-neutral quote-only paymaster
+  policy.
 - `src/robinhood/decision.ts` owns the exact protocol EIP-712 decision schema.
 - `src/robinhood/receipts.ts` owns L2 receipt, L1 posting, reorg, and independent
   economic-finality assessment.
-- `src/robinhood/query.ts` owns indexer reconciliation and bounded public offline
-  caching.
+- `src/robinhood/query.ts` owns indexer reconciliation, bounded public
+  pagination/retries, block-snapshot consistency, reorg invalidation, and
+  read-only offline caching.
 - `src/robinhood/virtuals.ts` owns offline structural launch-packet validation.
 
 Files named `*-integrity.ts` and `generated-artifact-store.ts` are internal

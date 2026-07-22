@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_MAX\_SMART\_ACCOUNT\_POLICY\_SECONDS**: `number`
 
-Defined in: src/robinhood/wallet.ts:86
+Defined in: [src/robinhood/wallet.ts:86](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L86)

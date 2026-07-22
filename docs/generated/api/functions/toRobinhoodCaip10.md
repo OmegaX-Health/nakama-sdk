@@ -8,7 +8,7 @@
 
 > **toRobinhoodCaip10**(`network`, `address`): `` `eip155:4663:0x${string}` `` \| `` `eip155:46630:0x${string}` ``
 
-Defined in: src/robinhood/chains.ts:147
+Defined in: [src/robinhood/chains.ts:147](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L147)
 
 ## Parameters
 

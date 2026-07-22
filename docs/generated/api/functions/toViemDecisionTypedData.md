@@ -8,7 +8,7 @@
 
 > **toViemDecisionTypedData**(`typedData`): `object`
 
-Defined in: src/robinhood/decision.ts:442
+Defined in: [src/robinhood/decision.ts:442](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L442)
 
 Viem derives EIP712Domain itself; wallet JSON retains the explicit schema.
 

@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodMinedReceipt
 
-Defined in: src/robinhood/receipts.ts:56
+Defined in: [src/robinhood/receipts.ts:56](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L56)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/receipts.ts:56
 
 > **blockHash**: `` `0x${string}` ``
 
-Defined in: src/robinhood/receipts.ts:59
+Defined in: [src/robinhood/receipts.ts:59](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L59)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/receipts.ts:59
 
 > **blockNumber**: `bigint`
 
-Defined in: src/robinhood/receipts.ts:58
+Defined in: [src/robinhood/receipts.ts:58](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L58)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/receipts.ts:58
 
 > **from**: `` `0x${string}` ``
 
-Defined in: src/robinhood/receipts.ts:61
+Defined in: [src/robinhood/receipts.ts:61](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L61)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/receipts.ts:61
 
 > `optional` **gasUsed?**: `bigint`
 
-Defined in: src/robinhood/receipts.ts:63
+Defined in: [src/robinhood/receipts.ts:63](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L63)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/receipts.ts:63
 
 > **status**: `"success"` \| `"reverted"`
 
-Defined in: src/robinhood/receipts.ts:60
+Defined in: [src/robinhood/receipts.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L60)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/receipts.ts:60
 
 > **to**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/receipts.ts:62
+Defined in: [src/robinhood/receipts.ts:62](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L62)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: src/robinhood/receipts.ts:62
 
 > **transactionHash**: `` `0x${string}` ``
 
-Defined in: src/robinhood/receipts.ts:57
+Defined in: [src/robinhood/receipts.ts:57](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L57)

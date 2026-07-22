@@ -8,7 +8,7 @@
 
 > **createRobinhoodSubmittedTransaction**(`params`): [`RobinhoodSubmittedTransaction`](../interfaces/RobinhoodSubmittedTransaction.md)
 
-Defined in: src/robinhood/receipts.ts:148
+Defined in: [src/robinhood/receipts.ts:148](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L148)
 
 ## Parameters
 

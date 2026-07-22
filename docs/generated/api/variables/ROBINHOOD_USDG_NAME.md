@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_USDG\_NAME**: `"Global Dollar"`
 
-Defined in: src/robinhood/assets.ts:30
+Defined in: [src/robinhood/assets.ts:30](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L30)

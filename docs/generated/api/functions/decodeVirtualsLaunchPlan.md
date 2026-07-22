@@ -8,7 +8,7 @@
 
 > **decodeVirtualsLaunchPlan**(`input`): [`VirtualsLaunchPlan`](../interfaces/VirtualsLaunchPlan.md)
 
-Defined in: src/robinhood/virtuals.ts:116
+Defined in: [src/robinhood/virtuals.ts:116](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L116)
 
 Parses and structurally validates a caller-supplied offline packet.
 

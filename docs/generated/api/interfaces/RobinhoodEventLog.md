@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodEventLog
 
-Defined in: src/robinhood/protocol.ts:384
+Defined in: [src/robinhood/protocol.ts:384](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L384)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/protocol.ts:384
 
 > **address**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:385
+Defined in: [src/robinhood/protocol.ts:385](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L385)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/protocol.ts:385
 
 > `optional` **blockHash?**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:389
+Defined in: [src/robinhood/protocol.ts:389](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L389)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/protocol.ts:389
 
 > `optional` **blockNumber?**: `bigint`
 
-Defined in: src/robinhood/protocol.ts:388
+Defined in: [src/robinhood/protocol.ts:388](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L388)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/protocol.ts:388
 
 > **data**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:386
+Defined in: [src/robinhood/protocol.ts:386](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L386)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/protocol.ts:386
 
 > `optional` **logIndex?**: `number`
 
-Defined in: src/robinhood/protocol.ts:391
+Defined in: [src/robinhood/protocol.ts:391](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L391)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/protocol.ts:391
 
 > **topics**: readonly `` `0x${string}` ``[]
 
-Defined in: src/robinhood/protocol.ts:387
+Defined in: [src/robinhood/protocol.ts:387](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L387)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: src/robinhood/protocol.ts:387
 
 > `optional` **transactionHash?**: `` `0x${string}` ``
 
-Defined in: src/robinhood/protocol.ts:390
+Defined in: [src/robinhood/protocol.ts:390](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L390)

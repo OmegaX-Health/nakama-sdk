@@ -20,6 +20,14 @@ An indexer can improve discovery and latency, but it cannot authorize a write.
 Use `reconcileRobinhoodRead(...)` against a fresh direct-chain observation, then
 call `assertRobinhoodWriteStateSafe(...)` before preparing the action.
 
+For multi-page discovery, use `collectRobinhoodIndexerPages(...)` with a
+provider-specific adapter scoped to `public_protocol_state`. The helper retries
+only errors the adapter explicitly classifies as transient, caps every retry
+and page, rejects repeated cursors or a changed indexed block/hash, and requires
+finality plus reconciliation context on every page. On a detected reorg, pass
+the affected block to `invalidateRobinhoodOfflineCacheAfterReorg(...)`; cached
+descendants are discarded and still cannot authorize a write.
+
 ## Submit a user action
 
 The wallet path is deliberately linear because each step binds the next:
@@ -90,6 +98,15 @@ Submission is disabled even for the allowlist. It will remain disabled until an
 independent finalized read verifies module code, policy installation, revocation
 state, limits, target, selector, program, and action constraints; an adapter's
 self-attestation is insufficient.
+
+A selected paymaster can later implement `RobinhoodPaymasterAdapter`, but the
+Phase-0 client requests and validates quotes only. Policy and quote must agree
+on sponsor, account, program, canonical policy commitment, action commitment,
+target, selector, native value, gas ceiling, bounded rate window, and expiry.
+The client deliberately exposes no user-operation submission method. Account
+lifecycle tests, passkey recovery, signer changes, fallback-wallet behavior,
+provider selection, and independent finalized sponsorship verification remain
+release gates.
 
 ## Validate a Virtuals packet
 

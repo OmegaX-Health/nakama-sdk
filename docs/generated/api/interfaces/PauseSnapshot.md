@@ -6,7 +6,7 @@
 
 # Interface: PauseSnapshot
 
-Defined in: src/robinhood/domain.ts:171
+Defined in: [src/robinhood/domain.ts:171](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L171)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/domain.ts:171
 
 > **active**: `boolean`
 
-Defined in: src/robinhood/domain.ts:179
+Defined in: [src/robinhood/domain.ts:179](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L179)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/domain.ts:179
 
 > **incidentId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:174
+Defined in: [src/robinhood/domain.ts:174](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L174)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/domain.ts:174
 
 > **pausedAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:176
+Defined in: [src/robinhood/domain.ts:176](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L176)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/domain.ts:176
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:172
+Defined in: [src/robinhood/domain.ts:172](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L172)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/domain.ts:172
 
 > **publicReasonCode**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:175
+Defined in: [src/robinhood/domain.ts:175](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L175)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/domain.ts:175
 
 > **reviewRequiredAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:178
+Defined in: [src/robinhood/domain.ts:178](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L178)
 
 Review deadline only; a pause never auto-expires.
 
@@ -64,4 +64,4 @@ Review deadline only; a pause never auto-expires.
 
 > **scope**: [`PauseScope`](../type-aliases/PauseScope.md)
 
-Defined in: src/robinhood/domain.ts:173
+Defined in: [src/robinhood/domain.ts:173](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L173)

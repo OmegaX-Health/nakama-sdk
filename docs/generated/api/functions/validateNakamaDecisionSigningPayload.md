@@ -8,7 +8,7 @@
 
 > **validateNakamaDecisionSigningPayload**(`payload`): [`NakamaDecisionSigningPayload`](../interfaces/NakamaDecisionSigningPayload.md)
 
-Defined in: src/robinhood/decision.ts:296
+Defined in: [src/robinhood/decision.ts:296](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L296)
 
 Rebuilds and validates the complete payload before display or signing.
 

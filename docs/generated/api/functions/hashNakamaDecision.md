@@ -8,7 +8,7 @@
 
 > **hashNakamaDecision**(`typedData`): `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:262
+Defined in: [src/robinhood/decision.ts:262](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L262)
 
 ## Parameters
 

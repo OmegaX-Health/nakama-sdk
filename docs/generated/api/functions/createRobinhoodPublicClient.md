@@ -8,7 +8,7 @@
 
 > **createRobinhoodPublicClient**(`options`): `object`
 
-Defined in: src/robinhood/chains.ts:174
+Defined in: [src/robinhood/chains.ts:174](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L174)
 
 Creates a client only from an explicit network and explicit transport.
 

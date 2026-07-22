@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodSignatureError
 
-Defined in: src/robinhood/errors.ts:54
+Defined in: [src/robinhood/errors.ts:54](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L54)
 
 Base class for the canonical Robinhood Chain SDK surface.
 
@@ -20,7 +20,7 @@ Base class for the canonical Robinhood Chain SDK surface.
 
 > **new NakamaRobinhoodSignatureError**(`message`, `options?`): `NakamaRobinhoodSignatureError`
 
-Defined in: src/robinhood/errors.ts:55
+Defined in: [src/robinhood/errors.ts:55](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L55)
 
 #### Parameters
 

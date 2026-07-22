@@ -8,4 +8,4 @@
 
 > **RobinhoodReceiptStatus** = `"submitted"` \| `"soft_confirmed"` \| `"l1_posted"` \| `"finalized"` \| `"reverted"` \| `"replaced"` \| `"timed_out"` \| `"reorged"`
 
-Defined in: src/robinhood/receipts.ts:18
+Defined in: [src/robinhood/receipts.ts:18](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L18)

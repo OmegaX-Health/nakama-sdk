@@ -8,7 +8,7 @@
 
 > **hashPreparedRobinhoodAction**(`action`): `` `0x${string}` ``
 
-Defined in: src/robinhood/wallet.ts:642
+Defined in: [src/robinhood/wallet.ts:1124](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1124)
 
 ## Parameters
 

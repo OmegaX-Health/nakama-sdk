@@ -8,7 +8,7 @@
 
 > **getRobinhoodChainIdHex**(`network`): `"0x1237"` \| `"0xb626"`
 
-Defined in: src/robinhood/chains.ts:105
+Defined in: [src/robinhood/chains.ts:105](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L105)
 
 ## Parameters
 

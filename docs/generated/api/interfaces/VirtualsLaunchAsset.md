@@ -6,7 +6,7 @@
 
 # Interface: VirtualsLaunchAsset
 
-Defined in: src/robinhood/virtuals.ts:18
+Defined in: [src/robinhood/virtuals.ts:18](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L18)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/virtuals.ts:18
 
 > **address**: `` `0x${string}` ``
 
-Defined in: src/robinhood/virtuals.ts:19
+Defined in: [src/robinhood/virtuals.ts:19](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L19)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/virtuals.ts:19
 
 > **decimals**: `number`
 
-Defined in: src/robinhood/virtuals.ts:22
+Defined in: [src/robinhood/virtuals.ts:22](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L22)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/virtuals.ts:22
 
 > **name**: `string`
 
-Defined in: src/robinhood/virtuals.ts:20
+Defined in: [src/robinhood/virtuals.ts:20](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L20)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: src/robinhood/virtuals.ts:20
 
 > **symbol**: `string`
 
-Defined in: src/robinhood/virtuals.ts:21
+Defined in: [src/robinhood/virtuals.ts:21](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L21)

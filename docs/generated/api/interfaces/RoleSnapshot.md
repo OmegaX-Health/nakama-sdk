@@ -6,7 +6,7 @@
 
 # Interface: RoleSnapshot
 
-Defined in: src/robinhood/domain.ts:163
+Defined in: [src/robinhood/domain.ts:163](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L163)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/domain.ts:163
 
 > **account**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:166
+Defined in: [src/robinhood/domain.ts:166](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L166)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/domain.ts:166
 
 > **active**: `boolean`
 
-Defined in: src/robinhood/domain.ts:167
+Defined in: [src/robinhood/domain.ts:167](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L167)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/domain.ts:167
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:164
+Defined in: [src/robinhood/domain.ts:164](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L164)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/domain.ts:164
 
 > **role**: [`ProgramRole`](../type-aliases/ProgramRole.md)
 
-Defined in: src/robinhood/domain.ts:165
+Defined in: [src/robinhood/domain.ts:165](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L165)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: src/robinhood/domain.ts:165
 
 > **validUntil**: `bigint` \| `null`
 
-Defined in: src/robinhood/domain.ts:168
+Defined in: [src/robinhood/domain.ts:168](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L168)

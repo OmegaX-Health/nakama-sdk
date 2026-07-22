@@ -6,7 +6,7 @@
 
 # Class: NakamaRobinhoodAccountPolicyError
 
-Defined in: src/robinhood/errors.ts:60
+Defined in: [src/robinhood/errors.ts:60](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L60)
 
 Base class for the canonical Robinhood Chain SDK surface.
 
@@ -20,7 +20,7 @@ Base class for the canonical Robinhood Chain SDK surface.
 
 > **new NakamaRobinhoodAccountPolicyError**(`message`, `options?`): `NakamaRobinhoodAccountPolicyError`
 
-Defined in: src/robinhood/errors.ts:61
+Defined in: [src/robinhood/errors.ts:61](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/errors.ts#L61)
 
 #### Parameters
 

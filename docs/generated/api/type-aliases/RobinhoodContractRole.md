@@ -8,4 +8,4 @@
 
 > **RobinhoodContractRole** = keyof *typeof* [`ROBINHOOD_CONTRACT_IDENTITIES`](../variables/ROBINHOOD_CONTRACT_IDENTITIES.md)
 
-Defined in: src/robinhood/artifacts.ts:49
+Defined in: [src/robinhood/artifacts.ts:49](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L49)

@@ -8,7 +8,7 @@
 
 > **getRobinhoodCaip2**(`network`): [`RobinhoodCaip2`](../type-aliases/RobinhoodCaip2.md)
 
-Defined in: src/robinhood/chains.ts:115
+Defined in: [src/robinhood/chains.ts:115](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L115)
 
 ## Parameters
 

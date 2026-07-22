@@ -8,7 +8,7 @@
 
 > **requireRobinhoodUsdg**(`network`, `override?`): [`RobinhoodSettlementAsset`](../interfaces/RobinhoodSettlementAsset.md) & `object`
 
-Defined in: src/robinhood/assets.ts:95
+Defined in: [src/robinhood/assets.ts:95](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L95)
 
 ## Parameters
 

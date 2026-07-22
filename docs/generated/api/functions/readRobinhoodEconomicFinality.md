@@ -8,7 +8,7 @@
 
 > **readRobinhoodEconomicFinality**(`params`): `Promise`\<[`RobinhoodTransactionFinality`](../interfaces/RobinhoodTransactionFinality.md)\>
 
-Defined in: src/robinhood/receipts.ts:345
+Defined in: [src/robinhood/receipts.ts:345](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L345)
 
 ## Parameters
 

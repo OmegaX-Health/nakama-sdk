@@ -6,7 +6,7 @@
 
 # Interface: VerifyNakamaDecisionOptions
 
-Defined in: src/robinhood/decision.ts:173
+Defined in: [src/robinhood/decision.ts:173](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L173)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/decision.ts:173
 
 > `optional` **client?**: `object`
 
-Defined in: src/robinhood/decision.ts:182
+Defined in: [src/robinhood/decision.ts:182](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L182)
 
 Required for EIP-1271 contract signers.
 
@@ -3373,7 +3373,7 @@ const unwatch = await client.watchPendingTransactions({
 
 > **expectedDecisionModule**: `string`
 
-Defined in: src/robinhood/decision.ts:178
+Defined in: [src/robinhood/decision.ts:178](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L178)
 
 ***
 
@@ -3381,7 +3381,7 @@ Defined in: src/robinhood/decision.ts:178
 
 > **expectedNonce**: `bigint`
 
-Defined in: src/robinhood/decision.ts:179
+Defined in: [src/robinhood/decision.ts:179](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L179)
 
 ***
 
@@ -3389,7 +3389,7 @@ Defined in: src/robinhood/decision.ts:179
 
 > **expectedSigner**: `string`
 
-Defined in: src/robinhood/decision.ts:177
+Defined in: [src/robinhood/decision.ts:177](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L177)
 
 ***
 
@@ -3397,7 +3397,7 @@ Defined in: src/robinhood/decision.ts:177
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/decision.ts:174
+Defined in: [src/robinhood/decision.ts:174](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L174)
 
 ***
 
@@ -3405,7 +3405,7 @@ Defined in: src/robinhood/decision.ts:174
 
 > `optional` **now?**: `number` \| `bigint` \| `Date`
 
-Defined in: src/robinhood/decision.ts:180
+Defined in: [src/robinhood/decision.ts:180](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L180)
 
 ***
 
@@ -3413,7 +3413,7 @@ Defined in: src/robinhood/decision.ts:180
 
 > **signature**: `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:176
+Defined in: [src/robinhood/decision.ts:176](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L176)
 
 ***
 
@@ -3421,4 +3421,4 @@ Defined in: src/robinhood/decision.ts:176
 
 > **typedData**: [`NakamaDecisionTypedData`](NakamaDecisionTypedData.md)
 
-Defined in: src/robinhood/decision.ts:175
+Defined in: [src/robinhood/decision.ts:175](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L175)

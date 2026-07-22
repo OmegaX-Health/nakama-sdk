@@ -8,7 +8,7 @@
 
 > **nakamaDecisionReplayKey**(`typedData`): `` `0x${string}` ``
 
-Defined in: src/robinhood/decision.ts:266
+Defined in: [src/robinhood/decision.ts:266](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L266)
 
 ## Parameters
 

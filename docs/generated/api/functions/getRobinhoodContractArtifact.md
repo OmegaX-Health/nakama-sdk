@@ -8,7 +8,7 @@
 
 > **getRobinhoodContractArtifact**(`bundle`, `role`): [`RobinhoodContractArtifact`](../interfaces/RobinhoodContractArtifact.md)
 
-Defined in: src/robinhood/artifacts.ts:618
+Defined in: [src/robinhood/artifacts.ts:617](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L617)
 
 ## Parameters
 

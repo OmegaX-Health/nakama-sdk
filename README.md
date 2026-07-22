@@ -121,6 +121,13 @@ follow-up write when the indexer is stale or divergent. Public-safe reads can
 be stored with the bounded offline cache helpers; private health evidence must
 remain offchain.
 
+`collectRobinhoodIndexerPages(...)` isolates a provider-specific public indexer
+behind a bounded adapter. It validates chain, block hash, safe/finalized heads,
+reconciliation status, page size, retry count, cursor progress, and one stable
+snapshot across every page. `invalidateRobinhoodOfflineCacheAfterReorg(...)`
+conservatively drops cached descendants after a detected reorg. Neither helper
+can make indexed or offline state safe for writes.
+
 ## Typed actions, simulation, and wallets
 
 `createRobinhoodActionBuilder(...)` covers the program lifecycle, exact USDG
@@ -150,6 +157,19 @@ simulate only a narrow allowlist of permissionless maintenance calls, but
 `submit(...)` fails until the SDK has an independent finalized onchain verifier
 for module code, installed policy, revocation state, and calldata constraints.
 An adapter's self-attestation is never treated as proof.
+
+`createRobinhoodPaymasterClient(...)` is also quote-only. Its provider-neutral
+policy and returned quote must bind sponsor, account, program, action
+commitment, policy commitment, target, selector, native value, gas, rate window,
+and expiry. It does not submit a user operation or turn provider-supplied
+payloads into trusted onchain proof. Account creation/recovery, passkey UX,
+signer changes, compatible wallet fallback, provider selection, and
+independently verified submission are external Phase-0 gates.
+
+For sponsor onboarding, `createRobinhoodSponsorFundingBatch(...)` can produce a
+non-submitting exact approval-plus-funding plan. It rejects mismatched accounts,
+programs, timing, vaults, amounts, and infinite approval; a provider still needs
+separate review before it may encode or execute that plan.
 
 ## Decision signatures
 

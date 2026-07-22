@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_SOFT\_CONFIRMATIONS**: `1`
 
-Defined in: src/robinhood/receipts.ts:16
+Defined in: [src/robinhood/receipts.ts:16](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L16)

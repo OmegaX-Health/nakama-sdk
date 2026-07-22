@@ -29,10 +29,12 @@ import {
   createRobinhoodActionBuilder,
   createRobinhoodPublicClient,
   createRobinhoodOfflineCacheRecord,
+  createRobinhoodPaymasterClient,
   createRobinhoodSmartAccountClient,
   createRobinhoodSubmittedTransaction,
   hashNakamaDecision,
   hashPreparedRobinhoodAction,
+  hashRobinhoodPaymasterPolicy,
   nakamaDecisionReplayKey,
   parseRobinhoodCaip10,
   parseRobinhoodUsdg,
@@ -40,12 +42,17 @@ import {
   requestNakamaDecisionSignature,
   readRobinhoodEconomicFinality,
   readRobinhoodOfflineCache,
+  collectRobinhoodIndexerPages,
+  invalidateRobinhoodOfflineCacheAfterReorg,
   toViemDecisionTypedData,
   validateRobinhoodSmartAccountPolicy,
+  validateRobinhoodPaymasterPolicy,
   verifyNakamaDecision,
   type PreparedRobinhoodAction,
   type RobinhoodL1BatchReader,
   type RobinhoodReceiptReader,
+  type RobinhoodPaymasterPolicy,
+  type RobinhoodPaymasterQuote,
   type RobinhoodSmartAccountPolicy,
 } from '../src/index.js';
 
@@ -856,6 +863,113 @@ test('smart-account policy binds network, account, program, action, target, sele
   );
 });
 
+test('provider-neutral paymaster quotes bind exact action, gas, rate, and expiry without enabling submission', async () => {
+  const { manifest, bundle, runtime } = createReadyRobinhoodFixture();
+  const builder = createRobinhoodActionBuilder({
+    manifest,
+    bundle,
+    runtime,
+    programId: TEST_PROGRAM_ID,
+  });
+  const now = 1_784_764_900n;
+  const action = builder.escalateNoQuorum({
+    account: TEST_ACCOUNT,
+    intentId: 'intent-paymaster-1',
+    requestId: REQUEST_ID,
+    preparedAt: '2026-07-23T00:00:00.000Z',
+    expiresAt: '2026-07-23T00:10:00.000Z',
+  });
+  const policy: RobinhoodPaymasterPolicy = {
+    version: 1,
+    network: 'mainnet',
+    sponsor: '0x00000000000000000000000000000000000000B1',
+    account: TEST_ACCOUNT,
+    programId: TEST_PROGRAM_ID,
+    allowedActions: ['escalate_no_quorum'],
+    allowedCalls: [
+      {
+        target: action.target,
+        selectors: [action.selector],
+        maximumNativeValue: 0n,
+      },
+    ],
+    validAfter: now - 60n,
+    validUntil: now + 3_600n,
+    maximumSponsoredCallsPerWindow: 3,
+    windowSeconds: 300,
+    maximumSponsoredGasPerAction: 500_000n,
+  };
+  const quoteClient = (overrides: Partial<RobinhoodPaymasterQuote> = {}) =>
+    createRobinhoodPaymasterClient({
+      policy,
+      manifest,
+      bundle,
+      runtime,
+      adapter: {
+        providerId: 'provider-neutral-test',
+        network: 'mainnet',
+        async quote({ actionCommitment, policyCommitment }) {
+          return {
+            version: 1,
+            providerId: 'provider-neutral-test',
+            network: 'mainnet',
+            chainId: 4663,
+            policyCommitment,
+            sponsor: policy.sponsor,
+            account: policy.account,
+            programId: policy.programId,
+            actionCommitment,
+            target: action.target,
+            selector: action.selector,
+            value: action.value,
+            validAfter: now - 10n,
+            validUntil: now + 60n,
+            maximumGas: 250_000n,
+            windowStartedAt: now - 30n,
+            callsSponsoredInWindow: 2,
+            paymasterData: '0x1234',
+            ...overrides,
+          };
+        },
+      },
+    });
+
+  const quote = await quoteClient().quote(action, { now });
+  assert.equal(quote.actionCommitment, hashPreparedRobinhoodAction(action));
+  assert.equal(quote.policyCommitment, hashRobinhoodPaymasterPolicy(policy));
+  assert.equal(quote.callsSponsoredInWindow, 2);
+  assert.equal(Object.isFrozen(quote), true);
+
+  await assert.rejects(
+    quoteClient({ policyCommitment: `0x${'98'.repeat(32)}` }).quote(action, {
+      now,
+    }),
+    /does not match the exact prepared action/,
+  );
+  await assert.rejects(
+    quoteClient({ actionCommitment: `0x${'99'.repeat(32)}` }).quote(action, {
+      now,
+    }),
+    /does not match the exact prepared action/,
+  );
+  await assert.rejects(
+    quoteClient({ callsSponsoredInWindow: 3 }).quote(action, { now }),
+    /exceeds its gas, rate, payload, or validity policy/,
+  );
+  await assert.rejects(
+    quoteClient({ paymasterData: '0x' }).quote(action, { now }),
+    /exceeds its gas, rate, payload, or validity policy/,
+  );
+  assert.throws(
+    () =>
+      validateRobinhoodPaymasterPolicy({
+        ...policy,
+        maximumSponsoredCallsPerWindow: 0,
+      }),
+    /rate and gas caps/,
+  );
+});
+
 test('prepared and simulated actions enforce canonical time, identity, uint, and commitment bounds', () => {
   const action: PreparedRobinhoodAction = {
     version: 1,
@@ -986,5 +1100,155 @@ test('offline cache rejects malformed or stale timestamps and can never authoriz
       new Date('2026-07-23T00:00:30.000Z'),
     ),
     null,
+  );
+});
+
+test('public indexer pagination bounds retries, rejects cursor loops, and preserves one block snapshot', async () => {
+  const page = {
+    scope: 'public_protocol_state' as const,
+    network: 'mainnet' as const,
+    chainId: 4663 as const,
+    caip2: 'eip155:4663' as const,
+    indexedBlock: 100n,
+    indexedBlockHash: TEST_BLOCK_HASH,
+    chainHead: 105n,
+    safeBlock: 104n,
+    finalizedBlock: 103n,
+    confirmations: 6,
+    reconciliation: 'indexer_behind' as const,
+    observedAt: '2026-07-23T00:00:00.000Z',
+  };
+  let attempts = 0;
+  const result = await collectRobinhoodIndexerPages({
+    query: { programId: TEST_PROGRAM_ID },
+    pageSize: 1,
+    maximumRetriesPerPage: 1,
+    waitBeforeRetry: async () => undefined,
+    adapter: {
+      providerId: 'public-indexer-test',
+      network: 'mainnet',
+      scope: 'public_protocol_state',
+      isRetryable(error) {
+        return error instanceof Error && error.message === 'transient';
+      },
+      async queryPage({ cursor }) {
+        attempts += 1;
+        if (attempts === 1) throw new Error('transient');
+        return cursor == null
+          ? { ...page, items: ['first'], nextCursor: 'cursor-2' }
+          : { ...page, items: ['second'], nextCursor: null };
+      },
+    },
+  });
+  assert.deepEqual(result.items, ['first', 'second']);
+  assert.equal(result.retries, 1);
+  assert.equal(result.pages.length, 2);
+
+  await assert.rejects(
+    collectRobinhoodIndexerPages({
+      query: {},
+      pageSize: 1,
+      maximumRetriesPerPage: 0,
+      adapter: {
+        providerId: 'oversized-page-test',
+        network: 'mainnet',
+        scope: 'public_protocol_state',
+        async queryPage() {
+          return { ...page, items: ['first', 'second'], nextCursor: null };
+        },
+      },
+    }),
+    /more items than requested page size/,
+  );
+
+  await assert.rejects(
+    collectRobinhoodIndexerPages({
+      query: {},
+      maximumRetriesPerPage: 0,
+      adapter: {
+        providerId: 'cursor-loop-test',
+        network: 'mainnet',
+        scope: 'public_protocol_state',
+        async queryPage() {
+          return { ...page, items: [], nextCursor: 'same-cursor' };
+        },
+      },
+    }),
+    /cursor repeated/,
+  );
+
+  let pageNumber = 0;
+  await assert.rejects(
+    collectRobinhoodIndexerPages({
+      query: {},
+      maximumRetriesPerPage: 0,
+      adapter: {
+        providerId: 'snapshot-change-test',
+        network: 'mainnet',
+        scope: 'public_protocol_state',
+        async queryPage() {
+          pageNumber += 1;
+          return pageNumber === 1
+            ? { ...page, items: [], nextCursor: 'next' }
+            : {
+                ...page,
+                indexedBlockHash: `0x${'99'.repeat(32)}` as const,
+                items: [],
+                nextCursor: null,
+              };
+        },
+      },
+    }),
+    /snapshot changed during pagination/,
+  );
+});
+
+test('offline cache invalidates conservatively at and after a detected reorg', () => {
+  const record = createRobinhoodOfflineCacheRecord({
+    key: 'program:reorg-test',
+    ttlSeconds: 60,
+    cachedAt: new Date('2026-07-23T00:00:00.000Z'),
+    read: {
+      value: { state: 'funded' },
+      context: {
+        network: 'mainnet',
+        chainId: 4663,
+        caip2: 'eip155:4663',
+        blockNumber: 100n,
+        blockHash: TEST_BLOCK_HASH,
+        chainHead: 105n,
+        safeBlock: 104n,
+        finalizedBlock: 103n,
+        confirmations: 6,
+        reconciliation: 'direct_chain_only',
+        observedAt: '2026-07-23T00:00:00.000Z',
+      },
+    },
+  });
+  assert.equal(
+    invalidateRobinhoodOfflineCacheAfterReorg(record, {
+      reorgedBlock: 100n,
+      canonicalBlockHash: TEST_BLOCK_HASH,
+    }),
+    record,
+  );
+  assert.equal(
+    invalidateRobinhoodOfflineCacheAfterReorg(record, {
+      reorgedBlock: 100n,
+      canonicalBlockHash: `0x${'99'.repeat(32)}`,
+    }),
+    null,
+  );
+  assert.equal(
+    invalidateRobinhoodOfflineCacheAfterReorg(record, {
+      reorgedBlock: 99n,
+    }),
+    null,
+  );
+  assert.equal(
+    invalidateRobinhoodOfflineCacheAfterReorg(record, {
+      reorgedBlock: 101n,
+    }),
+    record,
   );
 });

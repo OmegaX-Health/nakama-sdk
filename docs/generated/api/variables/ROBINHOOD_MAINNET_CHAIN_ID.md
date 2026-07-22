@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_MAINNET\_CHAIN\_ID**: `4663`
 
-Defined in: src/robinhood/chains.ts:19
+Defined in: [src/robinhood/chains.ts:19](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L19)

@@ -8,7 +8,7 @@
 
 > **parseRobinhoodUsdg**(`value`, `network`, `override?`): [`RobinhoodAssetAmount`](../interfaces/RobinhoodAssetAmount.md)
 
-Defined in: src/robinhood/assets.ts:180
+Defined in: [src/robinhood/assets.ts:180](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L180)
 
 ## Parameters
 

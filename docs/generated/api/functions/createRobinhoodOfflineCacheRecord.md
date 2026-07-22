@@ -8,7 +8,7 @@
 
 > **createRobinhoodOfflineCacheRecord**\<`T`\>(`params`): [`RobinhoodOfflineCacheRecord`](../interfaces/RobinhoodOfflineCacheRecord.md)\<`T`\>
 
-Defined in: src/robinhood/query.ts:101
+Defined in: [src/robinhood/query.ts:287](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/query.ts#L287)
 
 ## Type Parameters
 

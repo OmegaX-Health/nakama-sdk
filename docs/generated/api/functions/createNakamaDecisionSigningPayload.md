@@ -8,7 +8,7 @@
 
 > **createNakamaDecisionSigningPayload**(`params`): [`NakamaDecisionSigningPayload`](../interfaces/NakamaDecisionSigningPayload.md)
 
-Defined in: src/robinhood/decision.ts:210
+Defined in: [src/robinhood/decision.ts:210](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/decision.ts#L210)
 
 ## Parameters
 

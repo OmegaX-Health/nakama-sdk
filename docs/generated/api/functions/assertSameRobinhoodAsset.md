@@ -8,7 +8,7 @@
 
 > **assertSameRobinhoodAsset**(`left`, `right`): `void`
 
-Defined in: src/robinhood/assets.ts:215
+Defined in: [src/robinhood/assets.ts:215](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L215)
 
 ## Parameters
 

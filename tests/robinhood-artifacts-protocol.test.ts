@@ -20,6 +20,7 @@ import {
   assertRobinhoodDeploymentReady,
   createRobinhoodActionBuilder,
   createRobinhoodReadClient,
+  createRobinhoodSponsorFundingBatch,
   createRobinhoodSubmittedTransactionFromSubmission,
   decodeRobinhoodError,
   getGeneratedRobinhoodArtifactBundle,
@@ -29,6 +30,7 @@ import {
   parseRobinhoodUsdg,
   requestRobinhoodAction,
   simulateRobinhoodAction,
+  validateRobinhoodArtifactBundle,
   validateRobinhoodDeploymentManifest,
   verifyRobinhoodDeploymentRuntime,
 } from '../src/index.js';
@@ -63,6 +65,22 @@ test('checked-in deployment manifests validate and remain fail-closed', async ()
     () => assertRobinhoodDeploymentReady(mainnet, bundle),
     NakamaRobinhoodArtifactError,
   );
+});
+
+test('ready artifact bundles require exact nonzero committed source provenance', () => {
+  const canonical = getGeneratedRobinhoodArtifactBundle();
+  assert.equal(canonical.status, 'ready');
+  assert.match(canonical.sourceCommit ?? '', /^[0-9a-f]{40}$/);
+  for (const sourceCommit of [null, 'abc123', 'A'.repeat(40), '0'.repeat(40)]) {
+    assert.throws(
+      () =>
+        validateRobinhoodArtifactBundle({
+          ...structuredClone(canonical),
+          sourceCommit,
+        }),
+      /sourceCommit must be a nonzero full lowercase Git commit SHA/,
+    );
+  }
 });
 
 test('deployment manifest rejects chain substitution, unknown fields, and USDG mislabeling', async () => {
@@ -135,6 +153,19 @@ test('ABI-dependent builders reject a self-asserted bundle that differs from gen
         programId: TEST_PROGRAM_ID,
       }),
     /does not match the generated canonical bundle/,
+  );
+
+  const substitutedProvenance = structuredClone(bundle);
+  substitutedProvenance.sourceCommit = 'd'.repeat(40);
+  assert.throws(
+    () =>
+      createRobinhoodActionBuilder({
+        manifest,
+        bundle: substitutedProvenance,
+        runtime,
+        programId: TEST_PROGRAM_ID,
+      }),
+    /generated canonical artifact bundle/,
   );
 });
 
@@ -278,6 +309,37 @@ test('typed action builder encodes exact approval, funding, request, and pause a
   });
   assert.equal(decodedFunding.functionName, 'fund');
   assert.deepEqual(decodedFunding.args, [100_000_000n, TEST_COMMITMENT]);
+  const sponsorBatch = createRobinhoodSponsorFundingBatch({
+    approval,
+    funding,
+    manifest,
+    bundle,
+    runtime,
+    now: 1_784_764_900n,
+  });
+  assert.equal(sponsorBatch.amount, 100_000_000n);
+  assert.deepEqual(
+    sponsorBatch.actions.map((action) => action.action),
+    ['approve_usdg', 'fund_program'],
+  );
+  assert.notEqual(sponsorBatch.batchCommitment, `0x${'00'.repeat(32)}`);
+  assert.throws(
+    () =>
+      createRobinhoodSponsorFundingBatch({
+        approval,
+        funding: builder.fundProgram({
+          ...context,
+          intentId: 'intent-action-mismatched-funding',
+          amount: parseRobinhoodUsdg('99', 'mainnet'),
+          fundingReference: TEST_COMMITMENT,
+        }),
+        manifest,
+        bundle,
+        runtime,
+        now: 1_784_764_900n,
+      }),
+    /same exact positive finite USDG amount/,
+  );
 
   const request = builder.openRequest({
     ...context,

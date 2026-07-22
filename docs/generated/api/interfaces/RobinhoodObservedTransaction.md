@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodObservedTransaction
 
-Defined in: src/robinhood/receipts.ts:47
+Defined in: [src/robinhood/receipts.ts:47](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L47)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/receipts.ts:47
 
 > **chainId**: `number`
 
-Defined in: src/robinhood/receipts.ts:49
+Defined in: [src/robinhood/receipts.ts:49](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L49)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/receipts.ts:49
 
 > **from**: `` `0x${string}` ``
 
-Defined in: src/robinhood/receipts.ts:50
+Defined in: [src/robinhood/receipts.ts:50](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L50)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/receipts.ts:50
 
 > **hash**: `` `0x${string}` ``
 
-Defined in: src/robinhood/receipts.ts:48
+Defined in: [src/robinhood/receipts.ts:48](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L48)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/receipts.ts:48
 
 > **input**: `` `0x${string}` ``
 
-Defined in: src/robinhood/receipts.ts:52
+Defined in: [src/robinhood/receipts.ts:52](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L52)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/receipts.ts:52
 
 > **to**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/receipts.ts:51
+Defined in: [src/robinhood/receipts.ts:51](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L51)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: src/robinhood/receipts.ts:51
 
 > **value**: `bigint`
 
-Defined in: src/robinhood/receipts.ts:53
+Defined in: [src/robinhood/receipts.ts:53](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/receipts.ts#L53)

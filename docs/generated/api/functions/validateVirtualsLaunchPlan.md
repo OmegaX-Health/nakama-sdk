@@ -8,7 +8,7 @@
 
 > **validateVirtualsLaunchPlan**(`input`): [`VirtualsLaunchPlan`](../interfaces/VirtualsLaunchPlan.md)
 
-Defined in: src/robinhood/virtuals.ts:143
+Defined in: [src/robinhood/virtuals.ts:143](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/virtuals.ts#L143)
 
 Structurally validates internally supplied launch assertions and evidence.
 External platform, legal, identity, RPC, and finality verification remains a

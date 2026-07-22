@@ -126,6 +126,32 @@ Phase-0 maintenance allowlist. Smart-account submission always fails closed in
 this release because an injected adapter cannot independently prove finalized
 module installation, revocation state, runtime code, and calldata enforcement.
 
+`createRobinhoodPaymasterClient(...)` isolates provider-specific quote behavior
+behind `RobinhoodPaymasterAdapter`. `validateRobinhoodPaymasterPolicy(...)`
+binds sponsor, account, program, allowed actions/calls, native value, gas, rate,
+and expiry. `hashRobinhoodPaymasterPolicy(...)` creates the canonical commitment
+that every returned quote must bind alongside the exact prepared action
+commitment and live window usage. The client is quote-only and cannot submit a
+user operation.
+
+`createRobinhoodSponsorFundingBatch(...)` validates a builder-issued
+`approve_usdg` followed by `fund_program` for the same account, program,
+timestamp, vault, and exact finite amount. It returns commitments for a future
+provider adapter but has no execution method and never permits an infinite
+allowance.
+
+## Public indexer and offline boundaries
+
+`collectRobinhoodIndexerPages(...)` accepts only a
+`public_protocol_state` adapter, validates chain/finality/reconciliation
+context, caps pages and retries, and rejects repeated cursors or a changed
+indexed snapshot. It also rejects a provider page containing more items than
+the requested page size. `invalidateRobinhoodOfflineCacheAfterReorg(...)` drops
+the cached block and descendants unless the exact cached block hash remains
+canonical. Indexed, divergent, stale, and offline records never satisfy
+`assertRobinhoodWriteStateSafe(...)`; private evidence remains outside this
+package.
+
 ## Receipts
 
 - `createRobinhoodSubmittedTransactionFromSubmission(...)` converts only the

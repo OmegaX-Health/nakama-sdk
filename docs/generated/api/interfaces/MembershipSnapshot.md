@@ -6,7 +6,7 @@
 
 # Interface: MembershipSnapshot
 
-Defined in: src/robinhood/domain.ts:123
+Defined in: [src/robinhood/domain.ts:123](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L123)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/domain.ts:123
 
 > **account**: `` `0x${string}` `` \| `null`
 
-Defined in: src/robinhood/domain.ts:126
+Defined in: [src/robinhood/domain.ts:126](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L126)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: src/robinhood/domain.ts:126
 
 > **activatedAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:127
+Defined in: [src/robinhood/domain.ts:127](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L127)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: src/robinhood/domain.ts:127
 
 > **expiresAt**: `bigint`
 
-Defined in: src/robinhood/domain.ts:128
+Defined in: [src/robinhood/domain.ts:128](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L128)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: src/robinhood/domain.ts:128
 
 > **memberCommitment**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:125
+Defined in: [src/robinhood/domain.ts:125](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L125)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: src/robinhood/domain.ts:125
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: src/robinhood/domain.ts:124
+Defined in: [src/robinhood/domain.ts:124](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L124)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: src/robinhood/domain.ts:124
 
 > **remainingBenefit**: [`RobinhoodAssetAmount`](RobinhoodAssetAmount.md)
 
-Defined in: src/robinhood/domain.ts:130
+Defined in: [src/robinhood/domain.ts:130](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L130)
 
 Current onchain liability remaining; historical consumption needs indexed events.
 
@@ -64,4 +64,4 @@ Current onchain liability remaining; historical consumption needs indexed events
 
 > **state**: [`MembershipState`](../type-aliases/MembershipState.md)
 
-Defined in: src/robinhood/domain.ts:131
+Defined in: [src/robinhood/domain.ts:131](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/domain.ts#L131)

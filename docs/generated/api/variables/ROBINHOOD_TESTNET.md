@@ -8,7 +8,7 @@
 
 > `const` **ROBINHOOD\_TESTNET**: `object`
 
-Defined in: src/robinhood/chains.ts:49
+Defined in: [src/robinhood/chains.ts:49](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L49)
 
 ## Type Declaration
 

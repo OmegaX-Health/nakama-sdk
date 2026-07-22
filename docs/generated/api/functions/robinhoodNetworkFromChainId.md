@@ -8,7 +8,7 @@
 
 > **robinhoodNetworkFromChainId**(`chainId`): [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: src/robinhood/chains.ts:121
+Defined in: [src/robinhood/chains.ts:121](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L121)
 
 ## Parameters
 

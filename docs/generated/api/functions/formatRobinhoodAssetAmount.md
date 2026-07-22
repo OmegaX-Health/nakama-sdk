@@ -8,7 +8,7 @@
 
 > **formatRobinhoodAssetAmount**(`amount`): `string`
 
-Defined in: src/robinhood/assets.ts:209
+Defined in: [src/robinhood/assets.ts:209](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/assets.ts#L209)
 
 ## Parameters
 

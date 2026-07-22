@@ -147,12 +147,12 @@ async function buildBundle() {
     );
   }
   if (
-    artifact.sourceCommit !== null &&
-    (typeof artifact.sourceCommit !== 'string' ||
-      !/^[0-9a-f]{40}$/.test(artifact.sourceCommit))
+    typeof artifact.sourceCommit !== 'string' ||
+    !/^[0-9a-f]{40}$/.test(artifact.sourceCommit) ||
+    /^0{40}$/.test(artifact.sourceCommit)
   ) {
     throw new Error(
-      'protocol artifact sourceCommit must be null or a full lowercase Git SHA.',
+      'protocol artifact sourceCommit must be a nonzero full lowercase Git SHA.',
     );
   }
 

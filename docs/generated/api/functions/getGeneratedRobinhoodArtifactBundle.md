@@ -8,7 +8,7 @@
 
 > **getGeneratedRobinhoodArtifactBundle**(): [`RobinhoodProtocolArtifactBundle`](../interfaces/RobinhoodProtocolArtifactBundle.md)
 
-Defined in: src/robinhood/artifacts.ts:486
+Defined in: [src/robinhood/artifacts.ts:484](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L484)
 
 ## Returns
 

@@ -1,53 +1,53 @@
 {
-  "sdkVersion": "0.8.10",
+  "sdkVersion": "0.9.0",
   "omegaxDocsRepo": "https://github.com/OmegaX-Health/omegax-docs",
-  "omegaxDocsCommit": "68c03bd322cf8f03d89129eb8b0be8d55e176bb8",
-  "syncedAt": "2026-06-23T13:56:18.793Z",
-  "syncedBy": "Marino Sabijan",
+  "omegaxDocsCommit": "PENDING",
+  "syncedAt": "PENDING",
+  "syncedBy": "PENDING",
   "pages": [
     {
       "sdkDoc": "README.md",
-      "sdkDocSha256": "243848325613f2d50984dd44b5cb2a4a6c2f81a08a9208c319a79eafe3b296c6",
+      "sdkDocSha256": "399bf28d4b7278f844447f8816b948ae9aee7af1cebd330f6b89c31ed3b0ee40",
       "omegaxDocsPath": "website/docs/sdk/overview.mdx"
     },
     {
       "sdkDoc": "docs/GETTING_STARTED.md",
-      "sdkDocSha256": "a3e31a2ed95f5ae668107e455baf0310a62def2e70f10a1ab0f0217e4a3943e2",
+      "sdkDocSha256": "7e443131e0e43806a4b1374eb2a3bf490c14bc23c8d78da4186a180346a2f67f",
       "omegaxDocsPath": "website/docs/sdk/getting-started.md"
     },
     {
       "sdkDoc": "docs/WORKFLOWS.md",
-      "sdkDocSha256": "1217873e11958771182f39891621ea4a4dc63d5f64740944d07c51f6d44a7cea",
+      "sdkDocSha256": "df44a53099c553c0ed4bd2e8eca4f6e7a89c309cc097b615294705f059eabc91",
       "omegaxDocsPath": "website/docs/sdk/workflows.md"
     },
     {
       "sdkDoc": "docs/RECIPES.md",
-      "sdkDocSha256": "b16a201504e58f5242026a02732508f7c2508f716dd4b229f0437ec40409c0dd",
+      "sdkDocSha256": "fd3a763c535263169fdccc83290316c8c787b31923ac42054063170ef22e9cb8",
       "omegaxDocsPath": "website/docs/sdk/recipes.md"
     },
     {
       "sdkDoc": "docs/TOP_APIS.md",
-      "sdkDocSha256": "42f890b0188cc2671d419e637a55d317a62cd37f2e5458bad478b6685323277c",
+      "sdkDocSha256": "81da53e88b916d8b8c7edec1620d07e9c64a70ae2717ea6b848b1137f92d7cb0",
       "omegaxDocsPath": "website/docs/sdk/top-apis.md"
     },
     {
       "sdkDoc": "docs/ERROR_CATALOG.md",
-      "sdkDocSha256": "d8d0618c144658ed27923707e8d8b8b0959b29bc4ba3c6142e4e34f79456fdf8",
+      "sdkDocSha256": "b5c2b24d47af51985508d66538ab9dcecc276c00314c2f06d8deeadb8e6ae10e",
       "omegaxDocsPath": "website/docs/sdk/error-catalog.md"
     },
     {
       "sdkDoc": "docs/API_REFERENCE.md",
-      "sdkDocSha256": "bae51568be03359035708e6ecaaada138819a5ef34cf446f903f4b07d153ab31",
+      "sdkDocSha256": "2b0d3b9c25d632c62476f274d0ad969ccc4086f03efcc9cf21fe8767f632c45c",
       "omegaxDocsPath": "website/docs/sdk/api-reference.md"
     },
     {
       "sdkDoc": "docs/RELEASE_NOTES.md",
-      "sdkDocSha256": "07cf11d48b28f5a5a46e851fe4e8167ca901f9cf34c142acd6a2296a882e7613",
+      "sdkDocSha256": "63616d29189c42ad57adcadad1c0dcf923362d96bcb9757318c5a34cfce5c63e",
       "omegaxDocsPath": "website/docs/sdk/release-notes.md"
     },
     {
       "sdkDoc": "docs/TROUBLESHOOTING.md",
-      "sdkDocSha256": "a64e637ae508a27f0b4857bfdbfee2416b4251119d1001ae5ac0f15759a4d683",
+      "sdkDocSha256": "c750214b0e5c5bbb0a0e3c37e1b3aab14d620d7e2d390a965e64329edba4dec3",
       "omegaxDocsPath": "website/docs/sdk/troubleshooting.md"
     }
   ]

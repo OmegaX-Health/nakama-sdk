@@ -8,7 +8,7 @@
 
 > **RobinhoodPublicClientOptions** = `object` & \{ `provider?`: `never`; `rpcUrl`: `string`; \} \| \{ `provider`: [`RobinhoodEip1193Provider`](../interfaces/RobinhoodEip1193Provider.md); `rpcUrl?`: `never`; \}
 
-Defined in: src/robinhood/chains.ts:85
+Defined in: [src/robinhood/chains.ts:85](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L85)
 
 ## Type Declaration
 

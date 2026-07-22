@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodEip1193Provider
 
-Defined in: src/robinhood/chains.ts:76
+Defined in: [src/robinhood/chains.ts:76](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L76)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: src/robinhood/chains.ts:76
 
 > **request**(`args`): `Promise`\<`unknown`\>
 
-Defined in: src/robinhood/chains.ts:77
+Defined in: [src/robinhood/chains.ts:77](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L77)
 
 #### Parameters
 

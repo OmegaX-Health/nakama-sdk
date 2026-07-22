@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_MAINNET\_CAIP2**: `"eip155:4663"`
 
-Defined in: src/robinhood/chains.ts:23
+Defined in: [src/robinhood/chains.ts:23](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/chains.ts#L23)
