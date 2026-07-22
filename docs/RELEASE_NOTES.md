@@ -8,6 +8,13 @@
   source, ABI, compiler, component-code, and deployment-commitment checks. A
   ready bundle now requires the nonzero committed contract-source revision and
   rejects null, malformed, zero, or caller-substituted provenance.
+- Migrated that boundary to artifact schema 2 and suite major 2, with the sole
+  schema-2 `EconomicActivity` event decoded into nine reconstructable kinds.
+  Runtime verification now rejects a legacy-major suite even when its factory
+  and deployment commitment otherwise match.
+- Added the adapter-only `recordBlockedAttempt` calldata/read boundary and typed
+  factory role/version errors. Blocked telemetry cannot enter the wallet action
+  path, consume a grant, or execute a target.
 - Added closed, fail-closed deployment manifests; both remain `unconfigured`, so
   no production read/write can be constructed until audited deployment evidence
   and live runtime verification exist.

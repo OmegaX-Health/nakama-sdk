@@ -3,7 +3,9 @@ import {
   decodeEventLog,
   encodeFunctionData,
   isHex,
+  keccak256,
   parseAbi,
+  stringToHex,
   zeroAddress,
   type Abi,
   type Address,
@@ -11,6 +13,7 @@ import {
 } from 'viem';
 
 import {
+  assertGeneratedRobinhoodArtifactBundle,
   assertRobinhoodDeploymentReady,
   getGeneratedRobinhoodArtifactBundle,
   getRobinhoodContractArtifact,
@@ -120,6 +123,35 @@ export const ROBINHOOD_REQUEST_STATE = Object.freeze({
   settled: 8,
 } as const);
 
+export const ROBINHOOD_ECONOMIC_ACTIVITY_KIND = Object.freeze({
+  sponsorFunding: 1,
+  memberLiabilityAdded: 2,
+  memberLiabilityReleased: 3,
+  pendingReservationAdded: 4,
+  pendingReservationCleared: 5,
+  obligationApproved: 6,
+  obligationSettled: 7,
+  sponsorRefundMatured: 8,
+  sponsorRefundClaimed: 9,
+} as const);
+
+export const ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE = Object.freeze({
+  authorized: ZERO_BYTES32,
+  authorizationNotActive: keccak256(stringToHex('AUTHORIZATION_NOT_ACTIVE')),
+  actionLimitExceeded: keccak256(stringToHex('ACTION_LIMIT_EXCEEDED')),
+  periodLimitExceeded: keccak256(stringToHex('PERIOD_LIMIT_EXCEEDED')),
+} as const);
+
+export const ROBINHOOD_FACTORY_ROLE_INDEX = Object.freeze({
+  sponsor: 0,
+  operator: 1,
+  initialReviewer: 2,
+  appealReviewer: 3,
+  settlement: 4,
+  guardian: 5,
+  eligibilityAttestor: 6,
+} as const);
+
 export const ROBINHOOD_PAUSE_SCOPE = Object.freeze({
   enrollment: 1,
   newRequests: 2,
@@ -152,6 +184,96 @@ export interface AgentAuthorization {
   purposeCommitment: Bytes32;
 }
 
+export type RobinhoodEconomicActivityKind =
+  | 'sponsor_funding'
+  | 'member_liability_added'
+  | 'member_liability_released'
+  | 'pending_reservation_added'
+  | 'pending_reservation_cleared'
+  | 'obligation_approved'
+  | 'obligation_settled'
+  | 'sponsor_refund_matured'
+  | 'sponsor_refund_claimed';
+
+export type RobinhoodEconomicActivityCodeByKind = {
+  sponsor_funding: 1;
+  member_liability_added: 2;
+  member_liability_released: 3;
+  pending_reservation_added: 4;
+  pending_reservation_cleared: 5;
+  obligation_approved: 6;
+  obligation_settled: 7;
+  sponsor_refund_matured: 8;
+  sponsor_refund_claimed: 9;
+};
+
+export interface RobinhoodEconomicAccountingSnapshot {
+  sponsorFunded: bigint;
+  settled: bigint;
+  sponsorRefunded: bigint;
+  maximumRemainingMemberLiability: bigint;
+  pendingRequestReservation: bigint;
+  approvedUnpaidObligations: bigint;
+  maturedRefunds: bigint;
+  trackedAssets: bigint;
+  encumberedAssets: bigint;
+}
+
+export interface RobinhoodEconomicActivityBase {
+  schemaVersion: 2;
+  role: 'vault';
+  eventName: 'EconomicActivity';
+  programId: Bytes32;
+  activityId: Bytes32;
+  relatedId: Bytes32;
+  asset: Address;
+  actor: Address;
+  beneficiary: Address;
+  amount: bigint;
+  accounting: RobinhoodEconomicAccountingSnapshot;
+  log: RobinhoodEventLog;
+}
+
+export type RobinhoodEconomicActivity = {
+  [Kind in RobinhoodEconomicActivityKind]: RobinhoodEconomicActivityBase & {
+    kind: Kind;
+    kindCode: RobinhoodEconomicActivityCodeByKind[Kind];
+  };
+}[RobinhoodEconomicActivityKind];
+
+export type RobinhoodAgentAuthorizationFailure =
+  | 'authorized'
+  | 'authorization_not_active'
+  | 'action_limit_exceeded'
+  | 'period_limit_exceeded';
+
+export interface RobinhoodAgentAuthorizationFailureSnapshot {
+  programId: Bytes32;
+  authorizationId: Bytes32;
+  principal: Address;
+  target: Address;
+  selector: Hex;
+  nativeValue: bigint;
+  assetAmount: bigint;
+  reasonCode: Bytes32;
+  failure: RobinhoodAgentAuthorizationFailure;
+}
+
+export interface RobinhoodRecordBlockedAttemptCall {
+  version: 1;
+  network: RobinhoodNetwork;
+  chainId: 4663 | 46630;
+  programId: Bytes32;
+  registry: Address;
+  requiredCaller: Address;
+  authorizationId: Bytes32;
+  principal: Address;
+  selector: Hex;
+  nativeValue: bigint;
+  assetAmount: bigint;
+  data: Hex;
+}
+
 export interface PrepareRobinhoodActionContext {
   account: string;
   intentId: string;
@@ -173,6 +295,14 @@ export interface RobinhoodReadClient {
   ): Promise<RobinhoodRead<ObligationSnapshot>>;
   readRole(role: ProgramRole): Promise<RobinhoodRead<RoleSnapshot>>;
   readPause(scope: PauseScope): Promise<RobinhoodRead<PauseSnapshot>>;
+  readAgentAuthorizationFailure(params: {
+    authorizationId: Bytes32;
+    principal: string;
+    target: string;
+    selector: Hex;
+    nativeValue: bigint;
+    assetAmount: bigint;
+  }): Promise<RobinhoodRead<RobinhoodAgentAuthorizationFailureSnapshot>>;
 }
 
 export interface RobinhoodActionBuilder {
@@ -356,17 +486,14 @@ export const ROBINHOOD_EVENT_NAMES = Object.freeze([
   'DecisionConsumed',
   'DependencyWarningChanged',
   'EIP712DomainChanged',
+  'EconomicActivity',
   'EligibilityAuthorizationRevoked',
   'EvidenceManifestUpdated',
-  'MemberLiabilityChanged',
   'MembershipAccountRecovered',
   'MembershipActivated',
   'MembershipStateChanged',
   'ModulesBound',
-  'ObligationApproved',
-  'ObligationSettled',
   'OperatorUnpauseApproved',
-  'PendingReservationChanged',
   'ProgramRegistered',
   'ProgramStateChanged',
   'ProgramSuiteDeployed',
@@ -375,11 +502,7 @@ export const ROBINHOOD_EVENT_NAMES = Object.freeze([
   'SafetyGuardianBound',
   'ScopePaused',
   'ScopeUnpaused',
-  'SettlementExecuted',
   'SettlementModuleBound',
-  'SponsorFundingReceived',
-  'SponsorRefundClaimed',
-  'SponsorRefundMatured',
   'SuiteRegistered',
   'SuiteStatusChanged',
 ] as const);
@@ -409,6 +532,42 @@ export interface DecodedRobinhoodError {
   args: readonly unknown[];
   data: Hex;
 }
+
+export type RobinhoodFactoryRole =
+  | 'sponsor'
+  | 'operator'
+  | 'initial_reviewer'
+  | 'appeal_reviewer'
+  | 'settlement'
+  | 'guardian'
+  | 'eligibility_attestor';
+
+export type DecodedRobinhoodFactoryConfigurationError =
+  | {
+      role: 'factory';
+      errorName: 'InvalidRole';
+      roleIndex: number;
+      factoryRole: RobinhoodFactoryRole;
+      address: Address;
+      data: Hex;
+    }
+  | {
+      role: 'factory';
+      errorName: 'DuplicateRole';
+      firstRoleIndex: number;
+      firstRole: RobinhoodFactoryRole;
+      secondRoleIndex: number;
+      secondRole: RobinhoodFactoryRole;
+      address: Address;
+      data: Hex;
+    }
+  | {
+      role: 'factory';
+      errorName: 'IncompatibleSuiteVersion';
+      expectedMajor: number;
+      actualMajor: number;
+      data: Hex;
+    };
 
 export function createRobinhoodReadClient(params: {
   client: RobinhoodPublicClient;
@@ -828,6 +987,46 @@ export function createRobinhoodReadClient(params: {
             'reviewRequiredAt',
           ),
           active: requireBoolean(tupleField(raw, 'active', 4), 'active'),
+        };
+      });
+    },
+    async readAgentAuthorizationFailure(input) {
+      const authorizationId = assertBytes32(
+        input.authorizationId,
+        'authorizationId',
+      );
+      const principal = normalizeRobinhoodAddress(input.principal);
+      const target = normalizeRobinhoodAddress(input.target);
+      const selector = requireBytes4(input.selector, 'selector');
+      assertUint(input.nativeValue, 'nativeValue');
+      assertUint(input.assetAmount, 'assetAmount');
+      return await atBlock(async (blockNumber) => {
+        const reasonCode = requireBytes32Value(
+          await read(
+            'agentAuthorizationRegistry',
+            'authorizationFailure',
+            [
+              authorizationId,
+              principal,
+              target,
+              selector,
+              input.nativeValue,
+              input.assetAmount,
+            ],
+            blockNumber,
+          ),
+          'authorizationFailure',
+        );
+        return {
+          programId,
+          authorizationId,
+          principal,
+          target,
+          selector,
+          nativeValue: input.nativeValue,
+          assetAmount: input.assetAmount,
+          reasonCode,
+          failure: decodeRobinhoodAgentAuthorizationFailure(reasonCode),
         };
       });
     },
@@ -1612,6 +1811,108 @@ export function createRobinhoodActionBuilder(params: {
   };
 }
 
+export function decodeRobinhoodAgentAuthorizationFailure(
+  reasonCode: Bytes32,
+): RobinhoodAgentAuthorizationFailure {
+  const normalized = assertBytes32(reasonCode, 'reasonCode').toLowerCase();
+  for (const [failure, code] of Object.entries(
+    ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE,
+  )) {
+    if (normalized !== code.toLowerCase()) continue;
+    return {
+      authorized: 'authorized',
+      authorizationNotActive: 'authorization_not_active',
+      actionLimitExceeded: 'action_limit_exceeded',
+      periodLimitExceeded: 'period_limit_exceeded',
+    }[failure] as RobinhoodAgentAuthorizationFailure;
+  }
+  throw new NakamaRobinhoodContractError(
+    'Agent authorization failure code is not part of protocol schema 2.',
+    { details: { reasonCode } },
+  );
+}
+
+/**
+ * Encodes the registry call a reviewed adapter makes after a failed attempt.
+ * The returned call is deliberately not a PreparedRobinhoodAction: an EOA or
+ * generic smart account cannot impersonate the adapter required by msg.sender.
+ */
+export function createRobinhoodRecordBlockedAttemptCall(params: {
+  manifest: RobinhoodDeploymentManifest;
+  bundle: RobinhoodProtocolArtifactBundle;
+  runtime: VerifiedRobinhoodDeploymentRuntime;
+  programId: Bytes32;
+  adapter: string;
+  authorizationId: Bytes32;
+  principal: string;
+  selector: Hex;
+  nativeValue: bigint;
+  assetAmount: bigint;
+}): RobinhoodRecordBlockedAttemptCall {
+  assertRobinhoodDeploymentReady(params.manifest, params.bundle);
+  const bundle = getGeneratedRobinhoodArtifactBundle();
+  const manifest = bundle.deployments[params.manifest.network];
+  assertRobinhoodDeploymentReady(manifest, bundle);
+  const programId = assertBytes32(params.programId, 'programId');
+  assertVerifiedRuntimeTarget({
+    manifest,
+    runtime: params.runtime,
+    programId,
+  });
+  const requiredCaller = requireNonZeroAddress(params.adapter, 'adapter');
+  const protectedAddresses = new Set(
+    Object.values(manifest.contracts).map(({ address }) =>
+      address.toLowerCase(),
+    ),
+  );
+  if (
+    protectedAddresses.has(requiredCaller.toLowerCase()) ||
+    manifest.settlementAsset.address?.toLowerCase() ===
+      requiredCaller.toLowerCase()
+  ) {
+    throw new NakamaRobinhoodConfigError(
+      'Blocked-attempt reporter must be an external reviewed adapter, not protocol infrastructure or USDG.',
+    );
+  }
+  const authorizationId = requireNonZeroCommitment(
+    params.authorizationId,
+    'authorizationId',
+  );
+  const principal = normalizeRobinhoodAddress(params.principal);
+  const selector = requireBytes4(params.selector, 'selector');
+  assertUint(params.nativeValue, 'nativeValue');
+  assertUint(params.assetAmount, 'assetAmount');
+  const registry = getRobinhoodContractDeployment(
+    manifest,
+    'agentAuthorizationRegistry',
+  ).address;
+  const data = encodeFunctionData({
+    abi: getRobinhoodContractArtifact(bundle, 'agentAuthorizationRegistry').abi,
+    functionName: 'recordBlockedAttempt',
+    args: [
+      authorizationId,
+      principal,
+      selector,
+      params.nativeValue,
+      params.assetAmount,
+    ],
+  } as never);
+  return Object.freeze({
+    version: 1,
+    network: manifest.network,
+    chainId: manifest.chainId,
+    programId,
+    registry,
+    requiredCaller,
+    authorizationId,
+    principal,
+    selector,
+    nativeValue: params.nativeValue,
+    assetAmount: params.assetAmount,
+    data,
+  });
+}
+
 export async function simulateRobinhoodAction(params: {
   client: RobinhoodPublicClient;
   bundle: RobinhoodProtocolArtifactBundle;
@@ -1699,6 +2000,71 @@ export function decodeRobinhoodError(
   return null;
 }
 
+export function decodeRobinhoodFactoryConfigurationError(
+  data: Hex,
+  bundle: RobinhoodProtocolArtifactBundle,
+): DecodedRobinhoodFactoryConfigurationError | null {
+  if (!isHex(data) || data === '0x') return null;
+  assertGeneratedRobinhoodArtifactBundle(bundle);
+  let decoded;
+  try {
+    decoded = decodeErrorResult({
+      abi: getRobinhoodContractArtifact(bundle, 'factory').abi,
+      data,
+    });
+  } catch {
+    return null;
+  }
+  const args = (decoded.args ?? []) as readonly unknown[];
+  if (decoded.errorName === 'InvalidRole') {
+    const roleIndex = requireNumber(args[0], 'InvalidRole.roleIndex');
+    return {
+      role: 'factory',
+      errorName: 'InvalidRole',
+      roleIndex,
+      factoryRole: decodeRobinhoodFactoryRole(roleIndex),
+      address: requireAddressValue(args[1], 'InvalidRole.role'),
+      data,
+    };
+  }
+  if (decoded.errorName === 'DuplicateRole') {
+    const firstRoleIndex = requireNumber(
+      args[0],
+      'DuplicateRole.firstRoleIndex',
+    );
+    const secondRoleIndex = requireNumber(
+      args[1],
+      'DuplicateRole.secondRoleIndex',
+    );
+    return {
+      role: 'factory',
+      errorName: 'DuplicateRole',
+      firstRoleIndex,
+      firstRole: decodeRobinhoodFactoryRole(firstRoleIndex),
+      secondRoleIndex,
+      secondRole: decodeRobinhoodFactoryRole(secondRoleIndex),
+      address: requireAddressValue(args[2], 'DuplicateRole.role'),
+      data,
+    };
+  }
+  if (decoded.errorName === 'IncompatibleSuiteVersion') {
+    return {
+      role: 'factory',
+      errorName: 'IncompatibleSuiteVersion',
+      expectedMajor: requireNumber(
+        args[0],
+        'IncompatibleSuiteVersion.expectedMajor',
+      ),
+      actualMajor: requireNumber(
+        args[1],
+        'IncompatibleSuiteVersion.actualMajor',
+      ),
+      data,
+    };
+  }
+  return null;
+}
+
 export function decodeRobinhoodEvent(params: {
   log: RobinhoodEventLog;
   manifest: RobinhoodDeploymentManifest;
@@ -1747,6 +2113,110 @@ export function decodeRobinhoodEvent(params: {
       },
     );
   }
+}
+
+export function decodeRobinhoodEconomicActivity(params: {
+  log: RobinhoodEventLog;
+  manifest: RobinhoodDeploymentManifest;
+  bundle: RobinhoodProtocolArtifactBundle;
+}): RobinhoodEconomicActivity {
+  assertRobinhoodDeploymentReady(params.manifest, params.bundle, {
+    requireAudit: false,
+  });
+  assertGeneratedRobinhoodArtifactBundle(params.bundle);
+  if (params.bundle.economicEventSchemaVersion !== 2) {
+    throw new NakamaRobinhoodArtifactError(
+      'Economic activity decoding requires protocol event schema 2.',
+    );
+  }
+  const decoded = decodeRobinhoodEvent(params);
+  if (decoded.role !== 'vault' || decoded.eventName !== 'EconomicActivity') {
+    throw new NakamaRobinhoodContractError(
+      'Log is not the canonical PoolVault EconomicActivity event.',
+      {
+        details: { role: decoded.role, eventName: decoded.eventName },
+      },
+    );
+  }
+  const args = decoded.args;
+  const kind = decodeRobinhoodEconomicActivityKind(
+    requireNumber(tupleField(args, 'kind', 2), 'EconomicActivity.kind'),
+  );
+  const activity = {
+    schemaVersion: 2,
+    role: 'vault',
+    eventName: 'EconomicActivity',
+    ...kind,
+    programId: requireBytes32Value(
+      tupleField(args, 'programId', 0),
+      'EconomicActivity.programId',
+    ),
+    activityId: requireBytes32Value(
+      tupleField(args, 'activityId', 1),
+      'EconomicActivity.activityId',
+    ),
+    relatedId: requireBytes32Value(
+      tupleField(args, 'relatedId', 3),
+      'EconomicActivity.relatedId',
+    ),
+    asset: requireAddressValue(
+      tupleField(args, 'asset', 4),
+      'EconomicActivity.asset',
+    ),
+    actor: requireAddressValue(
+      tupleField(args, 'actor', 5),
+      'EconomicActivity.actor',
+    ),
+    beneficiary: requireAddressValue(
+      tupleField(args, 'beneficiary', 6),
+      'EconomicActivity.beneficiary',
+    ),
+    amount: requireBigInt(
+      tupleField(args, 'amount', 7),
+      'EconomicActivity.amount',
+    ),
+    accounting: {
+      sponsorFunded: requireBigInt(
+        tupleField(args, 'sponsorFunded', 8),
+        'EconomicActivity.sponsorFunded',
+      ),
+      settled: requireBigInt(
+        tupleField(args, 'settled', 9),
+        'EconomicActivity.settled',
+      ),
+      sponsorRefunded: requireBigInt(
+        tupleField(args, 'sponsorRefunded', 10),
+        'EconomicActivity.sponsorRefunded',
+      ),
+      maximumRemainingMemberLiability: requireBigInt(
+        tupleField(args, 'maximumRemainingMemberLiability', 11),
+        'EconomicActivity.maximumRemainingMemberLiability',
+      ),
+      pendingRequestReservation: requireBigInt(
+        tupleField(args, 'pendingRequestReservation', 12),
+        'EconomicActivity.pendingRequestReservation',
+      ),
+      approvedUnpaidObligations: requireBigInt(
+        tupleField(args, 'approvedUnpaidObligations', 13),
+        'EconomicActivity.approvedUnpaidObligations',
+      ),
+      maturedRefunds: requireBigInt(
+        tupleField(args, 'maturedRefunds', 14),
+        'EconomicActivity.maturedRefunds',
+      ),
+      trackedAssets: requireBigInt(
+        tupleField(args, 'trackedAssets', 15),
+        'EconomicActivity.trackedAssets',
+      ),
+      encumberedAssets: requireBigInt(
+        tupleField(args, 'encumberedAssets', 16),
+        'EconomicActivity.encumberedAssets',
+      ),
+    },
+    log: params.log,
+  } as RobinhoodEconomicActivity;
+  assertRobinhoodEconomicActivityConsistency(activity, params.manifest);
+  return activity;
 }
 
 function createPreparedAction(params: {
@@ -2094,6 +2564,95 @@ function pauseScopeCode(scope: PauseScope): number {
   }[scope];
 }
 
+function decodeRobinhoodEconomicActivityKind(code: number): {
+  [Kind in RobinhoodEconomicActivityKind]: {
+    kind: Kind;
+    kindCode: RobinhoodEconomicActivityCodeByKind[Kind];
+  };
+}[RobinhoodEconomicActivityKind] {
+  switch (code) {
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.sponsorFunding:
+      return { kind: 'sponsor_funding', kindCode: 1 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.memberLiabilityAdded:
+      return { kind: 'member_liability_added', kindCode: 2 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.memberLiabilityReleased:
+      return { kind: 'member_liability_released', kindCode: 3 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.pendingReservationAdded:
+      return { kind: 'pending_reservation_added', kindCode: 4 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.pendingReservationCleared:
+      return { kind: 'pending_reservation_cleared', kindCode: 5 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.obligationApproved:
+      return { kind: 'obligation_approved', kindCode: 6 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.obligationSettled:
+      return { kind: 'obligation_settled', kindCode: 7 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.sponsorRefundMatured:
+      return { kind: 'sponsor_refund_matured', kindCode: 8 };
+    case ROBINHOOD_ECONOMIC_ACTIVITY_KIND.sponsorRefundClaimed:
+      return { kind: 'sponsor_refund_claimed', kindCode: 9 };
+    default:
+      throw new NakamaRobinhoodContractError(
+        `Unknown economic activity kind ${code}.`,
+      );
+  }
+}
+
+function assertRobinhoodEconomicActivityConsistency(
+  activity: RobinhoodEconomicActivity,
+  manifest: RobinhoodDeploymentManifest,
+): void {
+  const expectedAsset = manifest.settlementAsset.address;
+  if (
+    expectedAsset == null ||
+    activity.asset.toLowerCase() !== expectedAsset.toLowerCase()
+  ) {
+    throw new NakamaRobinhoodContractError(
+      'Economic activity asset does not match the deployment settlement asset.',
+    );
+  }
+  const accounting = activity.accounting;
+  const outflows = accounting.settled + accounting.sponsorRefunded;
+  if (outflows > accounting.sponsorFunded) {
+    throw new NakamaRobinhoodContractError(
+      'Economic activity accounting reports outflows above sponsor funding.',
+    );
+  }
+  const expectedTrackedAssets = accounting.sponsorFunded - outflows;
+  const expectedEncumberedAssets =
+    accounting.maximumRemainingMemberLiability +
+    accounting.approvedUnpaidObligations +
+    accounting.maturedRefunds;
+  if (
+    accounting.trackedAssets !== expectedTrackedAssets ||
+    accounting.encumberedAssets !== expectedEncumberedAssets ||
+    accounting.pendingRequestReservation >
+      accounting.maximumRemainingMemberLiability ||
+    accounting.encumberedAssets > accounting.trackedAssets
+  ) {
+    throw new NakamaRobinhoodContractError(
+      'Economic activity accounting snapshot violates the canonical vault identities.',
+    );
+  }
+}
+
+function decodeRobinhoodFactoryRole(index: number): RobinhoodFactoryRole {
+  const roles: Readonly<Record<number, RobinhoodFactoryRole>> = {
+    [ROBINHOOD_FACTORY_ROLE_INDEX.sponsor]: 'sponsor',
+    [ROBINHOOD_FACTORY_ROLE_INDEX.operator]: 'operator',
+    [ROBINHOOD_FACTORY_ROLE_INDEX.initialReviewer]: 'initial_reviewer',
+    [ROBINHOOD_FACTORY_ROLE_INDEX.appealReviewer]: 'appeal_reviewer',
+    [ROBINHOOD_FACTORY_ROLE_INDEX.settlement]: 'settlement',
+    [ROBINHOOD_FACTORY_ROLE_INDEX.guardian]: 'guardian',
+    [ROBINHOOD_FACTORY_ROLE_INDEX.eligibilityAttestor]: 'eligibility_attestor',
+  };
+  const role = roles[index];
+  if (role == null) {
+    throw new NakamaRobinhoodContractError(
+      `Unknown factory role index ${index}.`,
+    );
+  }
+  return role;
+}
+
 function parseAccount(action: PreparedRobinhoodAction): Address {
   const address = action.accountId.split(':').at(-1);
   if (address == null) {
@@ -2120,6 +2679,15 @@ function requireNonEmptyHex(value: unknown, field: string): Hex {
     throw new NakamaRobinhoodConfigError(`${field} must be non-empty hex.`);
   }
   return value;
+}
+
+function requireBytes4(value: unknown, field: string): Hex {
+  if (typeof value !== 'string' || !/^0x[0-9a-f]{8}$/iu.test(value)) {
+    throw new NakamaRobinhoodConfigError(
+      `${field} must be exactly four bytes.`,
+    );
+  }
+  return value as Hex;
 }
 
 function requireNonZeroCommitment(value: string, field: string): Bytes32 {

@@ -6,7 +6,7 @@
 
 # Interface: DecodedRobinhoodError
 
-Defined in: [src/robinhood/protocol.ts:406](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L406)
+Defined in: [src/robinhood/protocol.ts:529](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L529)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:406](https://github.com/OmegaX-Health/nak
 
 > **args**: readonly `unknown`[]
 
-Defined in: [src/robinhood/protocol.ts:409](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L409)
+Defined in: [src/robinhood/protocol.ts:532](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L532)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:409](https://github.com/OmegaX-Health/nak
 
 > **data**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:410](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L410)
+Defined in: [src/robinhood/protocol.ts:533](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L533)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:410](https://github.com/OmegaX-Health/nak
 
 > **errorName**: `string`
 
-Defined in: [src/robinhood/protocol.ts:408](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L408)
+Defined in: [src/robinhood/protocol.ts:531](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L531)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/robinhood/protocol.ts:408](https://github.com/OmegaX-Health/nak
 
 > **role**: `"factory"` \| `"assetRegistry"` \| `"templateRegistry"` \| `"poolRegistry"` \| `"program"` \| `"vault"` \| `"membershipRegistry"` \| `"decisionModule"` \| `"requestManager"` \| `"settlementModule"` \| `"agentAuthorizationRegistry"` \| `"safetyGuardian"`
 
-Defined in: [src/robinhood/protocol.ts:407](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L407)
+Defined in: [src/robinhood/protocol.ts:530](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L530)

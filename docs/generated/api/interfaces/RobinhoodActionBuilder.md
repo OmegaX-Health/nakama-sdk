@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodActionBuilder
 
-Defined in: [src/robinhood/protocol.ts:178](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L178)
+Defined in: [src/robinhood/protocol.ts:308](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L308)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:178](https://github.com/OmegaX-Health/nak
 
 > `readonly` **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/protocol.ts:179](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L179)
+Defined in: [src/robinhood/protocol.ts:309](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L309)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:179](https://github.com/OmegaX-Health/nak
 
 > `readonly` **programId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:180](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L180)
+Defined in: [src/robinhood/protocol.ts:310](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L310)
 
 ## Methods
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:180](https://github.com/OmegaX-Health/nak
 
 > **activateMembership**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:222](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L222)
+Defined in: [src/robinhood/protocol.ts:352](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L352)
 
 #### Parameters
 
@@ -48,7 +48,7 @@ Defined in: [src/robinhood/protocol.ts:222](https://github.com/OmegaX-Health/nak
 
 > **activateProgram**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:196](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L196)
+Defined in: [src/robinhood/protocol.ts:326](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L326)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ Defined in: [src/robinhood/protocol.ts:196](https://github.com/OmegaX-Health/nak
 
 > **approveActivationAsOperator**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:190](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L190)
+Defined in: [src/robinhood/protocol.ts:320](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L320)
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: [src/robinhood/protocol.ts:190](https://github.com/OmegaX-Health/nak
 
 > **approveActivationAsSponsor**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:187](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L187)
+Defined in: [src/robinhood/protocol.ts:317](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L317)
 
 #### Parameters
 
@@ -102,7 +102,7 @@ Defined in: [src/robinhood/protocol.ts:187](https://github.com/OmegaX-Health/nak
 
 > **approveCancellationAsOperator**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:204](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L204)
+Defined in: [src/robinhood/protocol.ts:334](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L334)
 
 #### Parameters
 
@@ -120,7 +120,7 @@ Defined in: [src/robinhood/protocol.ts:204](https://github.com/OmegaX-Health/nak
 
 > **approveCancellationAsSponsor**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:201](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L201)
+Defined in: [src/robinhood/protocol.ts:331](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L331)
 
 #### Parameters
 
@@ -138,7 +138,7 @@ Defined in: [src/robinhood/protocol.ts:201](https://github.com/OmegaX-Health/nak
 
 > **approveExactUsdg**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:210](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L210)
+Defined in: [src/robinhood/protocol.ts:340](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L340)
 
 #### Parameters
 
@@ -156,7 +156,7 @@ Defined in: [src/robinhood/protocol.ts:210](https://github.com/OmegaX-Health/nak
 
 > **approveUnpauseAsOperator**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:314](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L314)
+Defined in: [src/robinhood/protocol.ts:444](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L444)
 
 #### Parameters
 
@@ -174,7 +174,7 @@ Defined in: [src/robinhood/protocol.ts:314](https://github.com/OmegaX-Health/nak
 
 > **cancelBeforePromises**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:207](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L207)
+Defined in: [src/robinhood/protocol.ts:337](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L337)
 
 #### Parameters
 
@@ -192,7 +192,7 @@ Defined in: [src/robinhood/protocol.ts:207](https://github.com/OmegaX-Health/nak
 
 > **cancelMembership**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:244](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L244)
+Defined in: [src/robinhood/protocol.ts:374](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L374)
 
 #### Parameters
 
@@ -210,7 +210,7 @@ Defined in: [src/robinhood/protocol.ts:244](https://github.com/OmegaX-Health/nak
 
 > **claimMaturedRefund**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:219](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L219)
+Defined in: [src/robinhood/protocol.ts:349](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L349)
 
 #### Parameters
 
@@ -228,7 +228,7 @@ Defined in: [src/robinhood/protocol.ts:219](https://github.com/OmegaX-Health/nak
 
 > **closeProgram**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:200](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L200)
+Defined in: [src/robinhood/protocol.ts:330](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L330)
 
 #### Parameters
 
@@ -246,7 +246,7 @@ Defined in: [src/robinhood/protocol.ts:200](https://github.com/OmegaX-Health/nak
 
 > **enterRunoff**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:199](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L199)
+Defined in: [src/robinhood/protocol.ts:329](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L329)
 
 #### Parameters
 
@@ -264,7 +264,7 @@ Defined in: [src/robinhood/protocol.ts:199](https://github.com/OmegaX-Health/nak
 
 > **escalateInformationTimeout**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:286](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L286)
+Defined in: [src/robinhood/protocol.ts:416](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L416)
 
 #### Parameters
 
@@ -282,7 +282,7 @@ Defined in: [src/robinhood/protocol.ts:286](https://github.com/OmegaX-Health/nak
 
 > **escalateNoQuorum**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:283](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L283)
+Defined in: [src/robinhood/protocol.ts:413](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L413)
 
 #### Parameters
 
@@ -300,7 +300,7 @@ Defined in: [src/robinhood/protocol.ts:283](https://github.com/OmegaX-Health/nak
 
 > **executeAppealDecision**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:275](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L275)
+Defined in: [src/robinhood/protocol.ts:405](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L405)
 
 #### Parameters
 
@@ -318,7 +318,7 @@ Defined in: [src/robinhood/protocol.ts:275](https://github.com/OmegaX-Health/nak
 
 > **executeInitialDecision**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:261](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L261)
+Defined in: [src/robinhood/protocol.ts:391](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L391)
 
 #### Parameters
 
@@ -336,7 +336,7 @@ Defined in: [src/robinhood/protocol.ts:261](https://github.com/OmegaX-Health/nak
 
 > **expireMembership**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:241](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L241)
+Defined in: [src/robinhood/protocol.ts:371](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L371)
 
 #### Parameters
 
@@ -354,7 +354,7 @@ Defined in: [src/robinhood/protocol.ts:241](https://github.com/OmegaX-Health/nak
 
 > **fileAppeal**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:269](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L269)
+Defined in: [src/robinhood/protocol.ts:399](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L399)
 
 #### Parameters
 
@@ -372,7 +372,7 @@ Defined in: [src/robinhood/protocol.ts:269](https://github.com/OmegaX-Health/nak
 
 > **finalizeUnappealedDenial**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:289](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L289)
+Defined in: [src/robinhood/protocol.ts:419](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L419)
 
 #### Parameters
 
@@ -390,7 +390,7 @@ Defined in: [src/robinhood/protocol.ts:289](https://github.com/OmegaX-Health/nak
 
 > **fundProgram**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:213](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L213)
+Defined in: [src/robinhood/protocol.ts:343](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L343)
 
 #### Parameters
 
@@ -408,7 +408,7 @@ Defined in: [src/robinhood/protocol.ts:213](https://github.com/OmegaX-Health/nak
 
 > **grantAgentAuthorization**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:295](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L295)
+Defined in: [src/robinhood/protocol.ts:425](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L425)
 
 #### Parameters
 
@@ -426,7 +426,7 @@ Defined in: [src/robinhood/protocol.ts:295](https://github.com/OmegaX-Health/nak
 
 > **guardianRevokeAgentAuthorization**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:334](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L334)
+Defined in: [src/robinhood/protocol.ts:464](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L464)
 
 #### Parameters
 
@@ -444,7 +444,7 @@ Defined in: [src/robinhood/protocol.ts:334](https://github.com/OmegaX-Health/nak
 
 > **markProgramFunded**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:184](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L184)
+Defined in: [src/robinhood/protocol.ts:314](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L314)
 
 #### Parameters
 
@@ -462,7 +462,7 @@ Defined in: [src/robinhood/protocol.ts:184](https://github.com/OmegaX-Health/nak
 
 > **markProgramReviewed**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:181](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L181)
+Defined in: [src/robinhood/protocol.ts:311](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L311)
 
 #### Parameters
 
@@ -480,7 +480,7 @@ Defined in: [src/robinhood/protocol.ts:181](https://github.com/OmegaX-Health/nak
 
 > **openEnrollment**(`context`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:193](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L193)
+Defined in: [src/robinhood/protocol.ts:323](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L323)
 
 #### Parameters
 
@@ -498,7 +498,7 @@ Defined in: [src/robinhood/protocol.ts:193](https://github.com/OmegaX-Health/nak
 
 > **openRequest**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:247](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L247)
+Defined in: [src/robinhood/protocol.ts:377](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L377)
 
 #### Parameters
 
@@ -516,7 +516,7 @@ Defined in: [src/robinhood/protocol.ts:247](https://github.com/OmegaX-Health/nak
 
 > **pauseScope**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:306](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L306)
+Defined in: [src/robinhood/protocol.ts:436](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L436)
 
 #### Parameters
 
@@ -534,7 +534,7 @@ Defined in: [src/robinhood/protocol.ts:306](https://github.com/OmegaX-Health/nak
 
 > **recoverMembershipAccount**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:235](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L235)
+Defined in: [src/robinhood/protocol.ts:365](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L365)
 
 #### Parameters
 
@@ -552,7 +552,7 @@ Defined in: [src/robinhood/protocol.ts:235](https://github.com/OmegaX-Health/nak
 
 > **revokeAgentAuthorization**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:300](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L300)
+Defined in: [src/robinhood/protocol.ts:430](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L430)
 
 #### Parameters
 
@@ -570,7 +570,7 @@ Defined in: [src/robinhood/protocol.ts:300](https://github.com/OmegaX-Health/nak
 
 > **revokeEligibilityAuthorization**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:228](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L228)
+Defined in: [src/robinhood/protocol.ts:358](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L358)
 
 #### Parameters
 
@@ -588,7 +588,7 @@ Defined in: [src/robinhood/protocol.ts:228](https://github.com/OmegaX-Health/nak
 
 > **setDependencyWarning**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:326](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L326)
+Defined in: [src/robinhood/protocol.ts:456](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L456)
 
 #### Parameters
 
@@ -606,7 +606,7 @@ Defined in: [src/robinhood/protocol.ts:326](https://github.com/OmegaX-Health/nak
 
 > **settleObligation**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:292](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L292)
+Defined in: [src/robinhood/protocol.ts:422](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L422)
 
 #### Parameters
 
@@ -624,7 +624,7 @@ Defined in: [src/robinhood/protocol.ts:292](https://github.com/OmegaX-Health/nak
 
 > **unpauseScope**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:320](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L320)
+Defined in: [src/robinhood/protocol.ts:450](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L450)
 
 #### Parameters
 
@@ -642,7 +642,7 @@ Defined in: [src/robinhood/protocol.ts:320](https://github.com/OmegaX-Health/nak
 
 > **updateEvidence**(`params`): [`PreparedRobinhoodAction`](PreparedRobinhoodAction.md)
 
-Defined in: [src/robinhood/protocol.ts:255](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L255)
+Defined in: [src/robinhood/protocol.ts:385](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L385)
 
 #### Parameters
 

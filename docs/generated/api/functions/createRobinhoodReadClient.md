@@ -8,7 +8,7 @@
 
 > **createRobinhoodReadClient**(`params`): [`RobinhoodReadClient`](../interfaces/RobinhoodReadClient.md)
 
-Defined in: [src/robinhood/protocol.ts:413](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L413)
+Defined in: [src/robinhood/protocol.ts:572](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L572)
 
 ## Parameters
 

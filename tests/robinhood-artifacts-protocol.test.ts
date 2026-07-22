@@ -4,9 +4,12 @@ import test from 'node:test';
 
 import {
   decodeFunctionData,
+  encodeAbiParameters,
   encodeErrorResult,
+  encodeEventTopics,
   keccak256,
   parseAbi,
+  parseAbiParameters,
   type Address,
   type PublicClient,
 } from 'viem';
@@ -15,6 +18,8 @@ import {
   NAKAMA_DECISION_ACTION,
   NAKAMA_DECISION_REVIEWER_ROLE,
   NAKAMA_DECISION_REVIEW_ROUND,
+  ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE,
+  ROBINHOOD_ECONOMIC_ACTIVITY_KIND,
   ROBINHOOD_EVENT_NAMES,
   NakamaRobinhoodArtifactError,
   assertRobinhoodDeploymentReady,
@@ -22,9 +27,13 @@ import {
   createNakamaEligibilityTypedData,
   createRobinhoodActionBuilder,
   createRobinhoodReadClient,
+  createRobinhoodRecordBlockedAttemptCall,
   createRobinhoodSponsorFundingBatch,
   createRobinhoodSubmittedTransactionFromSubmission,
+  decodeRobinhoodAgentAuthorizationFailure,
+  decodeRobinhoodEconomicActivity,
   decodeRobinhoodError,
+  decodeRobinhoodFactoryConfigurationError,
   getGeneratedRobinhoodArtifactBundle,
   getRobinhoodContractArtifact,
   hashNakamaEligibilityAuthorization,
@@ -74,6 +83,17 @@ test('checked-in deployment manifests validate and remain fail-closed', async ()
 test('ready artifact bundles require exact nonzero committed source provenance', () => {
   const canonical = getGeneratedRobinhoodArtifactBundle();
   assert.equal(canonical.status, 'ready');
+  assert.equal(canonical.schemaVersion, 2);
+  assert.equal(canonical.protocolSuiteMajor, 2);
+  assert.equal(canonical.economicEventSchemaVersion, 2);
+  assert.equal(
+    canonical.sourceCommit,
+    '6392e2c774b66252b62245ffee18c18b3803b9be',
+  );
+  assert.equal(
+    canonical.sourceArtifactSha256,
+    '3e66c8340badccb9e413414e7dada7e80c3a8d46560d439153a799a9be5e2f1b',
+  );
   assert.match(canonical.sourceCommit ?? '', /^[0-9a-f]{40}$/);
   for (const sourceCommit of [null, 'abc123', 'A'.repeat(40), '0'.repeat(40)]) {
     assert.throws(
@@ -83,6 +103,20 @@ test('ready artifact bundles require exact nonzero committed source provenance',
           sourceCommit,
         }),
       /sourceCommit must be a nonzero full lowercase Git commit SHA/,
+    );
+  }
+  for (const [field, value] of [
+    ['schemaVersion', 1],
+    ['protocolSuiteMajor', 1],
+    ['economicEventSchemaVersion', 1],
+  ] as const) {
+    assert.throws(
+      () =>
+        validateRobinhoodArtifactBundle({
+          ...structuredClone(canonical),
+          [field]: value,
+        }),
+      /identity is invalid|require protocol suite major 2/,
     );
   }
 });
@@ -268,6 +302,255 @@ test('typed event-name set exactly covers every imported Robinhood ABI event', (
     }
   }
   assert.deepEqual([...names].sort(), [...ROBINHOOD_EVENT_NAMES].sort());
+});
+
+test('canonical EconomicActivity decoder discriminates and reconstructs all nine ledger kinds', () => {
+  const { manifest, bundle } = createReadyRobinhoodFixture();
+  const vaultAbi = getRobinhoodContractArtifact(bundle, 'vault').abi;
+  const kinds = [
+    [ROBINHOOD_ECONOMIC_ACTIVITY_KIND.sponsorFunding, 'sponsor_funding'],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.memberLiabilityAdded,
+      'member_liability_added',
+    ],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.memberLiabilityReleased,
+      'member_liability_released',
+    ],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.pendingReservationAdded,
+      'pending_reservation_added',
+    ],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.pendingReservationCleared,
+      'pending_reservation_cleared',
+    ],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.obligationApproved,
+      'obligation_approved',
+    ],
+    [ROBINHOOD_ECONOMIC_ACTIVITY_KIND.obligationSettled, 'obligation_settled'],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.sponsorRefundMatured,
+      'sponsor_refund_matured',
+    ],
+    [
+      ROBINHOOD_ECONOMIC_ACTIVITY_KIND.sponsorRefundClaimed,
+      'sponsor_refund_claimed',
+    ],
+  ] as const;
+  const nonIndexed = parseAbiParameters(
+    'bytes32 relatedId,address asset,address actor,address beneficiary,int256 amount,uint256 sponsorFunded,uint256 settled,uint256 sponsorRefunded,uint256 maximumRemainingMemberLiability,uint256 pendingRequestReservation,uint256 approvedUnpaidObligations,uint256 maturedRefunds,uint256 trackedAssets,uint256 encumberedAssets',
+  );
+  const createLog = (kind: number, trackedOffset = 0n) => {
+    const activityId = `0x${kind.toString(16).padStart(64, '0')}` as const;
+    return {
+      address: manifest.contracts.vault!.address,
+      topics: encodeEventTopics({
+        abi: vaultAbi,
+        eventName: 'EconomicActivity',
+        args: { programId: TEST_PROGRAM_ID, activityId, kind },
+      } as never),
+      data: encodeAbiParameters(nonIndexed, [
+        TEST_COMMITMENT,
+        manifest.settlementAsset.address!,
+        TEST_ACCOUNT,
+        TEST_ACCOUNT,
+        kind % 2 === 0 ? -BigInt(kind) : BigInt(kind),
+        1_000n + BigInt(kind),
+        100n,
+        50n,
+        400n,
+        100n,
+        200n,
+        100n,
+        850n + BigInt(kind) + trackedOffset,
+        700n,
+      ]),
+      blockNumber: 103n,
+      blockHash: TEST_BLOCK_HASH,
+      transactionHash: TEST_TX_HASH,
+      logIndex: kind,
+    } as const;
+  };
+
+  for (const [kindCode, kind] of kinds) {
+    const decoded = decodeRobinhoodEconomicActivity({
+      log: createLog(kindCode),
+      manifest,
+      bundle,
+    });
+    assert.equal(decoded.schemaVersion, 2);
+    assert.equal(decoded.role, 'vault');
+    assert.equal(decoded.eventName, 'EconomicActivity');
+    assert.equal(decoded.kindCode, kindCode);
+    assert.equal(decoded.kind, kind);
+    assert.equal(decoded.programId, TEST_PROGRAM_ID);
+    assert.equal(decoded.relatedId, TEST_COMMITMENT);
+    assert.equal(decoded.actor, TEST_ACCOUNT);
+    assert.equal(decoded.accounting.sponsorFunded, 1_000n + BigInt(kindCode));
+    assert.equal(decoded.accounting.trackedAssets, 850n + BigInt(kindCode));
+    assert.equal(decoded.accounting.encumberedAssets, 700n);
+  }
+
+  assert.throws(
+    () =>
+      decodeRobinhoodEconomicActivity({
+        log: createLog(0),
+        manifest,
+        bundle,
+      }),
+    /Unknown economic activity kind 0/,
+  );
+  assert.throws(
+    () =>
+      decodeRobinhoodEconomicActivity({
+        log: createLog(1, 1n),
+        manifest,
+        bundle,
+      }),
+    /canonical vault identities/,
+  );
+});
+
+test('blocked-attempt helper exposes adapter-only calldata and canonical failure reasons', () => {
+  const { manifest, bundle, runtime } = createReadyRobinhoodFixture();
+  const adapter = '0x00000000000000000000000000000000000000F1' as Address;
+  const authorizationId = `0x${'71'.repeat(32)}` as const;
+  const selector = '0x12345678' as const;
+  const call = createRobinhoodRecordBlockedAttemptCall({
+    manifest,
+    bundle,
+    runtime,
+    programId: TEST_PROGRAM_ID,
+    adapter,
+    authorizationId,
+    principal: TEST_ACCOUNT,
+    selector,
+    nativeValue: 1n,
+    assetAmount: 2n,
+  });
+  assert.equal(call.requiredCaller.toLowerCase(), adapter.toLowerCase());
+  assert.equal(
+    call.registry,
+    manifest.contracts.agentAuthorizationRegistry!.address,
+  );
+  assert.equal('action' in call, false);
+  const decoded = decodeFunctionData({
+    abi: getRobinhoodContractArtifact(bundle, 'agentAuthorizationRegistry').abi,
+    data: call.data,
+  });
+  assert.equal(decoded.functionName, 'recordBlockedAttempt');
+  assert.deepEqual(decoded.args, [
+    authorizationId,
+    TEST_ACCOUNT,
+    selector,
+    1n,
+    2n,
+  ]);
+  assert.equal(
+    decodeRobinhoodAgentAuthorizationFailure(
+      ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE.authorizationNotActive,
+    ),
+    'authorization_not_active',
+  );
+  assert.equal(
+    decodeRobinhoodAgentAuthorizationFailure(
+      ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE.actionLimitExceeded,
+    ),
+    'action_limit_exceeded',
+  );
+  assert.equal(
+    decodeRobinhoodAgentAuthorizationFailure(
+      ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE.periodLimitExceeded,
+    ),
+    'period_limit_exceeded',
+  );
+  assert.equal(
+    decodeRobinhoodAgentAuthorizationFailure(
+      ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE.authorized,
+    ),
+    'authorized',
+  );
+  assert.throws(
+    () =>
+      createRobinhoodRecordBlockedAttemptCall({
+        manifest,
+        bundle,
+        runtime,
+        programId: TEST_PROGRAM_ID,
+        adapter,
+        authorizationId,
+        principal: TEST_ACCOUNT,
+        selector: '0x1234',
+        nativeValue: 0n,
+        assetAmount: 0n,
+      }),
+    /exactly four bytes/,
+  );
+  assert.throws(
+    () =>
+      createRobinhoodRecordBlockedAttemptCall({
+        manifest,
+        bundle,
+        runtime,
+        programId: TEST_PROGRAM_ID,
+        adapter: manifest.contracts.vault!.address,
+        authorizationId,
+        principal: TEST_ACCOUNT,
+        selector,
+        nativeValue: 0n,
+        assetAmount: 0n,
+      }),
+    /external reviewed adapter/,
+  );
+});
+
+test('factory role and suite-version errors decode to stable typed identities', () => {
+  const bundle = getGeneratedRobinhoodArtifactBundle();
+  const factoryAbi = getRobinhoodContractArtifact(bundle, 'factory').abi;
+  const invalidRole = decodeRobinhoodFactoryConfigurationError(
+    encodeErrorResult({
+      abi: factoryAbi,
+      errorName: 'InvalidRole',
+      args: [6, TEST_ACCOUNT],
+    } as never),
+    bundle,
+  );
+  assert.equal(invalidRole?.errorName, 'InvalidRole');
+  if (invalidRole?.errorName !== 'InvalidRole') assert.fail('InvalidRole');
+  assert.equal(invalidRole.roleIndex, 6);
+  assert.equal(invalidRole.factoryRole, 'eligibility_attestor');
+  assert.equal(invalidRole.address, TEST_ACCOUNT);
+
+  const duplicateRole = decodeRobinhoodFactoryConfigurationError(
+    encodeErrorResult({
+      abi: factoryAbi,
+      errorName: 'DuplicateRole',
+      args: [0, 1, TEST_ACCOUNT],
+    } as never),
+    bundle,
+  );
+  assert.equal(duplicateRole?.errorName, 'DuplicateRole');
+  if (duplicateRole?.errorName !== 'DuplicateRole')
+    assert.fail('DuplicateRole');
+  assert.equal(duplicateRole.firstRole, 'sponsor');
+  assert.equal(duplicateRole.secondRole, 'operator');
+
+  const wrongSuite = decodeRobinhoodFactoryConfigurationError(
+    encodeErrorResult({
+      abi: factoryAbi,
+      errorName: 'IncompatibleSuiteVersion',
+      args: [2, 1],
+    } as never),
+    bundle,
+  );
+  assert.equal(wrongSuite?.errorName, 'IncompatibleSuiteVersion');
+  if (wrongSuite?.errorName !== 'IncompatibleSuiteVersion') {
+    assert.fail('IncompatibleSuiteVersion');
+  }
+  assert.equal(wrongSuite.expectedMajor, 2);
+  assert.equal(wrongSuite.actualMajor, 1);
 });
 
 test('eligibility revocation helper and action bind the exact digest while allowing a relayer', () => {
@@ -841,6 +1124,8 @@ test('read client exposes named program concepts with direct-chain finality cont
       reviewRequiredAt: 1_200n,
       active: true,
     },
+    authorizationFailure:
+      ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE.periodLimitExceeded,
   };
   const observedReads: Array<{
     address: Address;
@@ -916,6 +1201,19 @@ test('read client exposes named program concepts with direct-chain finality cont
   const pause = await readClient.readPause('new_requests');
   assert.equal(pause.value.reviewRequiredAt, 1_200n);
   assert.equal('expiresAt' in pause.value, false);
+  const authorizationFailure = await readClient.readAgentAuthorizationFailure({
+    authorizationId: `0x${'88'.repeat(32)}`,
+    principal: TEST_ACCOUNT,
+    target: '0x00000000000000000000000000000000000000F1',
+    selector: '0x12345678',
+    nativeValue: 0n,
+    assetAmount: 0n,
+  });
+  assert.equal(authorizationFailure.value.failure, 'period_limit_exceeded');
+  assert.equal(
+    authorizationFailure.value.reasonCode,
+    ROBINHOOD_AGENT_AUTHORIZATION_FAILURE_CODE.periodLimitExceeded,
+  );
   const accountingReads = observedReads.filter((read) =>
     ['accounting', 'actualAssets', 'freeLiquidity', 'reconciled'].includes(
       read.functionName,
@@ -974,7 +1272,7 @@ test('runtime verification pins finalized code and rejects a mismatched suite gr
     safetyGuardian: addressByRole.safetyGuardian!,
   };
   const templateSuiteCalls: unknown[][] = [];
-  const makeClient = (badProgramVault = false) =>
+  const makeClient = (badProgramVault = false, suiteMajor = 2) =>
     ({
       async getChainId() {
         return 4663;
@@ -1050,7 +1348,7 @@ test('runtime verification pins finalized code and rejects a mismatched suite gr
             templateCommitment: TEST_COMMITMENT,
             reviewCommitment: TEST_COMMITMENT,
             registeredAt: 1n,
-            major: 1,
+            major: suiteMajor,
             minor: 0,
             patch: 0,
             status: 1,
@@ -1086,5 +1384,13 @@ test('runtime verification pins finalized code and rejects a mismatched suite gr
       bundle,
     }),
     /program.vault does not match the deployment graph/,
+  );
+  await assert.rejects(
+    verifyRobinhoodDeploymentRuntime({
+      client: makeClient(false, 1),
+      manifest,
+      bundle,
+    }),
+    /suite is not the active canonical factory release/,
   );
 });

@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodReadClient
 
-Defined in: [src/robinhood/protocol.ts:162](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L162)
+Defined in: [src/robinhood/protocol.ts:284](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L284)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:162](https://github.com/OmegaX-Health/nak
 
 > `readonly` **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/protocol.ts:163](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L163)
+Defined in: [src/robinhood/protocol.ts:285](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L285)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:163](https://github.com/OmegaX-Health/nak
 
 > `readonly` **programId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/protocol.ts:164](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L164)
+Defined in: [src/robinhood/protocol.ts:286](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L286)
 
 ## Methods
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:164](https://github.com/OmegaX-Health/nak
 
 > **readAccounting**(): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`ProgramAccountingSnapshot`](ProgramAccountingSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:166](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L166)
+Defined in: [src/robinhood/protocol.ts:288](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L288)
 
 #### Returns
 
@@ -38,11 +38,51 @@ Defined in: [src/robinhood/protocol.ts:166](https://github.com/OmegaX-Health/nak
 
 ***
 
+### readAgentAuthorizationFailure()
+
+> **readAgentAuthorizationFailure**(`params`): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`RobinhoodAgentAuthorizationFailureSnapshot`](RobinhoodAgentAuthorizationFailureSnapshot.md)\>\>
+
+Defined in: [src/robinhood/protocol.ts:298](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L298)
+
+#### Parameters
+
+##### params
+
+###### assetAmount
+
+`bigint`
+
+###### authorizationId
+
+`` `0x${string}` ``
+
+###### nativeValue
+
+`bigint`
+
+###### principal
+
+`string`
+
+###### selector
+
+`` `0x${string}` ``
+
+###### target
+
+`string`
+
+#### Returns
+
+`Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`RobinhoodAgentAuthorizationFailureSnapshot`](RobinhoodAgentAuthorizationFailureSnapshot.md)\>\>
+
+***
+
 ### readMembership()
 
 > **readMembership**(`membershipId`): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`MembershipSnapshot`](MembershipSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:167](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L167)
+Defined in: [src/robinhood/protocol.ts:289](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L289)
 
 #### Parameters
 
@@ -60,7 +100,7 @@ Defined in: [src/robinhood/protocol.ts:167](https://github.com/OmegaX-Health/nak
 
 > **readObligation**(`requestId`): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`ObligationSnapshot`](ObligationSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:171](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L171)
+Defined in: [src/robinhood/protocol.ts:293](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L293)
 
 #### Parameters
 
@@ -78,7 +118,7 @@ Defined in: [src/robinhood/protocol.ts:171](https://github.com/OmegaX-Health/nak
 
 > **readPause**(`scope`): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`PauseSnapshot`](PauseSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:175](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L175)
+Defined in: [src/robinhood/protocol.ts:297](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L297)
 
 #### Parameters
 
@@ -96,7 +136,7 @@ Defined in: [src/robinhood/protocol.ts:175](https://github.com/OmegaX-Health/nak
 
 > **readProgram**(): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`ProgramSnapshot`](ProgramSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:165](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L165)
+Defined in: [src/robinhood/protocol.ts:287](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L287)
 
 #### Returns
 
@@ -108,7 +148,7 @@ Defined in: [src/robinhood/protocol.ts:165](https://github.com/OmegaX-Health/nak
 
 > **readRequest**(`requestId`): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`RequestSnapshot`](RequestSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:170](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L170)
+Defined in: [src/robinhood/protocol.ts:292](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L292)
 
 #### Parameters
 
@@ -126,7 +166,7 @@ Defined in: [src/robinhood/protocol.ts:170](https://github.com/OmegaX-Health/nak
 
 > **readRole**(`role`): `Promise`\<[`RobinhoodRead`](RobinhoodRead.md)\<[`RoleSnapshot`](RoleSnapshot.md)\>\>
 
-Defined in: [src/robinhood/protocol.ts:174](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L174)
+Defined in: [src/robinhood/protocol.ts:296](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L296)
 
 #### Parameters
 

@@ -8,7 +8,7 @@
 
 > **decodeRobinhoodEvent**(`params`): [`DecodedRobinhoodEvent`](../interfaces/DecodedRobinhoodEvent.md)
 
-Defined in: [src/robinhood/protocol.ts:1702](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L1702)
+Defined in: [src/robinhood/protocol.ts:2068](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L2068)
 
 ## Parameters
 

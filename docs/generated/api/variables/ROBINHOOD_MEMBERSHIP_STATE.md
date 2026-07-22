@@ -8,4 +8,4 @@
 
 > `const` **ROBINHOOD\_MEMBERSHIP\_STATE**: `Readonly`\<\{ `active`: `1`; `cancelled`: `3`; `expired`: `2`; `none`: `0`; \}\>
 
-Defined in: [src/robinhood/protocol.ts:104](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L104)
+Defined in: [src/robinhood/protocol.ts:107](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L107)

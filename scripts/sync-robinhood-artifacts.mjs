@@ -29,6 +29,9 @@ const DEPLOYMENTS = {
   mainnet: resolve('deployments/robinhood-mainnet.json'),
   testnet: resolve('deployments/robinhood-testnet.json'),
 };
+const PROTOCOL_ARTIFACT_SCHEMA_VERSION = 2;
+const PROTOCOL_SUITE_MAJOR = 2;
+const ECONOMIC_EVENT_SCHEMA_VERSION = 2;
 
 function parseFlag(name) {
   return process.argv.includes(`--${name}`);
@@ -113,11 +116,13 @@ async function buildBundle() {
   const localArtifactPath = resolve(LOCAL_ROOT, PROTOCOL_ARTIFACT_NAME);
   if (!existsSync(localArtifactPath)) {
     return {
-      schemaVersion: 1,
+      schemaVersion: 2,
       status: 'unconfigured',
       sourceArtifact: 'nakama-protocol/shared/robinhood/protocol_contract.json',
       sourceArtifactSha256: null,
       sourceCommit: null,
+      protocolSuiteMajor: null,
+      economicEventSchemaVersion: null,
       deploymentCodeCommitment: null,
       generatedBy: 'scripts/sync-robinhood-artifacts.mjs',
       contracts: {},
@@ -130,6 +135,15 @@ async function buildBundle() {
     'Robinhood protocol artifact',
   );
   const artifact = requireObject(protocolArtifact.value, 'protocol artifact');
+  if (
+    artifact.schemaVersion !== PROTOCOL_ARTIFACT_SCHEMA_VERSION ||
+    artifact.protocolSuiteMajor !== PROTOCOL_SUITE_MAJOR ||
+    artifact.economicEventSchemaVersion !== ECONOMIC_EVENT_SCHEMA_VERSION
+  ) {
+    throw new Error(
+      'Robinhood protocol artifact must use schemaVersion 2, protocolSuiteMajor 2, and economicEventSchemaVersion 2.',
+    );
+  }
   const artifactContracts = requireObject(
     artifact.contracts,
     'protocol artifact contracts',
@@ -186,11 +200,13 @@ async function buildBundle() {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     status: 'ready',
     sourceArtifact: 'nakama-protocol/shared/robinhood/protocol_contract.json',
     sourceArtifactSha256: sha256(protocolArtifact.raw),
     sourceCommit: artifact.sourceCommit,
+    protocolSuiteMajor: artifact.protocolSuiteMajor,
+    economicEventSchemaVersion: artifact.economicEventSchemaVersion,
     deploymentCodeCommitment: deploymentPlan.deploymentCodeCommitment,
     generatedBy: 'scripts/sync-robinhood-artifacts.mjs',
     contracts,

@@ -8,7 +8,7 @@
 
 > **verifyRobinhoodDeploymentRuntime**(`params`): `Promise`\<[`VerifiedRobinhoodDeploymentRuntime`](../interfaces/VerifiedRobinhoodDeploymentRuntime.md)\>
 
-Defined in: [src/robinhood/artifacts.ts:643](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L643)
+Defined in: [src/robinhood/artifacts.ts:660](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L660)
 
 ## Parameters
 

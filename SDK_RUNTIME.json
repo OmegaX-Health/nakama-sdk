@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "package": {
     "name": "@nakama-health/protocol-sdk",
     "version": "0.9.0",
@@ -8,6 +8,14 @@
   },
   "protocol": {
     "chainFamily": "eip155",
+    "artifactSchemaVersion": 2,
+    "protocolSuiteMajor": 2,
+    "economicEventSchemaVersion": 2,
+    "economicEvent": {
+      "contractRole": "vault",
+      "name": "EconomicActivity",
+      "topic0": "0x66c2674649a39002b7b60387490bfe265f1679193ced8acb3ffb131893cde2f6"
+    },
     "networks": {
       "mainnet": {
         "name": "Robinhood Chain Mainnet",
@@ -26,9 +34,9 @@
     },
     "sourceRepo": "../nakama-protocol",
     "sourceArtifact": "shared/robinhood/protocol_contract.json",
-    "sourceCommit": "906167e68a91b2482d936363395f0aaf2b325d12",
-    "sourceArtifactSha256": "4fb4534ac8bf47118a092647edb1a1d47f9023e5826bc3c6b2d1654d8ff94c29",
-    "deploymentCodeCommitment": "0xba2f28e7888a1d48666ee9c86e713bb4c879699a3f1157f708917aa78cf76374",
+    "sourceCommit": "6392e2c774b66252b62245ffee18c18b3803b9be",
+    "sourceArtifactSha256": "3e66c8340badccb9e413414e7dada7e80c3a8d46560d439153a799a9be5e2f1b",
+    "deploymentCodeCommitment": "0xafca0d891a53056ba7689c1c83a49d48ce7337e24709f380d52459892fe39677",
     "deploymentKind": "factory-authorized-create2",
     "deploymentSchema": "deployments/robinhood-deployment.schema.json",
     "fundingAsset": {
@@ -57,7 +65,7 @@
       "factory": {
         "contractName": "NakamaFactory",
         "abiArtifact": "contracts/robinhood/NakamaFactory.abi.json",
-        "abiSha256": "d36dce8a99ec631fd175bea1f7d3d9e49dd34d0794f9c417deddcf38e34964d8"
+        "abiSha256": "f10b97c9f537bbbd0564b8ab27f55498bb6803211089e1eae54762733bc14f16"
       },
       "program": {
         "contractName": "ProtectionProgram",
@@ -67,12 +75,12 @@
       "vault": {
         "contractName": "PoolVault",
         "abiArtifact": "contracts/robinhood/PoolVault.abi.json",
-        "abiSha256": "e59200c586ab359fc217928a31395c6627f321b2977e63925fc37198ffc3008d"
+        "abiSha256": "4e8dae8989e20802b7cdcecf5accc413f0a0ffd3da554f0e18d0c78885ace44d"
       },
       "membershipRegistry": {
         "contractName": "MembershipRegistry",
         "abiArtifact": "contracts/robinhood/MembershipRegistry.abi.json",
-        "abiSha256": "0f8ecfb8296257f36d2b148e722c4b35760d3237b13abd86f70729fb6c4c7fc6"
+        "abiSha256": "aea59e0c6ac27d8cdb11fe91f0e5538d1a4a54b4aa9715625e28b9251bc9ae2d"
       },
       "decisionModule": {
         "contractName": "DecisionModule",
@@ -87,12 +95,12 @@
       "settlementModule": {
         "contractName": "SettlementModule",
         "abiArtifact": "contracts/robinhood/SettlementModule.abi.json",
-        "abiSha256": "18c43554fa0c78aae415c0265e177be11f7c1a46c04f66f97d7ba6fbcea22b03"
+        "abiSha256": "32653e443c9443aa9deb5a4a9192d5cc13f4a05d01771c2bea3490adbd5243b2"
       },
       "agentAuthorizationRegistry": {
         "contractName": "AgentAuthorizationRegistry",
         "abiArtifact": "contracts/robinhood/AgentAuthorizationRegistry.abi.json",
-        "abiSha256": "1adb7dee99b684a16343dfa9fd39334df60014e8fc243b44c3c8b5bd37562a74"
+        "abiSha256": "7c9c1705b5479ee3dca29fb331a89ee1e34e3ed975ae1c0e19d2383f8d4518ea"
       },
       "safetyGuardian": {
         "contractName": "SafetyGuardian",
@@ -159,6 +167,16 @@
           "subpath": "./robinhood"
         },
         {
+          "name": "decodeRobinhoodEconomicActivity",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "decodeRobinhoodFactoryConfigurationError",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
           "name": "reconcileRobinhoodRead",
           "kind": "value",
           "subpath": "./robinhood"
@@ -180,6 +198,11 @@
       "entrypoints": [
         {
           "name": "createRobinhoodActionBuilder",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodRecordBlockedAttemptCall",
           "kind": "value",
           "subpath": "./robinhood"
         },
@@ -269,6 +292,7 @@
     "Phase-0 smart-account submission requires SDK-sealed account, factory, entry-point, validation, recovery, and passkey runtime verification plus exact fresh simulation and provider-result binding; live installed-policy and revocation conformance remains external.",
     "Smart-account creation, passkey enrollment, signer rotation, and recovery are one-time-approval, expiry, revision, commitment, transition, and readback bound; selecting and qualifying a production provider remains external.",
     "Paymaster adapters are quote-only; provider payloads cannot submit or prove sponsorship, and every quote is bound to exact action, canonical policy commitment, gas, rate, and expiry policy.",
+    "Blocked-attempt calldata is adapter-only and never becomes a wallet PreparedRobinhoodAction; the registry persists a failure reason without consuming a grant or executing a target.",
     "Indexer and offline-cache state is public and read-only; page sizes, pagination, and retries are bounded, snapshot changes fail, and reorged descendants invalidate.",
     "Economic finality requires sealed transaction-intent readback plus two independent L2 readers and two independent L1 batch readers.",
     "The Virtuals validator is an offline structural check; it cannot prove platform acceptance, legal eligibility, ownership, code deployment, or launch finality."

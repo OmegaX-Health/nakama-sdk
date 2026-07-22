@@ -85,6 +85,56 @@ Use an indexer for discovery and UX, then use the direct pinned read as the
 authority. An `offline_cache`, stale, divergent, or malformed context cannot
 authorize a write.
 
+## Decode the canonical economic ledger event
+
+```ts
+import {
+  decodeRobinhoodEconomicActivity,
+  getGeneratedRobinhoodArtifactBundle,
+} from '@nakama-health/protocol-sdk';
+
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const activity = decodeRobinhoodEconomicActivity({
+  log,
+  manifest: bundle.deployments.mainnet,
+  bundle,
+});
+
+console.log(activity.kind); // one of the nine protocol activity names
+console.log(activity.accounting.trackedAssets); // post-activity vault state
+```
+
+The decoder accepts only `PoolVault.EconomicActivity` schema 2. It rejects a
+wrong contract, unknown kind, substituted asset, or post-state accounting that
+does not satisfy the protocol identities, so indexers do not need to reconcile
+parallel economic event families.
+
+## Encode durable blocked-attempt telemetry from an adapter
+
+```ts
+import { createRobinhoodRecordBlockedAttemptCall } from '@nakama-health/protocol-sdk';
+
+const call = createRobinhoodRecordBlockedAttemptCall({
+  manifest,
+  bundle,
+  runtime,
+  programId,
+  adapter: reviewedAdapterAddress,
+  authorizationId,
+  principal,
+  selector,
+  nativeValue: 0n,
+  assetAmount,
+});
+
+await handoffToReviewedAdapter(call);
+```
+
+The returned object is adapter calldata, not a `PreparedRobinhoodAction` and not
+a transaction sender. The reviewed adapter must make the registry call itself,
+because `msg.sender` is part of the protocol authorization boundary; an EOA,
+generic smart account, protocol contract, or USDG address cannot stand in for it.
+
 ## Request a decision signature
 
 ```ts

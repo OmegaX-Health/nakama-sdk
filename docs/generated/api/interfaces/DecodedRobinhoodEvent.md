@@ -6,7 +6,7 @@
 
 # Interface: DecodedRobinhoodEvent
 
-Defined in: [src/robinhood/protocol.ts:399](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L399)
+Defined in: [src/robinhood/protocol.ts:522](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L522)
 
 ## Properties
 
@@ -14,15 +14,15 @@ Defined in: [src/robinhood/protocol.ts:399](https://github.com/OmegaX-Health/nak
 
 > **args**: `Record`\<`string`, `unknown`\> \| readonly `unknown`[]
 
-Defined in: [src/robinhood/protocol.ts:402](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L402)
+Defined in: [src/robinhood/protocol.ts:525](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L525)
 
 ***
 
 ### eventName
 
-> **eventName**: `"AssetRegistered"` \| `"AssetStatusChanged"` \| `"AuthorityTransferStarted"` \| `"AuthorityTransferred"` \| `"SuiteRegistered"` \| `"SuiteStatusChanged"` \| `"ProgramRegistered"` \| `"ProgramSuiteDeployed"` \| `"ActivationApprovalRecorded"` \| `"CancellationApprovalRecorded"` \| `"ModulesBound"` \| `"ProgramStateChanged"` \| `"MemberLiabilityChanged"` \| `"ObligationApproved"` \| `"ObligationSettled"` \| `"PendingReservationChanged"` \| `"SponsorFundingReceived"` \| `"SponsorRefundClaimed"` \| `"SponsorRefundMatured"` \| `"ClaimManagerBound"` \| `"EIP712DomainChanged"` \| `"EligibilityAuthorizationRevoked"` \| `"MembershipAccountRecovered"` \| `"MembershipActivated"` \| `"MembershipStateChanged"` \| `"DecisionConsumed"` \| `"AppealFiled"` \| `"EvidenceManifestUpdated"` \| `"RequestOpened"` \| `"RequestStateChanged"` \| `"SettlementModuleBound"` \| `"SettlementExecuted"` \| `"AuthorizationBlocked"` \| `"AuthorizationConsumed"` \| `"AuthorizationGranted"` \| `"AuthorizationRevoked"` \| `"SafetyGuardianBound"` \| `"AgentAuthorizationEmergencyRevoked"` \| `"DependencyWarningChanged"` \| `"OperatorUnpauseApproved"` \| `"ScopePaused"` \| `"ScopeUnpaused"`
+> **eventName**: `"AssetRegistered"` \| `"AssetStatusChanged"` \| `"AuthorityTransferStarted"` \| `"AuthorityTransferred"` \| `"SuiteRegistered"` \| `"SuiteStatusChanged"` \| `"ProgramRegistered"` \| `"ProgramSuiteDeployed"` \| `"ActivationApprovalRecorded"` \| `"CancellationApprovalRecorded"` \| `"ModulesBound"` \| `"ProgramStateChanged"` \| `"EconomicActivity"` \| `"ClaimManagerBound"` \| `"EIP712DomainChanged"` \| `"EligibilityAuthorizationRevoked"` \| `"MembershipAccountRecovered"` \| `"MembershipActivated"` \| `"MembershipStateChanged"` \| `"DecisionConsumed"` \| `"AppealFiled"` \| `"EvidenceManifestUpdated"` \| `"RequestOpened"` \| `"RequestStateChanged"` \| `"SettlementModuleBound"` \| `"AuthorizationBlocked"` \| `"AuthorizationConsumed"` \| `"AuthorizationGranted"` \| `"AuthorizationRevoked"` \| `"SafetyGuardianBound"` \| `"AgentAuthorizationEmergencyRevoked"` \| `"DependencyWarningChanged"` \| `"OperatorUnpauseApproved"` \| `"ScopePaused"` \| `"ScopeUnpaused"`
 
-Defined in: [src/robinhood/protocol.ts:401](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L401)
+Defined in: [src/robinhood/protocol.ts:524](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L524)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:401](https://github.com/OmegaX-Health/nak
 
 > **log**: [`RobinhoodEventLog`](RobinhoodEventLog.md)
 
-Defined in: [src/robinhood/protocol.ts:403](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L403)
+Defined in: [src/robinhood/protocol.ts:526](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L526)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/robinhood/protocol.ts:403](https://github.com/OmegaX-Health/nak
 
 > **role**: `"factory"` \| `"assetRegistry"` \| `"templateRegistry"` \| `"poolRegistry"` \| `"program"` \| `"vault"` \| `"membershipRegistry"` \| `"decisionModule"` \| `"requestManager"` \| `"settlementModule"` \| `"agentAuthorizationRegistry"` \| `"safetyGuardian"`
 
-Defined in: [src/robinhood/protocol.ts:400](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L400)
+Defined in: [src/robinhood/protocol.ts:523](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L523)

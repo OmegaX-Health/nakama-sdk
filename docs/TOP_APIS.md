@@ -30,7 +30,13 @@ Robinhood-native surface.
 ## Product reads and writes
 
 - `createRobinhoodReadClient(...)` reads program, accounting, membership,
-  request, obligation, role, and pause state at pinned blocks.
+  request, obligation, role, pause, and exact agent-authorization failure state
+  at pinned blocks.
+- `decodeRobinhoodEconomicActivity(...)` accepts only the canonical vault event
+  schema, returns one of the nine typed economic activity variants, and rejects
+  asset or post-state accounting contradictions.
+- `decodeRobinhoodFactoryConfigurationError(...)` turns factory role, duplicate
+  role, and suite-major reverts into typed configuration errors with named roles.
 - `reconcileRobinhoodRead(...)` compares an indexer page with direct-chain
   truth; `assertRobinhoodWriteStateSafe(...)` rejects stale or divergent state.
 - `collectRobinhoodIndexerPages(...)` validates bounded public pagination,
@@ -79,6 +85,10 @@ Robinhood-native surface.
 - `createRobinhoodSponsorFundingBatch(...)` creates a non-submitting two-action
   plan only when exact finite USDG approval and funding calldata agree on the
   canonical vault and amount.
+- `createRobinhoodRecordBlockedAttemptCall(...)` encodes the durable failure
+  telemetry call for an externally reviewed adapter. It deliberately does not
+  create a wallet-submittable prepared action because the registry authenticates
+  the adapter through `msg.sender`.
 - `validateVirtualsLaunchPacketStructure(...)` checks a supplied packet for
   internal consistency and explicit Robinhood/USDG identity. It performs no RPC,
   legal, identity, approval, launch, signing, or broadcast operation.

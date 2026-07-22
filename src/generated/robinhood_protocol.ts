@@ -2,14 +2,16 @@
 // Source: canonical Robinhood protocol artifact, ABIs, and deployment manifests.
 
 export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   status: 'ready',
   sourceArtifact: 'nakama-protocol/shared/robinhood/protocol_contract.json',
   sourceArtifactSha256:
-    '4fb4534ac8bf47118a092647edb1a1d47f9023e5826bc3c6b2d1654d8ff94c29',
-  sourceCommit: '906167e68a91b2482d936363395f0aaf2b325d12',
+    '3e66c8340badccb9e413414e7dada7e80c3a8d46560d439153a799a9be5e2f1b',
+  sourceCommit: '6392e2c774b66252b62245ffee18c18b3803b9be',
+  protocolSuiteMajor: 2,
+  economicEventSchemaVersion: 2,
   deploymentCodeCommitment:
-    '0xba2f28e7888a1d48666ee9c86e713bb4c879699a3f1157f708917aa78cf76374',
+    '0xafca0d891a53056ba7689c1c83a49d48ce7337e24709f380d52459892fe39677',
   generatedBy: 'scripts/sync-robinhood-artifacts.mjs',
   contracts: {
     assetRegistry: {
@@ -1178,7 +1180,7 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
       contractName: 'NakamaFactory',
       sourceAbi: 'contracts/robinhood/NakamaFactory.abi.json',
       abiSha256:
-        'd36dce8a99ec631fd175bea1f7d3d9e49dd34d0794f9c417deddcf38e34964d8',
+        'f10b97c9f537bbbd0564b8ab27f55498bb6803211089e1eae54762733bc14f16',
       abi: [
         {
           inputs: [
@@ -1228,6 +1230,27 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           type: 'error',
         },
         {
+          inputs: [
+            {
+              internalType: 'uint8',
+              name: 'firstRoleIndex',
+              type: 'uint8',
+            },
+            {
+              internalType: 'uint8',
+              name: 'secondRoleIndex',
+              type: 'uint8',
+            },
+            {
+              internalType: 'address',
+              name: 'role',
+              type: 'address',
+            },
+          ],
+          name: 'DuplicateRole',
+          type: 'error',
+        },
+        {
           inputs: [],
           name: 'FundingAssetIdentityChanged',
           type: 'error',
@@ -1246,6 +1269,22 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
             },
           ],
           name: 'FundingAssetMismatch',
+          type: 'error',
+        },
+        {
+          inputs: [
+            {
+              internalType: 'uint32',
+              name: 'expectedMajor',
+              type: 'uint32',
+            },
+            {
+              internalType: 'uint32',
+              name: 'actualMajor',
+              type: 'uint32',
+            },
+          ],
+          name: 'IncompatibleSuiteVersion',
           type: 'error',
         },
         {
@@ -1272,6 +1311,22 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
             },
           ],
           name: 'InvalidBytecode',
+          type: 'error',
+        },
+        {
+          inputs: [
+            {
+              internalType: 'uint8',
+              name: 'roleIndex',
+              type: 'uint8',
+            },
+            {
+              internalType: 'address',
+              name: 'role',
+              type: 'address',
+            },
+          ],
+          name: 'InvalidRole',
           type: 'error',
         },
         {
@@ -1356,6 +1411,19 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           ],
           name: 'ProgramSuiteDeployed',
           type: 'event',
+        },
+        {
+          inputs: [],
+          name: 'SUITE_MAJOR_VERSION',
+          outputs: [
+            {
+              internalType: 'uint32',
+              name: '',
+              type: 'uint32',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
         },
         {
           inputs: [],
@@ -3144,7 +3212,7 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
       contractName: 'PoolVault',
       sourceAbi: 'contracts/robinhood/PoolVault.abi.json',
       abiSha256:
-        'e59200c586ab359fc217928a31395c6627f321b2977e63925fc37198ffc3008d',
+        '4e8dae8989e20802b7cdcecf5accc413f0a0ffd3da554f0e18d0c78885ace44d',
       abi: [
         {
           inputs: [
@@ -3353,19 +3421,61 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
             {
               indexed: true,
               internalType: 'bytes32',
-              name: 'membershipId',
+              name: 'activityId',
+              type: 'bytes32',
+            },
+            {
+              indexed: true,
+              internalType: 'enum RobinhoodTypes.EconomicActivityKind',
+              name: 'kind',
+              type: 'uint8',
+            },
+            {
+              indexed: false,
+              internalType: 'bytes32',
+              name: 'relatedId',
               type: 'bytes32',
             },
             {
               indexed: false,
+              internalType: 'address',
+              name: 'asset',
+              type: 'address',
+            },
+            {
+              indexed: false,
+              internalType: 'address',
+              name: 'actor',
+              type: 'address',
+            },
+            {
+              indexed: false,
+              internalType: 'address',
+              name: 'beneficiary',
+              type: 'address',
+            },
+            {
+              indexed: false,
               internalType: 'int256',
-              name: 'amountDelta',
+              name: 'amount',
               type: 'int256',
             },
             {
               indexed: false,
               internalType: 'uint256',
-              name: 'memberRemaining',
+              name: 'sponsorFunded',
+              type: 'uint256',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'settled',
+              type: 'uint256',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'sponsorRefunded',
               type: 'uint256',
             },
             {
@@ -3374,8 +3484,38 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
               name: 'maximumRemainingMemberLiability',
               type: 'uint256',
             },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'pendingRequestReservation',
+              type: 'uint256',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'approvedUnpaidObligations',
+              type: 'uint256',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'maturedRefunds',
+              type: 'uint256',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'trackedAssets',
+              type: 'uint256',
+            },
+            {
+              indexed: false,
+              internalType: 'uint256',
+              name: 'encumberedAssets',
+              type: 'uint256',
+            },
           ],
-          name: 'MemberLiabilityChanged',
+          name: 'EconomicActivity',
           type: 'event',
         },
         {
@@ -3404,232 +3544,30 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           type: 'event',
         },
         {
-          anonymous: false,
-          inputs: [
+          inputs: [],
+          name: 'ECONOMIC_EVENT_SCHEMA_VERSION',
+          outputs: [
             {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'requestId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'membershipId',
-              type: 'bytes32',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'approvedUnpaidObligations',
-              type: 'uint256',
+              internalType: 'uint32',
+              name: '',
+              type: 'uint32',
             },
           ],
-          name: 'ObligationApproved',
-          type: 'event',
+          stateMutability: 'view',
+          type: 'function',
         },
         {
-          anonymous: false,
-          inputs: [
+          inputs: [],
+          name: 'SPONSOR_REFUND_ACTIVITY_ID',
+          outputs: [
             {
-              indexed: true,
               internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'requestId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'address',
-              name: 'asset',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'trackedAssets',
-              type: 'uint256',
-            },
-          ],
-          name: 'ObligationSettled',
-          type: 'event',
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'requestId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'membershipId',
-              type: 'bytes32',
-            },
-            {
-              indexed: false,
-              internalType: 'int256',
-              name: 'amountDelta',
-              type: 'int256',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'pendingRequestReservation',
-              type: 'uint256',
-            },
-          ],
-          name: 'PendingReservationChanged',
-          type: 'event',
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'sponsor',
-              type: 'address',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'asset',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'trackedAssets',
-              type: 'uint256',
-            },
-            {
-              indexed: false,
-              internalType: 'bytes32',
-              name: 'fundingReference',
+              name: '',
               type: 'bytes32',
             },
           ],
-          name: 'SponsorFundingReceived',
-          type: 'event',
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'sponsor',
-              type: 'address',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'address',
-              name: 'asset',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-          ],
-          name: 'SponsorRefundClaimed',
-          type: 'event',
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'asset',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'maturedRefunds',
-              type: 'uint256',
-            },
-          ],
-          name: 'SponsorRefundMatured',
-          type: 'event',
+          stateMutability: 'view',
+          type: 'function',
         },
         {
           inputs: [],
@@ -4171,7 +4109,7 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
       contractName: 'MembershipRegistry',
       sourceAbi: 'contracts/robinhood/MembershipRegistry.abi.json',
       abiSha256:
-        '0f8ecfb8296257f36d2b148e722c4b35760d3237b13abd86f70729fb6c4c7fc6',
+        'aea59e0c6ac27d8cdb11fe91f0e5538d1a4a54b4aa9715625e28b9251bc9ae2d',
       abi: [
         {
           inputs: [
@@ -4458,10 +4396,10 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
               type: 'uint8',
             },
             {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'releasedLiability',
-              type: 'uint256',
+              indexed: true,
+              internalType: 'address',
+              name: 'actor',
+              type: 'address',
             },
           ],
           name: 'MembershipStateChanged',
@@ -6729,7 +6667,7 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
       contractName: 'SettlementModule',
       sourceAbi: 'contracts/robinhood/SettlementModule.abi.json',
       abiSha256:
-        '18c43554fa0c78aae415c0265e177be11f7c1a46c04f66f97d7ba6fbcea22b03',
+        '32653e443c9443aa9deb5a4a9192d5cc13f4a05d01771c2bea3490adbd5243b2',
       abi: [
         {
           inputs: [
@@ -6792,49 +6730,6 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
           inputs: [],
           name: 'Unauthorized',
           type: 'error',
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'programId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'bytes32',
-              name: 'requestId',
-              type: 'bytes32',
-            },
-            {
-              indexed: true,
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'address',
-              name: 'asset',
-              type: 'address',
-            },
-            {
-              indexed: false,
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-            {
-              indexed: false,
-              internalType: 'address',
-              name: 'settlementActor',
-              type: 'address',
-            },
-          ],
-          name: 'SettlementExecuted',
-          type: 'event',
         },
         {
           inputs: [],
@@ -6914,7 +6809,7 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
       contractName: 'AgentAuthorizationRegistry',
       sourceAbi: 'contracts/robinhood/AgentAuthorizationRegistry.abi.json',
       abiSha256:
-        '1adb7dee99b684a16343dfa9fd39334df60014e8fc243b44c3c8b5bd37562a74',
+        '7c9c1705b5479ee3dca29fb331a89ee1e34e3ed975ae1c0e19d2383f8d4518ea',
       abi: [
         {
           inputs: [
@@ -6950,6 +6845,17 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
         {
           inputs: [],
           name: 'AgentActionsPaused',
+          type: 'error',
+        },
+        {
+          inputs: [
+            {
+              internalType: 'bytes32',
+              name: 'authorizationId',
+              type: 'bytes32',
+            },
+          ],
+          name: 'AttemptIsAuthorized',
           type: 'error',
         },
         {
@@ -7198,6 +7104,32 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
         },
         {
           inputs: [],
+          name: 'ACTION_LIMIT_EXCEEDED',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: '',
+              type: 'bytes32',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [],
+          name: 'AUTHORIZATION_NOT_ACTIVE',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: '',
+              type: 'bytes32',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [],
           name: 'MAX_AUTHORIZATION_DURATION',
           outputs: [
             {
@@ -7230,6 +7162,63 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
               internalType: 'uint64',
               name: '',
               type: 'uint64',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [],
+          name: 'PERIOD_LIMIT_EXCEEDED',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: '',
+              type: 'bytes32',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [
+            {
+              internalType: 'bytes32',
+              name: 'authorizationId',
+              type: 'bytes32',
+            },
+            {
+              internalType: 'address',
+              name: 'principal',
+              type: 'address',
+            },
+            {
+              internalType: 'address',
+              name: 'target',
+              type: 'address',
+            },
+            {
+              internalType: 'bytes4',
+              name: 'selector',
+              type: 'bytes4',
+            },
+            {
+              internalType: 'uint256',
+              name: 'nativeValue',
+              type: 'uint256',
+            },
+            {
+              internalType: 'uint256',
+              name: 'assetAmount',
+              type: 'uint256',
+            },
+          ],
+          name: 'authorizationFailure',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: '',
+              type: 'bytes32',
             },
           ],
           stateMutability: 'view',
@@ -7635,6 +7624,45 @@ export const ROBINHOOD_PROTOCOL_ARTIFACT_BUNDLE_RAW = {
             },
           ],
           stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [
+            {
+              internalType: 'bytes32',
+              name: 'authorizationId',
+              type: 'bytes32',
+            },
+            {
+              internalType: 'address',
+              name: 'principal',
+              type: 'address',
+            },
+            {
+              internalType: 'bytes4',
+              name: 'selector',
+              type: 'bytes4',
+            },
+            {
+              internalType: 'uint256',
+              name: 'nativeValue',
+              type: 'uint256',
+            },
+            {
+              internalType: 'uint256',
+              name: 'assetAmount',
+              type: 'uint256',
+            },
+          ],
+          name: 'recordBlockedAttempt',
+          outputs: [
+            {
+              internalType: 'bytes32',
+              name: 'reasonCode',
+              type: 'bytes32',
+            },
+          ],
+          stateMutability: 'nonpayable',
           type: 'function',
         },
         {

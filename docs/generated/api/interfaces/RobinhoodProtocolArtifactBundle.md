@@ -14,7 +14,7 @@ Defined in: [src/robinhood/artifacts.ts:95](https://github.com/OmegaX-Health/nak
 
 > **contracts**: `Partial`\<`Record`\<[`RobinhoodContractRole`](../type-aliases/RobinhoodContractRole.md), [`RobinhoodContractArtifact`](RobinhoodContractArtifact.md)\>\>
 
-Defined in: [src/robinhood/artifacts.ts:103](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L103)
+Defined in: [src/robinhood/artifacts.ts:105](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L105)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/artifacts.ts:103](https://github.com/OmegaX-Health/na
 
 > **deploymentCodeCommitment**: `` `0x${string}` `` \| `null`
 
-Defined in: [src/robinhood/artifacts.ts:101](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L101)
+Defined in: [src/robinhood/artifacts.ts:103](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L103)
 
 ***
 
@@ -30,7 +30,15 @@ Defined in: [src/robinhood/artifacts.ts:101](https://github.com/OmegaX-Health/na
 
 > **deployments**: `Record`\<[`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md), [`RobinhoodDeploymentManifest`](RobinhoodDeploymentManifest.md)\>
 
-Defined in: [src/robinhood/artifacts.ts:104](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L104)
+Defined in: [src/robinhood/artifacts.ts:106](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L106)
+
+***
+
+### economicEventSchemaVersion
+
+> **economicEventSchemaVersion**: `2` \| `null`
+
+Defined in: [src/robinhood/artifacts.ts:102](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L102)
 
 ***
 
@@ -38,13 +46,21 @@ Defined in: [src/robinhood/artifacts.ts:104](https://github.com/OmegaX-Health/na
 
 > **generatedBy**: `"scripts/sync-robinhood-artifacts.mjs"`
 
-Defined in: [src/robinhood/artifacts.ts:102](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L102)
+Defined in: [src/robinhood/artifacts.ts:104](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L104)
+
+***
+
+### protocolSuiteMajor
+
+> **protocolSuiteMajor**: `2` \| `null`
+
+Defined in: [src/robinhood/artifacts.ts:101](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L101)
 
 ***
 
 ### schemaVersion
 
-> **schemaVersion**: `1`
+> **schemaVersion**: `2`
 
 Defined in: [src/robinhood/artifacts.ts:96](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L96)
 

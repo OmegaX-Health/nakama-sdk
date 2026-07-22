@@ -38,6 +38,9 @@ placeholder configuration or self-asserted evidence into authority.
 - The nonzero full contract-source Git commit, source artifact SHA-256, and
   factory-authorized CREATE2 deployment-code commitment are declared in
   `SDK_RUNTIME.json` and verified by `npm run runtime:check`.
+- Artifact schema `2`, suite major `2`, economic-event schema `2`, and the
+  canonical `EconomicActivity` topic are version-pinned. A same-named legacy
+  ABI cannot pass import or runtime parity.
 - Generated artifacts are cloned and recursively frozen behind an internal
   revisioned store, so consumer mutation cannot poison future reads.
 - Deployment manifests use a closed schema. An unconfigured manifest contains
@@ -56,6 +59,9 @@ placeholder configuration or self-asserted evidence into authority.
 - Memberships expose remaining benefit rather than inferring consumption from
   unrelated counters. Obligations distinguish `none`, `approved_unpaid`, and
   `settled`; pause state exposes its review deadline without inventing expiry.
+- Economic projection consumes only `PoolVault.EconomicActivity`. Its nine
+  discriminated kinds include the signed delta and full post-mutation
+  accounting snapshot, so replay does not reconcile parallel event families.
 - Indexers are caches. A write requires a fresh direct-chain observation and an
   explicit safe reconciliation result.
 - The public indexer adapter caps pages/retries, requires chain, finality, and
@@ -78,6 +84,9 @@ placeholder configuration or self-asserted evidence into authority.
 - The wallet request is bound to chain, sender, target, selector, calldata,
   native value, intent, expiry, explanation, and expected state changes.
 - The SDK never accepts a private key and never performs background signing.
+- Blocked-attempt calldata is adapter-only and is never capability-marked as a
+  wallet action. Recording recomputes a current failure, changes no consumption
+  counter, and executes no target.
 
 ## Decisions and replay safety
 

@@ -93,11 +93,13 @@ export interface RobinhoodContractArtifact {
 }
 
 export interface RobinhoodProtocolArtifactBundle {
-  schemaVersion: 1;
+  schemaVersion: 2;
   status: 'unconfigured' | 'ready';
   sourceArtifact: 'nakama-protocol/shared/robinhood/protocol_contract.json';
   sourceArtifactSha256: string | null;
   sourceCommit: string | null;
+  protocolSuiteMajor: 2 | null;
+  economicEventSchemaVersion: 2 | null;
   deploymentCodeCommitment: Hex | null;
   generatedBy: 'scripts/sync-robinhood-artifacts.mjs';
   contracts: Partial<Record<RobinhoodContractRole, RobinhoodContractArtifact>>;
@@ -373,6 +375,8 @@ export function validateRobinhoodArtifactBundle(
       'sourceArtifact',
       'sourceArtifactSha256',
       'sourceCommit',
+      'protocolSuiteMajor',
+      'economicEventSchemaVersion',
       'deploymentCodeCommitment',
       'generatedBy',
       'contracts',
@@ -381,7 +385,7 @@ export function validateRobinhoodArtifactBundle(
     'artifact bundle',
   );
   if (
-    bundle.schemaVersion !== 1 ||
+    bundle.schemaVersion !== 2 ||
     (bundle.status !== 'unconfigured' && bundle.status !== 'ready') ||
     bundle.sourceArtifact !==
       'nakama-protocol/shared/robinhood/protocol_contract.json' ||
@@ -448,6 +452,8 @@ export function validateRobinhoodArtifactBundle(
       Object.keys(contracts).length !== 0 ||
       bundle.sourceArtifactSha256 !== null ||
       bundle.sourceCommit !== null ||
+      bundle.protocolSuiteMajor !== null ||
+      bundle.economicEventSchemaVersion !== null ||
       bundle.deploymentCodeCommitment !== null
     ) {
       throw new NakamaRobinhoodArtifactError(
@@ -455,6 +461,14 @@ export function validateRobinhoodArtifactBundle(
       );
     }
   } else {
+    if (
+      bundle.protocolSuiteMajor !== 2 ||
+      bundle.economicEventSchemaVersion !== 2
+    ) {
+      throw new NakamaRobinhoodArtifactError(
+        'Ready Robinhood artifacts require protocol suite major 2 and economic event schema 2.',
+      );
+    }
     requireSha256(bundle.sourceArtifactSha256, 'sourceArtifactSha256');
     requireNonZeroBytes32(
       bundle.deploymentCodeCommitment,
@@ -512,6 +526,9 @@ export function assertGeneratedRobinhoodArtifactBundle(
     bundle.status !== 'ready' ||
     bundle.sourceArtifactSha256 !== canonical.sourceArtifactSha256 ||
     bundle.sourceCommit !== canonical.sourceCommit ||
+    bundle.protocolSuiteMajor !== canonical.protocolSuiteMajor ||
+    bundle.economicEventSchemaVersion !==
+      canonical.economicEventSchemaVersion ||
     bundle.deploymentCodeCommitment !== canonical.deploymentCodeCommitment
   ) {
     throw new NakamaRobinhoodArtifactError(
@@ -925,6 +942,7 @@ export async function verifyRobinhoodDeploymentRuntime(params: {
     suiteRecord,
     address('factory'),
     actualDeploymentCodeCommitment,
+    params.bundle.protocolSuiteMajor,
   );
   if (
     requireNonZeroBytes32(
@@ -1258,6 +1276,7 @@ function assertActiveSuiteRecord(
   input: unknown,
   factory: Address,
   deploymentCodeCommitment: Hex,
+  expectedMajor: 2 | null,
 ): void {
   if (input == null || typeof input !== 'object') {
     throw new NakamaRobinhoodArtifactError(
@@ -1274,10 +1293,13 @@ function assertActiveSuiteRecord(
     value('deploymentCodeCommitment', 1),
     'templateRegistry.requireActiveSuite.deploymentCodeCommitment',
   );
+  const major = value('major', 5);
   const status = value('status', 8);
   if (
+    expectedMajor == null ||
     actualFactory.toLowerCase() !== factory.toLowerCase() ||
     actualCommitment.toLowerCase() !== deploymentCodeCommitment.toLowerCase() ||
+    (major !== expectedMajor && major !== BigInt(expectedMajor)) ||
     status !== 1
   ) {
     throw new NakamaRobinhoodArtifactError(

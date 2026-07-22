@@ -8,7 +8,7 @@
 
 > **simulateRobinhoodAction**(`params`): `Promise`\<[`SimulatedRobinhoodAction`](../interfaces/SimulatedRobinhoodAction.md)\>
 
-Defined in: [src/robinhood/protocol.ts:1615](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L1615)
+Defined in: [src/robinhood/protocol.ts:1916](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L1916)
 
 ## Parameters
 

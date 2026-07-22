@@ -8,7 +8,7 @@
 
 > **createRobinhoodActionBuilder**(`params`): [`RobinhoodActionBuilder`](../interfaces/RobinhoodActionBuilder.md)
 
-Defined in: [src/robinhood/protocol.ts:837](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L837)
+Defined in: [src/robinhood/protocol.ts:1036](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L1036)
 
 ## Parameters
 

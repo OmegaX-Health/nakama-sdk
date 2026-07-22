@@ -42,6 +42,8 @@ const manifest = validateRobinhoodDeploymentManifest(
 );
 
 console.log(bundle.status); // ready: all 12 ABIs are imported
+console.log(bundle.protocolSuiteMajor); // 2
+console.log(bundle.economicEventSchemaVersion); // 2
 console.log(manifest.status); // unconfigured: no deployed addresses yet
 ```
 
@@ -91,6 +93,11 @@ console.log(program.context.reconciliation); // direct_chain_only
 Reads pin all calls to one block and return block/finality context alongside the
 domain value. If the UI also uses an indexer, reconcile it with a direct read
 before enabling a write.
+
+For an economic projection, decode only canonical PoolVault logs with
+`decodeRobinhoodEconomicActivity(...)`. The result is one of nine typed kinds
+and includes the complete post-mutation accounting snapshot; replay in canonical
+log order and rewind changed blocks after a reorg.
 
 ## 5. Prepare, simulate, and submit one action
 

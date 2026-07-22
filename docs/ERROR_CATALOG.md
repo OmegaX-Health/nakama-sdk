@@ -39,6 +39,17 @@ Live bytecode, suite topology, program binding, decoded calldata, event, or
 contract state conflicts with the verified deployment. Treat this as a stopped
 operation and investigate the deployment/RPC state before retrying.
 
+For factory planning failures, use
+`decodeRobinhoodFactoryConfigurationError(...)`. `InvalidRole` identifies a
+zero or incompatible infrastructure address, `DuplicateRole` names both
+authority positions that were collapsed, and `IncompatibleSuiteVersion`
+reports expected versus actual major version. These are configuration failures;
+changing gas or retrying the same calldata cannot fix them.
+
+`decodeRobinhoodEconomicActivity(...)` also raises this error for an unknown
+economic kind or a non-vault event. Stop projection at that log because silently
+accepting a new schema would corrupt reconstructed accounting.
+
 ## `NakamaRobinhoodSimulationError`
 
 The exact prepared action reverted, was stale, changed, or was not simulated on

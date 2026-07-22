@@ -8,7 +8,7 @@
 
 > **loadRobinhoodDeploymentManifest**(`input`, `expectedNetwork?`): [`RobinhoodDeploymentManifest`](../interfaces/RobinhoodDeploymentManifest.md)
 
-Defined in: [src/robinhood/artifacts.ts:173](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L173)
+Defined in: [src/robinhood/artifacts.ts:175](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L175)
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: VerifiedRobinhoodDeploymentRuntime
 
-Defined in: [src/robinhood/artifacts.ts:111](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L111)
+Defined in: [src/robinhood/artifacts.ts:113](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L113)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/artifacts.ts:111](https://github.com/OmegaX-Health/na
 
 > **chainHead**: `bigint`
 
-Defined in: [src/robinhood/artifacts.ts:114](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L114)
+Defined in: [src/robinhood/artifacts.ts:116](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L116)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/artifacts.ts:114](https://github.com/OmegaX-Health/na
 
 > **chainId**: `number`
 
-Defined in: [src/robinhood/artifacts.ts:113](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L113)
+Defined in: [src/robinhood/artifacts.ts:115](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L115)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/artifacts.ts:113](https://github.com/OmegaX-Health/na
 
 > **checkedAtBlock**: `bigint`
 
-Defined in: [src/robinhood/artifacts.ts:117](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L117)
+Defined in: [src/robinhood/artifacts.ts:119](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L119)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/artifacts.ts:117](https://github.com/OmegaX-Health/na
 
 > **checkedAtBlockHash**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/artifacts.ts:118](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L118)
+Defined in: [src/robinhood/artifacts.ts:120](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L120)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/robinhood/artifacts.ts:118](https://github.com/OmegaX-Health/na
 
 > **contracts**: `Record`\<[`RobinhoodContractRole`](../type-aliases/RobinhoodContractRole.md), [`RobinhoodContractDeployment`](RobinhoodContractDeployment.md) & `object`\>
 
-Defined in: [src/robinhood/artifacts.ts:122](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L122)
+Defined in: [src/robinhood/artifacts.ts:124](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L124)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/robinhood/artifacts.ts:122](https://github.com/OmegaX-Health/na
 
 > **finalizedBlock**: `bigint`
 
-Defined in: [src/robinhood/artifacts.ts:116](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L116)
+Defined in: [src/robinhood/artifacts.ts:118](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L118)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/robinhood/artifacts.ts:116](https://github.com/OmegaX-Health/na
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/artifacts.ts:112](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L112)
+Defined in: [src/robinhood/artifacts.ts:114](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L114)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/robinhood/artifacts.ts:112](https://github.com/OmegaX-Health/na
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/artifacts.ts:119](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L119)
+Defined in: [src/robinhood/artifacts.ts:121](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L121)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [src/robinhood/artifacts.ts:119](https://github.com/OmegaX-Health/na
 
 > **safeBlock**: `bigint`
 
-Defined in: [src/robinhood/artifacts.ts:115](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L115)
+Defined in: [src/robinhood/artifacts.ts:117](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L117)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [src/robinhood/artifacts.ts:115](https://github.com/OmegaX-Health/na
 
 > **settlementAsset**: [`VerifiedRobinhoodUsdg`](VerifiedRobinhoodUsdg.md)
 
-Defined in: [src/robinhood/artifacts.ts:121](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L121)
+Defined in: [src/robinhood/artifacts.ts:123](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L123)
 
 ***
 
@@ -94,4 +94,4 @@ Defined in: [src/robinhood/artifacts.ts:121](https://github.com/OmegaX-Health/na
 
 > **suiteId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/artifacts.ts:120](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L120)
+Defined in: [src/robinhood/artifacts.ts:122](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/artifacts.ts#L122)

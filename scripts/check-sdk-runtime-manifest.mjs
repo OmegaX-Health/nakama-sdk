@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { keccak256, stringToHex } from 'viem';
 
 const CONTRACT_ROLES = Object.freeze({
   assetRegistry: 'AssetRegistry',
@@ -48,6 +49,9 @@ const MAINNET_USDG = Object.freeze({
   mainnetAddress: '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168',
   testnetAddress: null,
 });
+const ECONOMIC_EVENT_SIGNATURE =
+  'EconomicActivity(bytes32,bytes32,uint8,bytes32,address,address,address,int256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)';
+const ECONOMIC_EVENT_TOPIC0 = keccak256(stringToHex(ECONOMIC_EVENT_SIGNATURE));
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
@@ -97,7 +101,7 @@ const sourceText = listTypeScriptFiles('src')
   .join('\n');
 const rootEntrypoint = readFileSync('src/index.ts', 'utf8');
 
-assertEqual(manifest.schemaVersion, 5, 'SDK runtime schemaVersion');
+assertEqual(manifest.schemaVersion, 6, 'SDK runtime schemaVersion');
 assertEqual(manifest.package.name, packageJson.name, 'package name');
 assertEqual(manifest.package.version, packageJson.version, 'package version');
 assertEqual(manifest.package.node, packageJson.engines?.node, 'node engine');
@@ -148,6 +152,26 @@ for (const legacyModule of [
 }
 
 assertEqual(manifest.protocol.chainFamily, 'eip155', 'chain family');
+assertEqual(
+  manifest.protocol.artifactSchemaVersion,
+  2,
+  'protocol artifact schema version',
+);
+assertEqual(manifest.protocol.protocolSuiteMajor, 2, 'protocol suite major');
+assertEqual(
+  manifest.protocol.economicEventSchemaVersion,
+  2,
+  'economic event schema version',
+);
+assertJsonEqual(
+  manifest.protocol.economicEvent,
+  {
+    contractRole: 'vault',
+    name: 'EconomicActivity',
+    topic0: ECONOMIC_EVENT_TOPIC0,
+  },
+  'economic event identity',
+);
 assertJsonEqual(
   Object.fromEntries(
     Object.entries(manifest.protocol.networks ?? {}).map(([network, value]) => [
@@ -184,7 +208,17 @@ const checkedInArtifactRaw = readFileSync(
   'utf8',
 );
 
-assertEqual(siblingArtifact.schemaVersion, 1, 'sibling artifact schemaVersion');
+assertEqual(siblingArtifact.schemaVersion, 2, 'sibling artifact schemaVersion');
+assertEqual(
+  siblingArtifact.protocolSuiteMajor,
+  2,
+  'sibling protocol suite major',
+);
+assertEqual(
+  siblingArtifact.economicEventSchemaVersion,
+  2,
+  'sibling economic event schema version',
+);
 assertEqual(siblingArtifact.chainFamily, 'eip155', 'sibling chain family');
 if (
   typeof siblingArtifact.sourceCommit !== 'string' ||
@@ -237,11 +271,13 @@ assertEqual(
 
 let functionCount = 0;
 let eventCount = 0;
+const abis = {};
 for (const [role, contractName] of Object.entries(CONTRACT_ROLES)) {
   const contract = manifest.protocol.contracts[role];
   const artifactContract = siblingArtifact.contracts?.[contractName];
   const abiRaw = readFileSync(contract.abiArtifact, 'utf8');
   const abi = JSON.parse(abiRaw);
+  abis[role] = abi;
   const abiSha256 = sha256(abiRaw);
 
   assertEqual(contract.contractName, contractName, `${role} contract name`);
@@ -275,6 +311,75 @@ for (const [role, contractName] of Object.entries(CONTRACT_ROLES)) {
   functionCount += abi.filter((entry) => entry.type === 'function').length;
   eventCount += abi.filter((entry) => entry.type === 'event').length;
 }
+
+const economicEvent = abis.vault.find(
+  (entry) => entry.type === 'event' && entry.name === 'EconomicActivity',
+);
+if (!economicEvent) fail('PoolVault EconomicActivity event is missing.');
+const actualEconomicSignature = `${economicEvent?.name}(${(
+  economicEvent?.inputs ?? []
+)
+  .map((input) => input.type)
+  .join(',')})`;
+assertEqual(
+  actualEconomicSignature,
+  ECONOMIC_EVENT_SIGNATURE,
+  'economic event signature',
+);
+assertJsonEqual(
+  (economicEvent?.inputs ?? []).map((input) => input.indexed === true),
+  [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ],
+  'economic event indexed fields',
+);
+assertEqual(
+  keccak256(stringToHex(actualEconomicSignature)),
+  ECONOMIC_EVENT_TOPIC0,
+  'economic event topic0',
+);
+
+const blockedAttempt = abis.agentAuthorizationRegistry.find(
+  (entry) => entry.type === 'function' && entry.name === 'recordBlockedAttempt',
+);
+assertJsonEqual(
+  blockedAttempt?.inputs?.map((input) => input.type),
+  ['bytes32', 'address', 'bytes4', 'uint256', 'uint256'],
+  'recordBlockedAttempt inputs',
+);
+assertJsonEqual(
+  blockedAttempt?.outputs?.map((output) => output.type),
+  ['bytes32'],
+  'recordBlockedAttempt outputs',
+);
+assertArrayEqual(
+  abis.factory
+    .filter((entry) => entry.type === 'error')
+    .map((entry) => entry.name)
+    .filter((name) =>
+      ['InvalidRole', 'DuplicateRole', 'IncompatibleSuiteVersion'].includes(
+        name,
+      ),
+    ),
+  ['InvalidRole', 'DuplicateRole', 'IncompatibleSuiteVersion'],
+  'factory role and version errors',
+);
 
 const deploymentSchema = readJson(manifest.protocol.deploymentSchema);
 assertEqual(

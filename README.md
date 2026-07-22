@@ -85,6 +85,10 @@ The bundle currently contains `AssetRegistry`, `TemplateRegistry`,
 `MembershipRegistry`, `DecisionModule`, `ClaimManager`, `SettlementModule`,
 `AgentAuthorizationRegistry`, and `SafetyGuardian`.
 
+The imported artifact is schema `2`, pins protocol suite major `2`, and pins
+economic-event schema `2`. Older artifacts are rejected before TypeScript
+generation, even when their contract names happen to match.
+
 ## Deployment gate
 
 Use the checked-in manifests for inspection, then require a deployed manifest
@@ -111,9 +115,15 @@ alone is never accepted as runtime proof.
 ## Typed product reads
 
 `createRobinhoodReadClient(...)` provides program, accounting, membership,
-request, obligation, role, and pause reads at pinned block numbers. Each result
-contains its network, CAIP-2 identity, block hash, head/safe/finalized markers,
-and reconciliation state.
+request, obligation, role, pause, and agent-authorization failure reads at
+pinned block numbers. Each result contains its network, CAIP-2 identity, block
+hash, head/safe/finalized markers, and reconciliation state.
+
+`decodeRobinhoodEconomicActivity(...)` decodes the sole canonical economic
+event into nine discriminated activity kinds and returns the complete
+post-mutation accounting snapshot. Consumers can replay successful vault logs
+without merging older event vocabularies. `decodeRobinhoodEvent(...)` remains
+the generic decoder for non-economic protocol events.
 
 Indexer output is treated as a cache. `reconcileRobinhoodRead(...)` compares it
 with a direct-chain read, and `assertRobinhoodWriteStateSafe(...)` blocks a
@@ -154,6 +164,13 @@ objects cannot cross the submission boundary. The safe order is fixed:
 The SDK never accepts a private key and never switches the wallet's network.
 `requestRobinhoodAction(...)` only calls `eth_sendTransaction` for the already
 simulated action.
+
+`createRobinhoodRecordBlockedAttemptCall(...)` encodes the separate
+`recordBlockedAttempt` telemetry call for a reviewed adapter. It deliberately
+does not return a `PreparedRobinhoodAction`: the registry requires the adapter
+contract itself as `msg.sender`, and a wallet must never impersonate that
+boundary. The call records a current failure reason without consuming a grant
+or executing the target.
 
 Phase-0 smart-account submission remains limited to a narrow allowlist of
 permissionless maintenance calls. Before `submit(...)` exists, callers must run

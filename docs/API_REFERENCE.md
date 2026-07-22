@@ -35,7 +35,8 @@ fallback for Robinhood.
 - `ROBINHOOD_CONTRACT_IDENTITIES` maps 12 SDK roles to canonical Solidity
   contract names. The public `requestManager` role maps to `ClaimManager`.
 - `getGeneratedRobinhoodArtifactBundle(...)` returns imported ABI provenance
-  and both network manifests.
+  and both network manifests. The bundle requires artifact schema `2`, suite
+  major `2`, and economic-event schema `2`.
 - `validateRobinhoodArtifactBundle(...)` and
   `validateRobinhoodDeploymentManifest(...)` enforce exact schemas and hashes.
 - `assertRobinhoodDeploymentReady(...)` requires all contracts, verified
@@ -62,6 +63,7 @@ exposes:
 - `readObligation(...)`
 - `readRole(...)`
 - `readPause(...)`
+- `readAgentAuthorizationFailure(...)`
 
 Every `RobinhoodRead<T>` includes a `RobinhoodReadContext` with chain identity,
 pinned block, block hash, head/safe/finalized blocks, observation time, and
@@ -97,8 +99,18 @@ runtime, expiry, calldata disclosure, and provider chain, then independently
 simulates again before calling `eth_sendTransaction`. Its sealed result binds
 the action commitment, calldata hash, target, sender, value, chain, and intent.
 
-`decodeRobinhoodEvent(...)` and `decodeRobinhoodError(...)` decode across the
-role-specific imported ABIs without weakening the role boundary.
+`decodeRobinhoodEconomicActivity(...)` accepts only the canonical PoolVault
+event and returns one of nine discriminated kinds with asset, actor,
+beneficiary, signed amount, and the complete post-mutation accounting snapshot.
+`decodeRobinhoodEvent(...)` and `decodeRobinhoodError(...)` remain generic
+role-aware decoders. `decodeRobinhoodFactoryConfigurationError(...)` gives
+stable names to `InvalidRole`, `DuplicateRole`, and
+`IncompatibleSuiteVersion`, including the factory role indexes.
+
+`createRobinhoodRecordBlockedAttemptCall(...)` returns adapter-only registry
+calldata plus the required caller. It is intentionally outside the wallet
+action builder because only the reviewed adapter contract may originate the
+call; it cannot consume a grant or execute the attempted target.
 
 ## Decision EIP-712
 

@@ -28,6 +28,21 @@ finality plus reconciliation context on every page. On a detected reorg, pass
 the affected block to `invalidateRobinhoodOfflineCacheAfterReorg(...)`; cached
 descendants are discarded and still cannot authorize a write.
 
+## Reconstruct economic accounting
+
+Subscribe to `PoolVault.EconomicActivity` and pass each canonical log to
+`decodeRobinhoodEconomicActivity(...)`. The decoder rejects every other role,
+event name, and unknown kind, then returns one of the nine schema-2 activities
+with the asset, actor, beneficiary, signed delta, and complete accounting
+snapshot after the mutation. Replay logs in canonical block, transaction, and
+log order; reorg handling must discard the changed block and every descendant
+before rebuilding the projection.
+
+Do not merge the removed sponsor-funding, liability, reservation, obligation,
+settlement, and refund event names into the projection. Schema 2 made
+`EconomicActivity` the only economic vocabulary so one successful mutation has
+one reconstructable record.
+
 ## Submit a user action
 
 The wallet path is deliberately linear because each step binds the next:
@@ -101,6 +116,14 @@ then reruns simulation and validates the provider's user-operation result
 against the exact action, chain, entry point, account, gas cap, and commitment.
 Installed policy/revocation readback remains a live provider-conformance gate;
 an adapter's self-attestation is insufficient.
+
+When an adapter's `consumeAuthorization(...)` simulation or transaction fails,
+the adapter may separately submit calldata from
+`createRobinhoodRecordBlockedAttemptCall(...)`. The registry recomputes the
+failure and persists `AuthorizationBlocked`; it rejects an attempt that is
+currently authorized and does not change consumption counters. The helper does
+not return a wallet action because the reviewed adapter contract must be the
+actual caller.
 
 A selected paymaster can later implement `RobinhoodPaymasterAdapter`, but the
 Phase-0 client requests and validates quotes only. Policy and quote must agree

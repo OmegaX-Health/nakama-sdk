@@ -6,7 +6,7 @@
 
 # Interface: PrepareRobinhoodActionContext
 
-Defined in: [src/robinhood/protocol.ts:155](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L155)
+Defined in: [src/robinhood/protocol.ts:277](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L277)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/protocol.ts:155](https://github.com/OmegaX-Health/nak
 
 > **account**: `string`
 
-Defined in: [src/robinhood/protocol.ts:156](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L156)
+Defined in: [src/robinhood/protocol.ts:278](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L278)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/protocol.ts:156](https://github.com/OmegaX-Health/nak
 
 > `optional` **expiresAt?**: `string` \| `Date`
 
-Defined in: [src/robinhood/protocol.ts:159](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L159)
+Defined in: [src/robinhood/protocol.ts:281](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L281)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/protocol.ts:159](https://github.com/OmegaX-Health/nak
 
 > **intentId**: `string`
 
-Defined in: [src/robinhood/protocol.ts:157](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L157)
+Defined in: [src/robinhood/protocol.ts:279](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L279)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/robinhood/protocol.ts:157](https://github.com/OmegaX-Health/nak
 
 > `optional` **preparedAt?**: `string` \| `Date`
 
-Defined in: [src/robinhood/protocol.ts:158](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L158)
+Defined in: [src/robinhood/protocol.ts:280](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/protocol.ts#L280)
