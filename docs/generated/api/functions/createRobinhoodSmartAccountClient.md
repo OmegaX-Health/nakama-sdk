@@ -8,7 +8,7 @@
 
 > **createRobinhoodSmartAccountClient**(`params`): [`RobinhoodSmartAccountClient`](../interfaces/RobinhoodSmartAccountClient.md)
 
-Defined in: [src/robinhood/wallet.ts:505](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L505)
+Defined in: [src/robinhood/wallet.ts:755](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L755)
 
 ## Parameters
 
@@ -33,6 +33,10 @@ Defined in: [src/robinhood/wallet.ts:505](https://github.com/OmegaX-Health/nakam
 #### runtime
 
 [`VerifiedRobinhoodDeploymentRuntime`](../interfaces/VerifiedRobinhoodDeploymentRuntime.md)
+
+#### smartAccountRuntime
+
+[`VerifiedRobinhoodSmartAccountRuntime`](../interfaces/VerifiedRobinhoodSmartAccountRuntime.md)
 
 ## Returns
 

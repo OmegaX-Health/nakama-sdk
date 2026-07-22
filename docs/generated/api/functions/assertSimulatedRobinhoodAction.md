@@ -8,7 +8,7 @@
 
 > **assertSimulatedRobinhoodAction**(`simulated`, `options?`): `void`
 
-Defined in: [src/robinhood/wallet.ts:1136](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1136)
+Defined in: [src/robinhood/wallet.ts:1747](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1747)
 
 ## Parameters
 

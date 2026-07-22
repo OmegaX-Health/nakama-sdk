@@ -253,10 +253,111 @@ export interface RobinhoodSmartAccountPolicy {
 
 export interface RobinhoodSmartAccountSubmission {
   kind: 'user_operation';
+  providerId: string;
   network: RobinhoodNetwork;
+  chainId: 4663 | 46630;
+  caip2: 'eip155:4663' | 'eip155:46630';
   intentId: string;
   accountId: RobinhoodCaip10;
   userOperationHash: Hex;
+  entryPoint: Address;
+  actionCommitment: Hex;
+  submittedAt: string;
+}
+
+export type RobinhoodSmartAccountModuleRole =
+  | 'factory'
+  | 'entryPoint'
+  | 'validationModule'
+  | 'recoveryModule'
+  | 'passkeyValidator';
+
+export interface RobinhoodSmartAccountRuntimeManifest {
+  schemaVersion: 1;
+  providerId: string;
+  network: RobinhoodNetwork;
+  account: Address;
+  accountRuntimeBytecodeHash: Hex;
+  modules: Record<
+    RobinhoodSmartAccountModuleRole,
+    Readonly<{ address: Address; runtimeBytecodeHash: Hex }>
+  >;
+}
+
+export interface VerifiedRobinhoodSmartAccountRuntime extends RobinhoodSmartAccountRuntimeManifest {
+  chainId: 4663 | 46630;
+  checkedAtBlock: bigint;
+  checkedAtBlockHash: Hex;
+  runtimeCommitment: Hex;
+}
+
+export type RobinhoodSmartAccountLifecycleState = Readonly<{
+  providerId: string;
+  network: RobinhoodNetwork;
+  account: Address;
+  status: 'counterfactual' | 'active' | 'recovery_locked';
+  revision: number;
+  ownerSignerCommitment: Hex;
+  recoveryCommitment: Hex;
+  passkeyCredentialCommitments: readonly Hex[];
+  recoveryEpoch: number;
+}>;
+
+export type RobinhoodSmartAccountLifecycleAction =
+  | Readonly<{
+      kind: 'create_account';
+      ownerSignerCommitment: Hex;
+      recoveryCommitment: Hex;
+      initialPasskeyCredentialCommitment: Hex;
+    }>
+  | Readonly<{
+      kind: 'enroll_passkey';
+      passkeyCredentialCommitment: Hex;
+    }>
+  | Readonly<{
+      kind: 'rotate_signer';
+      nextOwnerSignerCommitment: Hex;
+    }>
+  | Readonly<{
+      kind: 'recover_account';
+      nextOwnerSignerCommitment: Hex;
+      nextPasskeyCredentialCommitment: Hex;
+      recoveryAuthorizationCommitment: Hex;
+    }>;
+
+export interface RobinhoodSmartAccountLifecycleRequest {
+  version: 1;
+  requestId: string;
+  network: RobinhoodNetwork;
+  account: Address;
+  expectedRevision: number;
+  action: RobinhoodSmartAccountLifecycleAction;
+  humanApprovalCommitment: Hex;
+  preparedAt: string;
+  expiresAt: string;
+  requestCommitment: Hex;
+}
+
+export interface RobinhoodSmartAccountLifecycleAdapter {
+  readonly providerId: string;
+  readonly network: RobinhoodNetwork;
+  readonly account: Address;
+  readState(): Promise<RobinhoodSmartAccountLifecycleState>;
+  /** Must atomically enforce requestCommitment and expectedRevision. */
+  execute(
+    request: RobinhoodSmartAccountLifecycleRequest,
+  ): Promise<RobinhoodSmartAccountLifecycleState>;
+}
+
+export interface RobinhoodSmartAccountLifecycleClient {
+  readonly providerId: string;
+  readonly network: RobinhoodNetwork;
+  readonly account: Address;
+  readState(): Promise<RobinhoodSmartAccountLifecycleState>;
+  execute(
+    request: Omit<RobinhoodSmartAccountLifecycleRequest, 'requestCommitment'>,
+    options?: { now?: Date | number | bigint },
+  ): Promise<RobinhoodSmartAccountLifecycleState>;
 }
 
 export interface RobinhoodSponsorFundingBatch {
@@ -337,16 +438,26 @@ export interface RobinhoodPaymasterClient {
 
 /** Provider-specific account implementation isolated from product code. */
 export interface RobinhoodSmartAccountAdapter {
+  readonly providerId: string;
   readonly network: RobinhoodNetwork;
   readonly account: Address;
   simulate(params: {
     action: PreparedRobinhoodAction;
     policy: RobinhoodSmartAccountPolicy;
   }): Promise<RobinhoodActionSimulation>;
+  /** Submit only the exact action and simulation supplied by the SDK client. */
+  submit(params: {
+    action: PreparedRobinhoodAction;
+    actionCommitment: Hex;
+    simulation: RobinhoodActionSimulation;
+    policy: RobinhoodSmartAccountPolicy;
+    runtime: VerifiedRobinhoodSmartAccountRuntime;
+  }): Promise<RobinhoodSmartAccountSubmission>;
 }
 
 export interface RobinhoodSmartAccountClient {
   readonly network: RobinhoodNetwork;
+  readonly providerId: string;
   readonly account: Address;
   readonly policy: RobinhoodSmartAccountPolicy;
   simulate(action: PreparedRobinhoodAction): Promise<RobinhoodActionSimulation>;
@@ -502,29 +613,179 @@ export async function requestNakamaDecisionSignature(
   return response;
 }
 
+const VERIFIED_SMART_ACCOUNT_RUNTIMES = new WeakSet<object>();
+const SMART_ACCOUNT_MODULE_ROLES = Object.freeze([
+  'factory',
+  'entryPoint',
+  'validationModule',
+  'recoveryModule',
+  'passkeyValidator',
+] as const satisfies readonly RobinhoodSmartAccountModuleRole[]);
+
+function requireProviderId(value: string): string {
+  const providerId = value.trim();
+  if (
+    providerId === '' ||
+    providerId.length > 128 ||
+    !/^[a-z0-9][a-z0-9._-]*$/i.test(providerId)
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account providerId is invalid.',
+    );
+  }
+  return providerId;
+}
+
+function requireRuntimeBytecodeHash(value: unknown, field: string): Hex {
+  const hash = requireTransactionHash(value, field);
+  if (hash.toLowerCase() === ZERO_BYTES32) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      `${field} cannot be the zero hash.`,
+    );
+  }
+  return hash;
+}
+
+/**
+ * Independently verifies the selected smart-account implementation and every
+ * privilege-bearing module at one explicit block before submission is enabled.
+ */
+export async function verifyRobinhoodSmartAccountRuntime(params: {
+  client: RobinhoodPublicClient;
+  manifest: RobinhoodSmartAccountRuntimeManifest;
+}): Promise<VerifiedRobinhoodSmartAccountRuntime> {
+  if (params.manifest.schemaVersion !== 1) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account runtime manifest schemaVersion must be 1.',
+    );
+  }
+  const providerId = requireProviderId(params.manifest.providerId);
+  const expectedChainId = getRobinhoodChainId(params.manifest.network);
+  const actualChainId = await params.client.getChainId();
+  if (actualChainId !== expectedChainId) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account runtime verifier is connected to the wrong chain.',
+    );
+  }
+  const account = normalizeRobinhoodAddress(params.manifest.account);
+  const accountRuntimeBytecodeHash = requireRuntimeBytecodeHash(
+    params.manifest.accountRuntimeBytecodeHash,
+    'accountRuntimeBytecodeHash',
+  );
+  const moduleKeys = Object.keys(params.manifest.modules).sort();
+  if (
+    moduleKeys.length !== SMART_ACCOUNT_MODULE_ROLES.length ||
+    moduleKeys.some(
+      (role, index) => role !== [...SMART_ACCOUNT_MODULE_ROLES].sort()[index],
+    )
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account runtime manifest must enumerate every approved module exactly once.',
+    );
+  }
+  const modules = {} as VerifiedRobinhoodSmartAccountRuntime['modules'];
+  const seenAddresses = new Set<string>([account.toLowerCase()]);
+  for (const role of SMART_ACCOUNT_MODULE_ROLES) {
+    const module = params.manifest.modules[role];
+    const address = normalizeRobinhoodAddress(module.address);
+    if (address === zeroAddress || seenAddresses.has(address.toLowerCase())) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        'Smart-account account and module addresses must be nonzero and unique.',
+      );
+    }
+    seenAddresses.add(address.toLowerCase());
+    modules[role] = Object.freeze({
+      address,
+      runtimeBytecodeHash: requireRuntimeBytecodeHash(
+        module.runtimeBytecodeHash,
+        `${role}.runtimeBytecodeHash`,
+      ),
+    });
+  }
+  const checkedAtBlock = await params.client.getBlockNumber();
+  const block = await params.client.getBlock({ blockNumber: checkedAtBlock });
+  if (block.hash == null) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account runtime verification block has no canonical hash.',
+    );
+  }
+  const targets = [
+    { label: 'account', address: account, hash: accountRuntimeBytecodeHash },
+    ...SMART_ACCOUNT_MODULE_ROLES.map((role) => ({
+      label: role,
+      address: modules[role].address,
+      hash: modules[role].runtimeBytecodeHash,
+    })),
+  ];
+  const bytecodes = await Promise.all(
+    targets.map(({ address }) =>
+      params.client.getBytecode({ address, blockNumber: checkedAtBlock }),
+    ),
+  );
+  for (const [index, bytecode] of bytecodes.entries()) {
+    if (
+      bytecode == null ||
+      bytecode === '0x' ||
+      keccak256(bytecode).toLowerCase() !== targets[index]?.hash.toLowerCase()
+    ) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        `Smart-account ${targets[index]?.label ?? 'runtime'} bytecode does not match the independently reviewed manifest.`,
+      );
+    }
+  }
+  const base = {
+    schemaVersion: 1 as const,
+    providerId,
+    network: params.manifest.network,
+    chainId: expectedChainId,
+    account,
+    accountRuntimeBytecodeHash,
+    modules: Object.freeze(modules),
+    checkedAtBlock,
+    checkedAtBlockHash: block.hash,
+  };
+  const runtime = Object.freeze({
+    ...base,
+    runtimeCommitment: keccak256(stringToHex(canonicalJson(base))),
+  });
+  VERIFIED_SMART_ACCOUNT_RUNTIMES.add(runtime);
+  return runtime;
+}
+
 export function createRobinhoodSmartAccountClient(params: {
   adapter: RobinhoodSmartAccountAdapter;
   policy: RobinhoodSmartAccountPolicy;
   manifest: RobinhoodDeploymentManifest;
   bundle: RobinhoodProtocolArtifactBundle;
   runtime: VerifiedRobinhoodDeploymentRuntime;
+  smartAccountRuntime: VerifiedRobinhoodSmartAccountRuntime;
 }): RobinhoodSmartAccountClient {
   const account = normalizeRobinhoodAddress(params.adapter.account);
+  const providerId = requireProviderId(params.adapter.providerId);
   validateRobinhoodSmartAccountPolicy(params.policy);
   assertRobinhoodDeploymentReady(params.manifest, params.bundle);
   if (
+    !VERIFIED_SMART_ACCOUNT_RUNTIMES.has(params.smartAccountRuntime) ||
+    !Object.isFrozen(params.smartAccountRuntime) ||
     params.adapter.network !== params.policy.network ||
+    providerId !== params.smartAccountRuntime.providerId ||
     account !== normalizeRobinhoodAddress(params.policy.account) ||
+    account !== normalizeRobinhoodAddress(params.smartAccountRuntime.account) ||
+    params.adapter.network !== params.smartAccountRuntime.network ||
+    params.smartAccountRuntime.chainId !==
+      getRobinhoodChainId(params.adapter.network) ||
     params.policy.network !== params.manifest.network ||
     params.policy.programId.toLowerCase() !==
-      params.runtime.programId.toLowerCase()
+      params.runtime.programId.toLowerCase() ||
+    !isVerifiedRobinhoodRuntime(params.runtime)
   ) {
     throw new NakamaRobinhoodAccountPolicyError(
-      'Smart-account adapter identity does not match its policy.',
+      'Smart-account adapter identity does not match its policy and independently verified runtime.',
     );
   }
   return {
     network: params.adapter.network,
+    providerId,
     account,
     policy: params.policy,
     async simulate(action) {
@@ -548,9 +809,359 @@ export function createRobinhoodSmartAccountClient(params: {
         bundle: params.bundle,
         runtime: params.runtime,
       });
-      throw new NakamaRobinhoodAccountPolicyError(
-        'Phase 0 smart-account submission is disabled until an independent finalized onchain module verifier is implemented.',
+      const actionCommitment = hashPreparedRobinhoodAction(action);
+      const simulation = await params.adapter.simulate({
+        action,
+        policy: params.policy,
+      });
+      if (
+        !simulation.success ||
+        simulation.gasEstimate < 1n ||
+        simulation.gasEstimate > params.policy.maximumGasPerAction ||
+        simulation.blockNumber < params.smartAccountRuntime.checkedAtBlock ||
+        !isHex(simulation.returnData)
+      ) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          'Smart-account submission requires a successful fresh simulation within the exact gas policy.',
+        );
+      }
+      const submitted = await params.adapter.submit({
+        action,
+        actionCommitment,
+        simulation: Object.freeze({ ...simulation }),
+        policy: params.policy,
+        runtime: params.smartAccountRuntime,
+      });
+      const expectedAccountId = `${action.caip2}:${account}` as RobinhoodCaip10;
+      if (
+        submitted.kind !== 'user_operation' ||
+        submitted.providerId !== providerId ||
+        submitted.network !== action.network ||
+        submitted.chainId !== action.chainId ||
+        submitted.caip2 !== action.caip2 ||
+        submitted.intentId !== action.intentId ||
+        submitted.accountId !== expectedAccountId ||
+        normalizeRobinhoodAddress(submitted.entryPoint) !==
+          params.smartAccountRuntime.modules.entryPoint.address ||
+        submitted.actionCommitment.toLowerCase() !==
+          actionCommitment.toLowerCase()
+      ) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          'Smart-account provider submission is not bound to the exact verified action, account, chain, and entry point.',
+        );
+      }
+      const userOperationHash = requireTransactionHash(
+        submitted.userOperationHash,
+        'userOperationHash',
       );
+      parseStrictIsoTimestamp(submitted.submittedAt, 'submittedAt');
+      return sealTrustedRobinhoodSubmission({
+        ...submitted,
+        providerId,
+        accountId: expectedAccountId,
+        userOperationHash,
+        entryPoint: params.smartAccountRuntime.modules.entryPoint.address,
+        actionCommitment,
+      });
+    },
+  };
+}
+
+function normalizeLifecycleState(
+  value: RobinhoodSmartAccountLifecycleState,
+  identity: { providerId: string; network: RobinhoodNetwork; account: Address },
+): RobinhoodSmartAccountLifecycleState {
+  const account = normalizeRobinhoodAddress(value.account);
+  if (
+    value.providerId !== identity.providerId ||
+    value.network !== identity.network ||
+    account !== identity.account ||
+    !['counterfactual', 'active', 'recovery_locked'].includes(value.status) ||
+    !Number.isSafeInteger(value.revision) ||
+    value.revision < 0 ||
+    !Number.isSafeInteger(value.recoveryEpoch) ||
+    value.recoveryEpoch < 0 ||
+    !Array.isArray(value.passkeyCredentialCommitments)
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account lifecycle state has an invalid identity or revision.',
+    );
+  }
+  const ownerSignerCommitment = requireRuntimeBytecodeHash(
+    value.ownerSignerCommitment,
+    'ownerSignerCommitment',
+  );
+  const recoveryCommitment = requireRuntimeBytecodeHash(
+    value.recoveryCommitment,
+    'recoveryCommitment',
+  );
+  const passkeys = value.passkeyCredentialCommitments.map((commitment, index) =>
+    requireRuntimeBytecodeHash(
+      commitment,
+      `passkeyCredentialCommitments[${index}]`,
+    ),
+  );
+  if (
+    new Set(passkeys.map((value) => value.toLowerCase())).size !==
+      passkeys.length ||
+    (value.status === 'active' && passkeys.length === 0)
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account passkey commitments must be unique and active accounts require at least one.',
+    );
+  }
+  return Object.freeze({
+    ...value,
+    account,
+    ownerSignerCommitment,
+    recoveryCommitment,
+    passkeyCredentialCommitments: Object.freeze(passkeys),
+  });
+}
+
+function normalizeLifecycleAction(
+  action: RobinhoodSmartAccountLifecycleAction,
+): RobinhoodSmartAccountLifecycleAction {
+  switch (action.kind) {
+    case 'create_account':
+      return Object.freeze({
+        kind: action.kind,
+        ownerSignerCommitment: requireRuntimeBytecodeHash(
+          action.ownerSignerCommitment,
+          'action.ownerSignerCommitment',
+        ),
+        recoveryCommitment: requireRuntimeBytecodeHash(
+          action.recoveryCommitment,
+          'action.recoveryCommitment',
+        ),
+        initialPasskeyCredentialCommitment: requireRuntimeBytecodeHash(
+          action.initialPasskeyCredentialCommitment,
+          'action.initialPasskeyCredentialCommitment',
+        ),
+      });
+    case 'enroll_passkey':
+      return Object.freeze({
+        kind: action.kind,
+        passkeyCredentialCommitment: requireRuntimeBytecodeHash(
+          action.passkeyCredentialCommitment,
+          'action.passkeyCredentialCommitment',
+        ),
+      });
+    case 'rotate_signer':
+      return Object.freeze({
+        kind: action.kind,
+        nextOwnerSignerCommitment: requireRuntimeBytecodeHash(
+          action.nextOwnerSignerCommitment,
+          'action.nextOwnerSignerCommitment',
+        ),
+      });
+    case 'recover_account':
+      return Object.freeze({
+        kind: action.kind,
+        nextOwnerSignerCommitment: requireRuntimeBytecodeHash(
+          action.nextOwnerSignerCommitment,
+          'action.nextOwnerSignerCommitment',
+        ),
+        nextPasskeyCredentialCommitment: requireRuntimeBytecodeHash(
+          action.nextPasskeyCredentialCommitment,
+          'action.nextPasskeyCredentialCommitment',
+        ),
+        recoveryAuthorizationCommitment: requireRuntimeBytecodeHash(
+          action.recoveryAuthorizationCommitment,
+          'action.recoveryAuthorizationCommitment',
+        ),
+      });
+  }
+}
+
+function sameCommitments(left: readonly Hex[], right: readonly Hex[]): boolean {
+  return (
+    left.length === right.length &&
+    left.every(
+      (value, index) => value.toLowerCase() === right[index]?.toLowerCase(),
+    )
+  );
+}
+
+function assertLifecycleTransition(
+  before: RobinhoodSmartAccountLifecycleState,
+  after: RobinhoodSmartAccountLifecycleState,
+  action: RobinhoodSmartAccountLifecycleAction,
+): void {
+  const unchangedRecovery =
+    before.recoveryCommitment.toLowerCase() ===
+    after.recoveryCommitment.toLowerCase();
+  if (after.revision !== before.revision + 1) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Smart-account lifecycle execution must advance exactly one revision.',
+    );
+  }
+  if (action.kind === 'create_account') {
+    if (
+      before.status !== 'counterfactual' ||
+      after.status !== 'active' ||
+      after.ownerSignerCommitment.toLowerCase() !==
+        action.ownerSignerCommitment.toLowerCase() ||
+      after.recoveryCommitment.toLowerCase() !==
+        action.recoveryCommitment.toLowerCase() ||
+      !sameCommitments(after.passkeyCredentialCommitments, [
+        action.initialPasskeyCredentialCommitment,
+      ]) ||
+      after.recoveryEpoch !== before.recoveryEpoch
+    ) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        'Account creation did not bind the exact owner, recovery, and initial passkey commitments.',
+      );
+    }
+    return;
+  }
+  if (before.status !== 'active' && before.status !== 'recovery_locked') {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Only an existing account can change credentials or recover.',
+    );
+  }
+  if (action.kind === 'enroll_passkey') {
+    if (
+      before.status !== 'active' ||
+      after.status !== 'active' ||
+      before.passkeyCredentialCommitments.some(
+        (value) =>
+          value.toLowerCase() ===
+          action.passkeyCredentialCommitment.toLowerCase(),
+      ) ||
+      !sameCommitments(after.passkeyCredentialCommitments, [
+        ...before.passkeyCredentialCommitments,
+        action.passkeyCredentialCommitment,
+      ]) ||
+      after.ownerSignerCommitment !== before.ownerSignerCommitment ||
+      !unchangedRecovery ||
+      after.recoveryEpoch !== before.recoveryEpoch
+    ) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        'Passkey enrollment changed unrelated account authority or did not append exactly one credential.',
+      );
+    }
+    return;
+  }
+  if (action.kind === 'rotate_signer') {
+    if (
+      before.status !== 'active' ||
+      after.status !== 'active' ||
+      action.nextOwnerSignerCommitment.toLowerCase() ===
+        before.ownerSignerCommitment.toLowerCase() ||
+      after.ownerSignerCommitment.toLowerCase() !==
+        action.nextOwnerSignerCommitment.toLowerCase() ||
+      !sameCommitments(
+        after.passkeyCredentialCommitments,
+        before.passkeyCredentialCommitments,
+      ) ||
+      !unchangedRecovery ||
+      after.recoveryEpoch !== before.recoveryEpoch
+    ) {
+      throw new NakamaRobinhoodAccountPolicyError(
+        'Signer rotation did not preserve passkeys and recovery authority.',
+      );
+    }
+    return;
+  }
+  if (
+    after.status !== 'active' ||
+    after.ownerSignerCommitment.toLowerCase() !==
+      action.nextOwnerSignerCommitment.toLowerCase() ||
+    !sameCommitments(after.passkeyCredentialCommitments, [
+      action.nextPasskeyCredentialCommitment,
+    ]) ||
+    !unchangedRecovery ||
+    after.recoveryEpoch !== before.recoveryEpoch + 1
+  ) {
+    throw new NakamaRobinhoodAccountPolicyError(
+      'Account recovery must rotate the owner, reset passkeys, preserve recovery authority, and advance its epoch.',
+    );
+  }
+}
+
+/** Provider-neutral lifecycle client used by any selected smart-account vendor. */
+export function createRobinhoodSmartAccountLifecycleClient(params: {
+  adapter: RobinhoodSmartAccountLifecycleAdapter;
+}): RobinhoodSmartAccountLifecycleClient {
+  const providerId = requireProviderId(params.adapter.providerId);
+  const account = normalizeRobinhoodAddress(params.adapter.account);
+  const identity = { providerId, network: params.adapter.network, account };
+  return {
+    ...identity,
+    async readState() {
+      return normalizeLifecycleState(
+        await params.adapter.readState(),
+        identity,
+      );
+    },
+    async execute(input, options = {}) {
+      if (
+        input.version !== 1 ||
+        !/^[a-zA-Z0-9:_-]{8,160}$/.test(input.requestId) ||
+        input.network !== identity.network ||
+        normalizeRobinhoodAddress(input.account) !== identity.account ||
+        !Number.isSafeInteger(input.expectedRevision) ||
+        input.expectedRevision < 0
+      ) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          'Smart-account lifecycle request identity is invalid.',
+        );
+      }
+      const preparedAtMs = parseStrictIsoTimestamp(
+        input.preparedAt,
+        'preparedAt',
+      );
+      const expiresAtMs = parseStrictIsoTimestamp(input.expiresAt, 'expiresAt');
+      const now = Number(toUnixSeconds(options.now) * 1_000n);
+      if (
+        expiresAtMs <= preparedAtMs ||
+        expiresAtMs - preparedAtMs >
+          ROBINHOOD_MAX_ACTION_WINDOW_SECONDS * 1_000 ||
+        preparedAtMs > now ||
+        expiresAtMs < now
+      ) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          'Smart-account lifecycle request requires a current bounded approval window.',
+        );
+      }
+      const action = normalizeLifecycleAction(input.action);
+      const humanApprovalCommitment = requireRuntimeBytecodeHash(
+        input.humanApprovalCommitment,
+        'humanApprovalCommitment',
+      );
+      const base = {
+        ...input,
+        account,
+        action,
+        humanApprovalCommitment,
+      };
+      const request: RobinhoodSmartAccountLifecycleRequest = Object.freeze({
+        ...base,
+        requestCommitment: keccak256(stringToHex(canonicalJson(base))),
+      });
+      const before = normalizeLifecycleState(
+        await params.adapter.readState(),
+        identity,
+      );
+      if (before.revision !== input.expectedRevision) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          'Smart-account lifecycle request lost its revision race.',
+        );
+      }
+      const result = await params.adapter.execute(request);
+      const after = normalizeLifecycleState(result, identity);
+      const readback = normalizeLifecycleState(
+        await params.adapter.readState(),
+        identity,
+      );
+      if (canonicalJson(after) !== canonicalJson(readback)) {
+        throw new NakamaRobinhoodAccountPolicyError(
+          'Smart-account lifecycle provider readback does not match its mutation result.',
+        );
+      }
+      assertLifecycleTransition(before, readback, action);
+      return readback;
     },
   };
 }

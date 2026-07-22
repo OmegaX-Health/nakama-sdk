@@ -63,9 +63,13 @@ Robinhood-native surface.
 
 ## Agents and Virtuals
 
-- `validateRobinhoodSmartAccountPolicy(...)` validates narrow policy shape;
-  Phase-0 smart-account submission remains disabled pending independent
-  finalized onchain policy proof.
+- `verifyRobinhoodSmartAccountRuntime(...)` verifies the selected account,
+  factory, entry point, validation, recovery, and passkey module bytecodes at one
+  block before the narrow maintenance submission path can be constructed.
+- `validateRobinhoodSmartAccountPolicy(...)` validates the narrow policy shape,
+  and `createRobinhoodSmartAccountLifecycleClient(...)` binds account creation,
+  passkey enrollment, signer rotation, and recovery to one approval, revision,
+  expiry, mutation result, and readback.
 - `createRobinhoodPaymasterClient(...)` validates provider-neutral,
   action-and-policy-bound sponsorship quotes. It has no submission method and
   treats the adapter payload as untrusted until an external onchain verifier

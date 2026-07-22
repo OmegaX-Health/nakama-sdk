@@ -6,7 +6,7 @@
 
 # Interface: RobinhoodPaymasterQuote
 
-Defined in: [src/robinhood/wallet.ts:295](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L295)
+Defined in: [src/robinhood/wallet.ts:396](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L396)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/robinhood/wallet.ts:295](https://github.com/OmegaX-Health/nakam
 
 > **account**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:302](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L302)
+Defined in: [src/robinhood/wallet.ts:403](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L403)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/robinhood/wallet.ts:302](https://github.com/OmegaX-Health/nakam
 
 > **actionCommitment**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:304](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L304)
+Defined in: [src/robinhood/wallet.ts:405](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L405)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/robinhood/wallet.ts:304](https://github.com/OmegaX-Health/nakam
 
 > **callsSponsoredInWindow**: `number`
 
-Defined in: [src/robinhood/wallet.ts:312](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L312)
+Defined in: [src/robinhood/wallet.ts:413](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L413)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/robinhood/wallet.ts:312](https://github.com/OmegaX-Health/nakam
 
 > **chainId**: `4663` \| `46630`
 
-Defined in: [src/robinhood/wallet.ts:299](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L299)
+Defined in: [src/robinhood/wallet.ts:400](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L400)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/robinhood/wallet.ts:299](https://github.com/OmegaX-Health/nakam
 
 > **maximumGas**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:310](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L310)
+Defined in: [src/robinhood/wallet.ts:411](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L411)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/robinhood/wallet.ts:310](https://github.com/OmegaX-Health/nakam
 
 > **network**: [`RobinhoodNetwork`](../type-aliases/RobinhoodNetwork.md)
 
-Defined in: [src/robinhood/wallet.ts:298](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L298)
+Defined in: [src/robinhood/wallet.ts:399](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L399)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/robinhood/wallet.ts:298](https://github.com/OmegaX-Health/nakam
 
 > **paymasterData**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:313](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L313)
+Defined in: [src/robinhood/wallet.ts:414](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L414)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/robinhood/wallet.ts:313](https://github.com/OmegaX-Health/nakam
 
 > **policyCommitment**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:300](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L300)
+Defined in: [src/robinhood/wallet.ts:401](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L401)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [src/robinhood/wallet.ts:300](https://github.com/OmegaX-Health/nakam
 
 > **programId**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:303](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L303)
+Defined in: [src/robinhood/wallet.ts:404](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L404)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [src/robinhood/wallet.ts:303](https://github.com/OmegaX-Health/nakam
 
 > **providerId**: `string`
 
-Defined in: [src/robinhood/wallet.ts:297](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L297)
+Defined in: [src/robinhood/wallet.ts:398](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L398)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [src/robinhood/wallet.ts:297](https://github.com/OmegaX-Health/nakam
 
 > **selector**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:306](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L306)
+Defined in: [src/robinhood/wallet.ts:407](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L407)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [src/robinhood/wallet.ts:306](https://github.com/OmegaX-Health/nakam
 
 > **sponsor**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:301](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L301)
+Defined in: [src/robinhood/wallet.ts:402](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L402)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [src/robinhood/wallet.ts:301](https://github.com/OmegaX-Health/nakam
 
 > **target**: `` `0x${string}` ``
 
-Defined in: [src/robinhood/wallet.ts:305](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L305)
+Defined in: [src/robinhood/wallet.ts:406](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L406)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: [src/robinhood/wallet.ts:305](https://github.com/OmegaX-Health/nakam
 
 > **validAfter**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:308](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L308)
+Defined in: [src/robinhood/wallet.ts:409](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L409)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: [src/robinhood/wallet.ts:308](https://github.com/OmegaX-Health/nakam
 
 > **validUntil**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:309](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L309)
+Defined in: [src/robinhood/wallet.ts:410](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L410)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: [src/robinhood/wallet.ts:309](https://github.com/OmegaX-Health/nakam
 
 > **value**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:307](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L307)
+Defined in: [src/robinhood/wallet.ts:408](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L408)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: [src/robinhood/wallet.ts:307](https://github.com/OmegaX-Health/nakam
 
 > **version**: `1`
 
-Defined in: [src/robinhood/wallet.ts:296](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L296)
+Defined in: [src/robinhood/wallet.ts:397](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L397)
 
 ***
 
@@ -150,4 +150,4 @@ Defined in: [src/robinhood/wallet.ts:296](https://github.com/OmegaX-Health/nakam
 
 > **windowStartedAt**: `bigint`
 
-Defined in: [src/robinhood/wallet.ts:311](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L311)
+Defined in: [src/robinhood/wallet.ts:412](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L412)

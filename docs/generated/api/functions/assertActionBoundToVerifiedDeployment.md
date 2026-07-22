@@ -8,7 +8,7 @@
 
 > **assertActionBoundToVerifiedDeployment**(`params`): `void`
 
-Defined in: [src/robinhood/wallet.ts:1189](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1189)
+Defined in: [src/robinhood/wallet.ts:1800](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1800)
 
 ## Parameters
 

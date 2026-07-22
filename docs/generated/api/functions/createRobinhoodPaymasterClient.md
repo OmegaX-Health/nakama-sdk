@@ -8,7 +8,7 @@
 
 > **createRobinhoodPaymasterClient**(`params`): [`RobinhoodPaymasterClient`](../interfaces/RobinhoodPaymasterClient.md)
 
-Defined in: [src/robinhood/wallet.ts:558](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L558)
+Defined in: [src/robinhood/wallet.ts:1169](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1169)
 
 ## Parameters
 

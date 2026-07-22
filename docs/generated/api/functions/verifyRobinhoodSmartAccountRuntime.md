@@ -2,29 +2,20 @@
 
 ***
 
-[@nakama-health/protocol-sdk](../README.md) / requestRobinhoodAction
+[@nakama-health/protocol-sdk](../README.md) / verifyRobinhoodSmartAccountRuntime
 
-# Function: requestRobinhoodAction()
+# Function: verifyRobinhoodSmartAccountRuntime()
 
-> **requestRobinhoodAction**(`provider`, `simulated`, `options`): `Promise`\<[`RobinhoodEip1193Submission`](../interfaces/RobinhoodEip1193Submission.md)\>
+> **verifyRobinhoodSmartAccountRuntime**(`params`): `Promise`\<[`VerifiedRobinhoodSmartAccountRuntime`](../interfaces/VerifiedRobinhoodSmartAccountRuntime.md)\>
 
-Defined in: [src/robinhood/wallet.ts:469](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L469)
+Defined in: [src/robinhood/wallet.ts:653](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L653)
+
+Independently verifies the selected smart-account implementation and every
+privilege-bearing module at one explicit block before submission is enabled.
 
 ## Parameters
 
-### provider
-
-[`RobinhoodEip1193Provider`](../interfaces/RobinhoodEip1193Provider.md)
-
-### simulated
-
-[`SimulatedRobinhoodAction`](../interfaces/SimulatedRobinhoodAction.md)
-
-### options
-
-#### bundle
-
-[`RobinhoodProtocolArtifactBundle`](../interfaces/RobinhoodProtocolArtifactBundle.md)
+### params
 
 #### client
 
@@ -1866,26 +1857,10 @@ const unwatch = await client.watchPendingTransactions({
 })
 ```
 
-#### gas?
-
-`bigint`
-
 #### manifest
 
-[`RobinhoodDeploymentManifest`](../interfaces/RobinhoodDeploymentManifest.md)
-
-#### maximumSimulationAgeSeconds?
-
-`number`
-
-#### now?
-
-`number` \| `bigint` \| `Date`
-
-#### runtime
-
-[`VerifiedRobinhoodDeploymentRuntime`](../interfaces/VerifiedRobinhoodDeploymentRuntime.md)
+[`RobinhoodSmartAccountRuntimeManifest`](../interfaces/RobinhoodSmartAccountRuntimeManifest.md)
 
 ## Returns
 
-`Promise`\<[`RobinhoodEip1193Submission`](../interfaces/RobinhoodEip1193Submission.md)\>
+`Promise`\<[`VerifiedRobinhoodSmartAccountRuntime`](../interfaces/VerifiedRobinhoodSmartAccountRuntime.md)\>

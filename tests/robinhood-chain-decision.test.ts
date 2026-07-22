@@ -30,6 +30,7 @@ import {
   createRobinhoodPublicClient,
   createRobinhoodOfflineCacheRecord,
   createRobinhoodPaymasterClient,
+  createRobinhoodSmartAccountLifecycleClient,
   createRobinhoodSmartAccountClient,
   createRobinhoodSubmittedTransaction,
   hashNakamaDecision,
@@ -47,6 +48,7 @@ import {
   toViemDecisionTypedData,
   validateRobinhoodSmartAccountPolicy,
   validateRobinhoodPaymasterPolicy,
+  verifyRobinhoodSmartAccountRuntime,
   verifyNakamaDecision,
   type PreparedRobinhoodAction,
   type RobinhoodL1BatchReader,
@@ -54,6 +56,9 @@ import {
   type RobinhoodPaymasterPolicy,
   type RobinhoodPaymasterQuote,
   type RobinhoodSmartAccountPolicy,
+  type RobinhoodSmartAccountLifecycleState,
+  type RobinhoodSmartAccountRuntimeManifest,
+  type RobinhoodPublicClient,
 } from '../src/index.js';
 
 import {
@@ -839,12 +844,74 @@ test('smart-account policy binds network, account, program, action, target, sele
     validAfter: BigInt(Math.floor(liveNow / 1_000) - 60),
     validUntil: BigInt(Math.floor(liveNow / 1_000) + 3_600),
   };
+  const smartAccountBytecode = '0x6001600055' as const;
+  const moduleBytecodes = {
+    factory: '0x6002600055',
+    entryPoint: '0x6003600055',
+    validationModule: '0x6004600055',
+    recoveryModule: '0x6005600055',
+    passkeyValidator: '0x6006600055',
+  } as const;
+  const moduleAddresses = {
+    factory: '0x0000000000000000000000000000000000000101',
+    entryPoint: '0x0000000000000000000000000000000000000102',
+    validationModule: '0x0000000000000000000000000000000000000103',
+    recoveryModule: '0x0000000000000000000000000000000000000104',
+    passkeyValidator: '0x0000000000000000000000000000000000000105',
+  } as const;
+  const smartAccountManifest: RobinhoodSmartAccountRuntimeManifest = {
+    schemaVersion: 1,
+    providerId: 'reference-aa',
+    network: 'mainnet',
+    account: TEST_ACCOUNT,
+    accountRuntimeBytecodeHash: keccak256(smartAccountBytecode),
+    modules: Object.fromEntries(
+      Object.entries(moduleAddresses).map(([role, address]) => [
+        role,
+        {
+          address,
+          runtimeBytecodeHash: keccak256(
+            moduleBytecodes[role as keyof typeof moduleBytecodes],
+          ),
+        },
+      ]),
+    ) as RobinhoodSmartAccountRuntimeManifest['modules'],
+  };
+  const bytecodeByAddress = new Map<string, `0x${string}`>([
+    [TEST_ACCOUNT.toLowerCase(), smartAccountBytecode],
+    ...Object.entries(moduleAddresses).map(
+      ([role, address]) =>
+        [
+          address.toLowerCase(),
+          moduleBytecodes[role as keyof typeof moduleBytecodes],
+        ] as [string, `0x${string}`],
+    ),
+  ]);
+  const smartAccountRuntime = await verifyRobinhoodSmartAccountRuntime({
+    manifest: smartAccountManifest,
+    client: {
+      async getChainId() {
+        return ROBINHOOD_MAINNET_CHAIN_ID;
+      },
+      async getBlockNumber() {
+        return 100n;
+      },
+      async getBlock() {
+        return { hash: TEST_BLOCK_HASH };
+      },
+      async getBytecode({ address }: { address: string }) {
+        return bytecodeByAddress.get(address.toLowerCase());
+      },
+    } as unknown as RobinhoodPublicClient,
+  });
   const smartAccount = createRobinhoodSmartAccountClient({
     policy: livePolicy,
     manifest,
     bundle,
     runtime,
+    smartAccountRuntime,
     adapter: {
+      providerId: 'reference-aa',
       network: 'mainnet',
       account: TEST_ACCOUNT,
       async simulate() {
@@ -855,11 +922,215 @@ test('smart-account policy binds network, account, program, action, target, sele
           returnData: '0x',
         };
       },
+      async submit(input) {
+        return {
+          kind: 'user_operation',
+          providerId: 'reference-aa',
+          network: 'mainnet',
+          chainId: ROBINHOOD_MAINNET_CHAIN_ID,
+          caip2: ROBINHOOD_MAINNET_CAIP2,
+          intentId: input.action.intentId,
+          accountId: input.action.accountId,
+          userOperationHash: `0x${'ab'.repeat(32)}`,
+          entryPoint: moduleAddresses.entryPoint,
+          actionCommitment: input.actionCommitment,
+          submittedAt: new Date().toISOString(),
+        };
+      },
     },
   });
+  const userOperation = await smartAccount.submit(liveAction);
+  assert.equal(userOperation.kind, 'user_operation');
+  assert.equal(userOperation.providerId, 'reference-aa');
+  assert.equal(
+    userOperation.actionCommitment,
+    hashPreparedRobinhoodAction(liveAction),
+  );
+  assert.equal(userOperation.entryPoint, moduleAddresses.entryPoint);
+
   await assert.rejects(
-    smartAccount.submit(liveAction),
-    /smart-account submission is disabled/,
+    verifyRobinhoodSmartAccountRuntime({
+      manifest: {
+        ...smartAccountManifest,
+        accountRuntimeBytecodeHash: `0x${'ff'.repeat(32)}`,
+      },
+      client: {
+        async getChainId() {
+          return ROBINHOOD_MAINNET_CHAIN_ID;
+        },
+        async getBlockNumber() {
+          return 100n;
+        },
+        async getBlock() {
+          return { hash: TEST_BLOCK_HASH };
+        },
+        async getBytecode({ address }: { address: string }) {
+          return bytecodeByAddress.get(address.toLowerCase());
+        },
+      } as unknown as RobinhoodPublicClient,
+    }),
+    /bytecode does not match/,
+  );
+});
+
+test('smart-account lifecycle enforces creation, passkey enrollment, signer rotation, and recovery readback', async () => {
+  const commitments = {
+    owner1: `0x${'11'.repeat(32)}` as const,
+    owner2: `0x${'12'.repeat(32)}` as const,
+    owner3: `0x${'13'.repeat(32)}` as const,
+    recovery: `0x${'21'.repeat(32)}` as const,
+    recoveryAuthorization: `0x${'22'.repeat(32)}` as const,
+    passkey1: `0x${'31'.repeat(32)}` as const,
+    passkey2: `0x${'32'.repeat(32)}` as const,
+    passkey3: `0x${'33'.repeat(32)}` as const,
+    approval: `0x${'41'.repeat(32)}` as const,
+  };
+  let state: RobinhoodSmartAccountLifecycleState = {
+    providerId: 'reference-aa',
+    network: 'mainnet',
+    account: TEST_ACCOUNT,
+    status: 'counterfactual',
+    revision: 0,
+    ownerSignerCommitment: commitments.owner1,
+    recoveryCommitment: commitments.recovery,
+    passkeyCredentialCommitments: [],
+    recoveryEpoch: 0,
+  };
+  let lastRequestCommitment = '';
+  const lifecycle = createRobinhoodSmartAccountLifecycleClient({
+    adapter: {
+      providerId: 'reference-aa',
+      network: 'mainnet',
+      account: TEST_ACCOUNT,
+      async readState() {
+        return state;
+      },
+      async execute(request) {
+        assert.equal(request.expectedRevision, state.revision);
+        assert.match(request.requestCommitment, /^0x[0-9a-f]{64}$/);
+        assert.notEqual(request.requestCommitment, lastRequestCommitment);
+        lastRequestCommitment = request.requestCommitment;
+        switch (request.action.kind) {
+          case 'create_account':
+            state = {
+              ...state,
+              status: 'active',
+              revision: state.revision + 1,
+              ownerSignerCommitment: request.action.ownerSignerCommitment,
+              recoveryCommitment: request.action.recoveryCommitment,
+              passkeyCredentialCommitments: [
+                request.action.initialPasskeyCredentialCommitment,
+              ],
+            };
+            break;
+          case 'enroll_passkey':
+            state = {
+              ...state,
+              revision: state.revision + 1,
+              passkeyCredentialCommitments: [
+                ...state.passkeyCredentialCommitments,
+                request.action.passkeyCredentialCommitment,
+              ],
+            };
+            break;
+          case 'rotate_signer':
+            state = {
+              ...state,
+              revision: state.revision + 1,
+              ownerSignerCommitment: request.action.nextOwnerSignerCommitment,
+            };
+            break;
+          case 'recover_account':
+            state = {
+              ...state,
+              status: 'active',
+              revision: state.revision + 1,
+              ownerSignerCommitment: request.action.nextOwnerSignerCommitment,
+              passkeyCredentialCommitments: [
+                request.action.nextPasskeyCredentialCommitment,
+              ],
+              recoveryEpoch: state.recoveryEpoch + 1,
+            };
+            break;
+        }
+        return state;
+      },
+    },
+  });
+  const now = Math.floor(Date.now() / 1_000);
+  const baseRequest = (requestId: string, expectedRevision: number) => ({
+    version: 1 as const,
+    requestId,
+    network: 'mainnet' as const,
+    account: TEST_ACCOUNT,
+    expectedRevision,
+    humanApprovalCommitment: commitments.approval,
+    preparedAt: new Date((now - 1) * 1_000).toISOString(),
+    expiresAt: new Date((now + 300) * 1_000).toISOString(),
+  });
+  await lifecycle.execute(
+    {
+      ...baseRequest('lifecycle:create:1', 0),
+      action: {
+        kind: 'create_account',
+        ownerSignerCommitment: commitments.owner1,
+        recoveryCommitment: commitments.recovery,
+        initialPasskeyCredentialCommitment: commitments.passkey1,
+      },
+    },
+    { now },
+  );
+  await lifecycle.execute(
+    {
+      ...baseRequest('lifecycle:passkey:2', 1),
+      action: {
+        kind: 'enroll_passkey',
+        passkeyCredentialCommitment: commitments.passkey2,
+      },
+    },
+    { now },
+  );
+  await lifecycle.execute(
+    {
+      ...baseRequest('lifecycle:signer:3', 2),
+      action: {
+        kind: 'rotate_signer',
+        nextOwnerSignerCommitment: commitments.owner2,
+      },
+    },
+    { now },
+  );
+  const recovered = await lifecycle.execute(
+    {
+      ...baseRequest('lifecycle:recover:4', 3),
+      action: {
+        kind: 'recover_account',
+        nextOwnerSignerCommitment: commitments.owner3,
+        nextPasskeyCredentialCommitment: commitments.passkey3,
+        recoveryAuthorizationCommitment: commitments.recoveryAuthorization,
+      },
+    },
+    { now },
+  );
+  assert.equal(recovered.revision, 4);
+  assert.equal(recovered.recoveryEpoch, 1);
+  assert.equal(recovered.ownerSignerCommitment, commitments.owner3);
+  assert.deepEqual(recovered.passkeyCredentialCommitments, [
+    commitments.passkey3,
+  ]);
+
+  await assert.rejects(
+    lifecycle.execute(
+      {
+        ...baseRequest('lifecycle:stale:5', 3),
+        action: {
+          kind: 'rotate_signer',
+          nextOwnerSignerCommitment: commitments.owner1,
+        },
+      },
+      { now },
+    ),
+    /lost its revision race/,
   );
 });
 

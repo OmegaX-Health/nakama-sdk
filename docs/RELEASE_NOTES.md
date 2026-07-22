@@ -20,9 +20,10 @@
 - Added canonical eligibility and exact-target eligibility-revocation EIP-712
   helpers, a relayer-safe revocation action builder, exhaustive revocation event
   decoding, and artifact parity with the hardened MembershipRegistry ABI.
-- Added provider-neutral smart-account simulation and paymaster quote policy
-  boundaries while keeping Phase-0 agent submission disabled pending provider
-  selection and independent finalized onchain policy proof.
+- Added independent smart-account account/module bytecode verification, exact
+  user-operation submission binding, and a provider-neutral lifecycle state
+  machine for creation, passkeys, signer rotation, and recovery. Paymaster
+  behavior remains quote-only pending provider selection and live conformance.
 - Added bounded public indexer pagination/retry validation, cursor-loop
   detection, finality/reconciliation context, and block-hash reorg cache
   invalidation; offline or unreconciled state remains read-only.

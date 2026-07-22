@@ -155,19 +155,26 @@ The SDK never accepts a private key and never switches the wallet's network.
 `requestRobinhoodAction(...)` only calls `eth_sendTransaction` for the already
 simulated action.
 
-Phase-0 smart-account submission is intentionally disabled. The policy API can
-simulate only a narrow allowlist of permissionless maintenance calls, but
-`submit(...)` fails until the SDK has an independent finalized onchain verifier
-for module code, installed policy, revocation state, and calldata constraints.
-An adapter's self-attestation is never treated as proof.
+Phase-0 smart-account submission remains limited to a narrow allowlist of
+permissionless maintenance calls. Before `submit(...)` exists, callers must run
+`verifyRobinhoodSmartAccountRuntime(...)` against a reviewed manifest for the
+account, factory, entry point, validation, recovery, and passkey modules. The
+client reruns the exact simulation, enforces gas and block bounds, and rejects a
+provider result that changes the chain, account, entry point, intent, or action
+commitment. An adapter's self-attestation is never treated as proof.
 
 `createRobinhoodPaymasterClient(...)` is also quote-only. Its provider-neutral
 policy and returned quote must bind sponsor, account, program, action
 commitment, policy commitment, target, selector, native value, gas, rate window,
 and expiry. It does not submit a user operation or turn provider-supplied
-payloads into trusted onchain proof. Account creation/recovery, passkey UX,
-signer changes, compatible wallet fallback, provider selection, and
-independently verified submission are external Phase-0 gates.
+payloads into trusted onchain proof.
+
+`createRobinhoodSmartAccountLifecycleClient(...)` supplies the provider-neutral
+account creation, passkey enrollment, signer rotation, and recovery contract.
+Every operation binds a one-time human approval, expiry, expected revision, and
+request commitment, then requires exact provider readback. A production vendor,
+fallback-wallet UX, live conformance run, and independently verified installed
+policy/revocation state remain external Phase-0 gates.
 
 For sponsor onboarding, `createRobinhoodSponsorFundingBatch(...)` can produce a
 non-submitting exact approval-plus-funding plan. It rejects mismatched accounts,

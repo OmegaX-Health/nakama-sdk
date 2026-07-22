@@ -122,10 +122,18 @@ never hard-code independent numeric mappings.
 `requestRobinhoodAction(...)` is the EIP-1193 write boundary. It does not accept
 a key or arbitrary transaction.
 
-`createRobinhoodSmartAccountClient(...)` can perform bounded simulation for the
-Phase-0 maintenance allowlist. Smart-account submission always fails closed in
-this release because an injected adapter cannot independently prove finalized
-module installation, revocation state, runtime code, and calldata enforcement.
+`verifyRobinhoodSmartAccountRuntime(...)` reads the account plus factory, entry
+point, validation, recovery, and passkey bytecodes at one canonical block and
+returns an unforgeable SDK capability. `createRobinhoodSmartAccountClient(...)`
+accepts that capability, reruns a bounded simulation for the Phase-0 maintenance
+allowlist, and validates the returned user operation against the exact action,
+account, chain, entry point, intent, and commitment. Live installed-policy and
+revocation conformance is still required for any chosen provider.
+
+`createRobinhoodSmartAccountLifecycleClient(...)` enforces the provider-neutral
+state machine for account creation, passkey enrollment, signer rotation, and
+recovery. Each mutation is approval-, expiry-, commitment-, and revision-bound;
+the SDK rejects any result that does not survive exact provider readback.
 
 `createRobinhoodPaymasterClient(...)` isolates provider-specific quote behavior
 behind `RobinhoodPaymasterAdapter`. `validateRobinhoodPaymasterPolicy(...)`

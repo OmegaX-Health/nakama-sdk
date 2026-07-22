@@ -8,7 +8,7 @@
 
 > **createRobinhoodSponsorFundingBatch**(`params`): [`RobinhoodSponsorFundingBatch`](../interfaces/RobinhoodSponsorFundingBatch.md)
 
-Defined in: [src/robinhood/wallet.ts:787](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L787)
+Defined in: [src/robinhood/wallet.ts:1398](https://github.com/OmegaX-Health/nakama-sdk/blob/main/src/robinhood/wallet.ts#L1398)
 
 Creates a non-submitting exact approval+funding batch plan. A selected smart
 account provider may encode it later, but the SDK exposes no generic batch

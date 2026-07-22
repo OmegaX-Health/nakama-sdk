@@ -94,19 +94,24 @@ expiry, no-quorum escalation, information-timeout escalation, and unappealed
 denial finalization. Economic, membership, role, funding, settlement, pause, and
 other privileged actions are rejected.
 
-Submission is disabled even for the allowlist. It will remain disabled until an
-independent finalized read verifies module code, policy installation, revocation
-state, limits, target, selector, program, and action constraints; an adapter's
-self-attestation is insufficient.
+Submission for the allowlist requires a capability returned by
+`verifyRobinhoodSmartAccountRuntime(...)`. That verifier reads the account and
+all five privilege-bearing module bytecodes at one canonical block. The client
+then reruns simulation and validates the provider's user-operation result
+against the exact action, chain, entry point, account, gas cap, and commitment.
+Installed policy/revocation readback remains a live provider-conformance gate;
+an adapter's self-attestation is insufficient.
 
 A selected paymaster can later implement `RobinhoodPaymasterAdapter`, but the
 Phase-0 client requests and validates quotes only. Policy and quote must agree
 on sponsor, account, program, canonical policy commitment, action commitment,
 target, selector, native value, gas ceiling, bounded rate window, and expiry.
-The client deliberately exposes no user-operation submission method. Account
-lifecycle tests, passkey recovery, signer changes, fallback-wallet behavior,
-provider selection, and independent finalized sponsorship verification remain
-release gates.
+Paymaster submission remains outside this quote client.
+`createRobinhoodSmartAccountLifecycleClient(...)` does expose a strict,
+revision-bound provider contract for account creation, passkey enrollment,
+signer rotation, and recovery with post-mutation readback. Provider selection,
+fallback-wallet UX, live lifecycle conformance, and independently finalized
+sponsorship verification remain release gates.
 
 ## Validate a Virtuals packet
 
