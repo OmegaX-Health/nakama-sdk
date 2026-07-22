@@ -1,7 +1,13 @@
-# Nakama Oracle Worker Starter
+# Nakama Claim Authorization Relayer Starter
 
-Protocol-bound oracle attestation starter. The smoke uses an in-memory keypair;
-production workers should use KMS or a secret manager.
+Builds the policy registry's exact Ethereum mainnet `ClaimRecipient` EIP-712 payload,
+digest, and replay key. The starter never handles a private key; the claimant's
+EIP-1193 wallet signs, and a production relayer must use a durable atomic replay
+store before submission.
+
+Set `POLICY_REGISTRY_ADDRESS` to the published
+`liveContracts.policyRegistry.address`; the core protocol address is not the
+EIP-712 verifying contract.
 
 ```bash
 npm install

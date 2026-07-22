@@ -1,69 +1,57 @@
 # Nakama SDK Examples
 
-These examples are safe first-run checks for external builders. They do not
-require funded signers, private keys, or live transaction submission.
+These examples exercise the Ethereum mainnet SDK without funded accounts,
+private keys, proprietary infrastructure, or transaction submission.
 
-## Devnet Smoke
+## Ethereum mainnet smoke
 
-Verifies the package import surface, safe client setup, PDA derivation, network
-metadata, and public protocol surface.
+Checks chain identity, CAIP account formatting, generated ABI provenance, and
+the fail-closed deployment manifest.
 
 ```bash
 npm run example:smoke
 ```
 
-Optional:
-
-```bash
-SOLANA_RPC_URL=https://api.devnet.solana.com npm run example:smoke
-```
-
-In an installed consumer project, use the packaged examples and CLI:
+In an installed consumer project:
 
 ```bash
 npm install @nakama-health/protocol-sdk
 npm install --save-dev tsx
-npx @nakama-health/protocol-sdk examples
-npx tsx node_modules/@nakama-health/protocol-sdk/examples/devnet-smoke.ts
+npx tsx node_modules/@nakama-health/protocol-sdk/examples/ethereum-mainnet-smoke.ts
 ```
 
-## App Builder Read Model
+## Contract calldata
 
-Shows how a health app, wallet, or backend can turn member positions,
-obligations, and claim cases into a user-facing read model.
+Encodes and decodes the canonical `deriveClaimId` call from the generated
+`NakamaPolicyRegistry` ABI.
 
 ```bash
-npm run example:app
+npm run example:contract
 ```
 
-## Oracle Attestation
+## Claim-recipient authorization
 
-Shows how an oracle service can sign and verify a protocol-bound claim
-attestation with a KMS-style adapter. The example uses an in-memory keypair for
-demonstration only.
+Builds the exact EIP-712 payload a claimant submits to an EIP-1193 wallet, then
+derives its digest and replay key without handling a private key.
 
 ```bash
-npm run example:oracle
+npm run example:authorization
 ```
 
-## Check All Examples
+## Check all examples
 
 ```bash
 npm run examples:check
 ```
 
-## Consumer Dogfood App
+## Consumer dogfood app
 
-`examples/consumer-app` is a tracked external-consumer dogfood fixture. It does
-not import SDK source files directly.
+`examples/consumer-app` installs the packed SDK as an external consumer, checks
+the canonical Ethereum subpaths, compiles, and runs a no-signature smoke.
 
 ```bash
 npm run dogfood:consumer
 ```
-
-The script packs the SDK, installs the tarball into a temporary copy of the app,
-typechecks, builds, scaffolds the public templates, and runs no-signature
-smokes.
 
 ## Public CLI
 

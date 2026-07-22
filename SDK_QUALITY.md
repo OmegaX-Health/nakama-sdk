@@ -1,125 +1,121 @@
-# OmegaX SDK Quality Doctrine
+# Nakama SDK Quality Doctrine
 
-This SDK is a production integration surface for humans and AI agents. It should
-be boringly reliable: easy to inspect, explicit about trust boundaries, and
-aligned with the live OmegaX protocol.
+This SDK is the public integration boundary for Nakama's Ethereum protocol.
+It should preserve user agency and Ethereum neutrality: applications
+bring their own RPC and wallet, users keep their keys, and contract state is the
+settlement source of truth.
 
-## API Naming
+## Canonical network
 
-- Use canonical protocol language: policy series, policy position, claim record,
-  and protocol config.
-- Do not add `v2`, `legacy`, compatibility, reward, or seeker-era names unless
-  the active protocol surface still requires them.
-- Prefer stable nouns over app-specific roles. SDK names should describe the
-  protocol concept, not a current UI journey.
+- Canonical chain identity is Ethereum mainnet: chain ID `1`, CAIP-2
+  `eip155:1`.
+- RPC URLs are caller-owned configuration. No vendor endpoint is privileged.
+- EIP-1193 requests must validate the wallet's current chain and must not switch
+  it silently.
+- Ethereum addresses are checksummed at trust boundaries and CAIP-10 identifiers
+  retain chain context.
 
-## Public Exports
+## Contract parity
 
-- Every public export must be useful from TypeScript tooling, documented through
-  generated API docs, and covered by an authored doc, example, or test when it is
-  a primary workflow entrypoint.
-- Public subpaths must stay listed in `package.json#exports` and
-  `SDK_RUNTIME.json`.
-- Remove stale exports in place during pre-1.0 alignment rather than adding
-  parallel aliases by default.
+- The canonical artifact contains `NakamaProtocolFactory`,
+  `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and the `ReserveVault`
+  template. The SDK refuses another contract set, chain, deployment plan, or
+  source artifact.
+- All four checked-in ABIs, generated constants, ABI SHA-256 digests, metadata,
+  and the deployment manifest must agree before release.
+- Calldata and event helpers consume ABI input; there is no hand-maintained
+  parallel instruction schema.
+- The protocol has scoped controllers and bounded scoped pauses, with no global
+  owner, upgrade proxy, or global pause in the canonical ABI. SDK docs must not
+  invent those powers.
 
-## Transaction Builders
+## Deployment safety
 
-- Builders produce unsigned transaction intent only. They must never sign,
-  broadcast, assume a wallet, or hide network mutation.
-- Required accounts and args must fail before a nonsensical instruction is
-  produced.
-- Custom program IDs are unsafe by default. They require an explicit unsafe flag
-  or `OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` for devnet, localnet, and
-  tests.
-- PDA derivation must use the same configured program ID as the instruction
-  being built.
+- An unconfigured manifest contains no factory, registry, protocol, deployer,
+  transaction, block, bytecode, or verification claim. ReserveVault remains a
+  CREATE2 template and never receives a launch address.
+- A configured deployment must prove one successful factory receipt, registry
+  at factory nonce one, protocol at nonce two, mutual factory/registry/core
+  getters, at least 12 confirmations, and an independent audit.
+- Published manifests bind the audit report, release approval, protocol
+  artifact, standalone ABI, source-verification provider/URL, and verification
+  evidence by canonical lowercase SHA-256 digest. Raw deployment output remains
+  `deployed-unverified` until the reviewed promotion gate succeeds.
+- Live validation checks all three exact runtime hashes and immutable-aware
+  templates, the factory creation input, and the approved ReserveVault template.
+- Source verification is exactly Sourcify v2 on Ethereum mainnet for the
+  factory, registry, and core; each canonical lookup must reproduce the exact
+  creation/runtime matches, timestamp, and match ID in the manifest.
+- Until those fields exist, contract-targeted writes are unavailable. A zero or
+  placeholder address is never a release shortcut.
 
-## Readers And RPC Helpers
+## Signing and authorization
 
-- Readers must validate protocol account ownership and discriminators where the
-  SDK has enough information to do so.
-- RPC helpers must make simulation, broadcast, and signature-verification
-  downgrades explicit in return values.
-- Helpers may read network state only when their name and docs make that clear.
+- `SigningPayloadV2` carries version `2`, CAIP-2 chain identity, CAIP-10 account
+  identity, and exactly one transaction or typed-data branch.
+- Wallet results use kind-matched `ReceiptSubmissionV2` or
+  `AuthorizationSubmissionV2` envelopes tied to a server-issued intent ID;
+  transaction hashes and signatures are never interchangeable.
+- The SDK never accepts, stores, or derives a private key.
+- Claim-recipient authorization must exactly match the policy registry's EIP-712
+  domain (`Nakama Policy Registry`, version `1`) and `ClaimRecipient` type.
+- Verification binds contract, chain, claimant, claim ID, recipient, trusted
+  onchain nonce, and deadline. ERC-1271 claimants require RPC-backed signature
+  validation.
+- Relayers must atomically consume both the typed-data digest and claim/nonce
+  replay key in durable shared storage.
 
-## Errors And Validation
+## Assets and finality
 
-- SDK-thrown errors should use stable `OmegaX*Error` classes with deterministic
-  `code` values and actionable messages.
-- Validation should fail closed around signing, expected transaction bytes,
-  account ownership, custom program IDs, and protocol-derived addresses.
-- Silent fallbacks are allowed only when the result records the fallback and the
-  caller can reject it.
+- ERC-20 integrations validate code before reading metadata, balance, or
+  allowance and can pin expected decimals and symbol.
+- Transaction success means more than a receipt: verification checks revert
+  status, confirmation depth, canonical block hash, a stable second receipt,
+  and Ethereum safe head.
+- Revert data should be decoded with the canonical ABI when available and
+  surfaced as typed SDK errors.
+- Contract-write backends must verify the mined sender, destination, calldata,
+  value, and submitted intent ID against their server-owned transaction intent
+  before accepting the receipt.
 
-## Safety And Side Effects
+## Legacy compatibility
 
-- No hidden signing.
-- No hidden broadcast.
-- No hidden cluster assumption.
-- No hidden mutation from examples, docs, templates, or CLI checks.
-- Side-effectful methods must name the action and document the caller-owned
-  signer, payer, network, and retry behavior.
+- Solana modules remain only for historical decoding, reads, simulation, and
+  migration while consumers move to Ethereum.
+- Legacy Solana modules are absent from the canonical root, and their runtime
+  dependencies are optional peers installed only by explicit migration users.
+- Every Solana instruction/transaction builder, safe-client write method,
+  broadcast, and MagicBlock write path fails with
+  `NAKAMA_LEGACY_WRITE_DISABLED`.
+- Explicit EIP-1193 gas limits above the EIP-7825 `0x1000000` ceiling fail
+  before a wallet request is constructed.
+- New examples and docs use `ethereum`, `ethereum_contract`, or
+  `ethereum_oracle`; they do not present legacy subpaths as canonical.
 
-## Protocol Parity
+## Generated artifacts and docs
 
-- Treat `../omegax-protocol` as the active source of truth while the protocol is
-  devnet-first.
-- Refresh fixtures and generated bindings only through project scripts.
-- Preserve the release target in `SDK_RUNTIME.json` and keep protocol surface
-  counts, program ID, and contract hash aligned with generated artifacts.
-- Run `npm run verify:protocol:local` whenever builders, readers, seeds,
-  fixtures, or workspace integration change.
+- `npm run import:ethereum-contract` imports the canonical sibling protocol
+  artifact and records ABI plus bytecode provenance.
+- `npm run generate:protocol-bindings` regenerates the TypeScript ABI and
+  deployment constants from checked-in inputs.
+- `npm run docs:api:generate` owns generated API markdown.
+- README, API reference, runtime manifest, generated docs, package exports, and
+  tests must agree on availability and side effects.
 
-## Docs And Examples
-
-- `README.md`, `docs/*.md`, generated API docs, templates, and examples must
-  agree on imports, subpaths, side effects, and command snippets.
-- Examples must be copyable without funded keys or irreversible actions by
-  default.
-- Docs must state setup assumptions, return types, side effects, failure modes,
-  and the validation command for the workflow.
-- Packaged docs and examples are part of the developer experience, not release
-  leftovers.
-
-## Agent-Friendly Usage
-
-- Agents should be able to start from `README.md`, `SDK_RUNTIME.json`, or
-  `examples/README.md` and discover the safe entrypoint for each lane.
-- Prefer obvious import surfaces and deterministic commands over prose-only
-  guidance.
-- Keep first-action flows small: connect, derive/read, build unsigned intent,
-  validate signed intent, then broadcast only when the caller explicitly asks.
-- Do not rely on ambient env vars except documented unsafe/test-only paths.
-
-## Release Gates
-
-Before handoff for broad or release-sensitive SDK work, run:
+## Required validation
 
 ```bash
-npm test
+npm run protocol:artifact:check
 npm run typecheck
 npm run lint
 npm run format:check
 npm run build
+npm test
 npm run docs:api:check
 npm run docs:check
-npm run docs:sync:check:strict
 npm run runtime:check
-npm run protocol:artifact:check
-npm run examples:check
-npm run dogfood:consumer
-npm run cli:check
-npm run templates:check
-npm run dx:smoke
-npm run release:state
-npm run security:secrets
-npm run security:install-scripts
-npm run security:release-governance
-npm run security:package
-npm run audit:prod
-npm pack --dry-run
+npm run audit:packed-consumer
 ```
 
-Run `npm run verify:release:protocol` before tagging or publishing when protocol
-parity is in scope.
+Mainnet fork tests, independent contract review, source verification, and live
+RPC/deployment checks are release gates outside a standalone SDK unit suite.

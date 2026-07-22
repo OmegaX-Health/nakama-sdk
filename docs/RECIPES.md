@@ -1,238 +1,96 @@
 # SDK Recipes — `@nakama-health/protocol-sdk`
 
-These recipes are copy-paste starting points for common external integrations.
-Use `createSafeProtocolClient(...)` by default. Use raw builders, dynamic
-instruction construction, or custom program IDs only for protocol-maintainer,
-localnet, or test workflows.
+These recipes use Ethereum mainnet, caller-owned RPC, self-custodial wallets,
+and the generated factory, policy registry, core, and ReserveVault artifacts.
 
-## Start With The CLI
+## Start with a scaffold
 
 ```bash
 npx @nakama-health/protocol-sdk doctor
 npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
 npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
+npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-claim-relayer
 ```
 
-Expected output: `doctor` should report passing checks without requiring a
-funded wallet, private key, or transaction submission.
+Each scaffold typechecks and runs without a funded wallet or live transaction.
 
-Next step: choose one scaffold and run `npm install`, `npm run typecheck`,
-`npm run build`, and `npm run smoke` inside it.
-
-## Node Backend
-
-Install:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
-cd nakama-provider-backend
-npm install
-```
+## Encode a contract call
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
+  NAKAMA_POLICY_REGISTRY_ABI,
+  encodeEthereumCalldata,
 } from '@nakama-health/protocol-sdk';
 
-const networkInfo = getOmegaXNetworkInfo('devnet');
-const connection = createConnection({
-  network: 'devnet',
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
+const data = encodeEthereumCalldata({
+  abi: NAKAMA_POLICY_REGISTRY_ABI,
+  functionName: 'deriveClaimId',
+  args: [positionId, claimant, nullifier],
 });
-const protocol = createSafeProtocolClient(connection, {
-  programId: PROTOCOL_PROGRAM_ID,
-});
-
-export function reserveDomainAddress(domainId: string) {
-  return deriveReserveDomainPda({
-    domainId,
-    programId: protocol.getProgramId(),
-  }).toBase58();
-}
 ```
 
-Expected output: a JSON status payload with `network`, `programId`,
-`reserveDomain`, `healthPlan`, instruction count, and account count.
+The ABI is generated from the canonical compiled protocol artifact, so callers
+do not maintain a parallel hand-written instruction schema.
 
-Next step: wire the status helper into your backend route and keep all
-signing/funded flows behind explicit product review.
-
-## Next.js Server Route
-
-Install:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-```
+## Inspect an ERC-20 before use
 
 ```ts
-import { NextResponse } from 'next/server';
-import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
-} from '@nakama-health/protocol-sdk';
+import { inspectErc20 } from '@nakama-health/protocol-sdk/ethereum_contract';
 
-export async function GET() {
-  const protocol = createSafeProtocolClient(
-    createConnection({
-      network: 'devnet',
-      rpcUrl: process.env.SOLANA_RPC_URL,
-    }),
-    { programId: PROTOCOL_PROGRAM_ID },
-  );
-
-  return NextResponse.json({
-    programId: protocol.getProgramId().toBase58(),
-    instructions: listProtocolInstructionNames(),
-    accounts: listProtocolAccountNames(),
-  });
-}
+const asset = await inspectErc20(client, {
+  token: tokenAddress,
+  owner: claimant,
+  spender: protocolAddress,
+  expectedSymbol: 'USDC',
+  expectedDecimals: 6,
+  minimumBalance: amount,
+  minimumAllowance: amount,
+});
 ```
 
-Expected output: the GET route returns protocol metadata without any signer.
+This proves contract code exists and checks metadata, balance, and allowance.
+Token symbols are display metadata, so production configuration should also pin
+the exact token address.
 
-Next step: move the generated route into `app/api/nakama/status/route.ts` and
-swap demo IDs for your product IDs.
+## Build claim-recipient typed data
 
-## Oracle Worker
+```ts
+import { createClaimRecipientAuthorizationSigningPayload } from '@nakama-health/protocol-sdk/ethereum_oracle';
 
-Install:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
-cd nakama-oracle-worker
-npm install
+const payload = createClaimRecipientAuthorizationSigningPayload({
+  account: claimant,
+  verifyingContract: policyRegistryAddress,
+  message: { claimId, recipient, nonce: trustedNonce, deadline },
+});
 ```
+
+Send this through `requestSigningSubmissionV2(...)` with a server-issued intent
+ID. The result is an `AuthorizationSubmissionV2`, so a transaction hash cannot
+be substituted for the signature. A relayer should then call
+`verifyAndConsumeClaimRecipientAuthorization(...)` with the original typed
+data, trusted onchain nonce, and a durable atomic replay guard. Pass an Ethereum
+public client for ERC-1271 smart-contract claimants.
+
+## Handle typed failures
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  attestProtocolOutcome,
-  createOracleSignerFromEnv,
-} from '@nakama-health/protocol-sdk';
-
-const signer = createOracleSignerFromEnv();
-
-export async function attestClaimOutcome(params: {
-  healthPlan: string;
-  fundingLine: string;
-  claimCase: string;
-  nonce: string;
-}) {
-  return await attestProtocolOutcome({
-    userId: 'member-001',
-    cycleId: 'claim-cycle-001',
-    outcomeId: 'claim-supported',
-    payload: {
-      decision: 'support_approve',
-      approvedAmountRaw: '150000000',
-    },
-    context: {
-      network: 'devnet',
-      programId: PROTOCOL_PROGRAM_ID,
-      healthPlan: params.healthPlan,
-      fundingLine: params.fundingLine,
-      claimCase: params.claimCase,
-      schemaKeyHashHex: 'ab'.repeat(32),
-      audience: 'claim-intake-service',
-      nonce: params.nonce,
-      asOfIso: new Date().toISOString(),
-      expiresAtIso: new Date(Date.now() + 5 * 60_000).toISOString(),
-    },
-    signer,
-  });
-}
-```
-
-Expected output: a protocol-bound attestation verifies locally and prints an
-attestation ID plus digest.
-
-Next step: replace the in-memory demo signer with KMS or secret-manager wiring
-and keep signer material out of tracked files.
-
-## Read-Only Frontend
-
-Install:
-
-```bash
-npm install @nakama-health/protocol-sdk
-```
-
-```ts
-import {
-  createConnection,
-  deriveHealthPlanPda,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
-  listProtocolAccountNames,
-} from '@nakama-health/protocol-sdk';
-
-const networkInfo = getOmegaXNetworkInfo('devnet');
-const connection = createConnection({
-  network: 'devnet',
-  rpcUrl: networkInfo.defaultRpcUrl,
-});
-
-const reserveDomain = deriveReserveDomainPda({ domainId: 'open-usdc-domain' });
-const healthPlan = deriveHealthPlanPda({
-  reserveDomain,
-  planId: 'genesis-protect-acute',
-});
-
-console.log({
-  rpcEndpoint: connection.rpcEndpoint,
-  healthPlan: healthPlan.toBase58(),
-  accountTypes: listProtocolAccountNames(),
-});
-```
-
-Expected output: a read-only status object with an RPC endpoint, derived health
-plan PDA, and known account types.
-
-Next step: move RPC calls that need secrets, signing, or privileged context into
-a backend route.
-
-## Typed Error Handling
-
-```ts
-import {
-  OmegaXError,
-  OmegaXProgramMismatchError,
-  createConnection,
-  createSafeProtocolClient,
-} from '@nakama-health/protocol-sdk';
+  NakamaEthereumError,
+  NakamaEthereumWrongChainError,
+} from '@nakama-health/protocol-sdk/errors';
 
 try {
-  createSafeProtocolClient(createConnection(), {
-    programId: '11111111111111111111111111111111',
-  });
+  await verifyEthereumReceipt(client, { hash });
 } catch (error) {
-  if (error instanceof OmegaXProgramMismatchError) {
+  if (error instanceof NakamaEthereumWrongChainError) {
+    // Reject the endpoint or wallet configuration.
+  } else if (error instanceof NakamaEthereumError) {
     console.error(error.code, error.details);
-  } else if (error instanceof OmegaXError) {
-    console.error(error.code, error.message);
   } else {
     throw error;
   }
 }
 ```
 
-## Dogfood Fixture
-
-Run the tracked external-consumer fixture before release:
-
-```bash
-npm run dogfood:consumer
-```
-
-The fixture installs the packed SDK tarball into a temp project, typechecks,
-builds, and runs a no-signature smoke.
+Run `npm run dogfood:consumer` before release to install the packed SDK into an
+external fixture, compile every Ethereum subpath, and execute its safe smoke.

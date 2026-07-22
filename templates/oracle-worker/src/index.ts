@@ -1,77 +1,38 @@
-import bs58 from 'bs58';
-import nacl from 'tweetnacl';
-import { Keypair } from '@solana/web3.js';
-
 import {
-  PROTOCOL_PROGRAM_ID,
-  attestProtocolOutcome,
-  createOracleSignerFromKmsAdapter,
-  verifyProtocolOracleAttestation,
+  claimRecipientNonceReplayKey,
+  createClaimRecipientAuthorizationSigningPayload,
+  hashClaimRecipientAuthorization,
+  normalizeEthereumAddress,
 } from '@nakama-health/protocol-sdk';
 
-const oracleKeypair = Keypair.generate();
-const signer = createOracleSignerFromKmsAdapter({
-  keyId: process.env.ORACLE_SIGNER_KEY_ID ?? 'dev-oracle-key',
-  publicKeyBase58: oracleKeypair.publicKey.toBase58(),
-  signWithKms: async (message) =>
-    nacl.sign.detached(message, oracleKeypair.secretKey),
-});
-
-const issuedAtIso = '2026-05-06T00:00:00.000Z';
-const healthPlan = Keypair.generate().publicKey;
-const fundingLine = Keypair.generate().publicKey;
-const claimCase = Keypair.generate().publicKey;
-
-const { attestation } = await attestProtocolOutcome({
-  userId: 'member-001',
-  cycleId: 'claim-cycle-001',
-  outcomeId: 'claim-supported',
-  payload: {
-    decision: 'support_approve',
-    approvedAmountRaw: '150000000',
+const payload = createClaimRecipientAuthorizationSigningPayload({
+  account:
+    process.env.CLAIMANT_ADDRESS ??
+    '0x0000000000000000000000000000000000000001',
+  verifyingContract:
+    process.env.POLICY_REGISTRY_ADDRESS ??
+    '0x0000000000000000000000000000000000000002',
+  message: {
+    claimId: `0x${'11'.repeat(32)}` as `0x${string}`,
+    recipient: normalizeEthereumAddress(
+      process.env.RECIPIENT_ADDRESS ??
+        '0x0000000000000000000000000000000000000003',
+    ),
+    nonce: 0n,
+    deadline: 2_000_000_000n,
   },
-  context: {
-    network: 'devnet',
-    programId: PROTOCOL_PROGRAM_ID,
-    healthPlan: healthPlan.toBase58(),
-    fundingLine: fundingLine.toBase58(),
-    claimCase: claimCase.toBase58(),
-    schemaKeyHashHex: 'ab'.repeat(32),
-    audience: 'claim-intake-service',
-    nonce: 'oracle-worker-smoke',
-    issuedAtIso,
-    asOfIso: issuedAtIso,
-    expiresAtIso: '2026-05-07T00:00:00.000Z',
-  },
-  signer,
 });
-
-const verified = verifyProtocolOracleAttestation(attestation, {
-  nowIso: issuedAtIso,
-  expectedVerifierPublicKeyBase58: bs58.encode(
-    oracleKeypair.publicKey.toBytes(),
-  ),
-  expectedVerifierKeyId: signer.keyId,
-  expectedNetwork: 'devnet',
-  expectedProgramId: PROTOCOL_PROGRAM_ID,
-  expectedHealthPlan: healthPlan,
-  expectedFundingLine: fundingLine,
-  expectedClaimCase: claimCase,
-  expectedAudience: 'claim-intake-service',
-  expectedNonce: 'oracle-worker-smoke',
-});
-
-if (!verified) {
-  throw new Error('Expected oracle worker attestation to verify.');
-}
 
 console.log(
   JSON.stringify(
     {
       ok: true,
-      role: 'oracle-worker',
-      attestationId: attestation.id,
-      digestHex: attestation.digestHex,
+      role: 'claim-authorization-relayer',
+      chainId: payload.chainId,
+      claimant: payload.accountId,
+      digest: hashClaimRecipientAuthorization(payload.typedData),
+      nonceReplayKey: claimRecipientNonceReplayKey(payload.typedData),
+      next: 'Ask the claimant wallet to sign with eth_signTypedData_v4.',
     },
     null,
     2,

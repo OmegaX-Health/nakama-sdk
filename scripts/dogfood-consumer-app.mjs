@@ -33,20 +33,29 @@ function run(command, args, options = {}) {
   return result.stdout;
 }
 
-function parsePackedTarball(stdout) {
+function parsePackedTarball(stdout, destination = sdkRoot) {
   const [pack] = JSON.parse(stdout);
   if (!pack?.filename) {
     throw new Error('npm pack did not return a tarball filename.');
   }
-  return resolve(sdkRoot, pack.filename);
+  return resolve(destination, pack.filename);
 }
 
 async function main() {
+  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-dogfood-'));
+  const npmEnvironment = {
+    npm_config_cache: join(tempRoot, '.npm-cache'),
+    npm_config_logs_dir: join(tempRoot, '.npm-logs'),
+  };
   run('npm', ['run', 'build']);
   const tarballPath = parsePackedTarball(
-    run('npm', ['pack', '--ignore-scripts', '--json'], { capture: true }),
+    run(
+      'npm',
+      ['pack', '--ignore-scripts', '--json', '--pack-destination', tempRoot],
+      { capture: true, env: npmEnvironment },
+    ),
+    tempRoot,
   );
-  const tempRoot = await mkdtemp(join(tmpdir(), 'nakama-sdk-dogfood-'));
   const appRoot = join(tempRoot, 'consumer-app');
 
   try {
@@ -63,10 +72,11 @@ async function main() {
 
     run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund'], {
       cwd: appRoot,
+      env: npmEnvironment,
     });
-    run('npm', ['run', 'typecheck'], { cwd: appRoot });
-    run('npm', ['run', 'build'], { cwd: appRoot });
-    run('npm', ['run', 'smoke'], { cwd: appRoot });
+    run('npm', ['run', 'typecheck'], { cwd: appRoot, env: npmEnvironment });
+    run('npm', ['run', 'build'], { cwd: appRoot, env: npmEnvironment });
+    run('npm', ['run', 'smoke'], { cwd: appRoot, env: npmEnvironment });
   } finally {
     await rm(tarballPath, { force: true });
     await rm(tempRoot, { recursive: true, force: true });

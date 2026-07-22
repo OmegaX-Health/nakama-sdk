@@ -1,15 +1,26 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+const npmStateRoot = mkdtempSync(join(tmpdir(), 'nakama-sdk-package-check-'));
+process.on('exit', () => {
+  rmSync(npmStateRoot, { recursive: true, force: true });
+});
 
 const result = spawnSync(
   'npm',
   ['pack', '--dry-run', '--ignore-scripts', '--json'],
   {
     encoding: 'utf8',
+    env: {
+      ...process.env,
+      npm_config_cache: join(npmStateRoot, '.npm-cache'),
+      npm_config_logs_dir: join(npmStateRoot, '.npm-logs'),
+    },
   },
 );
 
@@ -46,6 +57,8 @@ const allowed = files.filter(
     path === 'NOTICE' ||
     path === 'SDK_QUALITY.md' ||
     path === 'SDK_RUNTIME.json' ||
+    path.startsWith('contracts/ethereum/') ||
+    path.startsWith('deployments/') ||
     publicDocs.has(path) ||
     path.startsWith('docs/generated/api/') ||
     path === 'examples/README.md' ||
@@ -63,9 +76,20 @@ const required = [
   'docs/API_REFERENCE.md',
   'docs/WORKFLOWS.md',
   'examples/README.md',
-  'examples/devnet-smoke.ts',
-  'examples/app-builder-read.ts',
-  'examples/oracle-attestation.ts',
+  ...[
+    'NakamaProtocolFactory',
+    'NakamaCoverageProtocol',
+    'NakamaPolicyRegistry',
+    'ReserveVault',
+  ].flatMap((contractName) => [
+    `contracts/ethereum/${contractName}.abi.json`,
+    `contracts/ethereum/${contractName}.metadata.json`,
+  ]),
+  'deployments/ethereum-mainnet.json',
+  'deployments/ethereum-mainnet.final.schema.json',
+  'examples/ethereum-mainnet-smoke.ts',
+  'examples/contract-calldata.ts',
+  'examples/claim-recipient-authorization.ts',
 ];
 const packageTargets = [
   packageJson.main,

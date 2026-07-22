@@ -15,11 +15,13 @@ import {
   OBLIGATION_STATUS_RESERVED,
   describeClaimStatus,
   describeObligationStatus,
+} from '../src/protocol_models.js';
+import {
   normalizeClaimRpcFailure,
   normalizeClaimSimulationFailure,
-  serializeSolanaTransactionBase64,
   validateSignedClaimTx,
-} from '../src/index.js';
+} from '../src/claims.js';
+import { serializeSolanaTransactionBase64 } from '../src/transactions.js';
 
 const RECENT_BLOCKHASH = '11111111111111111111111111111111';
 

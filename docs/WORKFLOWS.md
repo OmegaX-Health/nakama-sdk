@@ -1,221 +1,91 @@
 # Integration Workflows — `@nakama-health/protocol-sdk`
 
-These workflows map the canonical Nakama economic model to the actual SDK builders and readers.
+The canonical flow is Ethereum mainnet read, user-authorized write, then
+reorg-aware verification. The SDK does not custody keys, select a privileged
+RPC, or substitute an offchain database for contract state.
 
-Use them by builder lane rather than reading the entire catalog in protocol-object order.
+## 1. Read and identify
 
-## Shared integration pattern
-
-1. Create `connection`, `protocol`, and `rpc` clients.
-2. Derive canonical addresses with PDA helpers.
-3. Build unsigned transactions with `build...Tx(...)`.
-4. Sign with your wallet or signer stack.
-5. Broadcast with `broadcastSignedTx(...)`.
-6. Verify state with `fetch...(...)` readers and reserve-model helpers.
-
-Use `createSafeProtocolClient(...)` for product and operator flows. Raw
-`createProtocolClient(...)` builders are useful for protocol engineering and
-tests, but production flows should stay on the safe layer unless an explicit
-unsafe custom-program override is part of a devnet or localnet workflow.
+Create a client with `createEthereumPublicClient(...)`, normalize identities
+with `toEthereumMainnetCaip10(...)`, and use the generated ABI with viem or the
+SDK's calldata/event helpers. Pin token address and decimals before treating an
+ERC-20 as a supported reserve asset.
 
 Runnable starting points:
 
-- `npm run example:smoke` for a no-signature safe-client import and PDA smoke.
-- `npm run example:app` for member, claim, and obligation read-model shaping.
-- `npm run example:oracle` for protocol-bound oracle attestation signing and verification.
+- `npm run example:smoke` checks chain and artifact provenance.
+- `npm run example:contract` exercises canonical ABI calldata.
+- `npm run example:authorization` builds the claim-recipient EIP-712 payload.
 
-## Path A: Oracle and event producers
+## 2. Prove the deployment
 
-Use this path when your service needs to sign Nakama-compatible outcome events and feed settlement-grade evidence into the claim lifecycle.
+`validateEthereumDeploymentManifest(...)` handles static schema and artifact
+checks. `validateEthereumContractDeployment(...)` adds live proof of the one
+factory receipt and creation input, nonce-one registry, nonce-two protocol,
+the protocol's `deploymentFactory()` back-pointer, mutual getters, three runtime
+templates, canonical block, safe head, confirmation depth, and three refreshed
+Sourcify exact-match records.
 
-### Workflow A1: Oracle attestation services
+A raw deployer receipt is an intermediate `deployed-unverified` artifact. It is
+not an SDK write target. Only the reviewed promotion step may produce
+`status: "deployed"`, `verified: true`, and the audited final manifest.
 
-Use this when an external oracle worker or service needs a stable signing surface for outcome attestations before it forwards them into downstream transport or settlement systems.
+## 3. Let the wallet authorize
 
-Helpers:
+Encode contract calldata from `NAKAMA_COVERAGE_PROTOCOL_ABI`, create a
+`SigningPayloadV2`, and pass it to the caller-provided EIP-1193 provider.
+`requestSigningPayloadV2(...)` checks chain ID again immediately before the
+wallet request and never switches networks silently.
+`requestSigningSubmissionV2(...)` returns a kind-matched, CAIP-bound submission
+envelope tied to a server-issued intent ID.
 
-- `createOracleSignerFromEnv(...)`
-- `createOracleSignerFromKmsAdapter(...)`
-- `attestOutcome(...)`
-- `attestProtocolOutcome(...)`
-- `verifyOracleAttestation(...)`
-- `verifyProtocolOracleAttestation(...)`
+## 4. Verify transaction outcome
 
-Use `attestProtocolOutcome(...)` for settlement-grade claim evidence. It binds
-the signed payload to network, program ID, health plan, funding line, claim
-case, schema key hash, audience, nonce, issue time, as-of time, and expiry.
-Use `verifyProtocolOracleAttestation(...)` before settlement intake so the SDK
-checks signature, trusted expected verifier identity, expiry, expected
-network/program/account IDs, audience, and nonce together. Generic
-`attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
-non-settlement telemetry.
+Use `verifyEthereumTransactionIntent(...)` to compare the submitted transaction
+with the trusted intent ID and server-owned sender, destination, calldata, and
+value before applying the receipt checks. `waitForEthereumReceipt(...)` and
+`verifyEthereumReceipt(...)` remain available for hash-only observation, but a
+wallet approval or an RPC's first receipt response is not settlement; require a
+successful, canonical, stable, sufficiently confirmed receipt at or below safe
+head.
 
-Off-chain attestations bind to a claim case by hash; the on-chain decision is
-recorded by the plan's claims operator through `buildAdjudicateClaimCaseTx(...)`,
-which carries the evidence and decision-support hashes into protocol state.
+## 5. Consume claim-recipient authorization
 
-See `examples/oracle-attestation.ts` for an offline KMS-adapter example that
-does not require secrets or a funded signer.
+The contract's EIP-712 schema is
+`ClaimRecipient(bytes32 claimId,address recipient,uint256 nonce,uint256 deadline)`
+under the `Nakama Policy Registry` version `1` domain. A relayer verifies the
+expected claimant, registry, chain, trusted nonce, deadline, and signature,
+then atomically consumes both digest and claim/nonce replay keys.
 
-## Path B: Health / wallet / app builders
+## Legacy migration
 
-Use this path when your app needs member, claim, obligation, and payout state without owning the entire sponsor or capital stack.
-
-### Workflow B1: Protection claims and premium flows
-
-Use this when a policy series needs explicit premium intake, claim review, and settlement consequences.
-
-Builders:
-
-- `buildRecordPremiumPaymentTx(...)`
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildAdjudicateClaimCaseTx(...)`
-- `buildSettleClaimCaseTx(...)`
-- `buildCreateObligationTx(...)`
-- `buildReserveObligationTx(...)`
-- `buildReleaseReserveTx(...)`
-- `buildSettleObligationTx(...)`
-
-Readers:
-
-- `fetchClaimCase(...)`
-- `fetchObligation(...)`
-- `fetchFundingLineLedger(...)`
-- `fetchPlanReserveLedger(...)`
-
-Failure helpers:
-
-- `normalizeClaimSimulationFailure(...)`
-- `normalizeClaimRpcFailure(...)`
-- `validateSignedClaimTx(...)` for checking the submitted signed transaction
-  against a server-stored unsigned transaction plus a nonce-bearing, expiring
-  `ClaimIntent` before trusting claim intake.
-
-See `examples/app-builder-read.ts` for deterministic app-facing read-model
-shaping from member, claim, and obligation snapshots.
-
-### Workflow B2: Member read models
-
-Use this when you want wallet-facing or app-facing views rather than raw account objects.
-
-Helpers:
-
-- `buildMemberReadModel(...)`
-- `describeEligibilityStatus(...)`
-- `describeClaimStatus(...)`
-- `describeObligationStatus(...)`
-- `shortenAddress(...)`
-
-## Path C: Sponsor and reserve integrators
-
-Use this path when you need to create the settlement boundary, launch sponsor programs, and fund plan reserves.
-
-### Workflow C1: Reserve-domain and asset-vault bootstrap
-
-Use this when preparing the settlement boundary for a new domain and asset.
-
-`buildCreateDomainAssetVaultTx(...)` derives the protocol-owned SPL vault token account at the canonical `domain_asset_vault_token` PDA. Do not create or pass an admin-owned token account; the protocol initializes the PDA-owned account inline.
-
-Builders:
-
-- `buildCreateReserveDomainTx(...)`
-- `buildUpdateReserveDomainControlsTx(...)`
-- `buildCreateDomainAssetVaultTx(...)`
-
-Readers:
-
-- `fetchReserveDomain(...)`
-- `fetchDomainAssetVault(...)`
-- `fetchDomainAssetLedger(...)`
-
-PDA helpers:
-
-- `deriveReserveDomainPda(...)`
-- `deriveDomainAssetVaultPda(...)`
-- `deriveDomainAssetVaultTokenAccountPda(...)`
-- `deriveDomainAssetLedgerPda(...)`
-
-### Workflow C2: Sponsor-funded health plan
-
-Use this for sponsor budgets, reward programs, and plans funded from sponsor budgets, premium income, and reserve capital contributions.
-
-Sponsor budget, premium, reserve-capital, and settlement builders move tokens as
-part of the instruction. Provide the payer source or payout recipient token
-account, the canonical domain vault token account, the asset mint, and the token
-program alongside the reserve ledgers.
-
-Product integrations should prefer `createSafeProtocolClient(...)` for sponsor
-funding, premium payment, and settlement flows. The safe layer derives
-PDA-owned vaults, enforces classic SPL Token accounts, and preflights
-token-account mint/owner where a `Connection` is available. Safe settlement
-additionally requires `recipientOwnerAddress` so the payout token account owner
-is checked before signing.
-
-`buildOpenClaimCaseTx(...)` requires an explicit `claimantAddress` or
-`memberWalletAddress`; operator-submitted claims never default the claimant to
-the operator authority.
-
-Builders:
-
-- `buildCreateHealthPlanTx(...)`
-- `buildUpdateHealthPlanControlsTx(...)`
-- `buildCreatePolicySeriesTx(...)`
-- `buildVersionPolicySeriesTx(...)`
-- `buildOpenFundingLineTx(...)`
-- `buildFundSponsorBudgetTx(...)`
-- `buildRecordPremiumPaymentTx(...)`
-- `buildDepositReserveCapitalTx(...)`
-- `buildRecordReserveEarningsTx(...)`
-- `buildReturnReserveCapitalTx(...)`
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildAdjudicateClaimCaseTx(...)`
-- `buildSettleClaimCaseTx(...)`
-- `buildCreateObligationTx(...)`
-- `buildReserveObligationTx(...)`
-- `buildReleaseReserveTx(...)`
-- `buildSettleObligationTx(...)`
-
-Readers:
-
-- `fetchHealthPlan(...)`
-- `fetchPolicySeries(...)`
-- `fetchFundingLine(...)`
-- `fetchFundingLineLedger(...)`
-- `fetchCapitalContribution(...)`
-- `fetchClaimCase(...)`
-- `fetchPlanReserveLedger(...)`
-- `fetchObligation(...)`
-
-Reserve helpers:
-
-- `recomputeReserveBalanceSheet(...)`
-- `buildSponsorReadModel(...)`
-- `buildCapitalReadModel(...)`
+Old Solana account decoders, PDA helpers, simulations, and model adapters remain
+available through explicit subpaths and optional peers for migration. Every
+legacy instruction/transaction builder and safe-client write method,
+`broadcastSignedTx(...)`, and every MagicBlock network or write path throws
+`NAKAMA_LEGACY_WRITE_DISABLED`; new integrations should not import those
+subpaths.
 
 ## Local release preflight
 
 ```bash
 npm ci
+npm run protocol:artifact:check
 npm run typecheck
 npm run lint
 npm run format:check
 npm run build
 npm test
-npm run docs:check
 npm run docs:api:check
-npm run docs:sync:check:strict
+npm run docs:check
 npm run runtime:check
 npm run examples:check
 npm run dogfood:consumer
 npm run cli:check
 npm run templates:check
-npm run dx:smoke
 npm run security:secrets
-npm run security:install-scripts
 npm run security:package
 npm run audit:prod
+npm run audit:packed-consumer
 npm pack --dry-run
-npm run verify:protocol:local
 ```

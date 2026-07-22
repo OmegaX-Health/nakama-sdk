@@ -27,6 +27,7 @@ These commands should not mutate tracked files or external services:
 - `npm run security:release-governance`
 - `npm run security:package`
 - `npm run audit:prod`
+- `npm run audit:packed-consumer`
 
 ## Tracked-Artifact Refreshers
 
@@ -34,7 +35,9 @@ These commands can update tracked files and should be followed by a git diff
 review:
 
 - `npm run generate:protocol-bindings`
-- `npm run sync:idl-fixture`
+- `npm run import:ethereum-contract` (imports all four canonical sibling ABIs, bytecode metadata, the factory deployment plan, and final schema)
+- `npm run sync:ethereum-abi`
+- `npm run sync:legacy-solana-idl` (legacy compatibility only)
 - `npm run docs:api:generate`
 - `npm run docs:sync:update`
 
@@ -49,7 +52,8 @@ or local network artifacts:
 - `npm run dogfood:consumer`
 - `npm run templates:check`
 - `npm run dx:smoke`
-- `npm run verify:protocol:local`
+- `npm run audit:packed-consumer`
+- `npm run verify:legacy-solana:local`
 - `npm run test:protocol:localnet`
 
 ## External Or Live Checks
@@ -59,7 +63,7 @@ read-only unless their own help text says otherwise:
 
 - `npm run release:state`
 - `npm run security:release-governance:live`
-- `npm run verify:protocol:local`
+- `npm run verify:legacy-solana:local`
 - `npm run docs:sync:update`
 
 ## Review And Governance Routing
@@ -86,7 +90,9 @@ and maintainer-controlled environment variables are provided:
 
 ## Ownership Rules
 
-- Generated protocol files belong to `npm run generate:protocol-bindings`.
+- The canonical four-contract Ethereum ABI module belongs to
+  `npm run generate:protocol-bindings`; legacy Anchor outputs belong to
+  `npm run sync:legacy-solana-idl`.
 - Generated API docs belong to `npm run docs:api:generate`.
 - `docs/OMEGAX_DOCS_SYNC.json` belongs to `npm run docs:sync:update` once the
   matching `omegax-docs` commit exists.

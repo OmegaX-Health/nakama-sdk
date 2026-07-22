@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 3,
+  "sourceArtifact": "nakama-protocol/shared/ethereum/protocol_contract.json",
+  "sourceArtifactSha256": "c894cb59f3bd83c4f55ea93a4896ba5b1b54a49965c6801ab06b506b716093e1",
+  "sourceAbi": "nakama-protocol/shared/ethereum/NakamaPolicyRegistry.abi.json",
+  "chainFamily": "eip155",
+  "canonicalChain": "eip155:1",
+  "compiler": {
+    "version": "0.8.28",
+    "evmVersion": "cancun",
+    "optimizerRuns": 200,
+    "viaIR": true
+  },
+  "deploymentPlan": {
+    "transactionCount": 1,
+    "entryContract": "NakamaProtocolFactory",
+    "factoryCreates": [
+      {
+        "contractName": "NakamaPolicyRegistry",
+        "nonce": 1
+      },
+      {
+        "contractName": "NakamaCoverageProtocol",
+        "nonce": 2
+      }
+    ],
+    "templates": [
+      {
+        "contractName": "ReserveVault",
+        "deploymentKind": "core-create2",
+        "saltDerivation": "keccak256(abi.encode(domainId,assetToken))"
+      }
+    ]
+  },
+  "contractName": "NakamaPolicyRegistry",
+  "abiSha256": "e8915399bd12a34c43fc2d16c61f1d3d4ebea62fbedcf5eac233470840b6c7bc",
+  "creationBytecodeHash": "0x1fcb5877b7a6d780c89d42d60d9487d3762d6a677de5102eae89c3d887d12592",
+  "creationBytecodeBytes": 12122,
+  "runtimeBytecodeTemplateHash": "0x038c714a39aee1f6baa83e230ac9e7e7b58aa1b5b517f14a3d68786148e1beda",
+  "runtimeBytecodeBytes": 10880,
+  "immutableReferences": [
+    {
+      "start": 357,
+      "length": 32
+    },
+    {
+      "start": 440,
+      "length": 32
+    },
+    {
+      "start": 2335,
+      "length": 32
+    },
+    {
+      "start": 3104,
+      "length": 32
+    },
+    {
+      "start": 3145,
+      "length": 32
+    },
+    {
+      "start": 3422,
+      "length": 32
+    },
+    {
+      "start": 3913,
+      "length": 32
+    },
+    {
+      "start": 4888,
+      "length": 32
+    },
+    {
+      "start": 5284,
+      "length": 32
+    },
+    {
+      "start": 5889,
+      "length": 32
+    },
+    {
+      "start": 6226,
+      "length": 32
+    },
+    {
+      "start": 7612,
+      "length": 32
+    },
+    {
+      "start": 10378,
+      "length": 32
+    },
+    {
+      "start": 10432,
+      "length": 32
+    },
+    {
+      "start": 10511,
+      "length": 32
+    },
+    {
+      "start": 10549,
+      "length": 32
+    },
+    {
+      "start": 10615,
+      "length": 32
+    }
+  ]
+}

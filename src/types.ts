@@ -1,6 +1,8 @@
 import type { Commitment } from '@solana/web3.js';
 
+/** @deprecated Legacy Solana generated types retained for read/migration compatibility. */
 export * from './generated/protocol_contract.js';
+/** @deprecated Legacy Solana generated types retained for read/migration compatibility. */
 export * from './generated/protocol_types.js';
 
 export type ClaimFailureCode =

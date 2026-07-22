@@ -1,252 +1,115 @@
 # Getting Started — `@nakama-health/protocol-sdk`
 
-This guide gets you from install to a usable Nakama client on Solana devnet beta, then points you into the right builder path.
+This guide gets an integration onto the canonical Ethereum mainnet surface
+without custodying a key or trusting an unconfigured contract address.
 
 ## Prerequisites
 
-- Node.js `>=20`
-- ESM runtime
-- A Solana RPC endpoint
-- The canonical deployed Nakama `programId` for your target cluster
+- Node.js `>=20` or an ESM-compatible browser build
+- an Ethereum mainnet RPC or EIP-1193 wallet provider
+- a durable atomic replay store if a backend consumes claim authorizations
 
-Public integrations should target devnet beta until Nakama announces public mainnet availability.
+The checked-in deployment is intentionally `unconfigured`. You can build,
+decode, and verify against the canonical ABI now, but contract-targeted writes
+must wait for a source-verified, independently audited deployment manifest.
 
-## Install
+## Install and inspect
 
 ```bash
 npm install @nakama-health/protocol-sdk
-npm install --save-dev tsx
-```
-
-## Check Your Environment
-
-```bash
 npx @nakama-health/protocol-sdk doctor
 ```
 
-`doctor` checks Node, ESM, package imports, network metadata, the canonical
-program ID, typed errors, and protocol instruction/account listings. Add
-`--rpc-url <url>` when you want it to check RPC connectivity too.
+`doctor` checks Node, ESM, canonical Ethereum subpaths, chain identity, ABI and
+bytecode provenance, deployment status, and typed errors. Add
+`--rpc-url <url>` to verify that your endpoint actually reports chain ID `1`.
 
-## First success smoke
-
-Run this before choosing a deeper workflow. It verifies package imports, network
-metadata, safe client creation, deterministic PDA derivation, and the public
-instruction/account surface without funded signers or a live transaction.
+Run the no-signature package smoke:
 
 ```bash
 npm run example:smoke
 ```
 
-In a separate integration project, copy `examples/devnet-smoke.ts` and run:
+## Create a mainnet client
 
-```bash
-npx tsx devnet-smoke.ts
+```ts
+import { createEthereumPublicClient } from '@nakama-health/protocol-sdk/ethereum';
+
+const client = createEthereumPublicClient({
+  rpcUrl: process.env.ETHEREUM_MAINNET_RPC_URL,
+});
 ```
 
-## Choose your builder path
+Applications choose their own endpoint. Passing an injected EIP-1193 provider
+instead is supported; passing both configurations is rejected.
 
-- Oracle and event producers: sign compatible outcome attestations and feed settlement-grade evidence into the claim lifecycle.
-- Health / wallet / app builders: read claim, obligation, and payout state, then build user-facing claim flows.
-- Sponsor and reserve integrators: launch reserve domains, asset vaults, plans, policy series, funding lines, reserve capital, and reserve-backed settlement on the canonical surface.
-
-## Create clients
+## Check deployment before contract use
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  createRpcClient,
-  getOmegaXNetworkInfo,
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  validateEthereumDeploymentManifest,
 } from '@nakama-health/protocol-sdk';
 
-const network =
-  (process.env.OMEGAX_NETWORK as 'devnet' | 'mainnet' | undefined) ?? 'devnet';
-const networkInfo = getOmegaXNetworkInfo(network);
-
-const connection = createConnection({
-  network,
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
-});
-
-const protocol = createSafeProtocolClient(connection, {
-  programId: PROTOCOL_PROGRAM_ID,
-});
-const rpc = createRpcClient(connection);
+const deployment = validateEthereumDeploymentManifest(
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  { requireDeployed: true },
+);
 ```
 
-Production clients default to the canonical Nakama program. Custom program IDs
-are rejected unless `unsafeAllowCustomProgramId: true` or
-`OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` is used for devnet, localnet, or
-tests.
+This currently throws by design. After deployment, use
+`validateEthereumContractDeployment(...)` to prove chain, address, bytecode,
+the one factory creation transaction, nonce-derived registry and protocol,
+the protocol's `deploymentFactory()` back-pointer, mutual getters, canonical
+receipt, safe head, all three runtime templates, three exact Sourcify records,
+and audit status against live state.
 
-Use `createProtocolClient(...)` only for protocol engineering, generated-surface
-tests, or advanced flows that need raw IDL-backed builders.
-
-For framework-specific snippets, see `docs/RECIPES.md`.
-
-## Inspect the current public surface
-
-Use the SDK to inspect the live contract shape before choosing builders.
-
-```ts
-import { listProtocolInstructionNames } from '@nakama-health/protocol-sdk';
-
-const instructions = listProtocolInstructionNames();
-```
-
-## Build, sign, and broadcast
-
-Every canonical instruction follows the same pattern:
-
-- choose the workflow-specific `build...Tx(...)`
-- pass the required `args`
-- pass the runtime `accounts`
-- attach a fresh `recentBlockhash`
-
-When you have a transaction:
-
-```ts
-const signedTx = await wallet.signTransaction(tx);
-const signedTxBase64 = Buffer.from(signedTx.serialize()).toString('base64');
-const result = await rpc.broadcastSignedTx({
-  signedTxBase64,
-  commitment: 'confirmed',
-});
-```
-
-Simulate before sending when you want preflight detail:
-
-```ts
-const signedTx = await wallet.signTransaction(tx);
-const signedTxBase64 = Buffer.from(signedTx.serialize()).toString('base64');
-const simulation = await rpc.simulateSignedTx({
-  signedTxBase64,
-  sigVerify: true,
-  replaceRecentBlockhash: false,
-});
-if (!simulation.signatureVerified) {
-  throw new Error('Transaction signature was not verified during simulation.');
-}
-```
-
-Signature-verifying simulation should keep `replaceRecentBlockhash: false`;
-some RPC implementations reject the combination of signature verification and a
-replaced blockhash. Simulation is preflight feedback, not authentication. Claim
-and intake services that accept user-submitted transactions should call
-`validateSignedClaimTx(...)` with the server-stored `expectedUnsignedTxBase64`
-plus a `ClaimIntent` containing `intentId`, `nonce`, `expiresAtIso`,
-`requiredSigner`, and `unsignedTxBase64`. Treat the submitted intent as metadata
-to check against server state, not as the source of truth for the transaction
-bytes. Operator flows can set `requireExactMessage: true`; wallet flows may
-allow blockhash-only refresh when every non-blockhash byte still matches.
-
-## Path A: Oracle and event producers
-
-Start here when your service needs to turn private or messy inputs into Nakama-compatible outcome events.
-
-Relevant helpers:
-
-- `createOracleSignerFromEnv(...)`
-- `createOracleSignerFromKmsAdapter(...)`
-- `attestOutcome(...)`
-- `attestProtocolOutcome(...)`
-- `verifyOracleAttestation(...)`
-- `verifyProtocolOracleAttestation(...)`
-
-Then continue with:
-
-- [SDK Workflows](WORKFLOWS.md)
-- [API Reference](API_REFERENCE.md)
-- [Oracle Event Production](https://docs.nakama.health/docs/oracle/event-production)
-
-## Path B: Health / wallet / app builders
-
-Start here when your product needs to show users what they hold, what happened, and what can be paid.
-
-Relevant builders and helpers:
-
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildMemberReadModel(...)`
-- `describeEligibilityStatus(...)`
-- `describeClaimStatus(...)`
-- `describeObligationStatus(...)`
-
-Then continue with:
-
-- [SDK Workflows](WORKFLOWS.md)
-- [API Reference](API_REFERENCE.md)
-- [Troubleshooting](TROUBLESHOOTING.md)
-
-## Path C: Sponsor and reserve integrators
-
-Start here when you need to create settlement boundaries, plan lanes, and reserve-backed settlement on the canonical model.
-
-Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, then provide source and vault token accounts for sponsor funding, premium payments, and reserve capital deposits. Use the safe client for sponsor funding, premium payments, and settlement so PDA derivation, classic SPL token guards, and token-account preflights stay in one place. Safe settlement calls also require `recipientOwnerAddress` to preflight payout token-account ownership before signing.
-
-Example: derive canonical addresses for a sponsor-side deployment:
+## Ask a self-custodial wallet to transact
 
 ```ts
 import {
-  deriveReserveDomainPda,
-  deriveDomainAssetVaultTokenAccountPda,
-  deriveHealthPlanPda,
-  derivePolicySeriesPda,
-  deriveFundingLinePda,
-} from '@nakama-health/protocol-sdk';
+  createEip1193TransactionSigningPayload,
+  requestSigningSubmissionV2,
+} from '@nakama-health/protocol-sdk/ethereum';
 
-const reserveDomain = deriveReserveDomainPda({
-  domainId: 'open-usdc-domain',
-  programId,
-}).toBase58();
-const healthPlan = deriveHealthPlanPda({
-  reserveDomain,
-  planId: 'builder-demo-plan',
-  programId,
-}).toBase58();
-const vaultTokenAccount = deriveDomainAssetVaultTokenAccountPda({
-  reserveDomain,
-  assetMint: process.env.ASSET_MINT!,
-  programId,
-}).toBase58();
-const policySeries = derivePolicySeriesPda({
-  healthPlan,
-  seriesId: 'builder-demo-protection',
-  programId,
-}).toBase58();
-const fundingLine = deriveFundingLinePda({
-  healthPlan,
-  lineId: 'builder-demo-premium',
-  programId,
-}).toBase58();
+const payload = createEip1193TransactionSigningPayload({
+  from: claimantAddress,
+  to: deployment.liveContracts.protocol.address,
+  data: calldata,
+  value: '0x0',
+});
+
+const submission = await requestSigningSubmissionV2(
+  window.ethereum,
+  payload,
+  serverIssuedIntentId,
+);
 ```
 
-Relevant builders and helpers:
+The SDK checks the payload, the EIP-7825 gas ceiling, and the connected wallet
+chain, then delegates signing and submission to the user's provider. It never accepts a private key, and the
+returned `ReceiptSubmissionV2` cannot substitute a signature or change the
+CAIP-bound account.
 
-- `buildCreateReserveDomainTx(...)`
-- `buildCreateDomainAssetVaultTx(...)`
-- `buildCreateHealthPlanTx(...)`
-- `buildCreatePolicySeriesTx(...)`
-- `buildVersionPolicySeriesTx(...)`
-- `buildOpenFundingLineTx(...)`
-- `buildDepositReserveCapitalTx(...)`
-- `buildSettleClaimCaseTx(...)`
-- `buildSettleObligationTx(...)`
-- `recomputeReserveBalanceSheet(...)`
+## Verify finality
 
-Then continue with:
+```ts
+import { verifyEthereumTransactionIntent } from '@nakama-health/protocol-sdk/ethereum_contract';
 
-- [SDK Workflows](WORKFLOWS.md)
-- [API Reference](API_REFERENCE.md)
-- [Release Notes](RELEASE_NOTES.md)
+const result = await verifyEthereumTransactionIntent(client, {
+  submission,
+  expectedIntentId: serverIssuedIntentId,
+  signingPayload: payload,
+  minimumConfirmations: 12,
+});
+```
 
-## Next steps
+Verification first proves that the mined sender, destination, calldata, and
+value exactly match the server-owned intent, then rejects reverts, insufficient
+depth, noncanonical block hashes, receipt changes, and receipts beyond
+Ethereum's safe head.
 
-1. Use [SDK Workflows](WORKFLOWS.md) to map your builder path to the right canonical builders and readers.
-2. Use [API Reference](API_REFERENCE.md) to inspect the exported reader, helper, and builder surface in detail.
-3. Use [Release Notes](RELEASE_NOTES.md) to confirm the current SDK version and newly added modules.
-4. Run `npm run generate:protocol-bindings` whenever the sibling protocol repo changes.
-5. Run `npm run verify:protocol:local` before shipping SDK changes that affect runtime parity.
+Continue with [Recipes](RECIPES.md), [Workflows](WORKFLOWS.md), and the
+[API Reference](API_REFERENCE.md). Legacy Solana modules remain available only
+through explicit subpaths and optional peer dependencies for historical reads,
+decoding, and migration; their builders and write paths fail closed.

@@ -23,6 +23,7 @@ Defined in: [src/errors.ts:13](https://github.com/OmegaX-Health/nakama-sdk/blob/
 - [`OmegaXInstructionBuildError`](OmegaXInstructionBuildError.md)
 - [`OmegaXTransactionDecodeError`](OmegaXTransactionDecodeError.md)
 - [`OmegaXRpcError`](OmegaXRpcError.md)
+- [`NakamaEthereumError`](NakamaEthereumError.md)
 
 ## Constructors
 

@@ -1,121 +1,62 @@
-import bs58 from 'bs58';
-import nacl from 'tweetnacl';
-import { Keypair } from '@solana/web3.js';
-
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  getOmegaXNetworkInfo,
+  ETHEREUM_MAINNET_CAIP2,
+  ETHEREUM_MAINNET_CHAIN_ID,
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  NAKAMA_POLICY_REGISTRY_ABI,
+  NAKAMA_POLICY_REGISTRY_ARTIFACT_METADATA,
 } from '@nakama-health/protocol-sdk';
-import { OmegaXProgramMismatchError } from '@nakama-health/protocol-sdk/errors';
+import { NakamaEthereumAddressError } from '@nakama-health/protocol-sdk/errors';
 import {
-  attestProtocolOutcome,
-  createOracleSignerFromKmsAdapter,
-  verifyProtocolOracleAttestation,
-} from '@nakama-health/protocol-sdk/oracle';
+  createEthereumPublicClient,
+  normalizeEthereumAddress,
+  toEthereumMainnetCaip10,
+} from '@nakama-health/protocol-sdk/ethereum';
 import {
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
-} from '@nakama-health/protocol-sdk/protocol';
+  decodeEthereumCalldata,
+  encodeEthereumCalldata,
+  validateEthereumDeploymentManifest,
+} from '@nakama-health/protocol-sdk/ethereum_contract';
 import {
-  deriveHealthPlanPda,
-  deriveReserveDomainPda,
-} from '@nakama-health/protocol-sdk/protocol_seeds';
+  claimRecipientNonceReplayKey,
+  createClaimRecipientAuthorizationSigningPayload,
+  hashClaimRecipientAuthorization,
+} from '@nakama-health/protocol-sdk/ethereum_oracle';
 
-const networkInfo = getOmegaXNetworkInfo('devnet');
-const connection = createConnection({
-  network: 'devnet',
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
+const client = createEthereumPublicClient();
+const deployment = validateEthereumDeploymentManifest(
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+);
+const claimant = '0x0000000000000000000000000000000000000001';
+const calldata = encodeEthereumCalldata({
+  abi: NAKAMA_POLICY_REGISTRY_ABI,
+  functionName: 'deriveClaimId',
+  args: [`0x${'11'.repeat(32)}`, claimant, `0x${'22'.repeat(32)}`],
 });
-const protocol = createSafeProtocolClient(connection, {
-  programId: PROTOCOL_PROGRAM_ID,
+const decoded = decodeEthereumCalldata({
+  abi: NAKAMA_POLICY_REGISTRY_ABI,
+  data: calldata,
 });
-
-const reserveDomain = deriveReserveDomainPda({
-  domainId: 'dogfood-domain',
-  programId: protocol.getProgramId(),
+const signingPayload = createClaimRecipientAuthorizationSigningPayload({
+  account: claimant,
+  verifyingContract: '0x0000000000000000000000000000000000000002',
+  message: {
+    claimId: `0x${'33'.repeat(32)}` as `0x${string}`,
+    recipient: '0x0000000000000000000000000000000000000003',
+    nonce: 0n,
+    deadline: 2_000_000_000n,
+  },
 });
-const healthPlan = deriveHealthPlanPda({
-  reserveDomain,
-  planId: 'dogfood-plan',
-  programId: protocol.getProgramId(),
-});
-const instructionNames = listProtocolInstructionNames();
-const accountNames = listProtocolAccountNames();
-
-if (instructionNames.length === 0 || accountNames.length === 0) {
-  throw new Error('Expected protocol instructions and accounts to be listed.');
-}
 
 let typedErrorBranchWorked = false;
 try {
-  createSafeProtocolClient(connection, {
-    programId: Keypair.generate().publicKey,
-  });
+  normalizeEthereumAddress('not-an-ethereum-address');
 } catch (error) {
   typedErrorBranchWorked =
-    error instanceof OmegaXProgramMismatchError &&
-    error.code === 'OMEGAX_PROGRAM_MISMATCH';
+    error instanceof NakamaEthereumAddressError &&
+    error.code === 'NAKAMA_ETHEREUM_ADDRESS_ERROR';
 }
-
 if (!typedErrorBranchWorked) {
-  throw new Error('Expected custom program ID failure to use typed errors.');
-}
-
-const oracleKeypair = Keypair.generate();
-const signer = createOracleSignerFromKmsAdapter({
-  keyId: 'dogfood-oracle',
-  publicKeyBase58: oracleKeypair.publicKey.toBase58(),
-  signWithKms: async (message) =>
-    nacl.sign.detached(message, oracleKeypair.secretKey),
-});
-const fundingLine = Keypair.generate().publicKey;
-const claimCase = Keypair.generate().publicKey;
-const issuedAtIso = '2026-05-06T00:00:00.000Z';
-
-const { attestation } = await attestProtocolOutcome({
-  userId: 'member-dogfood',
-  cycleId: 'cycle-dogfood',
-  outcomeId: 'claim-supported',
-  payload: {
-    decision: 'support_approve',
-    approvedAmountRaw: '150000000',
-  },
-  context: {
-    network: networkInfo.network,
-    programId: PROTOCOL_PROGRAM_ID,
-    healthPlan: healthPlan.toBase58(),
-    fundingLine: fundingLine.toBase58(),
-    claimCase: claimCase.toBase58(),
-    schemaKeyHashHex: 'ab'.repeat(32),
-    audience: 'dogfood-consumer-app',
-    nonce: 'dogfood-nonce',
-    issuedAtIso,
-    asOfIso: issuedAtIso,
-    expiresAtIso: '2026-05-07T00:00:00.000Z',
-  },
-  signer,
-});
-
-const attestationVerified = verifyProtocolOracleAttestation(attestation, {
-  nowIso: issuedAtIso,
-  expectedVerifierPublicKeyBase58: bs58.encode(
-    oracleKeypair.publicKey.toBytes(),
-  ),
-  expectedVerifierKeyId: 'dogfood-oracle',
-  expectedNetwork: networkInfo.network,
-  expectedProgramId: PROTOCOL_PROGRAM_ID,
-  expectedHealthPlan: healthPlan,
-  expectedFundingLine: fundingLine,
-  expectedClaimCase: claimCase,
-  expectedAudience: 'dogfood-consumer-app',
-  expectedNonce: 'dogfood-nonce',
-});
-
-if (!attestationVerified) {
-  throw new Error('Expected dogfood oracle attestation to verify.');
+  throw new Error('Expected invalid address failure to use a typed error.');
 }
 
 console.log(
@@ -123,14 +64,20 @@ console.log(
     {
       ok: true,
       packageImport: '@nakama-health/protocol-sdk',
-      network: networkInfo.network,
-      programId: protocol.getProgramId().toBase58(),
-      reserveDomain: reserveDomain.toBase58(),
-      healthPlan: healthPlan.toBase58(),
-      instructions: instructionNames.length,
-      accounts: accountNames.length,
+      chainId: ETHEREUM_MAINNET_CHAIN_ID,
+      clientChainId: client.chain?.id,
+      caip2: ETHEREUM_MAINNET_CAIP2,
+      claimant: toEthereumMainnetCaip10(claimant),
+      deploymentStatus: deployment.status,
+      policyRegistryAddress: deployment.liveContracts.policyRegistry.address,
+      runtimeBytecodeTemplateHash:
+        NAKAMA_POLICY_REGISTRY_ARTIFACT_METADATA.runtimeBytecodeTemplateHash,
+      decodedFunction: decoded.functionName,
       typedErrorBranchWorked,
-      attestationId: attestation.id,
+      authorizationDigest: hashClaimRecipientAuthorization(
+        signingPayload.typedData,
+      ),
+      nonceReplayKey: claimRecipientNonceReplayKey(signingPayload.typedData),
     },
     null,
     2,

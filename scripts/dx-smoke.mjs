@@ -18,6 +18,8 @@ function run(command, args, options = {}) {
     stdio: options.capture ? 'pipe' : 'inherit',
     env: {
       ...process.env,
+      npm_config_cache: join(smokeDir, '.npm-cache'),
+      npm_config_logs_dir: join(smokeDir, '.npm-logs'),
       ...options.env,
     },
   });
@@ -72,58 +74,55 @@ try {
   writeFileSync(
     join(smokeDir, 'consumer.ts'),
     `import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  deriveReserveDomainPda,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
-  type SafeProtocolClient,
-  type SafeProtocolClientOptions,
-  type SafeSettleObligationTxParams,
+  ETHEREUM_MAINNET_CAIP2,
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  NAKAMA_POLICY_REGISTRY_ABI,
 } from '@nakama-health/protocol-sdk';
-import { validateSignedClaimTx } from '@nakama-health/protocol-sdk/claims';
-import { OmegaXError } from '@nakama-health/protocol-sdk/errors';
-import { createOracleSignerFromKmsAdapter } from '@nakama-health/protocol-sdk/oracle';
-import { createProtocolClient } from '@nakama-health/protocol-sdk/protocol';
-import { buildMemberReadModel } from '@nakama-health/protocol-sdk/protocol_models';
-import { deriveHealthPlanPda } from '@nakama-health/protocol-sdk/protocol_seeds';
-import { createRpcClient } from '@nakama-health/protocol-sdk/rpc';
-import { serializeSolanaTransactionBase64 } from '@nakama-health/protocol-sdk/transactions';
-import type { ClaimIntent } from '@nakama-health/protocol-sdk/types';
-import { sha256Hex } from '@nakama-health/protocol-sdk/utils';
+import { NakamaEthereumConfigError } from '@nakama-health/protocol-sdk/errors';
+import {
+  createEip1193TransactionSigningPayload,
+  createEthereumPublicClient,
+  type ProtocolTransactionRequestV2,
+} from '@nakama-health/protocol-sdk/ethereum';
+import {
+  encodeEthereumCalldata,
+  validateEthereumDeploymentManifest,
+} from '@nakama-health/protocol-sdk/ethereum_contract';
+import { claimRecipientNonceReplayKey } from '@nakama-health/protocol-sdk/ethereum_oracle';
 
-const options: SafeProtocolClientOptions = { programId: PROTOCOL_PROGRAM_ID };
-const connection = createConnection({ network: 'devnet' });
-const safe: SafeProtocolClient = createSafeProtocolClient(connection, options);
-const raw = createProtocolClient(connection, PROTOCOL_PROGRAM_ID);
-const rpc = createRpcClient(connection);
-const reserveDomain = deriveReserveDomainPda({ domainId: 'dx-smoke' });
-const healthPlan = deriveHealthPlanPda({
-  reserveDomain,
-  planId: 'dx-plan',
+const transaction: ProtocolTransactionRequestV2 = {
+  from: '0x0000000000000000000000000000000000000001',
+  to: '0x0000000000000000000000000000000000000002',
+  data: '0x',
+  value: '0x0',
+  gas: '0x1000000',
+};
+const payload = createEip1193TransactionSigningPayload(transaction);
+const client = createEthereumPublicClient();
+const deployment = validateEthereumDeploymentManifest(
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+);
+const calldata = encodeEthereumCalldata({
+  abi: NAKAMA_POLICY_REGISTRY_ABI,
+  functionName: 'deriveClaimId',
+  args: [
+    ('0x' + '11'.repeat(32)) as ProtocolTransactionRequestV2['data'],
+    transaction.from,
+    ('0x' + '22'.repeat(32)) as ProtocolTransactionRequestV2['data'],
+  ],
 });
-const maybeSettleParams = null as SafeSettleObligationTxParams | null;
-const maybeIntent = null as ClaimIntent | null;
 
-void safe;
-void raw;
-void rpc;
-void healthPlan;
-void maybeSettleParams;
-void maybeIntent;
-void OmegaXError;
-void validateSignedClaimTx;
-void createOracleSignerFromKmsAdapter;
-void buildMemberReadModel;
-void serializeSolanaTransactionBase64;
-void sha256Hex;
-
-if (listProtocolInstructionNames().length === 0) {
-  throw new Error('No protocol instructions exported.');
+void NakamaEthereumConfigError;
+void claimRecipientNonceReplayKey;
+void calldata;
+if (ETHEREUM_MAINNET_CAIP2 !== 'eip155:1' || client.chain?.id !== 1) {
+  throw new Error('Ethereum mainnet identity mismatch.');
 }
-if (listProtocolAccountNames().length === 0) {
-  throw new Error('No protocol accounts exported.');
+if (payload.transaction.gas !== '0x1000000') {
+  throw new Error('EIP-7825 boundary was not preserved.');
+}
+if (deployment.status !== 'unconfigured') {
+  throw new Error('Expected the unreleased deployment manifest to fail closed.');
 }
 `,
   );
@@ -137,16 +136,10 @@ if (listProtocolAccountNames().length === 0) {
 const require = createRequire(import.meta.url);
 const subpaths = [
   '@nakama-health/protocol-sdk',
-  '@nakama-health/protocol-sdk/claims',
   '@nakama-health/protocol-sdk/errors',
-  '@nakama-health/protocol-sdk/oracle',
-  '@nakama-health/protocol-sdk/protocol',
-  '@nakama-health/protocol-sdk/protocol_models',
-  '@nakama-health/protocol-sdk/protocol_seeds',
-  '@nakama-health/protocol-sdk/rpc',
-  '@nakama-health/protocol-sdk/transactions',
-  '@nakama-health/protocol-sdk/types',
-  '@nakama-health/protocol-sdk/utils',
+  '@nakama-health/protocol-sdk/ethereum',
+  '@nakama-health/protocol-sdk/ethereum_contract',
+  '@nakama-health/protocol-sdk/ethereum_oracle',
 ];
 
 for (const subpath of subpaths) {

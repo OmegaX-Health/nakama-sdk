@@ -7,16 +7,17 @@ import {
   OmegaXAccountOwnerMismatchError,
   OmegaXConfigError,
   OmegaXInvalidPublicKeyError,
-  OmegaXProgramMismatchError,
   OmegaXTokenAccountPreflightError,
   OmegaXTransactionDecodeError,
-  createConnection,
+  NakamaLegacyWriteDisabledError,
+} from '../src/errors.js';
+import { createConnection } from '../src/rpc.js';
+import {
   createProtocolClient,
-  decodeSolanaTransaction,
-  getProgramId,
   preflightClassicTokenAccount,
-  toPublicKey,
-} from '../src/index.js';
+} from '../src/protocol.js';
+import { toPublicKey } from '../src/protocol_seeds.js';
+import { decodeSolanaTransaction } from '../src/transactions.js';
 
 const SPL_TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
@@ -81,7 +82,7 @@ test('network helpers throw typed config errors', () => {
   );
 });
 
-test('custom program ID guard throws a typed program mismatch error', () => {
+test('legacy client construction fails closed before custom program handling', () => {
   const client = createProtocolClient(
     createConnection('http://127.0.0.1:8899'),
   );
@@ -93,10 +94,7 @@ test('custom program ID guard throws a typed program mismatch error', () => {
         args: {},
         accounts: {},
       }),
-    (error) =>
-      error instanceof OmegaXProgramMismatchError &&
-      error.code === 'OMEGAX_PROGRAM_MISMATCH' &&
-      error.details?.expectedProgramId === getProgramId().toBase58(),
+    NakamaLegacyWriteDisabledError,
   );
 });
 

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "package": {
     "name": "@nakama-health/protocol-sdk",
     "version": "0.8.10",
@@ -7,21 +7,257 @@
     "node": ">=20"
   },
   "protocol": {
-    "sourceRepo": "../omegax-protocol",
-    "bindingRefreshCommit": "434ee42d",
-    "programId": "6EXiDfGVbG7V1X2xaEALDZ7CtSuezkM8ZvXXFpk5WxQM",
-    "contractSha256": "9c7eb5d1484f21c064e560d7ecd80060b61f564496565fb28036e074952bb9fc",
-    "surface": {
-      "instructions": 21,
-      "accounts": 11,
-      "types": 43
+    "chainFamily": "eip155",
+    "chainId": 1,
+    "caip2": "eip155:1",
+    "sourceRepo": "../nakama-protocol",
+    "sourceRevision": "working-tree-uncommitted",
+    "sourceArtifact": "shared/ethereum/protocol_contract.json",
+    "sourceArtifactSha256": "c894cb59f3bd83c4f55ea93a4896ba5b1b54a49965c6801ab06b506b716093e1",
+    "deploymentPlan": {
+      "transactionCount": 1,
+      "entryContract": "NakamaProtocolFactory",
+      "factoryCreates": [
+        {
+          "contractName": "NakamaPolicyRegistry",
+          "nonce": 1
+        },
+        {
+          "contractName": "NakamaCoverageProtocol",
+          "nonce": 2
+        }
+      ],
+      "templates": [
+        {
+          "contractName": "ReserveVault",
+          "deploymentKind": "core-create2",
+          "saltDerivation": "keccak256(abi.encode(domainId,assetToken))"
+        }
+      ]
     },
-    "parityCommand": "npm run verify:protocol:local"
+    "contracts": {
+      "NakamaProtocolFactory": {
+        "abiArtifact": "contracts/ethereum/NakamaProtocolFactory.abi.json",
+        "metadataArtifact": "contracts/ethereum/NakamaProtocolFactory.metadata.json",
+        "abiSha256": "c80b950a24d135213403720b2d72eeafad0a509f046d08bed82d5988347bfe05",
+        "creationBytecodeHash": "0xf9fccea78ffa1999c11b440abd8f99dcf1798c8c49568447e38119bfbd53dc17",
+        "creationBytecodeBytes": 35934,
+        "runtimeBytecodeTemplateHash": "0xcc40ae6846256b678edd42124680c87886519cf7c1cf4f3bf32a17439a8791b9",
+        "runtimeBytecodeBytes": 234,
+        "immutableReferences": [
+          {
+            "start": 66,
+            "length": 32
+          },
+          {
+            "start": 133,
+            "length": 32
+          }
+        ]
+      },
+      "NakamaCoverageProtocol": {
+        "abiArtifact": "contracts/ethereum/NakamaCoverageProtocol.abi.json",
+        "metadataArtifact": "contracts/ethereum/NakamaCoverageProtocol.metadata.json",
+        "abiSha256": "478252e61e323e9735f8db4ca13fd91c9532d2936bd2ac92d8bf8718aa98af0f",
+        "creationBytecodeHash": "0xc8cba6083edcd8512999556b3f52af566f23af3ca88d8868b1e2f1e97ce194d2",
+        "creationBytecodeBytes": 22873,
+        "runtimeBytecodeTemplateHash": "0x74a6a4b6a4f3270f168670aa4ba46300cbd40939c8f34d0f8a815c1a0ad798c1",
+        "runtimeBytecodeBytes": 22393,
+        "immutableReferences": [
+          {
+            "start": 1527,
+            "length": 32
+          },
+          {
+            "start": 2571,
+            "length": 32
+          },
+          {
+            "start": 2833,
+            "length": 32
+          },
+          {
+            "start": 3642,
+            "length": 32
+          },
+          {
+            "start": 4525,
+            "length": 32
+          },
+          {
+            "start": 5706,
+            "length": 32
+          },
+          {
+            "start": 7253,
+            "length": 32
+          },
+          {
+            "start": 7760,
+            "length": 32
+          },
+          {
+            "start": 7956,
+            "length": 32
+          },
+          {
+            "start": 10963,
+            "length": 32
+          },
+          {
+            "start": 12129,
+            "length": 32
+          },
+          {
+            "start": 13059,
+            "length": 32
+          },
+          {
+            "start": 14418,
+            "length": 32
+          },
+          {
+            "start": 18619,
+            "length": 32
+          },
+          {
+            "start": 18670,
+            "length": 32
+          }
+        ]
+      },
+      "NakamaPolicyRegistry": {
+        "abiArtifact": "contracts/ethereum/NakamaPolicyRegistry.abi.json",
+        "metadataArtifact": "contracts/ethereum/NakamaPolicyRegistry.metadata.json",
+        "abiSha256": "e8915399bd12a34c43fc2d16c61f1d3d4ebea62fbedcf5eac233470840b6c7bc",
+        "creationBytecodeHash": "0x1fcb5877b7a6d780c89d42d60d9487d3762d6a677de5102eae89c3d887d12592",
+        "creationBytecodeBytes": 12122,
+        "runtimeBytecodeTemplateHash": "0x038c714a39aee1f6baa83e230ac9e7e7b58aa1b5b517f14a3d68786148e1beda",
+        "runtimeBytecodeBytes": 10880,
+        "immutableReferences": [
+          {
+            "start": 357,
+            "length": 32
+          },
+          {
+            "start": 440,
+            "length": 32
+          },
+          {
+            "start": 2335,
+            "length": 32
+          },
+          {
+            "start": 3104,
+            "length": 32
+          },
+          {
+            "start": 3145,
+            "length": 32
+          },
+          {
+            "start": 3422,
+            "length": 32
+          },
+          {
+            "start": 3913,
+            "length": 32
+          },
+          {
+            "start": 4888,
+            "length": 32
+          },
+          {
+            "start": 5284,
+            "length": 32
+          },
+          {
+            "start": 5889,
+            "length": 32
+          },
+          {
+            "start": 6226,
+            "length": 32
+          },
+          {
+            "start": 7612,
+            "length": 32
+          },
+          {
+            "start": 10378,
+            "length": 32
+          },
+          {
+            "start": 10432,
+            "length": 32
+          },
+          {
+            "start": 10511,
+            "length": 32
+          },
+          {
+            "start": 10549,
+            "length": 32
+          },
+          {
+            "start": 10615,
+            "length": 32
+          }
+        ]
+      },
+      "ReserveVault": {
+        "abiArtifact": "contracts/ethereum/ReserveVault.abi.json",
+        "metadataArtifact": "contracts/ethereum/ReserveVault.metadata.json",
+        "abiSha256": "b6d2294056185bf0159fb9c562e5c6279a18364a5d7e1066aecf458546b302e3",
+        "creationBytecodeHash": "0x1afdeb212685300237e807661a86094834cf06fc1e3f50fd3d17fc06293b1fa3",
+        "creationBytecodeBytes": 2108,
+        "runtimeBytecodeTemplateHash": "0x4186b9b73bede94e5d981327f635771a54cebb68551f14bfaba6aceafdcb5bcf",
+        "runtimeBytecodeBytes": 1840,
+        "immutableReferences": [
+          {
+            "start": 104,
+            "length": 32
+          },
+          {
+            "start": 178,
+            "length": 32
+          },
+          {
+            "start": 230,
+            "length": 32
+          },
+          {
+            "start": 326,
+            "length": 32
+          },
+          {
+            "start": 1017,
+            "length": 32
+          },
+          {
+            "start": 1107,
+            "length": 32
+          },
+          {
+            "start": 1614,
+            "length": 32
+          }
+        ]
+      }
+    },
+    "deploymentManifest": "deployments/ethereum-mainnet.json",
+    "deploymentSchema": "deployments/ethereum-mainnet.final.schema.json",
+    "deploymentStatus": "unconfigured",
+    "parityCommand": "npm run protocol:artifact:check",
+    "importCommand": "npm run import:ethereum-contract"
   },
   "publicSubpaths": [
     ".",
     "./claims",
     "./errors",
+    "./ethereum",
+    "./ethereum_contract",
+    "./ethereum_oracle",
     "./magicblock",
     "./oracle",
     "./package.json",
@@ -33,96 +269,158 @@
     "./types",
     "./utils"
   ],
+  "canonicalSubpaths": [
+    ".",
+    "./errors",
+    "./ethereum",
+    "./ethereum_contract",
+    "./ethereum_oracle"
+  ],
+  "legacyReadMigrationSubpaths": [
+    "./claims",
+    "./magicblock",
+    "./oracle",
+    "./protocol",
+    "./protocol_models",
+    "./protocol_seeds",
+    "./rpc",
+    "./transactions",
+    "./types",
+    "./utils"
+  ],
   "lanes": [
     {
-      "id": "app-read-build",
+      "id": "ethereum-mainnet-read",
       "entrypoints": [
-        { "name": "createConnection", "kind": "function", "subpath": "." },
         {
-          "name": "createSafeProtocolClient",
+          "name": "createEthereumPublicClient",
           "kind": "function",
-          "subpath": "."
+          "subpath": "./ethereum"
         },
-        { "name": "deriveHealthPlanPda", "kind": "function", "subpath": "." },
-        { "name": "derivePolicySeriesPda", "kind": "function", "subpath": "." }
-      ],
-      "sideEffects": "Reads network state only when a fetch method is called; builders return unsigned transactions."
-    },
-    {
-      "id": "claim-intake",
-      "entrypoints": [
-        { "name": "ClaimIntent", "kind": "type", "subpath": "./types" },
-        { "name": "validateSignedClaimTx", "kind": "function", "subpath": "." },
-        { "name": "simulateSignedTx", "kind": "method", "subpath": "./rpc" },
-        { "name": "broadcastSignedTx", "kind": "method", "subpath": "./rpc" }
-      ],
-      "sideEffects": "Validation is local; simulation and broadcast require explicit RPC calls."
-    },
-    {
-      "id": "oracle-attestation",
-      "entrypoints": [
-        { "name": "attestProtocolOutcome", "kind": "function", "subpath": "." },
         {
-          "name": "verifyProtocolOracleAttestation",
+          "name": "toEthereumMainnetCaip10",
           "kind": "function",
+          "subpath": "./ethereum"
+        },
+        {
+          "name": "NAKAMA_PROTOCOL_FACTORY_ABI",
+          "kind": "const",
           "subpath": "."
         },
         {
-          "name": "createOracleSignerFromKmsAdapter",
-          "kind": "function",
+          "name": "NAKAMA_POLICY_REGISTRY_ABI",
+          "kind": "const",
+          "subpath": "."
+        },
+        {
+          "name": "NAKAMA_COVERAGE_PROTOCOL_ABI",
+          "kind": "const",
+          "subpath": "."
+        },
+        {
+          "name": "NAKAMA_RESERVE_VAULT_ABI",
+          "kind": "const",
           "subpath": "."
         }
       ],
-      "sideEffects": "Signing occurs only through the caller-provided signer adapter."
+      "sideEffects": "Client construction is local; reads occur only when the caller invokes viem actions."
     },
     {
-      "id": "maintainer-protocol-parity",
+      "id": "self-custodial-wallet",
       "entrypoints": [
         {
-          "name": "listProtocolInstructionNames",
+          "name": "createEip1193TransactionSigningPayload",
           "kind": "function",
-          "subpath": "."
+          "subpath": "./ethereum"
         },
         {
-          "name": "listProtocolAccountNames",
+          "name": "createEip712SigningPayload",
           "kind": "function",
-          "subpath": "."
+          "subpath": "./ethereum"
         },
-        { "name": "decodeProtocolAccount", "kind": "function", "subpath": "." },
         {
-          "name": "buildProtocolInstruction",
+          "name": "requestSigningPayloadV2",
           "kind": "function",
-          "subpath": "."
+          "subpath": "./ethereum"
+        },
+        {
+          "name": "requestSigningSubmissionV2",
+          "kind": "function",
+          "subpath": "./ethereum"
         }
       ],
-      "sideEffects": "No network mutation unless the caller separately signs and broadcasts."
+      "sideEffects": "The request helper checks chain ID and then asks the caller-provided wallet to sign or submit; the SDK never receives a private key."
+    },
+    {
+      "id": "contract-and-finality-safety",
+      "entrypoints": [
+        {
+          "name": "validateEthereumContractDeployment",
+          "kind": "function",
+          "subpath": "./ethereum_contract"
+        },
+        {
+          "name": "inspectErc20",
+          "kind": "function",
+          "subpath": "./ethereum_contract"
+        },
+        {
+          "name": "verifyEthereumReceipt",
+          "kind": "function",
+          "subpath": "./ethereum_contract"
+        },
+        {
+          "name": "verifyEthereumTransactionIntent",
+          "kind": "function",
+          "subpath": "./ethereum_contract"
+        }
+      ],
+      "sideEffects": "These helpers perform RPC reads only and reject wrong-chain, unverified, unaudited, reverted, reorged, or under-confirmed state."
+    },
+    {
+      "id": "claim-recipient-authorization",
+      "entrypoints": [
+        {
+          "name": "createClaimRecipientAuthorizationSigningPayload",
+          "kind": "function",
+          "subpath": "./ethereum_oracle"
+        },
+        {
+          "name": "verifyClaimRecipientAuthorization",
+          "kind": "function",
+          "subpath": "./ethereum_oracle"
+        },
+        {
+          "name": "verifyAndConsumeClaimRecipientAuthorization",
+          "kind": "function",
+          "subpath": "./ethereum_oracle"
+        }
+      ],
+      "sideEffects": "Verification is local or read-only RPC; replay consumption mutates only the caller-provided durable replay store."
     }
   ],
   "environment": {
     "required": [],
-    "optional": ["SOLANA_RPC_URL", "OMEGAX_PROTOCOL_REPO"],
-    "unsafe": [
-      {
-        "name": "OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID",
-        "purpose": "Allows custom program IDs for devnet, localnet, and test workflows only."
-      }
-    ]
+    "optional": ["ETHEREUM_MAINNET_RPC_URL"],
+    "unsafe": []
   },
   "safetyRules": [
-    "No hidden signing.",
-    "No hidden broadcast.",
-    "No implicit production cluster.",
-    "Custom program IDs fail closed unless explicitly unsafe-enabled.",
-    "Signed claim transactions must be compared with trusted expected unsigned bytes."
+    "Ethereum chain ID is pinned to 1 and represented as eip155:1.",
+    "No hidden private-key handling, wallet switching, or proprietary RPC dependency.",
+    "The schema-v3 mainnet manifest is unconfigured, so the factory, policy registry, protocol, and future ReserveVault targets all fail closed.",
+    "Receipt verification checks revert status, confirmations, canonical block hash, receipt stability, and safe head.",
+    "Receipt submissions bind a trusted intent ID and the mined sender, destination, calldata, and value.",
+    "Deployment validation binds the one factory receipt, CREATE nonce-one registry and nonce-two protocol, the protocol deploymentFactory getter, mutual cross-getters, all three live bytecode templates, the ReserveVault CREATE2 template, and three exact Sourcify records.",
+    "Claim-recipient signatures bind chain 1 and the Nakama Policy Registry EIP-712 domain to claimant, claim, recipient, nonce, and deadline.",
+    "EIP-1193 signing payloads reject explicit gas limits above the EIP-7825 cap of 0x1000000.",
+    "The canonical root depends only on viem; optional Solana peers load only through explicit legacy read and migration subpaths.",
+    "All legacy Solana instruction, transaction, safe-client, broadcast, and MagicBlock write paths throw NAKAMA_LEGACY_WRITE_DISABLED."
   ],
   "docs": [
     "README.md",
     "SDK_QUALITY.md",
-    "docs/GETTING_STARTED.md",
     "docs/API_REFERENCE.md",
-    "docs/WORKFLOWS.md",
-    "docs/RECIPES.md",
-    "examples/README.md"
+    "docs/INDEX.md"
   ],
   "validationGates": [
     "npm test",
@@ -132,19 +430,16 @@
     "npm run build",
     "npm run docs:api:check",
     "npm run docs:check",
-    "npm run docs:sync:check:strict",
     "npm run runtime:check",
     "npm run protocol:artifact:check",
     "npm run examples:check",
     "npm run dogfood:consumer",
     "npm run cli:check",
     "npm run templates:check",
-    "npm run dx:smoke",
     "npm run security:secrets",
-    "npm run security:install-scripts",
-    "npm run security:release-governance",
     "npm run security:package",
     "npm run audit:prod",
+    "npm run audit:packed-consumer",
     "npm pack --dry-run"
   ]
 }

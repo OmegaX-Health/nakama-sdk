@@ -1,464 +1,179 @@
 # API Reference — `@nakama-health/protocol-sdk`
 
-This page documents the public SDK surface shipped in `0.8.10`.
+The canonical SDK surface targets Ethereum mainnet (`eip155:1`). The generated
+deployment manifest is intentionally unconfigured, so contract-targeted writes
+remain unavailable until a real audited deployment is recorded and validated.
 
-Use `docs/TOP_APIS.md` first if you are choosing an integration path. Use
-`docs/generated/api/README.md` for generated symbol-level markdown.
+Generated symbol-level documentation lives in `generated/api/README.md`.
 
-## Core runtime entrypoints
+## Ethereum network and wallet API
 
-- `createConnection(...)`
-- `getOmegaXNetworkInfo(...)`
-- `OMEGAX_NETWORKS`
-- `createRpcClient(...)`
-- `createSafeProtocolClient(...)`
-- `createProtocolClient(...)`
-- `getProtocolIdl()`
-- `listProtocolInstructionNames()`
-- `listProtocolInstructionAccounts(...)`
-- `listProtocolAccountNames()`
-- `accountExists(...)`
-- `decodeProtocolAccount(...)`
-- `buildProtocolInstruction(...)`
-- `buildProtocolTransaction(...)`
-- `compileTransactionToV0(...)`
-- `preflightClassicTokenAccount(...)`
+Available from the package root and
+`@nakama-health/protocol-sdk/ethereum`.
 
-Typed SDK errors:
-
-Available from the root package and `@nakama-health/protocol-sdk/errors`.
-See `docs/ERROR_CATALOG.md` for likely causes and fixes.
-
-- `OmegaXError`
-- `OmegaXConfigError`
-- `OmegaXInvalidPublicKeyError`
-- `OmegaXProgramMismatchError`
-- `OmegaXAccountNotFoundError`
-- `OmegaXAccountOwnerMismatchError`
-- `OmegaXTokenAccountPreflightError`
-- `OmegaXInstructionBuildError`
-- `OmegaXTransactionDecodeError`
-- `OmegaXRpcError`
-
-Safe-client public types:
-
-- `SafeProtocolClientOptions`
-- `SafeProtocolClient`
-- `SafeFundSponsorBudgetTxParams`
-- `SafeRecordPremiumPaymentTxParams`
-- `SafeOpenClaimCaseTxParams`
-- `SafeReserveObligationTxParams`
-- `SafeReleaseReserveTxParams`
-- `SafeSettleObligationTxParams`
-- `SafeSettleClaimCaseTxParams`
-
-## RPC client
-
-Returned by `createRpcClient(...)`.
-
-- `getRecentBlockhash()`
-- `broadcastSignedTx(...)`
-- `simulateSignedTx(...)`
-- `getSignatureStatus(...)`
-
-`simulateSignedTx(...)` verifies signatures by default and leaves blockhash
-replacement off while verifying signatures. If you disable signature
-verification, blockhash replacement defaults on for fresher preflight. If an RPC
-rejects the signature-verifying simulation argument combination, the SDK fails
-closed unless the caller explicitly passes `allowSigVerifyFallback: true`.
-Results include
-`sigVerifyRequested`, `sigVerifyUsed`, `signatureVerified`, and
-`verificationDowngraded` so intake services can reject unverified preflight
-results.
-
-## MagicBlock adjunct helpers
-
-Available from `@nakama-health/protocol-sdk/magicblock`; intentionally not exported
-from the root package.
-
-- `derivePrivateReviewRegistryPda(...)`
-- `derivePrivateReviewOperatorPda(...)`
-- `derivePrivateClaimReviewSessionPda(...)`
-- `buildInitializeReviewRegistryTx(...)`
-- `buildUpsertReviewOperatorTx(...)`
-- `buildOpenReviewSessionTx(...)`
-- `buildDelegateReviewSessionTx(...)`
-- `buildRecordPrivateReviewTx(...)`
-- `buildRecordPrivatePaymentRefTx(...)`
-- `buildCommitAndCloseReviewSessionTx(...)`
-- `buildMarkReviewFailedTx(...)`
-- `verifyActivePrivateReviewOperator(...)`
-- `verifyCommittedApprovedReviewSession(...)`
-
-The hardened claim-room helpers bind session PDAs to session authority, claim
-case, and session id; reviews to a registered operator; and payment references
-to a payment attestor.
-
-## Canonical instruction builders
-
-Product and operator flows should start with `createSafeProtocolClient(...)`.
-Raw generated builders are returned by `createProtocolClient(...)`.
-
-Use `createSafeProtocolClient(...)` for product and operator flows. It wraps the
-checked convenience builders, pins the canonical program ID by default, and
-preflights classic SPL token custody accounts when a `Connection` is available.
-The safe layer covers claim-case intake, claim settlement, and obligation
-reserve/release/settle flows plus sponsor funding and premium payments.
-Safe settlement calls additionally require `recipientOwnerAddress` so the SDK
-can preflight the payout token-account owner, not only the vault and mint.
-`buildProtocolInstruction(...)`, `buildProtocolTransaction(...)`, and the raw
-dynamic builders remain advanced APIs for protocol engineering and tests; they
-reject permissive numeric coercion and fixed-array length drift before Borsh
-encoding.
-
-The protocol surface is 21 instructions, grouped by lifecycle:
-reserve domains and asset vaults, health plans and policy series, funding lines,
-reserve capital movements, obligations, and the claim-case lifecycle.
-
-### Reserve domains and asset vaults
-
-- `buildCreateReserveDomainTx(...)`
-- `buildUpdateReserveDomainControlsTx(...)`
-- `buildCreateDomainAssetVaultTx(...)`
-
-### Health plans and policy series
-
-- `buildCreateHealthPlanTx(...)`
-- `buildUpdateHealthPlanControlsTx(...)`
-- `buildCreatePolicySeriesTx(...)`
-- `buildVersionPolicySeriesTx(...)`
-
-### Plan-side funding and reserve capital
-
-- `buildOpenFundingLineTx(...)`
-- `buildFundSponsorBudgetTx(...)`
-- `buildRecordPremiumPaymentTx(...)`
-- `buildDepositReserveCapitalTx(...)`
-- `buildRecordReserveEarningsTx(...)`
-- `buildReturnReserveCapitalTx(...)`
-
-### Obligations
-
-- `buildCreateObligationTx(...)`
-- `buildReserveObligationTx(...)`
-- `buildReleaseReserveTx(...)`
-- `buildSettleObligationTx(...)`
-
-### Claim-case lifecycle
-
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildAdjudicateClaimCaseTx(...)`
-- `buildSettleClaimCaseTx(...)`
-
-Every instruction also exposes a sibling `build...Instruction(...)` helper.
-
-Custody-sensitive builders mirror the on-chain custody requirements directly.
-`buildCreateDomainAssetVaultTx(...)` derives the protocol-owned
-`domain_asset_vault_token` PDA, while sponsor funding, premium payments, reserve
-capital deposits/returns/earnings, obligation settlement, and claim settlement
-require source or recipient token accounts, the canonical vault token account,
-asset mint, and token program accounts.
-
-## Canonical account readers
-
-Returned by `createProtocolClient(...)`. Each reader returns the typed account
-shape or `null` for an empty account. `fetchAccount(...)` and `decodeAccount(...)`
-provide a generic path keyed by account name, and `listProtocolAccountNames()`
-enumerates the same set at runtime.
-
-- `fetchReserveDomain(...)`
-- `fetchDomainAssetVault(...)`
-- `fetchDomainAssetLedger(...)`
-- `fetchHealthPlan(...)`
-- `fetchPlanReserveLedger(...)`
-- `fetchPolicySeries(...)`
-- `fetchFundingLine(...)`
-- `fetchFundingLineLedger(...)`
-- `fetchCapitalContribution(...)`
-- `fetchObligation(...)`
-- `fetchClaimCase(...)`
-
-## PDA helpers
-
-Available from the root package and `@nakama-health/protocol-sdk/protocol_seeds`.
-
-- `getProgramId()`
-- `toPublicKey(...)`
-- `normalizeAddress(...)`
-- `utf8ByteLength(...)`
-- `isSeedIdSafe(...)`
-- `assertSeedId(...)`
-- `deriveProtocolGovernancePda(...)`
-- `deriveReserveDomainPda(...)`
-- `deriveDomainAssetVaultPda(...)`
-- `deriveDomainAssetVaultTokenAccountPda(...)`
-- `deriveDomainAssetLedgerPda(...)`
-- `deriveReserveAssetRailPda(...)`
-- `deriveHealthPlanPda(...)`
-- `derivePlanReserveLedgerPda(...)`
-- `derivePolicySeriesPda(...)`
-- `deriveSeriesReserveLedgerPda(...)`
-- `deriveMemberPositionPda(...)`
-- `deriveMembershipAnchorSeatPda(...)`
-- `deriveFundingLinePda(...)`
-- `deriveFundingLineLedgerPda(...)`
-- `deriveClaimCasePda(...)`
-- `deriveClaimAttestationPda(...)`
-- `deriveObligationPda(...)`
-- `deriveLiquidityPoolPda(...)`
-- `deriveCapitalClassPda(...)`
-- `derivePoolClassLedgerPda(...)`
-- `deriveLpPositionPda(...)`
-- `deriveAllocationPositionPda(...)`
-- `deriveAllocationLedgerPda(...)`
-- `deriveOracleProfilePda(...)`
-- `derivePoolOracleApprovalPda(...)`
-- `derivePoolOracleFeeVaultPda(...)`
-- `derivePoolOraclePolicyPda(...)`
-- `derivePoolOraclePermissionSetPda(...)`
-- `derivePoolTreasuryVaultPda(...)`
-- `deriveProtocolFeeVaultPda(...)`
-- `deriveOutcomeSchemaPda(...)`
-- `deriveSchemaDependencyLedgerPda(...)`
-
-Seed constants:
-
-- `SEED_PROTOCOL_GOVERNANCE`
-- `SEED_RESERVE_DOMAIN`
-- `SEED_DOMAIN_ASSET_VAULT`
-- `SEED_DOMAIN_ASSET_VAULT_TOKEN`
-- `SEED_DOMAIN_ASSET_LEDGER`
-- `SEED_RESERVE_ASSET_RAIL`
-- `SEED_HEALTH_PLAN`
-- `SEED_PLAN_RESERVE_LEDGER`
-- `SEED_POLICY_SERIES`
-- `SEED_SERIES_RESERVE_LEDGER`
-- `SEED_MEMBER_POSITION`
-- `SEED_MEMBERSHIP_ANCHOR_SEAT`
-- `SEED_FUNDING_LINE`
-- `SEED_FUNDING_LINE_LEDGER`
-- `SEED_CLAIM_CASE`
-- `SEED_CLAIM_ATTESTATION`
-- `SEED_OBLIGATION`
-- `SEED_LIQUIDITY_POOL`
-- `SEED_CAPITAL_CLASS`
-- `SEED_POOL_CLASS_LEDGER`
-- `SEED_LP_POSITION`
-- `SEED_ALLOCATION_POSITION`
-- `SEED_ALLOCATION_LEDGER`
-- `SEED_ORACLE_PROFILE`
-- `SEED_POOL_ORACLE_APPROVAL`
-- `SEED_POOL_ORACLE_FEE_VAULT`
-- `SEED_POOL_ORACLE_POLICY`
-- `SEED_POOL_ORACLE_PERMISSION_SET`
-- `SEED_POOL_TREASURY_VAULT`
-- `SEED_PROTOCOL_FEE_VAULT`
-- `SEED_OUTCOME_SCHEMA`
-- `SEED_SCHEMA_DEPENDENCY_LEDGER`
-- `ZERO_PUBKEY`
-- `ZERO_PUBKEY_KEY`
-- `MAX_ID_SEED_BYTES`
-
-## Reserve-model helpers
-
-Available from the root package and `@nakama-health/protocol-sdk/protocol_models`.
-
-- `toBigIntAmount(...)`
-- `recomputeReserveBalanceSheet(...)`
-- `sumReserveBalanceSheets(...)`
-- `buildSponsorReadModel(...)`
-- `buildCapitalReadModel(...)`
-- `buildMemberReadModel(...)`
-- `bpsRatio(...)`
-- `shortenAddress(...)`
-
-Status and labeling helpers:
-
-- `describeSeriesMode(...)`
-- `describeSeriesStatus(...)`
-- `describeFundingLineType(...)`
-- `describeEligibilityStatus(...)`
-- `describeClaimStatus(...)`
-- `describeObligationStatus(...)`
-- `describeCapitalRestriction(...)`
+- `createEthereumPublicClient(...)` creates a viem public client pinned to
+  chain ID 1. It accepts one custom HTTP RPC URL or one EIP-1193 provider.
+- `normalizeEthereumAddress(...)` validates and checksums an address.
+- `toEthereumMainnetCaip10(...)` emits an `eip155:1:<address>` account ID.
+- `parseEthereumMainnetCaip10(...)` rejects non-mainnet CAIP account IDs.
+- `createEip1193TransactionSigningPayload(...)` creates a chain-bound
+  `SigningPayloadV2` transaction request and rejects an explicit gas limit
+  above the EIP-7825 ceiling.
+- `createEip712SigningPayload(...)` creates a chain-bound `SigningPayloadV2`
+  typed-data request.
+- `validateSigningPayloadV2(...)` rejects wrong CAIP identifiers, account/from
+  mismatches, and mixed transaction/typed-data branches at a wire boundary.
+- `createReceiptSubmissionV2(...)` and
+  `createAuthorizationSubmissionV2(...)` bind a wallet result to the original
+  intent, chain, account, and request kind.
+- `validateReceiptSubmissionV2(...)` and
+  `validateAuthorizationSubmissionV2(...)` reject transaction-hash/signature
+  substitution and malformed submission envelopes.
+- `assertEip1193Mainnet(...)` verifies the wallet is already on chain ID 1.
+- `requestSigningPayloadV2(...)` calls `eth_sendTransaction` or
+  `eth_signTypedData_v4` after the chain check.
+- `requestSigningSubmissionV2(...)` performs the request and returns the
+  matching canonical `ReceiptSubmissionV2` or `AuthorizationSubmissionV2`.
 
 Constants:
 
-- `SERIES_MODE_REWARD`
-- `SERIES_MODE_PROTECTION`
-- `SERIES_MODE_REIMBURSEMENT`
-- `SERIES_MODE_PARAMETRIC`
-- `SERIES_MODE_OTHER`
-- `SERIES_STATUS_DRAFT`
-- `SERIES_STATUS_ACTIVE`
-- `SERIES_STATUS_PAUSED`
-- `SERIES_STATUS_CLOSED`
-- `FUNDING_LINE_TYPE_SPONSOR_BUDGET`
-- `FUNDING_LINE_TYPE_PREMIUM_INCOME`
-- `FUNDING_LINE_TYPE_LIQUIDITY_POOL_ALLOCATION`
-- `FUNDING_LINE_TYPE_BACKSTOP`
-- `FUNDING_LINE_TYPE_SUBSIDY`
-- `FUNDING_LINE_STATUS_OPEN`
-- `FUNDING_LINE_STATUS_PAUSED`
-- `FUNDING_LINE_STATUS_CLOSED`
-- `RESERVE_ASSET_ROLE_PRIMARY_STABLE`
-- `RESERVE_ASSET_ROLE_SECONDARY_STABLE`
-- `RESERVE_ASSET_ROLE_VOLATILE_COLLATERAL`
-- `RESERVE_ASSET_ROLE_TREASURY_LAST_RESORT`
-- `RESERVE_ORACLE_SOURCE_NONE`
-- `RESERVE_ORACLE_SOURCE_CHAINLINK_DATA_STREAM`
-- `RESERVE_ORACLE_SOURCE_CHAINLINK_DATA_FEED`
-- `RESERVE_ORACLE_SOURCE_GOVERNANCE_ATTESTED`
-- `ELIGIBILITY_PENDING`
-- `ELIGIBILITY_ELIGIBLE`
-- `ELIGIBILITY_PAUSED`
-- `ELIGIBILITY_CLOSED`
-- `MEMBERSHIP_MODE_OPEN`
-- `MEMBERSHIP_MODE_TOKEN_GATE`
-- `MEMBERSHIP_MODE_INVITE_ONLY`
-- `MEMBERSHIP_GATE_KIND_OPEN`
-- `MEMBERSHIP_GATE_KIND_INVITE_ONLY`
-- `MEMBERSHIP_GATE_KIND_NFT_ANCHOR`
-- `MEMBERSHIP_GATE_KIND_STAKE_ANCHOR`
-- `MEMBERSHIP_GATE_KIND_FUNGIBLE_SNAPSHOT`
-- `MEMBERSHIP_PROOF_MODE_OPEN`
-- `MEMBERSHIP_PROOF_MODE_TOKEN_GATE`
-- `MEMBERSHIP_PROOF_MODE_INVITE_PERMIT`
-- `CLAIM_INTAKE_OPEN`
-- `CLAIM_INTAKE_UNDER_REVIEW`
-- `CLAIM_INTAKE_APPROVED`
-- `CLAIM_INTAKE_DENIED`
-- `CLAIM_INTAKE_SETTLED`
-- `CLAIM_INTAKE_CLOSED`
-- `CLAIM_ATTESTATION_DECISION_SUPPORT_APPROVE`
-- `CLAIM_ATTESTATION_DECISION_SUPPORT_DENY`
-- `CLAIM_ATTESTATION_DECISION_REQUEST_REVIEW`
-- `CLAIM_ATTESTATION_DECISION_ABSTAIN`
-- `POOL_ORACLE_PERMISSION_ATTEST_CLAIM`
-- `OBLIGATION_STATUS_PROPOSED`
-- `OBLIGATION_STATUS_RESERVED`
-- `OBLIGATION_STATUS_CLAIMABLE_PAYABLE`
-- `OBLIGATION_STATUS_SETTLED`
-- `OBLIGATION_STATUS_CANCELED`
-- `OBLIGATION_STATUS_IMPAIRED`
-- `OBLIGATION_STATUS_RECOVERED`
-- `OBLIGATION_DELIVERY_MODE_CLAIMABLE`
-- `OBLIGATION_DELIVERY_MODE_PAYABLE`
-- `REDEMPTION_POLICY_OPEN`
-- `REDEMPTION_POLICY_QUEUE_ONLY`
-- `REDEMPTION_POLICY_PAUSED`
-- `CAPITAL_CLASS_RESTRICTION_OPEN`
-- `CAPITAL_CLASS_RESTRICTION_RESTRICTED`
-- `CAPITAL_CLASS_RESTRICTION_WRAPPER_ONLY`
-- `LP_QUEUE_STATUS_NONE`
-- `LP_QUEUE_STATUS_PENDING`
-- `LP_QUEUE_STATUS_PROCESSED`
-- `PAUSE_FLAG_PROTOCOL_EMERGENCY`
-- `PAUSE_FLAG_DOMAIN_RAILS`
-- `PAUSE_FLAG_PLAN_OPERATIONS`
-- `PAUSE_FLAG_CLAIM_INTAKE`
-- `PAUSE_FLAG_CAPITAL_SUBSCRIPTIONS`
-- `PAUSE_FLAG_REDEMPTION_QUEUE_ONLY`
-- `PAUSE_FLAG_ORACLE_FINALITY_HOLD`
-- `PAUSE_FLAG_ALLOCATION_FREEZE`
-- `ORACLE_TYPE_LAB`
-- `ORACLE_TYPE_HOSPITAL_CLINIC`
-- `ORACLE_TYPE_HEALTH_APP`
-- `ORACLE_TYPE_WEARABLE_DATA_PROVIDER`
-- `ORACLE_TYPE_OTHER`
-- `SCHEMA_FAMILY_KERNEL`
-- `SCHEMA_FAMILY_CLINICAL`
-- `SCHEMA_FAMILY_CLAIMS_CODING`
-- `SCHEMA_VISIBILITY_PUBLIC`
-- `SCHEMA_VISIBILITY_PRIVATE`
-- `SCHEMA_VISIBILITY_RESTRICTED`
-- `NATIVE_SOL_MINT`
+- `ETHEREUM_MAINNET_CHAIN_ID` is `1`.
+- `ETHEREUM_MAINNET_CHAIN_ID_HEX` is `0x1`.
+- `ETHEREUM_MAINNET_CAIP2` is `eip155:1`.
+- `ETHEREUM_MAINNET_TRANSACTION_GAS_LIMIT_CAP` is `0x1000000n`.
 
-## Claims helpers
+`SigningPayloadV2` uses `version: 2`, `chainId: "eip155:1"`, a CAIP-10
+`accountId`, and the discriminants `transaction` or `typed_data`.
+`requestSigningPayloadV2(...)` never changes the wallet network and never
+handles a private key. `AuthorizationStatusV2` provides an optional relayer
+lifecycle vocabulary without treating offchain status as settlement truth.
 
-Available from the root package and `@nakama-health/protocol-sdk/claims`.
+## Contract, calldata, asset, and finality API
 
-- `normalizeClaimSimulationFailure(...)`
-- `normalizeClaimRpcFailure(...)`
-- `validateSignedClaimTx(...)`
+Available from the package root and
+`@nakama-health/protocol-sdk/ethereum_contract`.
 
-`validateSignedClaimTx(...)` requires a trusted
-`expectedUnsignedTxBase64` from the service that created the intent, and fails
-closed when the signed transaction does not match it. Claim intents should
-include `intentId`, `nonce`, `expiresAtIso`, `requiredSigner`, and
-`unsignedTxBase64`, but submitted intent bytes are metadata only; do not use them
-as the expected transaction source. The validator rejects stale intents, wrong
-nonces, wrong signers, malformed transactions, and message tampering.
-Recent-blockhash refresh is allowed only when every non-blockhash byte still
-matches, and `requireExactMessage: true` disables even that for high-risk
-operator flows.
+- `validateEthereumDeploymentManifest(...)` validates schema v3, chain,
+  one-factory deployment identity, three live contract records, the
+  ReserveVault CREATE2 template, four ABI hashes, audit/release digests, and
+  per-contract Sourcify evidence.
+  `requireDeployed: true` rejects the checked-in unconfigured/unaudited manifest.
+- `validateEthereumContractDeployment(...)` additionally checks the factory
+  receipt and creation input, nonce-one registry, nonce-two protocol, the
+  protocol's `deploymentFactory()` back-pointer, mutual getters, three live
+  runtime templates, safe/finalized evidence, and fresh Sourcify lookups.
+- `verifyEthereumSourcifyDeployment(...)` independently GETs each canonical
+  `https://sourcify.dev/server/v2/contract/1/<checksummed-address>` endpoint and
+  requires mainnet, address, exact creation/runtime matches, timestamp, and
+  match ID to equal the published evidence.
+- `assertEthereumCreationBytecodeHash(...)` is the low-level integrity
+  primitive used to bind deployment transaction input to the generated
+  creation-bytecode hash.
+- `encodeEthereumCalldata(...)` encodes an ABI function call.
+- `decodeEthereumCalldata(...)` decodes ABI calldata.
+- `decodeEthereumEventLogs(...)` decodes matching event logs and defaults to
+  strict failure.
+- `decodeEthereumRevert(...)` decodes Solidity custom or standard errors when
+  the supplied ABI supports them.
+- `inspectErc20(...)` checks contract code and reads `name`, `symbol`,
+  `decimals`, and `totalSupply`; optional owner/spender inputs add balance and
+  allowance minimum checks.
+- `waitForEthereumReceipt(...)` waits for the configured confirmation count and
+  then performs canonical-chain and safe-head verification.
+- `verifyEthereumReceipt(...)` rejects reverted receipts, insufficient
+  confirmations, block-hash changes, receipt changes, and transactions beyond
+  the safe head.
+- `verifyEthereumTransactionIntent(...)` fetches the submitted transaction,
+  binds the submission to a trusted expected intent ID, proves its sender,
+  destination, calldata, and value equal the server-owned transaction intent,
+  then performs the full receipt and finality checks.
 
-The claims module also re-exports:
+The default confirmation count is `DEFAULT_ETHEREUM_CONFIRMATIONS` (`12`). Safe
+head verification is enabled by default.
 
-- `describeClaimStatus(...)`
-- `describeObligationStatus(...)`
-- claim intake status constants
-- obligation status constants
+Generated contract constants:
 
-## Oracle helpers
+- `NAKAMA_PROTOCOL_FACTORY_ABI`
+- `NAKAMA_POLICY_REGISTRY_ABI`
+- `NAKAMA_COVERAGE_PROTOCOL_ABI`
+- `NAKAMA_RESERVE_VAULT_ABI`
+- matching `*_ABI_SHA256` and `*_ARTIFACT_METADATA` constants
+- `NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT`
 
-Available from the root package and `@nakama-health/protocol-sdk/oracle`.
+## EIP-712 claim-recipient authorization API
 
-- `createOracleSignerFromEnv(...)`
-- `createOracleSignerFromKmsAdapter(...)`
-- `attestOutcome(...)`
-- `attestProtocolOutcome(...)`
-- `verifyOracleAttestation(...)`
-- `verifyProtocolOracleAttestation(...)`
+Available from the package root and
+`@nakama-health/protocol-sdk/ethereum_oracle`.
 
-Use `attestProtocolOutcome(...)` for settlement-grade protocol evidence. Its
-context binds the evidence to network, program ID, health plan, funding line,
-claim case, optional pool allocation scope, schema key hash, audience, nonce,
-issue time, as-of time, and expiry. Generic `attestOutcome(...)` remains
-available for telemetry and non-settlement event packaging. Use
-`verifyProtocolOracleAttestation(...)` when settlement code needs signature
-validity plus trusted expected verifier identity, expected
-program/network/account, audience, nonce, and expiry
-checks. Optional policy/pool/class/allocation scope is rejected unless it is
-explicitly expected or `allowUnexpectedOptionalScope` is set for
-telemetry-style wildcard matching.
+- `createClaimRecipientAuthorizationTypedData(...)` constructs the contract's
+  canonical `ClaimRecipient` domain and message for chain ID 1.
+- `createClaimRecipientAuthorizationSigningPayload(...)` wraps the canonical
+  typed data in `SigningPayloadV2` for an EIP-1193 wallet.
+- `hashClaimRecipientAuthorization(...)` returns the EIP-712 digest.
+- `verifyClaimRecipientAuthorization(...)` validates the fixed type schema,
+  domain name and version, chain, verifying contract, expected claimant,
+  trusted onchain nonce, deadline, signature, and fixed-width fields. Passing a
+  public client enables ERC-1271 claimant validation.
+- `claimRecipientNonceReplayKey(...)` derives the contract/claim/nonce key.
+- `verifyAndConsumeClaimRecipientAuthorization(...)` performs verification and
+  atomically consumes the digest and nonce key through a caller-provided replay
+  guard.
 
-## Shared utilities
+`ClaimRecipientReplayGuard.consume(...)` must be atomic across all supplied
+keys. `InMemoryClaimRecipientReplayGuard` is intended for tests and
+single-process demos; production services need a durable shared implementation.
 
-Available from the root package and `@nakama-health/protocol-sdk/utils`.
+## Ethereum errors
 
-- `stableStringify(...)`
-- `sha256Hex(...)`
-- `sha256Bytes(...)`
-- `toIsoString(...)`
-- `nowIso()`
-- `newId(...)`
-- `anchorDiscriminator(...)`
-- `encodeU64Le(...)`
-- `encodeI64Le(...)`
-- `encodeU32Le(...)`
-- `encodeU16Le(...)`
-- `encodeString(...)`
-- `readU32Le(...)`
-- `readU16Le(...)`
-- `readU64Le(...)`
-- `readI64Le(...)`
-- `readString(...)`
-- `toHex(...)`
-- `fromHex(...)`
-- `hashStringTo32(...)`
+Available from the package root and
+`@nakama-health/protocol-sdk/errors`.
 
-## Transaction helpers
+- `NakamaEthereumConfigError` — `NAKAMA_ETHEREUM_CONFIG_ERROR`
+- `NakamaEthereumAddressError` — `NAKAMA_ETHEREUM_ADDRESS_ERROR`
+- `NakamaEthereumWrongChainError` — `NAKAMA_ETHEREUM_WRONG_CHAIN`
+- `NakamaEthereumContractError` — `NAKAMA_ETHEREUM_CONTRACT_ERROR`
+- `NakamaEthereumReceiptError` — `NAKAMA_ETHEREUM_RECEIPT_ERROR`
+- `NakamaEthereumAttestationError` — `NAKAMA_ETHEREUM_ATTESTATION_ERROR`
+- `NakamaEthereumReplayError` — `NAKAMA_ETHEREUM_REPLAY`
+- `NakamaLegacyWriteDisabledError` — `NAKAMA_LEGACY_WRITE_DISABLED`
 
-Available from the root package and `@nakama-health/protocol-sdk/transactions`.
+All extend the existing typed SDK error base and expose `code`, optional
+`details`, and optional `cause`.
 
-- `decodeSolanaTransaction(...)`
-- `serializeSolanaTransaction(...)`
-- `serializeSolanaTransactionBase64(...)`
-- `solanaTransactionMessageBytes(...)`
-- `solanaTransactionIntentMessageBytes(...)`
-- `solanaTransactionMessageBase64(...)`
-- `solanaTransactionRequiredSigner(...)`
-- `solanaTransactionFirstSignature(...)`
-- `solanaTransactionSignerSignature(...)`
+## Generated ABI ownership
+
+The checked-in inputs are the ABI and metadata pairs for
+`NakamaProtocolFactory`, `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and
+`ReserveVault` under `contracts/ethereum/`, plus
+`deployments/ethereum-mainnet.json` and
+`deployments/ethereum-mainnet.final.schema.json`. Run
+`npm run generate:protocol-bindings` to regenerate
+`src/generated/ethereum_protocol.ts`; `npm run protocol:artifact:check` fails if
+any ABI, metadata record, schema, manifest, or generated output drifts from the
+canonical sibling `nakama-protocol` artifact.
+
+The Anchor IDL generator is retained only under
+`npm run sync:legacy-solana-idl` for migration compatibility.
+
+## Legacy Solana surface
+
+The following subpaths are deprecated for new integrations:
+
+- `@nakama-health/protocol-sdk/protocol`
+- `@nakama-health/protocol-sdk/protocol_seeds`
+- `@nakama-health/protocol-sdk/rpc`
+- `@nakama-health/protocol-sdk/transactions`
+- `@nakama-health/protocol-sdk/claims`
+- `@nakama-health/protocol-sdk/oracle`
+- `@nakama-health/protocol-sdk/magicblock`
+
+Their decoding, derivation, simulation, and read helpers remain for migration.
+They are excluded from the package root and require explicit installation of
+the optional Solana peers. Every protocol instruction/transaction builder,
+raw-client builder, safe-client write method, `broadcastSignedTx(...)`, and
+MagicBlock write path fails with `NAKAMA_LEGACY_WRITE_DISABLED`; these subpaths
+are not Ethereum compatibility shims.
+
+```bash
+npm install @coral-xyz/anchor @solana/web3.js bn.js bs58 tweetnacl
+```

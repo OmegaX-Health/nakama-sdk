@@ -8,13 +8,19 @@ Authoritative refresh command:
 npm run generate:protocol-bindings
 ```
 
-The command reads the canonical sibling `../omegax-protocol` workspace unless
-`OMEGAX_PROTOCOL_REPO` points somewhere else. It refreshes:
+The canonical command reads:
 
-- `src/generated/omegax_protocol.idl.json`
-- `src/generated/protocol_contract.ts`
-- `src/generated/protocol_types.ts`
-- `tests/fixtures/omegax_protocol.idl.json`
+- ABI and metadata pairs for `NakamaProtocolFactory`,
+  `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and `ReserveVault` under
+  `contracts/ethereum/`
+- `deployments/ethereum-mainnet.json`
+- `deployments/ethereum-mainnet.final.schema.json`
+
+It refreshes `src/generated/ethereum_protocol.ts`.
+
+The old Anchor outputs (`omegax_protocol.idl.json`, `protocol_contract.ts`,
+`protocol_types.ts`, and the test IDL fixture) are migration-only and are
+refreshed by `npm run sync:legacy-solana-idl`.
 
 After refreshing, run:
 

@@ -64,6 +64,23 @@ async function main() {
   ) {
     throw new Error('doctor did not verify package subpath imports');
   }
+  const deploymentCheck = doctor.checks.find(
+    (check) => check.name === 'deployment-manifest',
+  );
+  const contractNames = Object.keys(
+    deploymentCheck?.details?.contracts ?? {},
+  ).sort();
+  const expectedContractNames = [
+    'NakamaCoverageProtocol',
+    'NakamaPolicyRegistry',
+    'NakamaProtocolFactory',
+    'ReserveVault',
+  ];
+  if (JSON.stringify(contractNames) !== JSON.stringify(expectedContractNames)) {
+    throw new Error(
+      'doctor did not report all four Ethereum contract artifacts',
+    );
+  }
 
   const failingDoctor = parseJsonOutput(
     run(

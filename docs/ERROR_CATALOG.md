@@ -1,141 +1,63 @@
-# Error Catalog - `@nakama-health/protocol-sdk`
+# Error Catalog — `@nakama-health/protocol-sdk`
 
-Public SDK errors extend `OmegaXError` and include a stable `code`, optional
-`details`, and optional `cause`. Branch on `instanceof` or `code`; do not parse
-message strings.
+Canonical Ethereum errors extend `NakamaEthereumError` and expose a stable
+`code`, optional `details`, and optional `cause`. Branch on `instanceof` or
+`code`; message strings are explanatory, not an API.
 
-## `OMEGAX_CONFIG_ERROR`
+## `NAKAMA_ETHEREUM_CONFIG_ERROR`
 
-Meaning: SDK configuration is invalid or incomplete.
+The RPC, signing payload, JSON-RPC quantity, fee fields, or caller configuration
+is invalid. Correct the configuration or payload before retrying.
 
-Likely causes:
+## `NAKAMA_ETHEREUM_ADDRESS_ERROR`
 
-- Unsupported network input.
-- Missing oracle signer environment variable.
-- Invalid oracle signer secret length.
+An Ethereum address could not be normalized or checksummed. Reject the input at
+the application boundary; retry only with a corrected address.
 
-Fix: correct network, env, or signer configuration before retrying.
+## `NAKAMA_ETHEREUM_WRONG_CHAIN`
 
-Retry: no, unless configuration changed.
+An RPC, wallet, CAIP identifier, EIP-1193 request, EIP-712 domain, or deployment
+manifest does not target Ethereum mainnet chain ID `1`. Do not switch a user's
+wallet silently; ask them to choose mainnet or replace the endpoint.
 
-## `OMEGAX_INVALID_PUBLIC_KEY`
+## `NAKAMA_ETHEREUM_CONTRACT_ERROR`
 
-Meaning: a provided address cannot be normalized to a Solana public key.
+ABI encoding, event decoding, ERC-20 inspection, deployment schema, artifact
+hash, runtime bytecode, creation receipt, source verification, or audit evidence
+failed. This is deterministic until the input, deployment, or reviewed evidence
+changes.
 
-Likely causes:
+## `NAKAMA_ETHEREUM_RECEIPT_ERROR`
 
-- Empty address.
-- Typo in base58 string.
-- Object with invalid `toBase58()` output.
+A transaction reverted, lacks confirmations, is outside safe head, has a
+noncanonical block hash, or changed between receipt reads. Retry reads for
+temporary confirmation depth; do not treat a reorged or reverted transaction as
+successful.
 
-Fix: validate the address at the application boundary.
+## `NAKAMA_ETHEREUM_ATTESTATION_ERROR`
 
-Retry: no, unless input changed.
+A claim-recipient typed-data domain, message, nonce, deadline, claimant, or
+signature is invalid. Rebuild the canonical payload from trusted contract state
+and ask the claimant to authorize that exact payload.
 
-## `OMEGAX_PROGRAM_MISMATCH`
+## `NAKAMA_ETHEREUM_REPLAY`
 
-Meaning: the requested program ID does not match the canonical Nakama program
-for safe production flows.
+The authorization digest or contract/claim nonce was already consumed. Do not
+retry the same authorization; read the current nonce and create a fresh payload.
 
-Likely causes:
+## `NAKAMA_LEGACY_WRITE_DISABLED`
 
-- Custom localnet/devnet program ID passed without unsafe opt-in.
-- Builder call mixed two different program IDs.
-- Token program is not the classic SPL Token program where required.
+A caller attempted to construct a Solana instruction/transaction, use a legacy
+safe-client write method, broadcast, or invoke a MagicBlock network/write
+operation. Those paths are disabled in the Ethereum mainnet SDK. Migrate the
+flow to an EIP-1193 wallet request and canonical Ethereum contract call.
 
-Fix: use `PROTOCOL_PROGRAM_ID` for product flows. Use
-`unsafeAllowCustomProgramId` only for localnet, test, or explicitly unsafe
-devnet workflows.
+## Legacy compatibility errors
 
-Retry: no, unless configuration changed.
-
-## `OMEGAX_ACCOUNT_NOT_FOUND`
-
-Meaning: an expected account was not found at the provided address.
-
-Likely causes:
-
-- Account has not been initialized.
-- Wrong PDA seed or program ID.
-- RPC points at the wrong cluster.
-
-Fix: confirm network, program ID, seeds, and account creation state.
-
-Retry: yes only after account creation or RPC/network correction.
-
-## `OMEGAX_ACCOUNT_OWNER_MISMATCH`
-
-Meaning: an account exists but is owned by an unexpected program.
-
-Likely causes:
-
-- Wrong cluster or address.
-- Token account expected but a system/program account was supplied.
-- Protocol account belongs to a different program ID.
-
-Fix: inspect the address and expected owner before asking users to sign.
-
-Retry: no, unless input changed.
-
-## `OMEGAX_TOKEN_ACCOUNT_PREFLIGHT`
-
-Meaning: a token custody account failed mint, owner, or layout preflight.
-
-Likely causes:
-
-- Recipient token account has wrong mint.
-- Recipient owner does not match expected owner.
-- Token account data is malformed or not a classic SPL Token account.
-
-Fix: create or select the correct token account, then retry.
-
-Retry: yes after token account correction.
-
-## `OMEGAX_INSTRUCTION_BUILD`
-
-Meaning: the SDK could not safely build the requested instruction or
-transaction.
-
-Likely causes:
-
-- Missing required account.
-- Fee payer could not be inferred.
-- Required recent blockhash or fee payer missing for v0 compilation.
-- Partial optional account scope supplied.
-
-Fix: provide the complete account scope or use `createSafeProtocolClient(...)`
-for guarded builders.
-
-Retry: no, unless the builder input changed.
-
-## `OMEGAX_TRANSACTION_DECODE`
-
-Meaning: serialized transaction bytes could not be decoded.
-
-Likely causes:
-
-- Malformed base64.
-- Truncated transaction.
-- Invalid legacy or versioned transaction message.
-
-Fix: preserve the original payload and validate serialization before submission.
-
-Retry: no, unless the transaction payload changed.
-
-## `OMEGAX_RPC_ERROR`
-
-Meaning: an RPC call returned a malformed or failed response through SDK RPC
-helpers.
-
-Likely causes:
-
-- RPC rejected simulation arguments.
-- RPC returned no result payload.
-- Transport or node behavior differs from Solana web3 expectations.
-
-Fix: inspect RPC logs, endpoint health, and simulation options. Use
-`allowSigVerifyFallback` only when the application explicitly accepts unverified
-simulation fallback metadata.
-
-Retry: yes for transport/node health failures; no for deterministic payload
-failures.
+`OMEGAX_CONFIG_ERROR`, `OMEGAX_INVALID_PUBLIC_KEY`,
+`OMEGAX_PROGRAM_MISMATCH`, `OMEGAX_ACCOUNT_NOT_FOUND`,
+`OMEGAX_ACCOUNT_OWNER_MISMATCH`, `OMEGAX_TOKEN_ACCOUNT_PREFLIGHT`,
+`OMEGAX_INSTRUCTION_BUILD`, `OMEGAX_TRANSACTION_DECODE`, and
+`OMEGAX_RPC_ERROR` remain stable for historical Solana reads, decoding,
+simulation, and migration. New Ethereum integrations should use the Nakama
+error classes above.

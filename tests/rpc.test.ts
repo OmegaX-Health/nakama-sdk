@@ -7,20 +7,29 @@ import {
   VersionedTransaction,
 } from '@solana/web3.js';
 
+import { NakamaLegacyWriteDisabledError } from '../src/errors.js';
 import {
   OMEGAX_NETWORKS,
   createConnection,
   createRpcClient,
-  compileTransactionToV0,
   getOmegaXNetworkInfo,
   type OmegaXNetworkInput,
-} from '../src/index.js';
+} from '../src/rpc.js';
+import { compileTransactionToV0 } from '../src/protocol.js';
 import { createRpcConnectionStub } from './support/rpc-connection.js';
 
 test('createConnection preserves URL overload behavior', () => {
   const connection = createConnection('http://127.0.0.1:8899', 'processed');
   assert.equal(connection.rpcEndpoint, 'http://127.0.0.1:8899');
   assert.equal(connection.commitment, 'processed');
+});
+
+test('legacy Solana transaction broadcasting fails closed', async () => {
+  const rpc = createRpcClient(createRpcConnectionStub());
+  await assert.rejects(
+    rpc.broadcastSignedTx({ signedTxBase64: 'AA==' }),
+    NakamaLegacyWriteDisabledError,
+  );
 });
 
 test('createConnection defaults to devnet when called with options or no args', () => {

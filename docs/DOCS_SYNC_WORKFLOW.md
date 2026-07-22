@@ -4,7 +4,7 @@ This workflow keeps `@nakama-health/protocol-sdk` and `docs.nakama.health` on th
 
 ## Ownership model
 
-- `omegax-sdk` is the source of truth for versioned package behavior and examples.
+- `nakama-sdk` is the source of truth for versioned package behavior and examples.
 - `omegax-docs` is the public documentation portal and product-facing explanation layer.
 - Every SDK release needs a matching portal sync record in `docs/OMEGAX_DOCS_SYNC.json`.
 

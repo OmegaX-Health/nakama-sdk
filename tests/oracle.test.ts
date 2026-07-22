@@ -7,14 +7,13 @@ import nacl from 'tweetnacl';
 import {
   attestOutcome,
   attestProtocolOutcome,
-  PROTOCOL_PROGRAM_ID,
-  sha256Hex,
-  stableStringify,
   verifyOracleAttestation,
   verifyProtocolOracleAttestation,
   type OracleSigner,
   type ProtocolBoundOutcomeAttestation,
-} from '../src/index.js';
+} from '../src/oracle.js';
+import { PROTOCOL_PROGRAM_ID } from '../src/generated/protocol_contract.js';
+import { sha256Hex, stableStringify } from '../src/utils.js';
 
 function createTestSigner(): OracleSigner {
   const keypair = nacl.sign.keyPair();

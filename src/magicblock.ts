@@ -8,6 +8,7 @@ import {
 import type { AccountInfo, Commitment } from '@solana/web3.js';
 
 import type { PublicKeyish } from './generated/protocol_types.js';
+import { NakamaLegacyWriteDisabledError } from './errors.js';
 import {
   anchorDiscriminator,
   encodeString,
@@ -38,6 +39,7 @@ export const MAGICBLOCK_DEVNET_ER_RPC_URL = 'https://devnet.magicblock.app/';
 export const MAGICBLOCK_DEVNET_ER_WS_URL = 'wss://devnet.magicblock.app/';
 export const MAGICBLOCK_DEVNET_TEE_RPC_URL =
   'https://devnet-tee.magicblock.app/';
+export const MAGICBLOCK_RUNTIME_STATUS = 'disabled_ethereum_mainnet' as const;
 
 export const PRIVATE_REVIEW_STATUS_OPENED = 0;
 export const PRIVATE_REVIEW_STATUS_DELEGATED = 1;
@@ -269,6 +271,7 @@ export interface PrivateClaimReviewSessionAccount {
 export function createMagicBlockConnections(
   config: MagicBlockConnectionConfig = {},
 ): MagicBlockConnections {
+  magicBlockWriteDisabled('createMagicBlockConnections');
   return {
     baseConnection: new Connection(
       config.baseRpcUrl ?? 'https://api.devnet.solana.com',
@@ -333,6 +336,7 @@ export async function waitForMagicBlockCommitmentSignature(
   erSignature: string,
   erConnection: Connection,
 ): Promise<string> {
+  magicBlockWriteDisabled('waitForMagicBlockCommitmentSignature');
   const scheduledTx = await erConnection.getTransaction(erSignature, {
     maxSupportedTransactionVersion: 0,
   });
@@ -385,6 +389,7 @@ export function buildMagicBlockExplorerLink(
 export function buildInitializeReviewRegistryTx(
   params: BuildInitializeReviewRegistryTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildInitializeReviewRegistryTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -416,6 +421,7 @@ export function buildInitializeReviewRegistryTx(
 export function buildSetReviewRegistryAuthorityTx(
   params: BuildSetReviewRegistryAuthorityTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildSetReviewRegistryAuthorityTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -444,6 +450,7 @@ export function buildSetReviewRegistryAuthorityTx(
 export function buildUpsertReviewOperatorTx(
   params: BuildUpsertReviewOperatorTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildUpsertReviewOperatorTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -483,6 +490,7 @@ export function buildUpsertReviewOperatorTx(
 export function buildSetReviewOperatorActiveTx(
   params: BuildSetReviewOperatorActiveTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildSetReviewOperatorActiveTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -519,6 +527,7 @@ export function buildSetReviewOperatorActiveTx(
 export function buildOpenReviewSessionTx(
   params: BuildOpenReviewSessionTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildOpenReviewSessionTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -569,6 +578,7 @@ export function buildOpenReviewSessionTx(
 export function buildDelegateReviewSessionTx(
   params: BuildDelegateReviewSessionTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildDelegateReviewSessionTx');
   const programId = privateReviewProgramId(params.programId);
   const reviewSession =
     params.reviewSession != null
@@ -629,6 +639,7 @@ export function buildDelegateReviewSessionTx(
 export function buildRecordPrivateReviewTx(
   params: BuildRecordPrivateReviewTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildRecordPrivateReviewTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -679,6 +690,7 @@ export function buildRecordPrivateReviewTx(
 export function buildRecordPrivatePaymentRefTx(
   params: BuildRecordPrivatePaymentRefTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildRecordPrivatePaymentRefTx');
   const programId = privateReviewProgramId(params.programId);
   const registry =
     params.registry != null
@@ -717,6 +729,7 @@ export function buildRecordPrivatePaymentRefTx(
 export function buildCommitAndCloseReviewSessionTx(
   params: BuildCommitAndCloseReviewSessionTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildCommitAndCloseReviewSessionTx');
   const programId = privateReviewProgramId(params.programId);
   const reviewSession =
     params.reviewSession != null
@@ -753,6 +766,7 @@ export function buildCommitAndCloseReviewSessionTx(
 export function buildMarkReviewFailedTx(
   params: BuildMarkReviewFailedTxParams,
 ): Transaction {
+  magicBlockWriteDisabled('buildMarkReviewFailedTx');
   const programId = privateReviewProgramId(params.programId);
   const reviewSession =
     params.reviewSession != null
@@ -872,6 +886,7 @@ export async function verifyCommittedApprovedReviewSession(
 export async function buildPrivatePaymentsApiTransaction(
   params: PrivatePaymentsBuildRequest,
 ): Promise<unknown> {
+  magicBlockWriteDisabled('buildPrivatePaymentsApiTransaction');
   const url = `${params.apiUrl ?? 'https://payments.magicblock.app'}${params.endpoint}`;
   const response = await fetch(url, {
     method: 'POST',
@@ -1177,4 +1192,16 @@ function assertHashMatches(
   if (normalizeHash(actual) !== normalizeHash(expected)) {
     throw new Error(`MagicBlock ${label} mismatch`);
   }
+}
+
+function magicBlockWriteDisabled(operation: string): void {
+  throw new NakamaLegacyWriteDisabledError(
+    'MagicBlock is a legacy Solana integration and is disabled in the Ethereum mainnet SDK.',
+    {
+      details: {
+        operation,
+        status: MAGICBLOCK_RUNTIME_STATUS,
+      },
+    },
+  );
 }

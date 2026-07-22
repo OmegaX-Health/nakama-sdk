@@ -8,10 +8,7 @@
     "smoke": "node dist/index.js"
   },
   "dependencies": {
-    "@nakama-health/protocol-sdk": "^0.8.10",
-    "@solana/web3.js": "^1.98.4",
-    "bs58": "^6.0.0",
-    "tweetnacl": "^1.0.3"
+    "@nakama-health/protocol-sdk": "^0.8.10"
   },
   "devDependencies": {
     "@types/node": "^20.19.37",

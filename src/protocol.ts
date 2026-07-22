@@ -49,6 +49,7 @@ import {
   OmegaXInstructionBuildError,
   OmegaXProgramMismatchError,
   OmegaXTokenAccountPreflightError,
+  NakamaLegacyWriteDisabledError,
 } from './errors.js';
 import {
   PROTOCOL_IDL_VERSION as INTERNAL_PROTOCOL_IDL_VERSION,
@@ -122,6 +123,18 @@ function resolveProgramIdForBuild(params: {
 }
 
 export const PROTOCOL_IDL_VERSION = INTERNAL_PROTOCOL_IDL_VERSION;
+
+function legacySolanaWriteDisabled(operation: string): void {
+  throw new NakamaLegacyWriteDisabledError(
+    `${operation} is disabled because Nakama's canonical execution network is Ethereum mainnet. Legacy Solana modules support reads, decoding, simulation, and migration only.`,
+    {
+      details: {
+        operation,
+        canonicalChain: 'eip155:1',
+      },
+    },
+  );
+}
 
 export function getProtocolIdl() {
   return getInternalProtocolIdl();
@@ -326,6 +339,7 @@ export function buildProtocolInstruction(
     unsafeAllowCustomProgramId?: boolean;
   },
 ): TransactionInstruction {
+  legacySolanaWriteDisabled('buildProtocolInstruction');
   const resolvedProgramId = resolveProgramIdForBuild({
     programId: params.programId,
     unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
@@ -351,6 +365,7 @@ export function buildProtocolTransaction(
     unsafeAllowCustomProgramId?: boolean;
   },
 ): Transaction {
+  legacySolanaWriteDisabled('buildProtocolTransaction');
   const resolvedProgramId = resolveProgramIdForBuild({
     programId: params.programId,
     unsafeAllowCustomProgramId: params.unsafeAllowCustomProgramId,
@@ -2007,6 +2022,9 @@ export function createSafeProtocolClient(
     async buildFundSponsorBudgetTx(
       params: SafeFundSponsorBudgetTxParams,
     ): Promise<Transaction> {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildFundSponsorBudgetTx',
+      );
       await preflightDomainVaultInflow({
         authority: params.authority,
         reserveDomainAddress: params.reserveDomainAddress,
@@ -2020,6 +2038,9 @@ export function createSafeProtocolClient(
     async buildRecordPremiumPaymentTx(
       params: SafeRecordPremiumPaymentTxParams,
     ): Promise<Transaction> {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildRecordPremiumPaymentTx',
+      );
       await preflightDomainVaultInflow({
         authority: params.authority,
         reserveDomainAddress: params.reserveDomainAddress,
@@ -2031,19 +2052,31 @@ export function createSafeProtocolClient(
       return buildRecordPremiumPaymentTx({ ...params, programId });
     },
     buildOpenClaimCaseTx(params: SafeOpenClaimCaseTxParams): Transaction {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildOpenClaimCaseTx',
+      );
       return buildOpenClaimCaseTx({ ...params, programId });
     },
     buildReserveObligationTx(
       params: SafeReserveObligationTxParams,
     ): Transaction {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildReserveObligationTx',
+      );
       return buildReserveObligationTx({ ...params, programId });
     },
     buildReleaseReserveTx(params: SafeReleaseReserveTxParams): Transaction {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildReleaseReserveTx',
+      );
       return buildReleaseReserveTx({ ...params, programId });
     },
     async buildSettleObligationTx(
       params: SafeSettleObligationTxParams,
     ): Promise<Transaction> {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildSettleObligationTx',
+      );
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
         assetMint: params.assetMint,
@@ -2062,6 +2095,9 @@ export function createSafeProtocolClient(
     async buildSettleClaimCaseTx(
       params: SafeSettleClaimCaseTxParams,
     ): Promise<Transaction> {
+      legacySolanaWriteDisabled(
+        'createSafeProtocolClient.buildSettleClaimCaseTx',
+      );
       await preflightDomainVaultOutflow({
         reserveDomainAddress: params.reserveDomainAddress,
         assetMint: params.assetMint,
@@ -2121,11 +2157,13 @@ export function createProtocolClient(
       > & {
         instructionName: ProtocolInstructionName;
       },
-    ) =>
-      buildProtocolInstruction({
+    ) => {
+      legacySolanaWriteDisabled('createProtocolClient.buildInstruction');
+      return buildProtocolInstruction({
         ...params,
         programId: resolveClientProgramId(params.programId),
-      }),
+      });
+    },
     buildTransaction: (
       params: BuildTransactionParams<
         Record<string, unknown>,
@@ -2133,11 +2171,13 @@ export function createProtocolClient(
       > & {
         instructionName: ProtocolInstructionName;
       },
-    ) =>
-      buildProtocolTransaction({
+    ) => {
+      legacySolanaWriteDisabled('createProtocolClient.buildTransaction');
+      return buildProtocolTransaction({
         ...params,
         programId: resolveClientProgramId(params.programId),
-      }),
+      });
+    },
     decodeAccount: <T = Record<string, unknown>>(
       accountName: ProtocolAccountName,
       data: Buffer | Uint8Array,
@@ -2168,24 +2208,30 @@ export function createProtocolClient(
         Record<string, unknown>,
         GenericInstructionAccounts
       >,
-    ) =>
-      buildProtocolInstruction({
+    ) => {
+      legacySolanaWriteDisabled(
+        `createProtocolClient.build${pascalName}Instruction`,
+      );
+      return buildProtocolInstruction({
         ...params,
         instructionName,
         programId: resolveClientProgramId(params.programId),
       });
+    };
 
     client[`build${pascalName}Tx`] = (
       params: BuildTransactionParams<
         Record<string, unknown>,
         GenericInstructionAccounts
       >,
-    ) =>
-      buildProtocolTransaction({
+    ) => {
+      legacySolanaWriteDisabled(`createProtocolClient.build${pascalName}Tx`);
+      return buildProtocolTransaction({
         ...params,
         instructionName,
         programId: resolveClientProgramId(params.programId),
       });
+    };
   }
 
   for (const accountName of listProtocolAccountNames()) {

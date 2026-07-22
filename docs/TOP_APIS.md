@@ -1,94 +1,54 @@
-# Top APIs - `@nakama-health/protocol-sdk`
+# Top APIs — `@nakama-health/protocol-sdk`
 
-Use this page when you know your builder lane and want the shortest route to the
-right SDK surface.
+## Ethereum identity and RPC
 
-## Health App
+- `createEthereumPublicClient(...)`
+- `normalizeEthereumAddress(...)`
+- `toEthereumMainnetCaip10(...)`
+- `parseEthereumMainnetCaip10(...)`
+- `ETHEREUM_MAINNET_CHAIN_ID`
+- `ETHEREUM_MAINNET_CAIP2`
 
-Start here for member-facing apps, wallets, and agent surfaces.
+## Self-custodial wallet requests
 
-- `createConnection(...)`
-- `createSafeProtocolClient(...)`
-- `deriveReserveDomainPda(...)`
-- `deriveHealthPlanPda(...)`
-- `derivePolicySeriesPda(...)`
-- `deriveClaimCasePda(...)`
-- `buildMemberReadModel(...)`
-- `validateSignedClaimTx(...)`
+- `createEip1193TransactionSigningPayload(...)`
+- `createEip712SigningPayload(...)`
+- `validateSigningPayloadV2(...)`
+- `requestSigningPayloadV2(...)`
+- `requestSigningSubmissionV2(...)`
+- `createReceiptSubmissionV2(...)`
+- `createAuthorizationSubmissionV2(...)`
+- `assertEip1193Mainnet(...)`
 
-First command:
+## Contract and asset safety
 
-```bash
-npx @nakama-health/protocol-sdk doctor
-```
+- `NAKAMA_COVERAGE_PROTOCOL_ABI`
+- `NAKAMA_POLICY_REGISTRY_ABI`
+- `NAKAMA_PROTOCOL_FACTORY_ABI`
+- `NAKAMA_RESERVE_VAULT_ABI`
+- `NAKAMA_COVERAGE_PROTOCOL_ARTIFACT_METADATA`
+- `encodeEthereumCalldata(...)`
+- `decodeEthereumCalldata(...)`
+- `decodeEthereumEventLogs(...)`
+- `decodeEthereumRevert(...)`
+- `inspectErc20(...)`
 
-Starter:
+## Deployment and finality
 
-```bash
-npx @nakama-health/protocol-sdk scaffold next-route --out omegax-health-route
-```
+- `validateEthereumDeploymentManifest(...)`
+- `validateEthereumContractDeployment(...)`
+- `verifyEthereumSourcifyDeployment(...)`
+- `waitForEthereumReceipt(...)`
+- `verifyEthereumReceipt(...)`
+- `verifyEthereumTransactionIntent(...)`
 
-## Hospital / Provider Backend
+## Claim-recipient authorization
 
-Start here for backend services that need stable protocol metadata, plan IDs,
-claim state, and typed SDK failures.
+- `createClaimRecipientAuthorizationSigningPayload(...)`
+- `verifyClaimRecipientAuthorization(...)`
+- `verifyAndConsumeClaimRecipientAuthorization(...)`
+- `claimRecipientNonceReplayKey(...)`
 
-- `createConnection(...)`
-- `createSafeProtocolClient(...)`
-- `getOmegaXNetworkInfo(...)`
-- `listProtocolInstructionNames(...)`
-- `listProtocolAccountNames(...)`
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildAdjudicateClaimCaseTx(...)`
-- `OmegaXError`
-- `OmegaXProgramMismatchError`
-- `OmegaXAccountNotFoundError`
-
-Starter:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold node-backend --out omegax-provider-backend
-```
-
-## Oracle Worker
-
-Start here for services that attest outcomes or claim-case evidence.
-
-- `createOracleSignerFromEnv(...)`
-- `createOracleSignerFromKmsAdapter(...)`
-- `attestOutcome(...)`
-- `attestProtocolOutcome(...)`
-- `verifyOracleAttestation(...)`
-- `verifyProtocolOracleAttestation(...)`
-
-Starter:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out omegax-oracle-worker
-```
-
-## Sponsor / Reserve Operator
-
-Start here for reserve domain, sponsor, premium, reserve-capital, and settlement flows.
-
-- `createSafeProtocolClient(...)`
-- `deriveDomainAssetVaultPda(...)`
-- `deriveDomainAssetVaultTokenAccountPda(...)`
-- `buildSponsorReadModel(...)`
-- `buildCapitalReadModel(...)`
-- `buildFundSponsorBudgetTx(...)`
-- `buildRecordPremiumPaymentTx(...)`
-- `buildDepositReserveCapitalTx(...)`
-- `buildRecordReserveEarningsTx(...)`
-- `buildReturnReserveCapitalTx(...)`
-- `buildSettleObligationTx(...)`
-
-Use the safe client for these flows. Raw `createProtocolClient(...)`,
-`buildProtocolInstruction(...)`, and custom program IDs are advanced
-protocol-maintainer surfaces.
-
-## Deep Reference
-
-Generated symbol-level markdown is available at `docs/generated/api/README.md`.
-Use it after you know which builder lane you are integrating.
+Generated symbol-level markdown is available at
+`docs/generated/api/README.md`. Legacy Solana APIs are documented separately in
+`docs/API_REFERENCE.md` for read and migration compatibility only.

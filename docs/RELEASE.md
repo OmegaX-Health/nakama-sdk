@@ -4,11 +4,17 @@ This is the maintainer flow for publishing the canonical SDK release.
 
 ## Release targets
 
-- Protocol: `omegax-protocol` commit `763c7da`
-- Protocol contract hash:
-  `f95822562b0c1f1b2d5bddde10f63d98d49dca7135c879011e432d0706735222`
+- Protocol: canonical four-contract schema-v3 artifact from `nakama-protocol`
+- Protocol artifact SHA-256:
+  `c894cb59f3bd83c4f55ea93a4896ba5b1b54a49965c6801ab06b506b716093e1`
 - SDK: `@nakama-health/protocol-sdk v0.8.10`
 - Docs portal: `docs.nakama.health` content synced to the matching SDK surface
+
+Read the live contract addresses from `deployments/ethereum-mainnet.json`; this
+guide does not duplicate them. A contract-enabled production release requires a
+schema-v3 `deployed` manifest with exact Sourcify evidence for the factory,
+policy registry, and core. An `unconfigured` SDK foundation release remains
+fail-closed and must not advertise live contract writes.
 
 ## Preconditions
 
@@ -16,7 +22,8 @@ This is the maintainer flow for publishing the canonical SDK release.
 - `docs/RELEASE_NOTES.md` is updated for the version being published.
 - `docs/OMEGAX_DOCS_SYNC.json` points at the merged docs commit.
 - Each docs sync mapping includes a current `sdkDocSha256` content hash.
-- Local protocol parity is green against the intended sibling `omegax-protocol` workspace.
+- All four ABIs, metadata records, and the final deployment schema match the
+  intended sibling `nakama-protocol` workspace.
 - The SDK release tag is annotated, signed, and matches `package.json`.
 - SDK commits include `Signed-off-by` trailers because CI enforces DCO.
 - GitHub `main` branch protection requires the approving review and CODEOWNERS
@@ -67,8 +74,8 @@ npm run security:release-governance
 npm run security:release-governance:live
 npm run security:package
 npm run audit:prod
+npm run audit:packed-consumer
 npm run verify:protocol:local
-npm run test:protocol:localnet
 npm pack --dry-run
 ```
 
@@ -98,10 +105,12 @@ should fail the command. External probes time out after 15 seconds by default;
 set `OMEGAX_RELEASE_STATE_TIMEOUT_MS` only when an unusually slow local network
 needs a larger read-only window.
 
-Production moderate-or-higher dependency advisories are release blockers unless
-`npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
-Solana-chain moderate advisories are allowed only through that script's narrow
-documented exception rather than forced transitive overrides.
+Production moderate-or-higher dependency advisories are release blockers.
+`npm run audit:prod` checks the repository dependency graph, while
+`npm run audit:packed-consumer` proves the published shape by installing the
+actual tarball with development dependencies omitted. Root-only overrides do
+not count as downstream-consumer remediation. Legacy Solana compatibility must
+remain behind optional peers and explicit subpaths.
 
 ## GitHub release governance setup
 
@@ -114,7 +123,7 @@ branch-protection review path; do not create automated code-review requests just
 to satisfy this release checklist.
 
 ```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+GITHUB_REPOSITORY=OmegaX-Health/nakama-sdk \
 OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
 npm run security:release-governance:setup
 ```
@@ -122,7 +131,7 @@ npm run security:release-governance:setup
 Or dry-run with an eligible reviewer team:
 
 ```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+GITHUB_REPOSITORY=OmegaX-Health/nakama-sdk \
 OMEGAX_RELEASE_REVIEWERS=marinosabijan \
 OMEGAX_RELEASE_REVIEWER_TEAMS=<team-slug> \
 npm run security:release-governance:setup
@@ -132,7 +141,7 @@ After reviewing the planned branch and environment settings, apply them only wit
 explicit approval:
 
 ```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+GITHUB_REPOSITORY=OmegaX-Health/nakama-sdk \
 OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
 npm run security:release-governance:setup -- --apply
 ```
@@ -140,7 +149,7 @@ npm run security:release-governance:setup -- --apply
 Or apply with an eligible reviewer team:
 
 ```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+GITHUB_REPOSITORY=OmegaX-Health/nakama-sdk \
 OMEGAX_RELEASE_REVIEWERS=marinosabijan \
 OMEGAX_RELEASE_REVIEWER_TEAMS=<team-slug> \
 npm run security:release-governance:setup -- --apply
@@ -157,7 +166,7 @@ without parsing the dry-run prose.
 Then verify live state:
 
 ```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
+GITHUB_REPOSITORY=OmegaX-Health/nakama-sdk \
 OMEGAX_REQUIRE_GITHUB_GOVERNANCE=1 \
 npm run security:release-governance
 ```
@@ -195,9 +204,9 @@ repo-level release gate.
 Before tagging, confirm the release no longer has legacy npm publish tokens:
 
 ```bash
-gh secret list --repo OmegaX-Health/omegax-sdk
+gh secret list --repo OmegaX-Health/nakama-sdk
 gh secret list --org OmegaX-Health -a actions
-gh secret list --repo OmegaX-Health/omegax-sdk --env npm-production
+gh secret list --repo OmegaX-Health/nakama-sdk --env npm-production
 ```
 
 The release governance checker audits organization Actions secrets when the
@@ -208,8 +217,8 @@ If `NPM_TOKEN` or `NODE_AUTH_TOKEN` exists, remove it only after explicit
 security approval:
 
 ```bash
-gh secret delete NPM_TOKEN --repo OmegaX-Health/omegax-sdk
-gh secret delete NODE_AUTH_TOKEN --repo OmegaX-Health/omegax-sdk
+gh secret delete NPM_TOKEN --repo OmegaX-Health/nakama-sdk
+gh secret delete NODE_AUTH_TOKEN --repo OmegaX-Health/nakama-sdk
 ```
 
 Remove organization or environment scoped npm tokens through the matching
@@ -217,20 +226,22 @@ GitHub UI or `gh secret delete` scope only after the same explicit approval.
 
 ## Protocol binding refresh
 
-Whenever the protocol IDL or contract artifact changes:
+Whenever the protocol artifact or any of the four standalone ABIs changes:
 
 ```bash
-npm run generate:protocol-bindings
+npm run import:ethereum-contract
+npm run sync:ethereum-abi:check
 ```
 
-Commit regenerated artifacts with the source change. Do not hand-edit generated protocol bindings.
+Commit all four ABI/metadata pairs, the schema, manifest, and regenerated
+bindings together. Do not hand-edit generated protocol bindings.
 
 ## Release publish order
 
-1. Finalize and push `omegax-protocol` `main`.
+1. Finalize and push `nakama-protocol` `main`.
 2. Finalize and push `omegax-docs` `main`.
 3. Update `docs/OMEGAX_DOCS_SYNC.json` with the merged docs commit.
-4. Finalize and push `omegax-sdk` `main`.
+4. Finalize and push `nakama-sdk` `main`.
 5. Tag SDK `v0.8.10`.
 6. Let the release workflow complete the uncredentialed `verify` job.
 7. Approve the protected `npm-production` publish job only after verify is green.
@@ -257,7 +268,7 @@ npm install @nakama-health/protocol-sdk@0.8.10
 node --input-type=module -e "const m = await import('@nakama-health/protocol-sdk'); console.log(Object.keys(m).length)"
 ```
 
-The `v0.8.9` package is published. Its release workflow failed after publish in
+The legacy `@omegax/protocol-sdk@0.8.9` package is published. Its release workflow failed after publish in
 the clean install/import smoke because npm registry visibility lagged behind the
 workflow retry window. Future tags should use the extended post-publish retry
 window before treating that smoke as a real package failure.

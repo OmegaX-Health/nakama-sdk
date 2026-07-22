@@ -1,52 +1,35 @@
 # @nakama-health/protocol-sdk
 
-Build health apps, oracle services, and outcome-triggered settlement flows on Solana devnet beta with the canonical Nakama Protocol SDK.
+Ethereum mainnet SDK foundation for Nakama's immutable protocol execution,
+with explicit plan-attester and offchain health-service dependencies.
 
-`@nakama-health/protocol-sdk` gives builders unsigned transaction builders, readers, PDA helpers, reserve-aware read models, and oracle attestation helpers for the current public Nakama surface.
+The canonical surface targets Ethereum mainnet (`chainId: 1`, CAIP-2
+`eip155:1`) through [viem](https://viem.sh). It provides self-custodial wallet
+payloads, ABI encoding and event decoding, ERC-20 preflight, reorg-aware receipt
+verification, and the protocol's EIP-712 claim-recipient authorization with
+nonce, deadline, claimant, contract, chain, and replay binding.
 
-## What you can build today
+## Deployment status
 
-- oracle and event-production services that sign compatible outcome events and settlement-grade claim evidence
-- health apps, wallets, and agents that read claim, obligation, and payout state
-- sponsor and reserve integrations that create reserve domains, plans, policy series, funding lines, and reserve-backed settlement
+The Ethereum contract interfaces are implemented, but production contracts are
+not deployed or configured in this repository. The checked-in schema-v3
+manifest has `status: "unconfigured"`, no factory, registry, or protocol
+address, and no launch-time ReserveVault address. Deployment validators fail
+closed, so the SDK cannot silently turn a placeholder into a mainnet target.
 
-## Who should use it
+This package does not custody keys, choose a hosted wallet, require a proprietary
+RPC, relay user transactions, or treat an offchain database as settlement truth.
+Applications choose their own Ethereum mainnet RPC and EIP-1193 wallet.
 
-- oracle and event producers
-- health / wallet / app builders
-- sponsor, treasury, and reserve integrators
-
-## Choose your path
-
-### Oracle and event producers
-
-Use `@nakama-health/protocol-sdk/oracle` to sign outcome and settlement-grade claim attestations.
-
-Start with:
-
-- `/docs/GETTING_STARTED.md`
-- `/docs/WORKFLOWS.md`
-- [Oracle Event Production](https://docs.nakama.health/docs/oracle/event-production)
-
-### Health / wallet / app builders
-
-Use reader helpers and claim builders to power user-facing views and outcome-driven product flows.
-
-Start with:
-
-- `/docs/GETTING_STARTED.md`
-- `/docs/WORKFLOWS.md`
-- `/docs/API_REFERENCE.md`
-
-### Sponsor and reserve integrators
-
-Use reserve-domain, plan, policy-series, funding-line, and reserve-capital builders to launch or manage sponsor lanes on the canonical model.
-
-Start with:
-
-- `/docs/WORKFLOWS.md`
-- `/docs/API_REFERENCE.md`
-- `/docs/TROUBLESHOOTING.md`
+The protocol deployer first emits `status: "deployed-unverified"`; that raw
+receipt is never an SDK write target. The reviewed promotion step emits the
+exact schema in `deployments/ethereum-mainnet.final.schema.json`. It binds the
+single factory creation receipt, registry at factory nonce one, protocol at
+nonce two, the protocol's immutable `deploymentFactory()` back-pointer, their
+mutual getters, the ReserveVault CREATE2 template, three exact Sourcify records,
+four ABIs, and the audit/release evidence. SHA-256
+evidence uses lowercase 64-character text without `0x`; Ethereum addresses,
+transaction hashes, and keccak bytecode hashes remain `0x`-prefixed.
 
 ## Install
 
@@ -54,196 +37,223 @@ Start with:
 npm install @nakama-health/protocol-sdk
 ```
 
-## Runtime basics
+Runtime requirements:
 
-- Node.js `>=20`
-- ESM-only package
-- Protocol builders are unsigned
-- `programId` must be configured explicitly in runtime integrations
-- Public integrations should stay on devnet until Nakama announces mainnet availability
+- Node.js `>=20` or an ESM-compatible browser build
+- an Ethereum mainnet JSON-RPC URL or EIP-1193 provider
+- a durable, atomic replay store for production attestation consumption
 
-## Quickstart
-
-Create clients once, then branch into the workflow that matches your product.
+## Ethereum mainnet client
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  createRpcClient,
-  getOmegaXNetworkInfo,
-  listProtocolInstructionNames,
-} from '@nakama-health/protocol-sdk';
+  ETHEREUM_MAINNET_CAIP2,
+  createEthereumPublicClient,
+  toEthereumMainnetCaip10,
+} from '@nakama-health/protocol-sdk/ethereum';
 
-const network =
-  (process.env.OMEGAX_NETWORK as 'devnet' | 'mainnet' | undefined) ?? 'devnet';
-const networkInfo = getOmegaXNetworkInfo(network);
-
-const connection = createConnection({
-  network,
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
+const client = createEthereumPublicClient({
+  rpcUrl: process.env.ETHEREUM_MAINNET_RPC_URL,
 });
 
-const programId = process.env.OMEGAX_PROGRAM_ID ?? PROTOCOL_PROGRAM_ID;
-const protocol = createSafeProtocolClient(connection, { programId });
-const rpc = createRpcClient(connection);
-const instructions = listProtocolInstructionNames();
+console.log(client.chain?.id); // 1
+console.log(ETHEREUM_MAINNET_CAIP2); // eip155:1
+console.log(
+  toEthereumMainnetCaip10('0x0000000000000000000000000000000000000001'),
+);
 ```
 
-From there:
+Omit `rpcUrl` to use viem's Ethereum mainnet default transport, or pass an
+injected `provider`. Supplying both is rejected.
 
-- oracle and event producers usually move into `attestOutcome(...)`, `attestProtocolOutcome(...)`, and `verifyProtocolOracleAttestation(...)`
-- health and wallet builders usually move into claim / obligation reads plus `buildOpenClaimCaseTx(...)` and `buildAuthorizeClaimRecipientTx(...)`
-- sponsor and reserve integrators usually move into safe reserve-domain, plan, funding-line, and reserve-capital builders from `/docs/WORKFLOWS.md`
+## Self-custodial EIP-1193 transactions
 
-## First success smoke
+`SigningPayloadV2` is the canonical versioned wire contract between a backend
+and a wallet client. Every payload carries `chainId: "eip155:1"`, a CAIP-10
+`accountId`, and exactly one `transaction` or `typed_data` branch. The helper
+checks the wallet's current chain before requesting a signature or transaction;
+it never switches networks silently.
 
-Run the smoke before choosing a deeper workflow. It verifies package imports,
-network metadata, safe client creation, deterministic PDA derivation, and the
-public protocol surface without requiring funded signers or a live transaction.
+```ts
+import {
+  createEip1193TransactionSigningPayload,
+  requestSigningSubmissionV2,
+} from '@nakama-health/protocol-sdk/ethereum';
+
+const payload = createEip1193TransactionSigningPayload({
+  from: '0x0000000000000000000000000000000000000001',
+  to: '0x0000000000000000000000000000000000000002',
+  data: '0x',
+  value: '0x0',
+});
+
+const submission = await requestSigningSubmissionV2(
+  window.ethereum,
+  payload,
+  serverIssuedIntentId,
+);
+```
+
+The transaction helper rejects wrong-chain payloads, malformed JSON-RPC
+quantities, explicit gas above the EIP-7825 `0x1000000` limit, odd-length
+calldata, and branch substitution. It returns a
+`ReceiptSubmissionV2` with a transaction hash; the backend must compare the
+mined transaction with its server-owned intent before treating the receipt as
+an authorized outcome.
+
+## EIP-712 claim-recipient authorization
+
+```ts
+import {
+  createClaimRecipientAuthorizationSigningPayload,
+  verifyAndConsumeClaimRecipientAuthorization,
+} from '@nakama-health/protocol-sdk/ethereum_oracle';
+import { requestSigningPayloadV2 } from '@nakama-health/protocol-sdk/ethereum';
+
+const signingPayload = createClaimRecipientAuthorizationSigningPayload({
+  account: claimantAddress,
+  verifyingContract: policyRegistryAddress,
+  message: {
+    claimId,
+    recipient,
+    nonce: trustedNonce,
+    deadline: now + 300n,
+  },
+});
+
+const signature = await requestSigningPayloadV2(
+  window.ethereum,
+  signingPayload,
+);
+
+const verified = await verifyAndConsumeClaimRecipientAuthorization({
+  typedData: signingPayload.typedData,
+  signature,
+  expectedClaimant: claimantAddress,
+  expectedVerifyingContract: policyRegistryAddress,
+  expectedNonce: trustedNonce,
+  replayGuard: durableAtomicReplayGuard,
+});
+```
+
+This schema exactly mirrors `NakamaPolicyRegistry`'s
+`ClaimRecipient(bytes32 claimId,address recipient,uint256 nonce,uint256 deadline)`
+type and `Nakama Policy Registry` version `1` domain.
+`verifyClaimRecipientAuthorization(...)` performs cryptographic and policy
+validation without state mutation. Relayers should use
+`verifyAndConsumeClaimRecipientAuthorization(...)`, whose replay guard
+atomically consumes both the EIP-712 digest and the contract/claim nonce key.
+The included `InMemoryClaimRecipientReplayGuard` is for tests and single-process
+demos, not distributed production. Pass an Ethereum public client when the
+claimant is an ERC-1271 smart-contract wallet.
+
+## ABI, ERC-20, and receipt checks
+
+Use `@nakama-health/protocol-sdk/ethereum_contract` for:
+
+- `encodeEthereumCalldata(...)` and `decodeEthereumCalldata(...)`
+- `decodeEthereumEventLogs(...)` and `decodeEthereumRevert(...)`
+- `inspectErc20(...)` for code, metadata, balance, and allowance checks
+- `waitForEthereumReceipt(...)` and `verifyEthereumReceipt(...)` for reverted,
+  under-confirmed, reorged, or not-yet-safe transactions
+- `verifyEthereumTransactionIntent(...)` for exact hash, sender, destination,
+  calldata, value, receipt, canonical-chain, and safe-head verification against
+  a server-owned intent ID and `SigningPayloadV2`
+- `validateEthereumDeploymentManifest(...)` and
+  `validateEthereumContractDeployment(...)` for the one factory receipt,
+  nonce-one registry, nonce-two protocol, the protocol `deploymentFactory()`
+  back-pointer, cross-getters, all three live immutable-aware runtime templates,
+  the ReserveVault CREATE2 template, and independent-audit validation
+- `verifyEthereumSourcifyDeployment(...)` to refresh all three exact-match
+  records independently of the publication-time verification response
+
+The package root exports ABI, ABI SHA-256, and artifact-metadata constants for
+`NakamaProtocolFactory`, `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and
+`ReserveVault`, plus `NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT`.
+
+## Generated contract seam
+
+The canonical generator reads the imported ABI, compiled-artifact provenance,
+and deployment manifest:
+
+```text
+contracts/ethereum/{NakamaProtocolFactory,NakamaPolicyRegistry,
+                   NakamaCoverageProtocol,ReserveVault}.{abi,metadata}.json
+deployments/ethereum-mainnet.json
+deployments/ethereum-mainnet.final.schema.json
+                │
+                ▼
+scripts/sync-ethereum-abi.mjs
+                │
+                ▼
+src/generated/ethereum_protocol.ts
+```
+
+Run:
 
 ```bash
-npm run example:smoke
+npm run import:ethereum-contract
+npm run generate:protocol-bindings
+npm run protocol:artifact:check
 ```
 
-For a clean external project, copy the same pattern from
-`examples/devnet-smoke.ts`.
+`import:ethereum-contract` imports all four compiled ABIs, their bytecode
+provenance, the one-transaction deployment plan, and the final schema from the
+canonical sibling artifact. Normal SDK builds use checked-in inputs, so package
+generation stays deterministic and does not require the sibling repository.
 
-## Public surface coverage
+The old Anchor IDL generator remains available only as
+`npm run sync:legacy-solana-idl`; it is no longer the canonical generation
+path.
 
-This package exposes the live canonical object model:
+## Legacy Solana compatibility
 
-- reserve domains and domain asset vaults
-- health plans and policy series
-- funding lines and plan reserve ledgers
-- reserve capital contributions, sponsor budgets, premium income, and reserve earnings
-- obligations, claim cases, and reserve-backed payouts
-- oracle attestation helpers for outcome and settlement-grade claim evidence
-- reserve-aware read models for sponsors, members, and capital providers
-- RPC helpers for unsigned transaction submission flows
-
-## Release status
-
-- SDK release target: `0.8.10`
-- Protocol surface target: `omegax-protocol` commit `763c7da`
-- Current public network target: Solana devnet beta
-- Public docs: [docs.nakama.health](https://docs.nakama.health)
-
-## Release notes
-
-- `0.8.10` adds an agent-readable runtime contract, packages docs and safe examples, removes stale reward/seeker-era public types, and hardens package/release verification gates.
-- `0.8.9` hardens `validateSignedClaimTx(...)` so claim intake must compare signed transactions against the service's trusted `expectedUnsignedTxBase64`, not client-submitted intent bytes.
-- `0.8.8` refreshes generated bindings for the 62-instruction / 31-account local protocol surface, removes the retired commitment-campaign API from current exports, adds governance authority accept/cancel builders, updates reserve-asset rail confidence inputs, adds direct plus selected-asset claim-case settlement helpers, and reflects inactive pool/allocation guard errors.
-- `0.8.7` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
-- `0.8.5` refreshes generated bindings for the then-current protocol surface, adds reserve and commitment PDA helpers, exports canonical reserve/membership/oracle/schema constants, expands the on-chain claim-case attestation builder, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
-- `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
-- `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
-- `0.8.2` keeps invite-only member enrollment builders aligned with the protocol account metas by preserving the optional invite-authority signer.
-- `0.8.1` refreshes generated bindings and protocol parity for the latest linked-claim and obligation-settlement hardening on the public `v0.3.0` surface.
-- `0.8.0` adds full parity for the current oracle and schema registry surface, plus a first-class oracle attestation helper module for service-side signing flows.
-- The package now exports `@nakama-health/protocol-sdk/oracle` alongside the root exports so oracle workers can use a narrower import surface when they only need attestation helpers.
-- Canonical protocol builders, readers, seeds, generated bindings, and local surface verification are aligned to the current `omegax-protocol` `main` surface.
-
-## Documentation map
-
-- `/docs/INDEX.md` for the maintainer and builder reading order
-- `/docs/GETTING_STARTED.md` for installation, client setup, and choosing the right builder path
-- `/docs/WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
-- `/docs/TOP_APIS.md` for the shortest public API list by builder lane
-- `/docs/RECIPES.md` for Node, Next.js, oracle worker, and read-only frontend snippets
-- `/docs/ERROR_CATALOG.md` for stable SDK error codes and fixes
-- `/docs/API_REFERENCE.md` for the exported package surface
-- `/docs/generated/api/README.md` for generated symbol-level API markdown
-- `/docs/TROUBLESHOOTING.md` for common failure modes and remediation
-- `/docs/RELEASE_NOTES.md` for versioned SDK release notes
-- `/docs/RELEASE.md` for the release checklist
-- `/docs/DOCS_SYNC_WORKFLOW.md` for SDK to portal sync rules
-- `/docs/CROSS_REPO_RELEASE_ORDER.md` for the coordinated protocol + docs + SDK publish order
-
-## Canonical module map
-
-- Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
-- `@nakama-health/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
-- `@nakama-health/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
-- `@nakama-health/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveDomainAssetVaultPda(...)`, `deriveHealthPlanPda(...)`, `derivePolicySeriesPda(...)`, `deriveFundingLinePda(...)`, `deriveObligationPda(...)`, and `deriveClaimCasePda(...)`
-- `@nakama-health/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
-- `@nakama-health/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
-- `@nakama-health/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)` for service-side signing and settlement-grade evidence verification
-- `@nakama-health/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
-- `@nakama-health/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
-- `@nakama-health/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
-- `@nakama-health/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
-
-## CLI
+Solana modules remain temporarily available through explicit subpaths for
+historical decoding, account reads, simulation, migration, and source
+compatibility. They are absent from the package root and are not installed into
+canonical Ethereum consumers. A project that needs them must install the
+optional peers explicitly:
 
 ```bash
-npx @nakama-health/protocol-sdk doctor
-npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
-npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
+npm install @coral-xyz/anchor @solana/web3.js bn.js bs58 tweetnacl
 ```
 
-The CLI is no-signature by default. It does not require funded wallets, private
-keys, or live transaction submission for first success.
+They are not a writable network surface:
 
-## What the SDK is for
+- Every legacy protocol instruction, transaction, convenience-builder, raw
+  client, and safe-client write method throws `NAKAMA_LEGACY_WRITE_DISABLED`.
+- `createRpcClient(...).broadcastSignedTx(...)` throws
+  `NAKAMA_LEGACY_WRITE_DISABLED`.
+- MagicBlock connection, transaction-builder, commitment, and private-payment
+  write paths throw `NAKAMA_LEGACY_WRITE_DISABLED`.
+- Solana transaction decoders, simulation helpers, PDA derivation, and account
+  decoders remain available for read/migration work.
 
-- Sponsors and operators can build reserve-domain, health-plan, policy-series, funding-line, reserve-capital, obligation, and claim-case settlement transactions directly.
-- Capital contributors can deposit and return reserve capital against canonical funding lines, then inspect the resulting contribution and ledger state.
-- Wallet apps and members can inspect plan participation, obligations, claim state, and payout history with the read-model helpers.
-- Oracle operators can sign outcome and settlement-grade claim attestations with a narrow attestation helper surface.
-- External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
-- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client covers sponsor funding, premium intake, claim-case settlement, and obligation reserve/release/settle flows. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
-- Safe settlement calls require `recipientOwnerAddress` alongside the custody accounts so the SDK can preflight payout token-account mint and owner before users sign.
+No Ethereum integration should import `protocol`, `protocol_seeds`, `rpc`,
+`transactions`, `claims`, `oracle`, or `magicblock`; those subpaths describe the
+legacy Solana surface.
 
-## What the SDK does not do
+## Public Ethereum subpaths
 
-- It does not keep pool-first compatibility aliases.
-- It does not hide settlement-critical accounting in offchain helpers.
-- It does not invent a second protocol surface for wrappers or regulated participation.
-- It does not sign transactions on your behalf.
+- `@nakama-health/protocol-sdk/ethereum`
+- `@nakama-health/protocol-sdk/ethereum_contract`
+- `@nakama-health/protocol-sdk/ethereum_oracle`
+- `@nakama-health/protocol-sdk/errors`
 
 ## Local verification
 
 ```bash
 npm ci
+npm run generate:protocol-bindings
+npm run protocol:artifact:check
 npm run typecheck
 npm run lint
 npm run format:check
 npm run build
 npm test
-npm run docs:api:check
 npm run docs:check
-npm run docs:sync:check:strict
-npm run runtime:check
-npm run examples:check
-npm run dogfood:consumer
-npm run cli:check
-npm run templates:check
-npm run dx:smoke
-npm run verify:release
-npm run security:secrets
-npm run security:install-scripts
-npm run security:package
-npm run audit:prod
-npm pack --dry-run
-npm run verify:protocol:local
+npm run audit:packed-consumer
 ```
 
-To refresh checked-in protocol artifacts from a sibling `omegax-protocol` workspace:
-
-```bash
-npm run generate:protocol-bindings
-```
-
-## Release coordination
-
-This package is released only when all three surfaces agree:
-
-1. `omegax-protocol`
-2. `omegax-docs`
-3. `omegax-sdk`
-
-Use `/docs/CROSS_REPO_RELEASE_ORDER.md` and `/docs/OMEGAX_DOCS_SYNC.json` to keep that publish train honest.
+Mainnet deployment, contract audits, a durable replay backend, fork tests, and a
+live RPC verification are release prerequisites outside this SDK foundation.

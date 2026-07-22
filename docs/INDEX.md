@@ -2,9 +2,18 @@
 
 Use this page as the navigation hub for builders and release maintainers.
 
+> **Deployment status:** the canonical SDK surface is Ethereum mainnet, but the
+> checked-in deployment remains unconfigured. Documentation and generated APIs
+> do not imply that a reviewed production address exists.
+
+## Start with Ethereum mainnet
+
+- `../README.md` for deployment status, self-custodial signing, and the ABI seam
+- `API_REFERENCE.md` for the supported Ethereum modules and fail-closed gates
+
 ## Start with your builder path
 
-- Oracle and event producers:
+- Claim authorization relayers:
   - `GETTING_STARTED.md`
   - `WORKFLOWS.md`
   - `API_REFERENCE.md`
@@ -12,22 +21,22 @@ Use this page as the navigation hub for builders and release maintainers.
   - `GETTING_STARTED.md`
   - `WORKFLOWS.md`
   - `TROUBLESHOOTING.md`
-- Sponsor and reserve integrators:
+- Contract and reserve integrators:
   - `WORKFLOWS.md`
   - `API_REFERENCE.md`
   - `RELEASE_NOTES.md`
 
 ## Core docs
 
-- `GETTING_STARTED.md` for client setup, path selection, and the shared unsigned transaction pattern
-- `WORKFLOWS.md` for oracle, app, sponsor, and reserve flows on the canonical surface
+- `GETTING_STARTED.md` for mainnet client setup and self-custodial wallet requests
+- `WORKFLOWS.md` for read, deployment-proof, wallet, finality, and authorization flows
 - `TOP_APIS.md` for the shortest API list by builder lane
 - `RECIPES.md` for Node, Next.js, oracle-worker, and read-only frontend snippets
-- `ERROR_CATALOG.md` for stable `OMEGAX_*` error codes, causes, and fixes
-- `API_REFERENCE.md` for public builders, readers, PDA helpers, and reserve-model helpers
+- `ERROR_CATALOG.md` for stable `NAKAMA_*` errors and legacy compatibility codes
+- `API_REFERENCE.md` for canonical Ethereum modules and the isolated legacy surface
 - `generated/api/README.md` for generated TypeDoc markdown from the exported SDK surface
 - `TROUBLESHOOTING.md` for canonical failure modes and remediation
-- `../examples/README.md` for runnable smoke, app-builder, and oracle examples
+- `../examples/README.md` for mainnet, calldata, and EIP-712 examples
 - `RELEASE_NOTES.md` for versioned SDK changes and rollout notes
 - `RELEASE.md` for local release gates and tag/publish steps
 - `REPOSITORY_STRUCTURE.md` for source ownership, generated-output rules, and validation by change type
@@ -39,9 +48,10 @@ Use this page as the navigation hub for builders and release maintainers.
 ## Parity assurance
 
 - `../PROTOCOL_PARITY_CHECKLIST.md`
-- `../tests/idl-parity.test.ts`
-- `../tests/protocol-contract-parity.test.ts`
-- `../tests/protocol.test.ts`
+- `../contracts/ethereum/*.metadata.json` for the factory, registry, core, and
+  ReserveVault artifact provenance
+- `../tests/ethereum-generated.test.ts`
+- `../tests/ethereum-contract.test.ts`
 
 ## Recommended reading order
 

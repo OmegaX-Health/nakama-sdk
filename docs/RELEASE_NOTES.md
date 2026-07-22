@@ -2,6 +2,22 @@
 
 ## `0.8.10`
 
+- Ported the canonical SDK lane to Ethereum mainnet (`eip155:1`) with a
+  fail-closed schema-v3 deployment manifest for one factory transaction, the
+  nonce-one policy registry, the nonce-two core, and addressless ReserveVault
+  CREATE2 template metadata.
+- Imported and generated exact ABI/bytecode metadata for
+  `NakamaProtocolFactory`, `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and
+  `ReserveVault`, with sibling-artifact parity, package/runtime gates, and
+  all-four-contract CLI/example/template diagnostics.
+- Removed the public `recordPremiumPayment` ABI path, added
+  `PolicyPremiumCollected` and the immutable core `deploymentFactory()` getter,
+  and made live deployment verification require that getter to resolve to the
+  receipt-bound manifest factory.
+- Added receipt/finality and transaction-intent verification, live factory and
+  child-address derivation, mutual getter and immutable-aware bytecode checks,
+  per-contract Sourcify validation, and ClaimRecipient EIP-712 authorization
+  bound to the Nakama Policy Registry with EOA/ERC-1271 and replay protection.
 - Added `SDK_QUALITY.md` and `SDK_RUNTIME.json` so humans and AI agents can
   inspect the SDK contract, safety rules, public lanes, protocol target, and
   release gates without inferring them from prose.
@@ -10,6 +26,12 @@
   templates, secrets, install scripts, and packed consumer smokes.
 - Removed stale reward/seeker-era public types from the canonical SDK surface
   and regenerated symbol-level API docs.
+- Removed all Solana modules and dependencies from the canonical root, moved
+  retained read/migration compatibility behind explicit subpaths and optional
+  peers, and made every legacy instruction/transaction builder and safe-client
+  write method fail closed.
+- Added an isolated packed-consumer production audit gate and EIP-7825
+  `0x1000000` transaction gas-limit enforcement with boundary tests.
 - Clarified the protocol surface target and `v0.8.9` post-publish smoke history
   without treating the already-published package as unpublished.
 

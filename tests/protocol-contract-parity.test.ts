@@ -1,7 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import * as sdk from '../src/index.js';
+import {
+  PROTOCOL_PDA_SEEDS,
+  PROTOCOL_PROGRAM_ID,
+} from '../src/generated/protocol_contract.js';
+import {
+  createProtocolClient,
+  listProtocolAccountNames,
+  listProtocolInstructionNames,
+} from '../src/protocol.js';
+import * as protocolSeeds from '../src/protocol_seeds.js';
+import { createConnection } from '../src/rpc.js';
 
 function instructionToBuilderBase(name: string): string {
   return name
@@ -45,31 +55,29 @@ const pdaSeedFunctionMap: Record<string, string> = {
   claim_attestation: 'deriveClaimAttestationPda',
 };
 
-test('every canonical instruction has transaction and instruction builders', () => {
-  const client = sdk.createProtocolClient(
-    sdk.createConnection('http://127.0.0.1:8899', 'confirmed'),
-    sdk.PROTOCOL_PROGRAM_ID,
+test('every retained legacy instruction has fail-closed builder entrypoints', () => {
+  const client = createProtocolClient(
+    createConnection('http://127.0.0.1:8899', 'confirmed'),
+    PROTOCOL_PROGRAM_ID,
   ) as Record<string, unknown>;
 
-  const missing = sdk
-    .listProtocolInstructionNames()
-    .flatMap((instructionName) => {
-      const builderBase = instructionToBuilderBase(instructionName);
-      return [`build${builderBase}Instruction`, `build${builderBase}Tx`].filter(
-        (methodName) => typeof client[methodName] !== 'function',
-      );
-    });
+  const missing = listProtocolInstructionNames().flatMap((instructionName) => {
+    const builderBase = instructionToBuilderBase(instructionName);
+    return [`build${builderBase}Instruction`, `build${builderBase}Tx`].filter(
+      (methodName) => typeof client[methodName] !== 'function',
+    );
+  });
 
   assert.deepEqual(missing, []);
 });
 
-test('every canonical account has a reader entrypoint', () => {
-  const client = sdk.createProtocolClient(
-    sdk.createConnection('http://127.0.0.1:8899', 'confirmed'),
-    sdk.PROTOCOL_PROGRAM_ID,
+test('every retained legacy account has a read entrypoint', () => {
+  const client = createProtocolClient(
+    createConnection('http://127.0.0.1:8899', 'confirmed'),
+    PROTOCOL_PROGRAM_ID,
   ) as Record<string, unknown>;
 
-  const missing = sdk.listProtocolAccountNames().filter((accountName) => {
+  const missing = listProtocolAccountNames().filter((accountName) => {
     const methodName =
       accountName === 'ProtocolGovernance'
         ? 'fetchProtocolGovernance'
@@ -80,8 +88,8 @@ test('every canonical account has a reader entrypoint', () => {
   assert.deepEqual(missing, []);
 });
 
-test('every canonical PDA seed schema is covered by an SDK derivation helper', () => {
-  const missingMappings = Object.keys(sdk.PROTOCOL_PDA_SEEDS)
+test('every retained legacy PDA schema has a migration derivation helper', () => {
+  const missingMappings = Object.keys(PROTOCOL_PDA_SEEDS)
     .sort()
     .filter((seedName) => !(seedName in pdaSeedFunctionMap));
 
@@ -89,7 +97,7 @@ test('every canonical PDA seed schema is covered by an SDK derivation helper', (
 
   for (const functionName of Object.values(pdaSeedFunctionMap)) {
     assert.equal(
-      typeof (sdk as Record<string, unknown>)[functionName],
+      typeof (protocolSeeds as Record<string, unknown>)[functionName],
       'function',
       `missing SDK derivation helper ${functionName}`,
     );

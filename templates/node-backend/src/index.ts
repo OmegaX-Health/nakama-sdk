@@ -1,52 +1,52 @@
 import { createServer } from 'node:http';
 
 import {
-  PROTOCOL_PROGRAM_ID,
-  OmegaXError,
-  createConnection,
-  createSafeProtocolClient,
-  deriveHealthPlanPda,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
+  ETHEREUM_MAINNET_CAIP2,
+  ETHEREUM_MAINNET_CHAIN_ID,
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA,
+  NakamaEthereumError,
+  createEthereumPublicClient,
+  validateEthereumDeploymentManifest,
 } from '@nakama-health/protocol-sdk';
 
 export function buildProtocolStatus() {
-  const networkInfo = getOmegaXNetworkInfo('devnet');
-  const connection = createConnection({
-    network: 'devnet',
-    rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-    commitment: 'confirmed',
+  const client = createEthereumPublicClient({
+    rpcUrl: process.env.ETHEREUM_MAINNET_RPC_URL,
   });
-  const protocol = createSafeProtocolClient(connection, {
-    programId: PROTOCOL_PROGRAM_ID,
-  });
-  const reserveDomain = deriveReserveDomainPda({
-    domainId: process.env.OMEGAX_DOMAIN_ID ?? 'hospital-demo-domain',
-    programId: protocol.getProgramId(),
-  });
-  const healthPlan = deriveHealthPlanPda({
-    reserveDomain,
-    planId: process.env.OMEGAX_PLAN_ID ?? 'hospital-demo-plan',
-    programId: protocol.getProgramId(),
-  });
+  const deployment = validateEthereumDeploymentManifest(
+    NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  );
 
   return {
     ok: true,
     role: 'health-or-hospital-backend',
-    network: networkInfo.network,
-    rpcUrl: connection.rpcEndpoint,
-    programId: protocol.getProgramId().toBase58(),
-    reserveDomain: reserveDomain.toBase58(),
-    healthPlan: healthPlan.toBase58(),
-    instructions: listProtocolInstructionNames().length,
-    accounts: listProtocolAccountNames().length,
+    chainId: ETHEREUM_MAINNET_CHAIN_ID,
+    caip2: ETHEREUM_MAINNET_CAIP2,
+    rpcConfigured: Boolean(process.env.ETHEREUM_MAINNET_RPC_URL),
+    clientChainId: client.chain?.id,
+    entryContract: deployment.entryContract,
+    deploymentStatus: deployment.status,
+    factoryAddress: deployment.liveContracts.factory.address,
+    policyRegistryAddress: deployment.liveContracts.policyRegistry.address,
+    protocolAddress: deployment.liveContracts.protocol.address,
+    contracts: Object.fromEntries(
+      Object.entries(NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA).map(
+        ([contractName, metadata]) => [
+          contractName,
+          {
+            abiSha256: metadata.abiSha256,
+            creationBytecodeBytes: metadata.creationBytecodeBytes,
+            runtimeBytecodeBytes: metadata.runtimeBytecodeBytes,
+          },
+        ],
+      ),
+    ),
   };
 }
 
 function errorPayload(error: unknown) {
-  if (error instanceof OmegaXError) {
+  if (error instanceof NakamaEthereumError) {
     return {
       ok: false,
       code: error.code,
