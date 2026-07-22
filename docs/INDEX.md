@@ -1,65 +1,48 @@
-# Documentation Index — `@nakama-health/protocol-sdk`
+# Nakama SDK documentation
 
-Use this page as the navigation hub for builders and release maintainers.
+The package root and `@nakama-health/protocol-sdk/robinhood` are the canonical
+Robinhood Chain surface. Both deployment manifests are deliberately
+`unconfigured`: the SDK, templates, and examples are implementation-ready, but
+production reads and writes remain blocked until the 12-contract deployment is
+audited, approved, published, and verified against live bytecode.
 
-> **Deployment status:** the canonical SDK surface is Ethereum mainnet, but the
-> checked-in deployment remains unconfigured. Documentation and generated APIs
-> do not imply that a reviewed production address exists.
+## Start here
 
-## Start with Ethereum mainnet
+1. [Getting started](GETTING_STARTED.md) establishes chain, RPC, deployment,
+   USDG, read, action, signature, and finality boundaries.
+2. [API reference](API_REFERENCE.md) explains the supported Robinhood modules
+   and their fail-closed behavior.
+3. [Workflows](WORKFLOWS.md) maps product operations to the safe runtime order.
+4. [Robinhood and Virtuals](ROBINHOOD_VIRTUALS.md) separates the health product
+   from the offline launch-packet checker and the official Virtuals launch
+   process.
 
-- `../README.md` for deployment status, self-custodial signing, and the ABI seam
-- `API_REFERENCE.md` for the supported Ethereum modules and fail-closed gates
+## Build and operate
 
-## Start with your builder path
+- [Top APIs](TOP_APIS.md) is the shortest route to the public surface.
+- [Recipes](RECIPES.md) contains minimal integration patterns.
+- [Error catalog](ERROR_CATALOG.md) maps typed failures to safe remediation.
+- [Troubleshooting](TROUBLESHOOTING.md) starts from the current fail-closed
+  deployment state and works outward.
+- [Repository structure](REPOSITORY_STRUCTURE.md) identifies generated,
+  handwritten, canonical, and legacy areas.
+- [SDK quality contract](../SDK_QUALITY.md) defines the release invariants.
+- [Release procedure](RELEASE.md) describes how an audited deployment becomes a
+  publishable package without weakening the safety gates.
 
-- Claim authorization relayers:
-  - `GETTING_STARTED.md`
-  - `WORKFLOWS.md`
-  - `API_REFERENCE.md`
-- Health / wallet / app builders:
-  - `GETTING_STARTED.md`
-  - `WORKFLOWS.md`
-  - `TROUBLESHOOTING.md`
-- Contract and reserve integrators:
-  - `WORKFLOWS.md`
-  - `API_REFERENCE.md`
-  - `RELEASE_NOTES.md`
+## Generated and machine-readable references
 
-## Core docs
+- [Generated TypeDoc](generated/api/README.md) is built from the canonical root.
+- [`SDK_RUNTIME.json`](../SDK_RUNTIME.json) is the machine-readable declaration
+  of networks, ABI roles, artifact commitments, subpaths, and safety boundaries.
+- [`contracts/robinhood/`](../contracts/robinhood/) contains the exact 12 ABIs
+  and imported protocol artifact.
+- [`deployments/`](../deployments/) contains the Robinhood mainnet/testnet
+  manifests and their closed JSON schema.
 
-- `GETTING_STARTED.md` for mainnet client setup and self-custodial wallet requests
-- `WORKFLOWS.md` for read, deployment-proof, wallet, finality, and authorization flows
-- `TOP_APIS.md` for the shortest API list by builder lane
-- `RECIPES.md` for Node, Next.js, oracle-worker, and read-only frontend snippets
-- `ERROR_CATALOG.md` for stable `NAKAMA_*` errors and legacy compatibility codes
-- `API_REFERENCE.md` for canonical Ethereum modules and the isolated legacy surface
-- `generated/api/README.md` for generated TypeDoc markdown from the exported SDK surface
-- `TROUBLESHOOTING.md` for canonical failure modes and remediation
-- `../examples/README.md` for mainnet, calldata, and EIP-712 examples
-- `RELEASE_NOTES.md` for versioned SDK changes and rollout notes
-- `RELEASE.md` for local release gates and tag/publish steps
-- `REPOSITORY_STRUCTURE.md` for source ownership, generated-output rules, and validation by change type
-- `DOCS_SYNC_WORKFLOW.md` for SDK to `omegax-docs` parity
-- `OMEGAX_DOCS_SYNC.json` for the machine-checkable portal sync record
-- `CROSS_REPO_RELEASE_ORDER.md` for the protocol + docs + SDK publish sequence
-- `../scripts/README.md` for script side effects and command ownership
+## Legacy surfaces
 
-## Parity assurance
-
-- `../PROTOCOL_PARITY_CHECKLIST.md`
-- `../contracts/ethereum/*.metadata.json` for the factory, registry, core, and
-  ReserveVault artifact provenance
-- `../tests/ethereum-generated.test.ts`
-- `../tests/ethereum-contract.test.ts`
-
-## Recommended reading order
-
-1. `GETTING_STARTED.md`
-2. `WORKFLOWS.md`
-3. `TOP_APIS.md`
-4. `RECIPES.md`
-5. `ERROR_CATALOG.md`
-6. `API_REFERENCE.md`
-7. `RELEASE_NOTES.md`
-8. `TROUBLESHOOTING.md`
+Ethereum-mainnet and Solana modules remain available through explicit package
+subpaths for migration. They are absent from the root, do not act as fallbacks,
+and are not the architecture for a new integration. Historical release notes
+remain in [release notes](RELEASE_NOTES.md) for provenance.

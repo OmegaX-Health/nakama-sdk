@@ -1,8 +1,8 @@
 # Nakama Next.js Route Starter
 
 Drop `src/route.ts` into a Next.js route such as
-`app/api/nakama/status/route.ts`. It reports the generated Ethereum mainnet
-contract status without submitting a transaction.
+`app/api/nakama/status/route.ts`. It reports the generated Robinhood Chain
+artifact and fail-closed deployment status without submitting a transaction.
 
 ```bash
 npm install

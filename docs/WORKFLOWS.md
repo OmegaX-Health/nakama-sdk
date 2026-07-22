@@ -1,91 +1,104 @@
-# Integration Workflows — `@nakama-health/protocol-sdk`
+# Canonical Robinhood workflows
 
-The canonical flow is Ethereum mainnet read, user-authorized write, then
-reorg-aware verification. The SDK does not custody keys, select a privileged
-RPC, or substitute an offchain database for contract state.
+Every production workflow begins with an explicit Robinhood network and a
+caller-selected RPC. A static manifest is only configuration; live runtime proof
+must come from `verifyRobinhoodDeploymentRuntime(...)`, and both checked-in
+manifests intentionally fail that prerequisite today.
 
-## 1. Read and identify
+## Read a protection program
 
-Create a client with `createEthereumPublicClient(...)`, normalize identities
-with `toEthereumMainnetCaip10(...)`, and use the generated ABI with viem or the
-SDK's calldata/event helpers. Pin token address and decimals before treating an
-ERC-20 as a supported reserve asset.
+1. Create the public client for chain `4663` or `46630`.
+2. Load the generated bundle and selected deployment manifest.
+3. Assert the deployment is complete, audited, approved, and verified.
+4. Verify all 12 live runtimes and suite relationships through the same client.
+5. Construct `createRobinhoodReadClient(...)` with the manifest, immutable
+   bundle, SDK-issued runtime proof, and exact program ID.
+6. Read at a pinned block. Preserve the returned block hash, safe/finalized
+   markers, and reconciliation state alongside the product value.
 
-Runnable starting points:
+An indexer can improve discovery and latency, but it cannot authorize a write.
+Use `reconcileRobinhoodRead(...)` against a fresh direct-chain observation, then
+call `assertRobinhoodWriteStateSafe(...)` before preparing the action.
 
-- `npm run example:smoke` checks chain and artifact provenance.
-- `npm run example:contract` exercises canonical ABI calldata.
-- `npm run example:authorization` builds the claim-recipient EIP-712 payload.
+## Submit a user action
 
-## 2. Prove the deployment
+The wallet path is deliberately linear because each step binds the next:
 
-`validateEthereumDeploymentManifest(...)` handles static schema and artifact
-checks. `validateEthereumContractDeployment(...)` adds live proof of the one
-factory receipt and creation input, nonce-one registry, nonce-two protocol,
-the protocol's `deploymentFactory()` back-pointer, mutual getters, three runtime
-templates, canonical block, safe head, confirmation depth, and three refreshed
-Sourcify exact-match records.
+1. Reconcile the direct state that controls the action.
+2. Build one action through `createRobinhoodActionBuilder(...)`.
+3. Display its explanation, exact USDG amount, recipient, expiry, and expected
+   state changes.
+4. Simulate that capability-marked action with `simulateRobinhoodAction(...)`.
+5. Pass the successful result to `requestRobinhoodAction(...)`; it verifies the
+   action/runtime/program bindings and reruns a fresh exact simulation.
+6. Let the user's EIP-1193 wallet authorize `eth_sendTransaction`.
+7. Convert the SDK-sealed submission to finality input and track it without
+   reconstructing or relabeling the action.
 
-A raw deployer receipt is an intermediate `deployed-unverified` artifact. It is
-not an SDK write target. Only the reviewed promotion step may produce
-`status: "deployed"`, `verified: true`, and the audited final manifest.
+An arbitrary calldata object, a cloned prepared action, a changed label, an old
+simulation, or caller-fabricated runtime proof is rejected. The SDK never holds
+a private key and never switches the user's network.
 
-## 3. Let the wallet authorize
+## Fund with USDG
 
-Encode contract calldata from `NAKAMA_COVERAGE_PROTOCOL_ABI`, create a
-`SigningPayloadV2`, and pass it to the caller-provided EIP-1193 provider.
-`requestSigningPayloadV2(...)` checks chain ID again immediately before the
-wallet request and never switches networks silently.
-`requestSigningSubmissionV2(...)` returns a kind-matched, CAIP-bound submission
-envelope tied to a server-issued intent ID.
+`parseRobinhoodUsdg(...)` represents the amount as integer units plus exact
+network, CAIP-2, token address, symbol, and decimals. Mainnet accepts only
+`0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`; testnet remains unavailable until
+a canonical address is published.
 
-## 4. Verify transaction outcome
+Approval and funding are separate actions. The approval builder decodes its own
+calldata before returning it, confirming the canonical vault spender, positive
+bounded amount, and matching human disclosure. Do not request an unlimited
+approval through a generic transaction helper.
 
-Use `verifyEthereumTransactionIntent(...)` to compare the submitted transaction
-with the trusted intent ID and server-owned sender, destination, calldata, and
-value before applying the receipt checks. `waitForEthereumReceipt(...)` and
-`verifyEthereumReceipt(...)` remain available for hash-only observation, but a
-wallet approval or an RPC's first receipt response is not settlement; require a
-successful, canonical, stable, sufficiently confirmed receipt at or below safe
-head.
+## Review and sign a decision
 
-## 5. Consume claim-recipient authorization
+Build one `NakamaDecision` EIP-712 payload from trusted request/program state,
+then generate the preview from that same payload. The message commits to the
+program, request, terms, evidence manifest/version, review round, reviewer role,
+decision action, approved amount, recipient commitment, public reason code,
+nonce, and expiry.
 
-The contract's EIP-712 schema is
-`ClaimRecipient(bytes32 claimId,address recipient,uint256 nonce,uint256 deadline)`
-under the `Nakama Policy Registry` version `1` domain. A relayer verifies the
-expected claimant, registry, chain, trusted nonce, deadline, and signature,
-then atomically consumes both digest and claim/nonce replay keys.
+After signature collection, call `verifyNakamaDecision(...)` with the expected
+reviewer, module, nonce, and time. Persist
+`nakamaDecisionReplayKey(...)` atomically before relaying, and provide a public
+client when contract-wallet EIP-1271 verification is allowed.
 
-## Legacy migration
+## Determine economic finality
 
-Old Solana account decoders, PDA helpers, simulations, and model adapters remain
-available through explicit subpaths and optional peers for migration. Every
-legacy instruction/transaction builder and safe-client write method,
-`broadcastSignedTx(...)`, and every MagicBlock network or write path throws
-`NAKAMA_LEGACY_WRITE_DISABLED`; new integrations should not import those
-subpaths.
+A single provider can report `soft_confirmed`, `l1_posted`, or `finalized` for
+display, but the result remains `economicFinal: false`. Economic finality needs:
 
-## Local release preflight
+- the exact SDK-sealed submission, including action commitment, calldata hash,
+  value, sender, target, chain, and intent;
+- transaction input/value/sender/target readback matching that submission;
+- two L2 readers with distinct provider, endpoint-origin, and operator identity;
+- two L1 batch-evidence readers with the same independence rules; and
+- agreement on the canonical receipt, L2 ordering, and L1 posting/finality.
 
-```bash
-npm ci
-npm run protocol:artifact:check
-npm run typecheck
-npm run lint
-npm run format:check
-npm run build
-npm test
-npm run docs:api:check
-npm run docs:check
-npm run runtime:check
-npm run examples:check
-npm run dogfood:consumer
-npm run cli:check
-npm run templates:check
-npm run security:secrets
-npm run security:package
-npm run audit:prod
-npm run audit:packed-consumer
-npm pack --dry-run
-```
+Provider disagreement, a changed receipt, replacement, timeout, revert, or
+canonical-block mismatch remains explicit and cannot be collapsed into success.
+
+## Simulate a maintenance agent
+
+The Phase-0 smart-account client can simulate only permissionless maintenance:
+expiry, no-quorum escalation, information-timeout escalation, and unappealed
+denial finalization. Economic, membership, role, funding, settlement, pause, and
+other privileged actions are rejected.
+
+Submission is disabled even for the allowlist. It will remain disabled until an
+independent finalized read verifies module code, policy installation, revocation
+state, limits, target, selector, program, and action constraints; an adapter's
+self-attestation is insufficient.
+
+## Validate a Virtuals packet
+
+`validateVirtualsLaunchPacketStructure(...)` runs offline. Use it to catch
+missing ownership references, inconsistent allocations, incorrect USDG/chain
+identity, duplicate addresses, mismatched simulation hashes, and impossible
+block ordering before a packet reaches an official workflow.
+
+Passing does not prove Virtuals acceptance, legal eligibility, KYC/KYB,
+beneficial ownership, deployed code, or finalized configuration. Resolve those
+through current official platform, legal, identity, and Robinhood RPC sources;
+this SDK never signs or broadcasts a launch.

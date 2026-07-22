@@ -32,6 +32,7 @@ import {
 } from './ethereum.js';
 
 export * from './ethereum_deployment.js';
+export * from './generated/ethereum_protocol.js';
 
 export const DEFAULT_ETHEREUM_CONFIRMATIONS = 12;
 

@@ -1,8 +1,9 @@
 # Nakama Node Backend Starter
 
-Read-only Ethereum mainnet starter for health apps, hospital/provider backends,
-and integration services. Set `ETHEREUM_MAINNET_RPC_URL` to your own endpoint;
-the smoke does not submit a transaction.
+Read-only Robinhood Chain starter for protection-product backends and
+integration services. Set `ROBINHOOD_MAINNET_RPC_URL` to your own endpoint;
+the smoke never submits a transaction and reports writes disabled while the
+checked-in deployment is unconfigured.
 
 ```bash
 npm install

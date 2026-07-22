@@ -1,35 +1,14 @@
-# @nakama-health/protocol-sdk
+# `@nakama-health/protocol-sdk`
 
-Ethereum mainnet SDK foundation for Nakama's immutable protocol execution,
-with explicit plan-attester and offchain health-service dependencies.
+The canonical TypeScript SDK for Nakama protection programs on Robinhood Chain.
+It binds product reads and actions to explicit chain identity, the protocol's
+generated ABIs, verified deployment/runtime evidence, exact USDG amounts,
+simulation, self-custodial wallets, and reorg-aware finality.
 
-The canonical surface targets Ethereum mainnet (`chainId: 1`, CAIP-2
-`eip155:1`) through [viem](https://viem.sh). It provides self-custodial wallet
-payloads, ABI encoding and event decoding, ERC-20 preflight, reorg-aware receipt
-verification, and the protocol's EIP-712 claim-recipient authorization with
-nonce, deadline, claimant, contract, chain, and replay binding.
-
-## Deployment status
-
-The Ethereum contract interfaces are implemented, but production contracts are
-not deployed or configured in this repository. The checked-in schema-v3
-manifest has `status: "unconfigured"`, no factory, registry, or protocol
-address, and no launch-time ReserveVault address. Deployment validators fail
-closed, so the SDK cannot silently turn a placeholder into a mainnet target.
-
-This package does not custody keys, choose a hosted wallet, require a proprietary
-RPC, relay user transactions, or treat an offchain database as settlement truth.
-Applications choose their own Ethereum mainnet RPC and EIP-1193 wallet.
-
-The protocol deployer first emits `status: "deployed-unverified"`; that raw
-receipt is never an SDK write target. The reviewed promotion step emits the
-exact schema in `deployments/ethereum-mainnet.final.schema.json`. It binds the
-single factory creation receipt, registry at factory nonce one, protocol at
-nonce two, the protocol's immutable `deploymentFactory()` back-pointer, their
-mutual getters, the ReserveVault CREATE2 template, three exact Sourcify records,
-four ABIs, and the audit/release evidence. SHA-256
-evidence uses lowercase 64-character text without `0x`; Ethereum addresses,
-transaction hashes, and keccak bytecode hashes remain `0x`-prefixed.
+The SDK is implementation-ready but not deployment-ready. All 12 protocol ABIs
+are synchronized from `nakama-protocol`; both checked-in deployment manifests
+remain `unconfigured`, so contract reads and writes fail closed until reviewed
+addresses, runtime hashes, audit evidence, and release approval are published.
 
 ## Install
 
@@ -37,223 +16,239 @@ transaction hashes, and keccak bytecode hashes remain `0x`-prefixed.
 npm install @nakama-health/protocol-sdk
 ```
 
-Runtime requirements:
+Node.js `>=20` is required. The package is ESM-first and uses
+[viem](https://viem.sh) for EVM encoding and clients.
 
-- Node.js `>=20` or an ESM-compatible browser build
-- an Ethereum mainnet JSON-RPC URL or EIP-1193 provider
-- a durable, atomic replay store for production attestation consumption
+## Network and settlement identity
 
-## Ethereum mainnet client
+The root export and `@nakama-health/protocol-sdk/robinhood` are the same
+Robinhood-native surface:
 
-```ts
-import {
-  ETHEREUM_MAINNET_CAIP2,
-  createEthereumPublicClient,
-  toEthereumMainnetCaip10,
-} from '@nakama-health/protocol-sdk/ethereum';
+| Network           | Chain ID | CAIP-2         | Status                                  |
+| ----------------- | -------: | -------------- | --------------------------------------- |
+| Robinhood mainnet |   `4663` | `eip155:4663`  | Explicitly supported                    |
+| Robinhood testnet |  `46630` | `eip155:46630` | Explicitly supported; USDG unconfigured |
 
-const client = createEthereumPublicClient({
-  rpcUrl: process.env.ETHEREUM_MAINNET_RPC_URL,
-});
-
-console.log(client.chain?.id); // 1
-console.log(ETHEREUM_MAINNET_CAIP2); // eip155:1
-console.log(
-  toEthereumMainnetCaip10('0x0000000000000000000000000000000000000001'),
-);
-```
-
-Omit `rpcUrl` to use viem's Ethereum mainnet default transport, or pass an
-injected `provider`. Supplying both is rejected.
-
-## Self-custodial EIP-1193 transactions
-
-`SigningPayloadV2` is the canonical versioned wire contract between a backend
-and a wallet client. Every payload carries `chainId: "eip155:1"`, a CAIP-10
-`accountId`, and exactly one `transaction` or `typed_data` branch. The helper
-checks the wallet's current chain before requesting a signature or transaction;
-it never switches networks silently.
+There is no chain-1 default. Client construction requires both a network and a
+caller-selected RPC URL or EIP-1193 provider:
 
 ```ts
-import {
-  createEip1193TransactionSigningPayload,
-  requestSigningSubmissionV2,
-} from '@nakama-health/protocol-sdk/ethereum';
+import { createRobinhoodPublicClient } from '@nakama-health/protocol-sdk';
 
-const payload = createEip1193TransactionSigningPayload({
-  from: '0x0000000000000000000000000000000000000001',
-  to: '0x0000000000000000000000000000000000000002',
-  data: '0x',
-  value: '0x0',
-});
-
-const submission = await requestSigningSubmissionV2(
-  window.ethereum,
-  payload,
-  serverIssuedIntentId,
-);
-```
-
-The transaction helper rejects wrong-chain payloads, malformed JSON-RPC
-quantities, explicit gas above the EIP-7825 `0x1000000` limit, odd-length
-calldata, and branch substitution. It returns a
-`ReceiptSubmissionV2` with a transaction hash; the backend must compare the
-mined transaction with its server-owned intent before treating the receipt as
-an authorized outcome.
-
-## EIP-712 claim-recipient authorization
-
-```ts
-import {
-  createClaimRecipientAuthorizationSigningPayload,
-  verifyAndConsumeClaimRecipientAuthorization,
-} from '@nakama-health/protocol-sdk/ethereum_oracle';
-import { requestSigningPayloadV2 } from '@nakama-health/protocol-sdk/ethereum';
-
-const signingPayload = createClaimRecipientAuthorizationSigningPayload({
-  account: claimantAddress,
-  verifyingContract: policyRegistryAddress,
-  message: {
-    claimId,
-    recipient,
-    nonce: trustedNonce,
-    deadline: now + 300n,
-  },
-});
-
-const signature = await requestSigningPayloadV2(
-  window.ethereum,
-  signingPayload,
-);
-
-const verified = await verifyAndConsumeClaimRecipientAuthorization({
-  typedData: signingPayload.typedData,
-  signature,
-  expectedClaimant: claimantAddress,
-  expectedVerifyingContract: policyRegistryAddress,
-  expectedNonce: trustedNonce,
-  replayGuard: durableAtomicReplayGuard,
+const client = createRobinhoodPublicClient({
+  network: 'mainnet',
+  rpcUrl: process.env.ROBINHOOD_MAINNET_RPC_URL!,
 });
 ```
 
-This schema exactly mirrors `NakamaPolicyRegistry`'s
-`ClaimRecipient(bytes32 claimId,address recipient,uint256 nonce,uint256 deadline)`
-type and `Nakama Policy Registry` version `1` domain.
-`verifyClaimRecipientAuthorization(...)` performs cryptographic and policy
-validation without state mutation. Relayers should use
-`verifyAndConsumeClaimRecipientAuthorization(...)`, whose replay guard
-atomically consumes both the EIP-712 digest and the contract/claim nonce key.
-The included `InMemoryClaimRecipientReplayGuard` is for tests and single-process
-demos, not distributed production. Pass an Ethereum public client when the
-claimant is an ERC-1271 smart-contract wallet.
+The SDK knows Robinhood's public endpoints for display and setup, but it never
+silently selects one for production calls.
 
-## ABI, ERC-20, and receipt checks
+Mainnet settlement is Global Dollar (`USDG`) at
+`0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`, with six decimals. The asset API
+binds amount, chain, token address, symbol, and decimals together:
 
-Use `@nakama-health/protocol-sdk/ethereum_contract` for:
+```ts
+import { parseRobinhoodUsdg } from '@nakama-health/protocol-sdk';
 
-- `encodeEthereumCalldata(...)` and `decodeEthereumCalldata(...)`
-- `decodeEthereumEventLogs(...)` and `decodeEthereumRevert(...)`
-- `inspectErc20(...)` for code, metadata, balance, and allowance checks
-- `waitForEthereumReceipt(...)` and `verifyEthereumReceipt(...)` for reverted,
-  under-confirmed, reorged, or not-yet-safe transactions
-- `verifyEthereumTransactionIntent(...)` for exact hash, sender, destination,
-  calldata, value, receipt, canonical-chain, and safe-head verification against
-  a server-owned intent ID and `SigningPayloadV2`
-- `validateEthereumDeploymentManifest(...)` and
-  `validateEthereumContractDeployment(...)` for the one factory receipt,
-  nonce-one registry, nonce-two protocol, the protocol `deploymentFactory()`
-  back-pointer, cross-getters, all three live immutable-aware runtime templates,
-  the ReserveVault CREATE2 template, and independent-audit validation
-- `verifyEthereumSourcifyDeployment(...)` to refresh all three exact-match
-  records independently of the publication-time verification response
+const amount = parseRobinhoodUsdg('125.50', 'mainnet');
+console.log(amount.units); // 125500000n
+```
 
-The package root exports ABI, ABI SHA-256, and artifact-metadata constants for
-`NakamaProtocolFactory`, `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and
-`ReserveVault`, plus `NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT`.
+Testnet USDG has no canonical address in this release. Parsing or preparing a
+testnet USDG action fails until a verified asset configuration is supplied.
 
-## Generated contract seam
+## Generated protocol seam
 
-The canonical generator reads the imported ABI, compiled-artifact provenance,
-and deployment manifest:
+The 12 ABIs are copied byte-for-byte from the canonical protocol artifact and
+their SHA-256 values are checked during generation:
 
 ```text
-contracts/ethereum/{NakamaProtocolFactory,NakamaPolicyRegistry,
-                   NakamaCoverageProtocol,ReserveVault}.{abi,metadata}.json
-deployments/ethereum-mainnet.json
-deployments/ethereum-mainnet.final.schema.json
-                │
-                ▼
-scripts/sync-ethereum-abi.mjs
-                │
-                ▼
-src/generated/ethereum_protocol.ts
+../nakama-protocol/shared/robinhood/protocol_contract.json
+../nakama-protocol/shared/robinhood/<ContractName>.abi.json
+                         │
+                         ▼
+scripts/sync-robinhood-artifacts.mjs
+                         │
+           ┌─────────────┴──────────────────┐
+           ▼                                ▼
+contracts/robinhood/*            src/generated/robinhood_protocol.ts
 ```
-
-Run:
 
 ```bash
-npm run import:ethereum-contract
-npm run generate:protocol-bindings
-npm run protocol:artifact:check
+npm run import:robinhood-contract
+npm run sync:robinhood-artifacts:check
 ```
 
-`import:ethereum-contract` imports all four compiled ABIs, their bytecode
-provenance, the one-transaction deployment plan, and the final schema from the
-canonical sibling artifact. Normal SDK builds use checked-in inputs, so package
-generation stays deterministic and does not require the sibling repository.
+The bundle currently contains `AssetRegistry`, `TemplateRegistry`,
+`PoolRegistry`, `NakamaFactory`, `ProtectionProgram`, `PoolVault`,
+`MembershipRegistry`, `DecisionModule`, `ClaimManager`, `SettlementModule`,
+`AgentAuthorizationRegistry`, and `SafetyGuardian`.
 
-The old Anchor IDL generator remains available only as
-`npm run sync:legacy-solana-idl`; it is no longer the canonical generation
-path.
+## Deployment gate
 
-## Legacy Solana compatibility
+Use the checked-in manifests for inspection, then require a deployed manifest
+before constructing product clients:
 
-Solana modules remain temporarily available through explicit subpaths for
-historical decoding, account reads, simulation, migration, and source
-compatibility. They are absent from the package root and are not installed into
-canonical Ethereum consumers. A project that needs them must install the
-optional peers explicitly:
+```ts
+import {
+  assertRobinhoodDeploymentReady,
+  getGeneratedRobinhoodArtifactBundle,
+} from '@nakama-health/protocol-sdk';
 
-```bash
-npm install @coral-xyz/anchor @solana/web3.js bn.js bs58 tweetnacl
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const manifest = bundle.deployments.mainnet;
+
+assertRobinhoodDeploymentReady(manifest, bundle); // throws today by design
 ```
 
-They are not a writable network surface:
+A writable release must name every contract address, ABI checksum, runtime
+bytecode hash, verification URL, deployment transaction/block, protocol commit,
+audit report, and release approval. `verifyRobinhoodDeploymentRuntime(...)`
+then checks the selected RPC's chain ID and live bytecode hashes. A manifest
+alone is never accepted as runtime proof.
 
-- Every legacy protocol instruction, transaction, convenience-builder, raw
-  client, and safe-client write method throws `NAKAMA_LEGACY_WRITE_DISABLED`.
-- `createRpcClient(...).broadcastSignedTx(...)` throws
-  `NAKAMA_LEGACY_WRITE_DISABLED`.
-- MagicBlock connection, transaction-builder, commitment, and private-payment
-  write paths throw `NAKAMA_LEGACY_WRITE_DISABLED`.
-- Solana transaction decoders, simulation helpers, PDA derivation, and account
-  decoders remain available for read/migration work.
+## Typed product reads
 
-No Ethereum integration should import `protocol`, `protocol_seeds`, `rpc`,
-`transactions`, `claims`, `oracle`, or `magicblock`; those subpaths describe the
-legacy Solana surface.
+`createRobinhoodReadClient(...)` provides program, accounting, membership,
+request, obligation, role, and pause reads at pinned block numbers. Each result
+contains its network, CAIP-2 identity, block hash, head/safe/finalized markers,
+and reconciliation state.
 
-## Public Ethereum subpaths
+Indexer output is treated as a cache. `reconcileRobinhoodRead(...)` compares it
+with a direct-chain read, and `assertRobinhoodWriteStateSafe(...)` blocks a
+follow-up write when the indexer is stale or divergent. Public-safe reads can
+be stored with the bounded offline cache helpers; private health evidence must
+remain offchain.
+
+## Typed actions, simulation, and wallets
+
+`createRobinhoodActionBuilder(...)` covers the program lifecycle, exact USDG
+approval/funding, memberships, requests/evidence, initial and appeal decisions,
+settlement, agent authorizations, and guardian controls. Construction requires
+an audited deployment plus live runtime verification, so placeholder addresses
+cannot produce a transaction.
+
+Every prepared action carries an intent ID, CAIP-10 account, target, selector,
+calldata, expiry, human explanation, and expected state change. It is frozen and
+internally capability-marked; reconstructed, cloned, relabeled, or caller-built
+objects cannot cross the submission boundary. The safe order is fixed:
+
+1. Reconcile the relevant read state.
+2. Build one typed action from a verified deployment/runtime.
+3. Simulate that exact action with `simulateRobinhoodAction(...)`.
+4. Show the explanation and state changes to the user.
+5. Submit the successful simulation through `requestRobinhoodAction(...)`.
+6. Track canonical finality with `waitForRobinhoodFinality(...)`.
+
+The SDK never accepts a private key and never switches the wallet's network.
+`requestRobinhoodAction(...)` only calls `eth_sendTransaction` for the already
+simulated action.
+
+Phase-0 smart-account submission is intentionally disabled. The policy API can
+simulate only a narrow allowlist of permissionless maintenance calls, but
+`submit(...)` fails until the SDK has an independent finalized onchain verifier
+for module code, installed policy, revocation state, and calldata constraints.
+An adapter's self-attestation is never treated as proof.
+
+## Decision signatures
+
+The decision helpers exactly mirror the protocol's EIP-712 type:
+
+```ts
+import {
+  NAKAMA_DECISION_ACTION,
+  NAKAMA_DECISION_REVIEWER_ROLE,
+  NAKAMA_DECISION_REVIEW_ROUND,
+  createNakamaDecisionSigningPayload,
+} from '@nakama-health/protocol-sdk';
+
+const payload = createNakamaDecisionSigningPayload({
+  network: 'mainnet',
+  reviewer,
+  decisionModule,
+  message: {
+    programId,
+    requestId,
+    termsCommitment,
+    evidenceManifestCommitment,
+    evidenceVersion: 1,
+    reviewRound: NAKAMA_DECISION_REVIEW_ROUND.initial,
+    reviewerRole: NAKAMA_DECISION_REVIEWER_ROLE.initialReviewer,
+    action: NAKAMA_DECISION_ACTION.approve,
+    approvedAmount: 2_500_000n,
+    recipientCommitment,
+    publicReasonCode,
+    nonce,
+    validUntil,
+  },
+});
+```
+
+The domain is `Nakama Protection Decision`, version `1`, with the selected
+Robinhood chain ID and the deployed `DecisionModule`. Verification binds the
+signer, module, nonce, expiry, digest, and replay key, with EIP-1271 support when
+a public client is supplied.
+
+## Receipt and finality model
+
+Robinhood Chain is an L2, so a mined receipt is useful UI feedback rather than
+the final settlement state. The receipt API distinguishes `submitted`,
+`soft_confirmed`, `l1_posted`, `finalized`, `reverted`, `replaced`, `timed_out`,
+and `reorged`; it checks the canonical block hash instead of relying on a
+confirmation count alone.
+
+Economic-finality tracking begins with the exact sealed wallet submission. It
+binds the action commitment, calldata hash, native value, chain, sender, and
+target; each L2 reader must read back and match the transaction input. Economic
+finality additionally requires independent provider/operator identities for two
+L2 readers and two L1 batch-evidence readers. Single-provider `finalized` is a
+display state and never sets `economicFinal`.
+
+## Offline Virtuals launch packet
+
+`validateVirtualsLaunchPacketStructure(...)` checks a caller-supplied launch
+packet for explicit Robinhood mainnet identity, canonical USDG, the five named
+Virtuals contract roles, nonzero and unique addresses, runtime hash parity,
+beneficial-owner references, transparent allocation concentration, fee-share
+arithmetic, simulation metadata, and finalized block ordering.
+
+It is intentionally offline and non-authoritative. Self-supplied gate booleans,
+identity flags, hashes, and block numbers do not prove Virtuals acceptance,
+legal eligibility, ownership, or onchain state. Production launch tooling must
+obtain platform/legal/identity approvals independently, read verified contract
+configuration from Robinhood RPC, simulate the exact packet, and then use the
+official Virtuals launch surface. This SDK never signs or broadcasts a Virtuals
+launch.
+
+See [the Robinhood and Virtuals guide](docs/ROBINHOOD_VIRTUALS.md) for the full
+boundary and launch checklist.
+
+## Legacy network surfaces
+
+Earlier Ethereum-mainnet and Solana integrations remain available only through
+explicit subpaths. They are absent from the root export and are not a fallback:
 
 - `@nakama-health/protocol-sdk/ethereum`
 - `@nakama-health/protocol-sdk/ethereum_contract`
 - `@nakama-health/protocol-sdk/ethereum_oracle`
-- `@nakama-health/protocol-sdk/errors`
+- `@nakama-health/protocol-sdk/protocol` and the other legacy Solana subpaths
 
-## Local verification
+Legacy Solana write builders remain disabled. Applications migrating old
+Ethereum code must retain explicit imports; new integrations should import the
+package root or `/robinhood`.
+
+## Verification
 
 ```bash
-npm ci
-npm run generate:protocol-bindings
-npm run protocol:artifact:check
+npm run sync:robinhood-artifacts:check
 npm run typecheck
 npm run lint
-npm run format:check
-npm run build
 npm test
-npm run docs:check
-npm run audit:packed-consumer
+npm run build
+npm run examples:check
+npm run security:package
 ```
 
-Mainnet deployment, contract audits, a durable replay backend, fork tests, and a
-live RPC verification are release prerequisites outside this SDK foundation.
+No contract deployment, token launch, package publication, or production write
+is performed by these commands.

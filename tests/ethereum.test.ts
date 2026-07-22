@@ -6,10 +6,7 @@ import {
   ETHEREUM_MAINNET_CHAIN_ID,
   ETHEREUM_MAINNET_CHAIN_ID_HEX,
   ETHEREUM_MAINNET_TRANSACTION_GAS_LIMIT_CAP,
-  NakamaEthereumConfigError,
-  NakamaEthereumWrongChainError,
   createAuthorizationSubmissionV2,
-  createClaimRecipientAuthorizationSigningPayload,
   createEip1193TransactionSigningPayload,
   createEthereumPublicClient,
   createReceiptSubmissionV2,
@@ -22,7 +19,12 @@ import {
   validateSigningPayloadV2,
   type Eip1193ProviderLike,
   type SigningPayloadV2,
-} from '../src/index.js';
+} from '../src/ethereum.js';
+import { createClaimRecipientAuthorizationSigningPayload } from '../src/ethereum_oracle.js';
+import {
+  NakamaEthereumConfigError,
+  NakamaEthereumWrongChainError,
+} from '../src/errors.js';
 
 const ACCOUNT = '0x0000000000000000000000000000000000000001';
 const RECIPIENT = '0x0000000000000000000000000000000000000002';

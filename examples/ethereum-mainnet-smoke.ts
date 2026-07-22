@@ -1,15 +1,17 @@
 import {
-  ETHEREUM_MAINNET_CAIP2,
-  ETHEREUM_MAINNET_CHAIN_ID,
   NAKAMA_COVERAGE_PROTOCOL_ABI,
   NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA,
   NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
   NAKAMA_POLICY_REGISTRY_ABI,
   NAKAMA_PROTOCOL_FACTORY_ABI,
   NAKAMA_RESERVE_VAULT_ABI,
-  toEthereumMainnetCaip10,
   validateEthereumDeploymentManifest,
-} from '@nakama-health/protocol-sdk';
+} from '@nakama-health/protocol-sdk/ethereum_contract';
+import {
+  ETHEREUM_MAINNET_CAIP2,
+  ETHEREUM_MAINNET_CHAIN_ID,
+  toEthereumMainnetCaip10,
+} from '@nakama-health/protocol-sdk/ethereum';
 
 const deployment = validateEthereumDeploymentManifest(
   NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,

@@ -1,5 +1,31 @@
 # Release Notes — `@nakama-health/protocol-sdk`
 
+## Unreleased — Robinhood-native protection SDK
+
+- Made Robinhood Chain mainnet (`4663`) and testnet (`46630`) the canonical root
+  surface, with an explicit `/robinhood` export and no chain-1 fallback.
+- Imported the exact 12-contract protocol artifact/ABIs and added reproducible
+  source, ABI, compiler, component-code, and deployment-commitment checks.
+- Added closed, fail-closed deployment manifests; both remain `unconfigured`, so
+  no production read/write can be constructed until audited deployment evidence
+  and live runtime verification exist.
+- Added exact canonical mainnet USDG identity/amount handling and left testnet
+  USDG unavailable until a verified address is published.
+- Added pinned product reads, indexer reconciliation, public-safe offline cache,
+  typed capability-marked actions, exact simulations, EIP-1193 wallet requests,
+  immutable protocol EIP-712 decisions, sealed transaction-intent finality, and
+  dual-independent L2/L1 economic-finality assessment.
+- Added a narrow smart-account simulation policy while keeping Phase-0 agent
+  submission disabled pending independent finalized onchain policy proof.
+- Added offline Virtuals launch-packet structural validation with explicit
+  warnings that it performs no platform, legal, identity, RPC, signing,
+  broadcast, or launch operation.
+- Reworked CLI doctor, templates, examples, package/runtime manifest, consumer
+  smoke tests, and canonical documentation around the Robinhood product lane.
+
+The entries below are historical releases and do not describe the canonical
+network or recommended integration path in the current working tree.
+
 ## `0.8.10`
 
 - Ported the canonical SDK lane to Ethereum mainnet (`eip155:1`) with a

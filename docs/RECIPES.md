@@ -1,96 +1,140 @@
-# SDK Recipes — `@nakama-health/protocol-sdk`
+# Robinhood recipes
 
-These recipes use Ethereum mainnet, caller-owned RPC, self-custodial wallets,
-and the generated factory, policy registry, core, and ReserveVault artifacts.
+These snippets demonstrate boundaries rather than a live deployment. The
+checked-in manifests are unconfigured, so the runtime-dependent recipes fail
+closed until audited deployment evidence exists.
 
-## Start with a scaffold
-
-```bash
-npx @nakama-health/protocol-sdk doctor
-npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
-npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-claim-relayer
-```
-
-Each scaffold typechecks and runs without a funded wallet or live transaction.
-
-## Encode a contract call
+## Inspect network and artifact identity
 
 ```ts
 import {
-  NAKAMA_POLICY_REGISTRY_ABI,
-  encodeEthereumCalldata,
+  getGeneratedRobinhoodArtifactBundle,
+  getRobinhoodCaip2,
+  getRobinhoodChainId,
 } from '@nakama-health/protocol-sdk';
 
-const data = encodeEthereumCalldata({
-  abi: NAKAMA_POLICY_REGISTRY_ABI,
-  functionName: 'deriveClaimId',
-  args: [positionId, claimant, nullifier],
-});
+const bundle = getGeneratedRobinhoodArtifactBundle();
+console.log(getRobinhoodChainId('mainnet')); // 4663
+console.log(getRobinhoodCaip2('mainnet')); // eip155:4663
+console.log(Object.keys(bundle.contracts)); // all 12 protocol roles
+console.log(bundle.deployments.mainnet.status); // unconfigured today
 ```
 
-The ABI is generated from the canonical compiled protocol artifact, so callers
-do not maintain a parallel hand-written instruction schema.
-
-## Inspect an ERC-20 before use
-
-```ts
-import { inspectErc20 } from '@nakama-health/protocol-sdk/ethereum_contract';
-
-const asset = await inspectErc20(client, {
-  token: tokenAddress,
-  owner: claimant,
-  spender: protocolAddress,
-  expectedSymbol: 'USDC',
-  expectedDecimals: 6,
-  minimumBalance: amount,
-  minimumAllowance: amount,
-});
-```
-
-This proves contract code exists and checks metadata, balance, and allowance.
-Token symbols are display metadata, so production configuration should also pin
-the exact token address.
-
-## Build claim-recipient typed data
-
-```ts
-import { createClaimRecipientAuthorizationSigningPayload } from '@nakama-health/protocol-sdk/ethereum_oracle';
-
-const payload = createClaimRecipientAuthorizationSigningPayload({
-  account: claimant,
-  verifyingContract: policyRegistryAddress,
-  message: { claimId, recipient, nonce: trustedNonce, deadline },
-});
-```
-
-Send this through `requestSigningSubmissionV2(...)` with a server-issued intent
-ID. The result is an `AuthorizationSubmissionV2`, so a transaction hash cannot
-be substituted for the signature. A relayer should then call
-`verifyAndConsumeClaimRecipientAuthorization(...)` with the original typed
-data, trusted onchain nonce, and a durable atomic replay guard. Pass an Ethereum
-public client for ERC-1271 smart-contract claimants.
-
-## Handle typed failures
+## Parse exact USDG without rounding
 
 ```ts
 import {
-  NakamaEthereumError,
-  NakamaEthereumWrongChainError,
-} from '@nakama-health/protocol-sdk/errors';
+  formatRobinhoodAssetAmount,
+  parseRobinhoodUsdg,
+} from '@nakama-health/protocol-sdk/robinhood';
 
-try {
-  await verifyEthereumReceipt(client, { hash });
-} catch (error) {
-  if (error instanceof NakamaEthereumWrongChainError) {
-    // Reject the endpoint or wallet configuration.
-  } else if (error instanceof NakamaEthereumError) {
-    console.error(error.code, error.details);
-  } else {
-    throw error;
-  }
-}
+const amount = parseRobinhoodUsdg('125.500001', 'mainnet');
+console.log(amount.units); // 125500001n
+console.log(formatRobinhoodAssetAmount(amount)); // 125.500001
 ```
 
-Run `npm run dogfood:consumer` before release to install the packed SDK into an
-external fixture, compile every Ethereum subpath, and execute its safe smoke.
+More than six fractional digits, a negative value, a wrong token address, or
+testnet USDG before its address is configured is rejected.
+
+## Prove deployment code before constructing a client
+
+```ts
+import {
+  assertRobinhoodDeploymentReady,
+  createRobinhoodPublicClient,
+  getGeneratedRobinhoodArtifactBundle,
+  verifyRobinhoodDeploymentRuntime,
+} from '@nakama-health/protocol-sdk';
+
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const manifest = bundle.deployments.mainnet;
+const client = createRobinhoodPublicClient({
+  network: 'mainnet',
+  rpcUrl: process.env.ROBINHOOD_MAINNET_RPC_URL!,
+});
+
+assertRobinhoodDeploymentReady(manifest, bundle);
+const runtime = await verifyRobinhoodDeploymentRuntime({
+  client,
+  manifest,
+  bundle,
+});
+```
+
+The assertion currently throws by design. Do not replace the proof with a cast,
+fixture, copied JSON object, or caller-supplied boolean.
+
+## Reconcile a direct read before writing
+
+```ts
+import {
+  assertRobinhoodWriteStateSafe,
+  reconcileRobinhoodRead,
+} from '@nakama-health/protocol-sdk';
+
+const reconciled = reconcileRobinhoodRead(directRead, indexerPage, {
+  now: new Date().toISOString(),
+  maxIndexerAgeSeconds: 30,
+  identity: (program) => program.programId,
+});
+
+assertRobinhoodWriteStateSafe(reconciled.context);
+```
+
+Use an indexer for discovery and UX, then use the direct pinned read as the
+authority. An `offline_cache`, stale, divergent, or malformed context cannot
+authorize a write.
+
+## Request a decision signature
+
+```ts
+import {
+  createNakamaDecisionPreview,
+  createNakamaDecisionSigningPayload,
+  requestNakamaDecisionSignature,
+} from '@nakama-health/protocol-sdk';
+
+const payload = createNakamaDecisionSigningPayload(decisionInput);
+const preview = createNakamaDecisionPreview(payload);
+
+showReviewer(preview);
+const signature = await requestNakamaDecisionSignature(
+  window.ethereum,
+  payload,
+);
+```
+
+Create the preview from the same immutable payload sent to the wallet. The SDK
+uses `eth_signTypedData_v4`, exposes `EIP712Domain` in wallet JSON, and never
+accepts a private key.
+
+## Assess display finality without overstating it
+
+```ts
+import { readRobinhoodFinality } from '@nakama-health/protocol-sdk';
+
+const display = await readRobinhoodFinality({
+  submitted,
+  reader,
+  now: new Date().toISOString(),
+});
+
+console.log(display.status);
+console.log(display.economicFinal); // always false in the single-reader lane
+```
+
+Use `readRobinhoodEconomicFinality(...)` only with the SDK-sealed wallet
+submission, two independent L2 readers, and two independent L1 batch readers.
+
+## Validate a launch packet offline
+
+```ts
+import { validateVirtualsLaunchPacketStructure } from '@nakama-health/protocol-sdk';
+
+const checked = validateVirtualsLaunchPacketStructure(decodedPacket);
+console.log(checked.warning);
+```
+
+The result is a consistency check, not Virtuals approval or onchain proof. Never
+route it directly to a signer; re-resolve current official platform, legal,
+identity, code, simulation, and finalized-chain evidence first.

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "package": {
     "name": "@nakama-health/protocol-sdk",
     "version": "0.8.10",
@@ -8,279 +8,129 @@
   },
   "protocol": {
     "chainFamily": "eip155",
-    "chainId": 1,
-    "caip2": "eip155:1",
-    "sourceRepo": "../nakama-protocol",
-    "sourceRevision": "working-tree-uncommitted",
-    "sourceArtifact": "shared/ethereum/protocol_contract.json",
-    "sourceArtifactSha256": "c894cb59f3bd83c4f55ea93a4896ba5b1b54a49965c6801ab06b506b716093e1",
-    "deploymentPlan": {
-      "transactionCount": 1,
-      "entryContract": "NakamaProtocolFactory",
-      "factoryCreates": [
-        {
-          "contractName": "NakamaPolicyRegistry",
-          "nonce": 1
-        },
-        {
-          "contractName": "NakamaCoverageProtocol",
-          "nonce": 2
-        }
-      ],
-      "templates": [
-        {
-          "contractName": "ReserveVault",
-          "deploymentKind": "core-create2",
-          "saltDerivation": "keccak256(abi.encode(domainId,assetToken))"
-        }
-      ]
-    },
-    "contracts": {
-      "NakamaProtocolFactory": {
-        "abiArtifact": "contracts/ethereum/NakamaProtocolFactory.abi.json",
-        "metadataArtifact": "contracts/ethereum/NakamaProtocolFactory.metadata.json",
-        "abiSha256": "c80b950a24d135213403720b2d72eeafad0a509f046d08bed82d5988347bfe05",
-        "creationBytecodeHash": "0xf9fccea78ffa1999c11b440abd8f99dcf1798c8c49568447e38119bfbd53dc17",
-        "creationBytecodeBytes": 35934,
-        "runtimeBytecodeTemplateHash": "0xcc40ae6846256b678edd42124680c87886519cf7c1cf4f3bf32a17439a8791b9",
-        "runtimeBytecodeBytes": 234,
-        "immutableReferences": [
-          {
-            "start": 66,
-            "length": 32
-          },
-          {
-            "start": 133,
-            "length": 32
-          }
-        ]
+    "networks": {
+      "mainnet": {
+        "name": "Robinhood Chain Mainnet",
+        "chainId": 4663,
+        "caip2": "eip155:4663",
+        "deploymentManifest": "deployments/robinhood-mainnet.json",
+        "deploymentStatus": "unconfigured"
       },
-      "NakamaCoverageProtocol": {
-        "abiArtifact": "contracts/ethereum/NakamaCoverageProtocol.abi.json",
-        "metadataArtifact": "contracts/ethereum/NakamaCoverageProtocol.metadata.json",
-        "abiSha256": "478252e61e323e9735f8db4ca13fd91c9532d2936bd2ac92d8bf8718aa98af0f",
-        "creationBytecodeHash": "0xc8cba6083edcd8512999556b3f52af566f23af3ca88d8868b1e2f1e97ce194d2",
-        "creationBytecodeBytes": 22873,
-        "runtimeBytecodeTemplateHash": "0x74a6a4b6a4f3270f168670aa4ba46300cbd40939c8f34d0f8a815c1a0ad798c1",
-        "runtimeBytecodeBytes": 22393,
-        "immutableReferences": [
-          {
-            "start": 1527,
-            "length": 32
-          },
-          {
-            "start": 2571,
-            "length": 32
-          },
-          {
-            "start": 2833,
-            "length": 32
-          },
-          {
-            "start": 3642,
-            "length": 32
-          },
-          {
-            "start": 4525,
-            "length": 32
-          },
-          {
-            "start": 5706,
-            "length": 32
-          },
-          {
-            "start": 7253,
-            "length": 32
-          },
-          {
-            "start": 7760,
-            "length": 32
-          },
-          {
-            "start": 7956,
-            "length": 32
-          },
-          {
-            "start": 10963,
-            "length": 32
-          },
-          {
-            "start": 12129,
-            "length": 32
-          },
-          {
-            "start": 13059,
-            "length": 32
-          },
-          {
-            "start": 14418,
-            "length": 32
-          },
-          {
-            "start": 18619,
-            "length": 32
-          },
-          {
-            "start": 18670,
-            "length": 32
-          }
-        ]
-      },
-      "NakamaPolicyRegistry": {
-        "abiArtifact": "contracts/ethereum/NakamaPolicyRegistry.abi.json",
-        "metadataArtifact": "contracts/ethereum/NakamaPolicyRegistry.metadata.json",
-        "abiSha256": "e8915399bd12a34c43fc2d16c61f1d3d4ebea62fbedcf5eac233470840b6c7bc",
-        "creationBytecodeHash": "0x1fcb5877b7a6d780c89d42d60d9487d3762d6a677de5102eae89c3d887d12592",
-        "creationBytecodeBytes": 12122,
-        "runtimeBytecodeTemplateHash": "0x038c714a39aee1f6baa83e230ac9e7e7b58aa1b5b517f14a3d68786148e1beda",
-        "runtimeBytecodeBytes": 10880,
-        "immutableReferences": [
-          {
-            "start": 357,
-            "length": 32
-          },
-          {
-            "start": 440,
-            "length": 32
-          },
-          {
-            "start": 2335,
-            "length": 32
-          },
-          {
-            "start": 3104,
-            "length": 32
-          },
-          {
-            "start": 3145,
-            "length": 32
-          },
-          {
-            "start": 3422,
-            "length": 32
-          },
-          {
-            "start": 3913,
-            "length": 32
-          },
-          {
-            "start": 4888,
-            "length": 32
-          },
-          {
-            "start": 5284,
-            "length": 32
-          },
-          {
-            "start": 5889,
-            "length": 32
-          },
-          {
-            "start": 6226,
-            "length": 32
-          },
-          {
-            "start": 7612,
-            "length": 32
-          },
-          {
-            "start": 10378,
-            "length": 32
-          },
-          {
-            "start": 10432,
-            "length": 32
-          },
-          {
-            "start": 10511,
-            "length": 32
-          },
-          {
-            "start": 10549,
-            "length": 32
-          },
-          {
-            "start": 10615,
-            "length": 32
-          }
-        ]
-      },
-      "ReserveVault": {
-        "abiArtifact": "contracts/ethereum/ReserveVault.abi.json",
-        "metadataArtifact": "contracts/ethereum/ReserveVault.metadata.json",
-        "abiSha256": "b6d2294056185bf0159fb9c562e5c6279a18364a5d7e1066aecf458546b302e3",
-        "creationBytecodeHash": "0x1afdeb212685300237e807661a86094834cf06fc1e3f50fd3d17fc06293b1fa3",
-        "creationBytecodeBytes": 2108,
-        "runtimeBytecodeTemplateHash": "0x4186b9b73bede94e5d981327f635771a54cebb68551f14bfaba6aceafdcb5bcf",
-        "runtimeBytecodeBytes": 1840,
-        "immutableReferences": [
-          {
-            "start": 104,
-            "length": 32
-          },
-          {
-            "start": 178,
-            "length": 32
-          },
-          {
-            "start": 230,
-            "length": 32
-          },
-          {
-            "start": 326,
-            "length": 32
-          },
-          {
-            "start": 1017,
-            "length": 32
-          },
-          {
-            "start": 1107,
-            "length": 32
-          },
-          {
-            "start": 1614,
-            "length": 32
-          }
-        ]
+      "testnet": {
+        "name": "Robinhood Chain Testnet",
+        "chainId": 46630,
+        "caip2": "eip155:46630",
+        "deploymentManifest": "deployments/robinhood-testnet.json",
+        "deploymentStatus": "unconfigured"
       }
     },
-    "deploymentManifest": "deployments/ethereum-mainnet.json",
-    "deploymentSchema": "deployments/ethereum-mainnet.final.schema.json",
-    "deploymentStatus": "unconfigured",
-    "parityCommand": "npm run protocol:artifact:check",
-    "importCommand": "npm run import:ethereum-contract"
+    "sourceRepo": "../nakama-protocol",
+    "sourceArtifact": "shared/robinhood/protocol_contract.json",
+    "sourceArtifactSha256": "ee8966f183d4826e08c5c594bf07e89aca3385e8423d8a79d3598656e9a3b75d",
+    "deploymentCodeCommitment": "0xce06ac68424ff1a9490fdc1629bd9a45936334011d0a91b2ba07cd7470224ad0",
+    "deploymentKind": "factory-authorized-create2",
+    "deploymentSchema": "deployments/robinhood-deployment.schema.json",
+    "fundingAsset": {
+      "name": "Global Dollar",
+      "symbol": "USDG",
+      "decimals": 6,
+      "mainnetAddress": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "testnetAddress": null
+    },
+    "contracts": {
+      "assetRegistry": {
+        "contractName": "AssetRegistry",
+        "abiArtifact": "contracts/robinhood/AssetRegistry.abi.json",
+        "abiSha256": "13fb7931d4bb89cf3cdf7360b430d6fa1fceb80349459a76398ad3063545492c"
+      },
+      "templateRegistry": {
+        "contractName": "TemplateRegistry",
+        "abiArtifact": "contracts/robinhood/TemplateRegistry.abi.json",
+        "abiSha256": "e48e9c7835f61bd2b343e3bba0ed3199a27498b504d7695ea4290da68894e3d0"
+      },
+      "poolRegistry": {
+        "contractName": "PoolRegistry",
+        "abiArtifact": "contracts/robinhood/PoolRegistry.abi.json",
+        "abiSha256": "532c832ffaab3485150f5e50fe3e201071387bc3b4d704d85ae3cdbbe9bde390"
+      },
+      "factory": {
+        "contractName": "NakamaFactory",
+        "abiArtifact": "contracts/robinhood/NakamaFactory.abi.json",
+        "abiSha256": "d36dce8a99ec631fd175bea1f7d3d9e49dd34d0794f9c417deddcf38e34964d8"
+      },
+      "program": {
+        "contractName": "ProtectionProgram",
+        "abiArtifact": "contracts/robinhood/ProtectionProgram.abi.json",
+        "abiSha256": "bf6cf82d09944d94a7f668c9bd44b99705ba9d75ea6e76084c0b5053d0c35d81"
+      },
+      "vault": {
+        "contractName": "PoolVault",
+        "abiArtifact": "contracts/robinhood/PoolVault.abi.json",
+        "abiSha256": "e59200c586ab359fc217928a31395c6627f321b2977e63925fc37198ffc3008d"
+      },
+      "membershipRegistry": {
+        "contractName": "MembershipRegistry",
+        "abiArtifact": "contracts/robinhood/MembershipRegistry.abi.json",
+        "abiSha256": "72ac7186bd82a54da9d795e44889c77c60a020bcec212af92a12f49ebec3f818"
+      },
+      "decisionModule": {
+        "contractName": "DecisionModule",
+        "abiArtifact": "contracts/robinhood/DecisionModule.abi.json",
+        "abiSha256": "0b317cb621d6b27adb2c41aa1a4772391811b612647b009e98a61c3466e1c7af"
+      },
+      "requestManager": {
+        "contractName": "ClaimManager",
+        "abiArtifact": "contracts/robinhood/ClaimManager.abi.json",
+        "abiSha256": "59bcd33d84304ddc2a05003367b3d36dfb849b3ae8d180bb5045db85eb27aa42"
+      },
+      "settlementModule": {
+        "contractName": "SettlementModule",
+        "abiArtifact": "contracts/robinhood/SettlementModule.abi.json",
+        "abiSha256": "18c43554fa0c78aae415c0265e177be11f7c1a46c04f66f97d7ba6fbcea22b03"
+      },
+      "agentAuthorizationRegistry": {
+        "contractName": "AgentAuthorizationRegistry",
+        "abiArtifact": "contracts/robinhood/AgentAuthorizationRegistry.abi.json",
+        "abiSha256": "1adb7dee99b684a16343dfa9fd39334df60014e8fc243b44c3c8b5bd37562a74"
+      },
+      "safetyGuardian": {
+        "contractName": "SafetyGuardian",
+        "abiArtifact": "contracts/robinhood/SafetyGuardian.abi.json",
+        "abiSha256": "7a41de5c4524a4182f9315575613487e4829830c0eb74c720d22a84513a66bd5"
+      }
+    },
+    "parityCommand": "npm run sync:robinhood-artifacts:check",
+    "importCommand": "npm run import:robinhood-contract"
   },
   "publicSubpaths": [
     ".",
+    "./robinhood",
     "./claims",
-    "./errors",
     "./ethereum",
     "./ethereum_contract",
     "./ethereum_oracle",
-    "./magicblock",
+    "./errors",
     "./oracle",
-    "./package.json",
     "./protocol",
+    "./magicblock",
     "./protocol_models",
     "./protocol_seeds",
     "./rpc",
     "./transactions",
     "./types",
-    "./utils"
+    "./utils",
+    "./package.json"
   ],
-  "canonicalSubpaths": [
-    ".",
-    "./errors",
-    "./ethereum",
-    "./ethereum_contract",
-    "./ethereum_oracle"
-  ],
+  "canonicalSubpaths": [".", "./robinhood"],
   "legacyReadMigrationSubpaths": [
     "./claims",
-    "./magicblock",
+    "./ethereum",
+    "./ethereum_contract",
+    "./ethereum_oracle",
+    "./errors",
     "./oracle",
     "./protocol",
+    "./magicblock",
     "./protocol_models",
     "./protocol_seeds",
     "./rpc",
@@ -290,156 +140,125 @@
   ],
   "lanes": [
     {
-      "id": "ethereum-mainnet-read",
+      "id": "robinhood-identity-read",
       "entrypoints": [
         {
-          "name": "createEthereumPublicClient",
-          "kind": "function",
-          "subpath": "./ethereum"
+          "name": "createRobinhoodPublicClient",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "toEthereumMainnetCaip10",
-          "kind": "function",
-          "subpath": "./ethereum"
+          "name": "verifyRobinhoodDeploymentRuntime",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "NAKAMA_PROTOCOL_FACTORY_ABI",
-          "kind": "const",
-          "subpath": "."
+          "name": "createRobinhoodReadClient",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "NAKAMA_POLICY_REGISTRY_ABI",
-          "kind": "const",
-          "subpath": "."
-        },
-        {
-          "name": "NAKAMA_COVERAGE_PROTOCOL_ABI",
-          "kind": "const",
-          "subpath": "."
-        },
-        {
-          "name": "NAKAMA_RESERVE_VAULT_ABI",
-          "kind": "const",
-          "subpath": "."
+          "name": "reconcileRobinhoodRead",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
-      ],
-      "sideEffects": "Client construction is local; reads occur only when the caller invokes viem actions."
+      ]
     },
     {
-      "id": "self-custodial-wallet",
+      "id": "robinhood-actions-wallet",
       "entrypoints": [
         {
-          "name": "createEip1193TransactionSigningPayload",
-          "kind": "function",
-          "subpath": "./ethereum"
+          "name": "createRobinhoodActionBuilder",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "createEip712SigningPayload",
-          "kind": "function",
-          "subpath": "./ethereum"
+          "name": "simulateRobinhoodAction",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "requestSigningPayloadV2",
-          "kind": "function",
-          "subpath": "./ethereum"
+          "name": "requestRobinhoodAction",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "requestSigningSubmissionV2",
-          "kind": "function",
-          "subpath": "./ethereum"
+          "name": "createRobinhoodSmartAccountClient",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
-      ],
-      "sideEffects": "The request helper checks chain ID and then asks the caller-provided wallet to sign or submit; the SDK never receives a private key."
+      ]
     },
     {
-      "id": "contract-and-finality-safety",
+      "id": "decision-and-finality",
       "entrypoints": [
         {
-          "name": "validateEthereumContractDeployment",
-          "kind": "function",
-          "subpath": "./ethereum_contract"
+          "name": "createNakamaDecisionSigningPayload",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "inspectErc20",
-          "kind": "function",
-          "subpath": "./ethereum_contract"
+          "name": "verifyNakamaDecision",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "verifyEthereumReceipt",
-          "kind": "function",
-          "subpath": "./ethereum_contract"
+          "name": "waitForRobinhoodFinality",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "verifyEthereumTransactionIntent",
-          "kind": "function",
-          "subpath": "./ethereum_contract"
+          "name": "readRobinhoodEconomicFinality",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
-      ],
-      "sideEffects": "These helpers perform RPC reads only and reject wrong-chain, unverified, unaudited, reverted, reorged, or under-confirmed state."
+      ]
     },
     {
-      "id": "claim-recipient-authorization",
+      "id": "virtuals-offline-structure",
       "entrypoints": [
         {
-          "name": "createClaimRecipientAuthorizationSigningPayload",
-          "kind": "function",
-          "subpath": "./ethereum_oracle"
+          "name": "decodeVirtualsLaunchPlan",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "verifyClaimRecipientAuthorization",
-          "kind": "function",
-          "subpath": "./ethereum_oracle"
-        },
-        {
-          "name": "verifyAndConsumeClaimRecipientAuthorization",
-          "kind": "function",
-          "subpath": "./ethereum_oracle"
+          "name": "validateVirtualsLaunchPacketStructure",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
-      ],
-      "sideEffects": "Verification is local or read-only RPC; replay consumption mutates only the caller-provided durable replay store."
+      ]
     }
   ],
-  "environment": {
-    "required": [],
-    "optional": ["ETHEREUM_MAINNET_RPC_URL"],
-    "unsafe": []
-  },
-  "safetyRules": [
-    "Ethereum chain ID is pinned to 1 and represented as eip155:1.",
-    "No hidden private-key handling, wallet switching, or proprietary RPC dependency.",
-    "The schema-v3 mainnet manifest is unconfigured, so the factory, policy registry, protocol, and future ReserveVault targets all fail closed.",
-    "Receipt verification checks revert status, confirmations, canonical block hash, receipt stability, and safe head.",
-    "Receipt submissions bind a trusted intent ID and the mined sender, destination, calldata, and value.",
-    "Deployment validation binds the one factory receipt, CREATE nonce-one registry and nonce-two protocol, the protocol deploymentFactory getter, mutual cross-getters, all three live bytecode templates, the ReserveVault CREATE2 template, and three exact Sourcify records.",
-    "Claim-recipient signatures bind chain 1 and the Nakama Policy Registry EIP-712 domain to claimant, claim, recipient, nonce, and deadline.",
-    "EIP-1193 signing payloads reject explicit gas limits above the EIP-7825 cap of 0x1000000.",
-    "The canonical root depends only on viem; optional Solana peers load only through explicit legacy read and migration subpaths.",
-    "All legacy Solana instruction, transaction, safe-client, broadcast, and MagicBlock write paths throw NAKAMA_LEGACY_WRITE_DISABLED."
+  "securityBoundaries": [
+    "No deployment manifest is usable until all 12 addresses, runtime hashes, verification URLs, audit evidence, and release approval are populated.",
+    "Runtime verification is an SDK-issued capability; caller-built or cloned proof objects are rejected.",
+    "Prepared actions are builder-issued capabilities, must pass an exact fresh simulation, and cannot be relabeled before wallet submission.",
+    "The SDK never accepts a private key, silently selects an RPC, or switches a user's chain.",
+    "Phase-0 smart-account submission is disabled until finalized onchain policy installation and revocation can be independently verified.",
+    "Economic finality requires sealed transaction-intent readback plus two independent L2 readers and two independent L1 batch readers.",
+    "The Virtuals validator is an offline structural check; it cannot prove platform acceptance, legal eligibility, ownership, code deployment, or launch finality."
   ],
   "docs": [
     "README.md",
     "SDK_QUALITY.md",
+    "docs/INDEX.md",
+    "docs/GETTING_STARTED.md",
     "docs/API_REFERENCE.md",
-    "docs/INDEX.md"
+    "docs/ROBINHOOD_VIRTUALS.md",
+    "docs/WORKFLOWS.md",
+    "docs/ERROR_CATALOG.md",
+    "docs/TROUBLESHOOTING.md"
   ],
   "validationGates": [
-    "npm test",
+    "npm run sync:robinhood-artifacts:check",
     "npm run typecheck",
     "npm run lint",
-    "npm run format:check",
+    "npm test",
     "npm run build",
-    "npm run docs:api:check",
     "npm run docs:check",
     "npm run runtime:check",
-    "npm run protocol:artifact:check",
     "npm run examples:check",
-    "npm run dogfood:consumer",
-    "npm run cli:check",
-    "npm run templates:check",
-    "npm run security:secrets",
-    "npm run security:package",
-    "npm run audit:prod",
-    "npm run audit:packed-consumer",
-    "npm pack --dry-run"
+    "npm run security:package"
   ]
 }

@@ -2,7 +2,7 @@ import {
   claimRecipientNonceReplayKey,
   createClaimRecipientAuthorizationSigningPayload,
   hashClaimRecipientAuthorization,
-} from '@nakama-health/protocol-sdk';
+} from '@nakama-health/protocol-sdk/ethereum_oracle';
 
 const payload = createClaimRecipientAuthorizationSigningPayload({
   account: '0x0000000000000000000000000000000000000001',

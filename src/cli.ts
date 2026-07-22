@@ -6,37 +6,31 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  ETHEREUM_MAINNET_CAIP2,
-  ETHEREUM_MAINNET_CHAIN_ID,
-  NAKAMA_COVERAGE_PROTOCOL_ABI,
-  NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA,
-  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
-  NAKAMA_POLICY_REGISTRY_ABI,
-  NAKAMA_PROTOCOL_FACTORY_ABI,
-  NAKAMA_RESERVE_VAULT_ABI,
-  createEthereumPublicClient,
-  normalizeEthereumAddress,
-  validateEthereumDeploymentManifest,
-} from './index.js';
+  ROBINHOOD_CONTRACT_ROLES,
+  getGeneratedRobinhoodArtifactBundle,
+  validateRobinhoodDeploymentManifest,
+} from './robinhood/artifacts.js';
 import {
-  NakamaEthereumAddressError,
-  NakamaEthereumError,
-  NakamaEthereumWrongChainError,
-} from './errors.js';
+  getRobinhoodCaip2,
+  getRobinhoodChainId,
+  createRobinhoodPublicClient,
+  normalizeRobinhoodAddress,
+  type RobinhoodNetwork,
+} from './robinhood/chains.js';
+import {
+  NakamaRobinhoodAddressError,
+  NakamaRobinhoodError,
+  NakamaRobinhoodWrongChainError,
+} from './robinhood/errors.js';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(cliDir, '..');
 const templatesRoot = resolve(packageRoot, 'templates');
 const packageJsonPath = resolve(packageRoot, 'package.json');
 const supportedTemplates = ['node-backend', 'next-route', 'oracle-worker'];
-const ethereumContractAbis = {
-  NakamaProtocolFactory: NAKAMA_PROTOCOL_FACTORY_ABI,
-  NakamaPolicyRegistry: NAKAMA_POLICY_REGISTRY_ABI,
-  NakamaCoverageProtocol: NAKAMA_COVERAGE_PROTOCOL_ABI,
-  ReserveVault: NAKAMA_RESERVE_VAULT_ABI,
-} as const;
 const subpaths = [
   '@nakama-health/protocol-sdk',
+  '@nakama-health/protocol-sdk/robinhood',
   '@nakama-health/protocol-sdk/errors',
   '@nakama-health/protocol-sdk/ethereum',
   '@nakama-health/protocol-sdk/ethereum_contract',
@@ -70,7 +64,7 @@ interface CliOptions {
 function usage(): string {
   return [
     'Usage:',
-    '  nakama-sdk doctor [--network mainnet] [--rpc-url <url>] [--json]',
+    '  nakama-sdk doctor [--network mainnet|testnet] [--rpc-url <url>] [--json]',
     '  nakama-sdk scaffold <node-backend|next-route|oracle-worker> [--out <dir>] [--force]',
     '  nakama-sdk examples',
   ].join('\n');
@@ -165,7 +159,7 @@ async function collectDoctorCheck(
       code,
       status: 'fail',
       message: error instanceof Error ? error.message : String(error),
-      ...(error instanceof NakamaEthereumError && error.details
+      ...(error instanceof NakamaRobinhoodError && error.details
         ? { details: error.details }
         : {}),
     };
@@ -218,16 +212,16 @@ export async function runDoctor(
   );
 
   checks.push(
-    await collectDoctorCheck('ethereum-mainnet', 'ETHEREUM_MAINNET', () => {
-      if (network !== 'mainnet') {
-        throw new NakamaEthereumWrongChainError(
-          `The canonical SDK network is mainnet; received ${network}.`,
+    await collectDoctorCheck('robinhood-network', 'ROBINHOOD_NETWORK', () => {
+      if (network !== 'mainnet' && network !== 'testnet') {
+        throw new NakamaRobinhoodWrongChainError(
+          `Robinhood network must be mainnet or testnet; received ${network}.`,
         );
       }
       return {
         network,
-        chainId: ETHEREUM_MAINNET_CHAIN_ID,
-        caip2: ETHEREUM_MAINNET_CAIP2,
+        chainId: getRobinhoodChainId(network),
+        caip2: getRobinhoodCaip2(network),
       };
     }),
   );
@@ -237,28 +231,28 @@ export async function runDoctor(
       'deployment-manifest',
       'DEPLOYMENT_MANIFEST',
       () => {
-        const deployment = validateEthereumDeploymentManifest(
-          NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+        if (network !== 'mainnet' && network !== 'testnet') {
+          throw new NakamaRobinhoodWrongChainError(
+            `Cannot select a deployment for unsupported network ${network}.`,
+          );
+        }
+        const bundle = getGeneratedRobinhoodArtifactBundle();
+        const deployment = validateRobinhoodDeploymentManifest(
+          bundle.deployments[network],
+          network,
         );
         return {
           status: deployment.status,
-          entryContract: deployment.entryContract,
-          factoryAddress: deployment.liveContracts.factory.address,
-          policyRegistryAddress:
-            deployment.liveContracts.policyRegistry.address,
-          protocolAddress: deployment.liveContracts.protocol.address,
+          chainId: deployment.chainId,
+          caip2: deployment.caip2,
+          protocolRelease: deployment.protocolRelease,
+          artifactBundleSha256: deployment.artifactBundleSha256,
+          settlementAsset: deployment.settlementAsset,
           contracts: Object.fromEntries(
-            Object.entries(NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA).map(
-              ([contractName, metadata]) => [
-                contractName,
-                {
-                  abiSha256: metadata.abiSha256,
-                  creationBytecodeBytes: metadata.creationBytecodeBytes,
-                  runtimeBytecodeBytes: metadata.runtimeBytecodeBytes,
-                  immutableReferences: metadata.immutableReferences.length,
-                },
-              ],
-            ),
+            ROBINHOOD_CONTRACT_ROLES.map((role) => [
+              role,
+              deployment.contracts[role] ?? null,
+            ]),
           ),
         };
       },
@@ -267,14 +261,26 @@ export async function runDoctor(
 
   checks.push(
     await collectDoctorCheck('contract-surface', 'CONTRACT_SURFACE', () => {
+      const bundle = getGeneratedRobinhoodArtifactBundle();
       const contractCounts = Object.fromEntries(
-        Object.entries(ethereumContractAbis).map(([contractName, abi]) => [
-          contractName,
-          {
-            functions: abi.filter((entry) => entry.type === 'function').length,
-            events: abi.filter((entry) => entry.type === 'event').length,
-          },
-        ]),
+        ROBINHOOD_CONTRACT_ROLES.map((role) => {
+          const artifact = bundle.contracts[role];
+          if (artifact == null) {
+            throw new Error(`generated bundle is missing ${role}`);
+          }
+          return [
+            role,
+            {
+              contractName: artifact.contractName,
+              abiSha256: artifact.abiSha256,
+              functions: artifact.abi.filter(
+                (entry) => entry.type === 'function',
+              ).length,
+              events: artifact.abi.filter((entry) => entry.type === 'event')
+                .length,
+            },
+          ];
+        }),
       );
       if (
         Object.values(contractCounts).some((counts) => counts.functions === 0)
@@ -288,17 +294,17 @@ export async function runDoctor(
   checks.push(
     await collectDoctorCheck('typed-errors', 'TYPED_ERRORS', () => {
       try {
-        normalizeEthereumAddress('not-an-ethereum-address');
+        normalizeRobinhoodAddress('not-a-robinhood-address');
       } catch (error) {
         if (
-          error instanceof NakamaEthereumAddressError &&
-          error.code === 'NAKAMA_ETHEREUM_ADDRESS_ERROR'
+          error instanceof NakamaRobinhoodAddressError &&
+          error.code === 'NAKAMA_ROBINHOOD_ADDRESS_ERROR'
         ) {
           return { code: error.code };
         }
         throw error;
       }
-      throw new Error('invalid Ethereum address did not throw a typed error');
+      throw new Error('invalid Robinhood address did not throw a typed error');
     }),
   );
 
@@ -308,11 +314,21 @@ export async function runDoctor(
         'rpc-connectivity',
         'RPC_CONNECTIVITY',
         async () => {
-          const client = createEthereumPublicClient({ rpcUrl: options.rpcUrl });
+          if (network !== 'mainnet' && network !== 'testnet') {
+            throw new NakamaRobinhoodWrongChainError(
+              `Cannot create an RPC client for unsupported network ${network}.`,
+            );
+          }
+          const selectedNetwork: RobinhoodNetwork = network;
+          const client = createRobinhoodPublicClient({
+            network: selectedNetwork,
+            rpcUrl: options.rpcUrl!,
+          });
           const chainId = await withTimeout(client.getChainId(), 5_000);
-          if (chainId !== ETHEREUM_MAINNET_CHAIN_ID) {
-            throw new NakamaEthereumWrongChainError(
-              `RPC returned chainId ${chainId}; expected Ethereum mainnet.`,
+          const expectedChainId = getRobinhoodChainId(selectedNetwork);
+          if (chainId !== expectedChainId) {
+            throw new NakamaRobinhoodWrongChainError(
+              `RPC returned chainId ${chainId}; expected Robinhood ${selectedNetwork} chainId ${expectedChainId}.`,
             );
           }
           return {

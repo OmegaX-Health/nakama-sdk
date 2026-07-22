@@ -1,25 +1,35 @@
 import {
-  claimRecipientNonceReplayKey,
-  createClaimRecipientAuthorizationSigningPayload,
-  hashClaimRecipientAuthorization,
-  normalizeEthereumAddress,
+  NAKAMA_DECISION_ACTION,
+  NAKAMA_DECISION_REVIEWER_ROLE,
+  NAKAMA_DECISION_REVIEW_ROUND,
+  createNakamaDecisionPreview,
+  createNakamaDecisionSigningPayload,
+  hashNakamaDecision,
+  nakamaDecisionReplayKey,
 } from '@nakama-health/protocol-sdk';
 
-const payload = createClaimRecipientAuthorizationSigningPayload({
-  account:
-    process.env.CLAIMANT_ADDRESS ??
+const payload = createNakamaDecisionSigningPayload({
+  network: 'mainnet',
+  reviewer:
+    process.env.REVIEWER_ADDRESS ??
     '0x0000000000000000000000000000000000000001',
-  verifyingContract:
-    process.env.POLICY_REGISTRY_ADDRESS ??
+  decisionModule:
+    process.env.DECISION_MODULE_ADDRESS ??
     '0x0000000000000000000000000000000000000002',
   message: {
-    claimId: `0x${'11'.repeat(32)}` as `0x${string}`,
-    recipient: normalizeEthereumAddress(
-      process.env.RECIPIENT_ADDRESS ??
-        '0x0000000000000000000000000000000000000003',
-    ),
+    programId: `0x${'11'.repeat(32)}`,
+    requestId: `0x${'22'.repeat(32)}`,
+    termsCommitment: `0x${'33'.repeat(32)}`,
+    evidenceManifestCommitment: `0x${'44'.repeat(32)}`,
+    evidenceVersion: 1,
+    reviewRound: NAKAMA_DECISION_REVIEW_ROUND.initial,
+    reviewerRole: NAKAMA_DECISION_REVIEWER_ROLE.initialReviewer,
+    action: NAKAMA_DECISION_ACTION.deny,
+    approvedAmount: 0n,
+    recipientCommitment: `0x${'00'.repeat(32)}`,
+    publicReasonCode: `0x${'55'.repeat(32)}`,
     nonce: 0n,
-    deadline: 2_000_000_000n,
+    validUntil: 2_000_000_000n,
   },
 });
 
@@ -27,14 +37,15 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      role: 'claim-authorization-relayer',
+      role: 'human-review-payload-worker',
       chainId: payload.chainId,
-      claimant: payload.accountId,
-      digest: hashClaimRecipientAuthorization(payload.typedData),
-      nonceReplayKey: claimRecipientNonceReplayKey(payload.typedData),
-      next: 'Ask the claimant wallet to sign with eth_signTypedData_v4.',
+      reviewer: payload.accountId,
+      preview: createNakamaDecisionPreview(payload),
+      digest: hashNakamaDecision(payload.typedData),
+      replayKey: nakamaDecisionReplayKey(payload.typedData),
+      next: 'Ask the named human reviewer wallet to sign with eth_signTypedData_v4.',
     },
-    null,
+    (_key, value) => (typeof value === 'bigint' ? value.toString() : value),
     2,
   ),
 );

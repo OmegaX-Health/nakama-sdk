@@ -1,52 +1,54 @@
 import { createServer } from 'node:http';
 
 import {
-  ETHEREUM_MAINNET_CAIP2,
-  ETHEREUM_MAINNET_CHAIN_ID,
-  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
-  NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA,
-  NakamaEthereumError,
-  createEthereumPublicClient,
-  validateEthereumDeploymentManifest,
+  ROBINHOOD_CONTRACT_ROLES,
+  ROBINHOOD_MAINNET_CAIP2,
+  ROBINHOOD_MAINNET_CHAIN_ID,
+  NakamaRobinhoodError,
+  createRobinhoodPublicClient,
+  getGeneratedRobinhoodArtifactBundle,
+  validateRobinhoodDeploymentManifest,
 } from '@nakama-health/protocol-sdk';
 
 export function buildProtocolStatus() {
-  const client = createEthereumPublicClient({
-    rpcUrl: process.env.ETHEREUM_MAINNET_RPC_URL,
-  });
-  const deployment = validateEthereumDeploymentManifest(
-    NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  const bundle = getGeneratedRobinhoodArtifactBundle();
+  const deployment = validateRobinhoodDeploymentManifest(
+    bundle.deployments.mainnet,
+    'mainnet',
   );
+  const rpcUrl = process.env.ROBINHOOD_MAINNET_RPC_URL;
+  const client = rpcUrl
+    ? createRobinhoodPublicClient({ network: 'mainnet', rpcUrl })
+    : null;
 
   return {
     ok: true,
-    role: 'health-or-hospital-backend',
-    chainId: ETHEREUM_MAINNET_CHAIN_ID,
-    caip2: ETHEREUM_MAINNET_CAIP2,
-    rpcConfigured: Boolean(process.env.ETHEREUM_MAINNET_RPC_URL),
-    clientChainId: client.chain?.id,
-    entryContract: deployment.entryContract,
+    role: 'protection-program-backend',
+    chainId: ROBINHOOD_MAINNET_CHAIN_ID,
+    caip2: ROBINHOOD_MAINNET_CAIP2,
+    rpcConfigured: client != null,
+    clientChainId: client?.chain?.id ?? null,
+    artifactStatus: bundle.status,
+    artifactSha256: bundle.sourceArtifactSha256,
     deploymentStatus: deployment.status,
-    factoryAddress: deployment.liveContracts.factory.address,
-    policyRegistryAddress: deployment.liveContracts.policyRegistry.address,
-    protocolAddress: deployment.liveContracts.protocol.address,
+    settlementAsset: deployment.settlementAsset,
     contracts: Object.fromEntries(
-      Object.entries(NAKAMA_ETHEREUM_CONTRACT_ARTIFACT_METADATA).map(
-        ([contractName, metadata]) => [
-          contractName,
-          {
-            abiSha256: metadata.abiSha256,
-            creationBytecodeBytes: metadata.creationBytecodeBytes,
-            runtimeBytecodeBytes: metadata.runtimeBytecodeBytes,
-          },
-        ],
-      ),
+      ROBINHOOD_CONTRACT_ROLES.map((role) => [
+        role,
+        {
+          contractName: bundle.contracts[role]?.contractName ?? null,
+          abiSha256: bundle.contracts[role]?.abiSha256 ?? null,
+          address: deployment.contracts[role]?.address ?? null,
+        },
+      ]),
     ),
+    writesEnabled: false,
+    next: 'Enable writes only after an audited generated deployment and finalized runtime verification.',
   };
 }
 
 function errorPayload(error: unknown) {
-  if (error instanceof NakamaEthereumError) {
+  if (error instanceof NakamaRobinhoodError) {
     return {
       ok: false,
       code: error.code,

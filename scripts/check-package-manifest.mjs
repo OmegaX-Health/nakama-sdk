@@ -46,6 +46,7 @@ const publicDocs = new Set([
   'docs/REPOSITORY_STRUCTURE.md',
   'docs/TOP_APIS.md',
   'docs/TROUBLESHOOTING.md',
+  'docs/ROBINHOOD_VIRTUALS.md',
   'docs/WORKFLOWS.md',
   'docs/generated/README.md',
 ]);
@@ -58,6 +59,7 @@ const allowed = files.filter(
     path === 'SDK_QUALITY.md' ||
     path === 'SDK_RUNTIME.json' ||
     path.startsWith('contracts/ethereum/') ||
+    path.startsWith('contracts/robinhood/') ||
     path.startsWith('deployments/') ||
     publicDocs.has(path) ||
     path.startsWith('docs/generated/api/') ||
@@ -76,6 +78,29 @@ const required = [
   'docs/API_REFERENCE.md',
   'docs/WORKFLOWS.md',
   'examples/README.md',
+  'contracts/robinhood/protocol_contract.json',
+  'contracts/robinhood/README.md',
+  'deployments/robinhood-mainnet.json',
+  'deployments/robinhood-testnet.json',
+  'deployments/robinhood-deployment.schema.json',
+  'docs/ROBINHOOD_VIRTUALS.md',
+  'examples/robinhood-smoke.ts',
+  'examples/robinhood-decision.ts',
+  'examples/virtuals-launch-plan.ts',
+  ...[
+    'AgentAuthorizationRegistry',
+    'AssetRegistry',
+    'ClaimManager',
+    'DecisionModule',
+    'MembershipRegistry',
+    'NakamaFactory',
+    'PoolRegistry',
+    'PoolVault',
+    'ProtectionProgram',
+    'SafetyGuardian',
+    'SettlementModule',
+    'TemplateRegistry',
+  ].map((contractName) => `contracts/robinhood/${contractName}.abi.json`),
   ...[
     'NakamaProtocolFactory',
     'NakamaCoverageProtocol',

@@ -1,54 +1,64 @@
-# Top APIs — `@nakama-health/protocol-sdk`
+# Top APIs
 
-## Ethereum identity and RPC
+Import these from either `@nakama-health/protocol-sdk` or
+`@nakama-health/protocol-sdk/robinhood`. The two paths expose the same canonical
+Robinhood-native surface.
 
-- `createEthereumPublicClient(...)`
-- `normalizeEthereumAddress(...)`
-- `toEthereumMainnetCaip10(...)`
-- `parseEthereumMainnetCaip10(...)`
-- `ETHEREUM_MAINNET_CHAIN_ID`
-- `ETHEREUM_MAINNET_CAIP2`
+## Chain, identity, and USDG
 
-## Self-custodial wallet requests
+- `createRobinhoodPublicClient(...)` creates a caller-RPC-bound viem client for
+  an explicit `mainnet` or `testnet` network.
+- `assertRobinhoodProviderChain(...)` confirms an EIP-1193 wallet is already on
+  the selected chain without requesting a switch.
+- `normalizeRobinhoodAddress(...)`, `toRobinhoodCaip10(...)`, and
+  `parseRobinhoodCaip10(...)` validate address and account identity.
+- `parseRobinhoodUsdg(...)`, `formatRobinhoodAssetAmount(...)`, and
+  `verifyRobinhoodUsdg(...)` bind units to exact chain and token metadata.
 
-- `createEip1193TransactionSigningPayload(...)`
-- `createEip712SigningPayload(...)`
-- `validateSigningPayloadV2(...)`
-- `requestSigningPayloadV2(...)`
-- `requestSigningSubmissionV2(...)`
-- `createReceiptSubmissionV2(...)`
-- `createAuthorizationSubmissionV2(...)`
-- `assertEip1193Mainnet(...)`
+## Artifacts and deployment proof
 
-## Contract and asset safety
+- `getGeneratedRobinhoodArtifactBundle(...)` loads an immutable copy of all 12
+  canonical ABI artifacts plus fail-closed deployment manifests.
+- `validateRobinhoodDeploymentManifest(...)` validates static manifest shape,
+  identity, checksums, and evidence fields.
+- `assertRobinhoodDeploymentReady(...)` rejects placeholders, partial suites,
+  unaudited deployments, and missing approval evidence.
+- `verifyRobinhoodDeploymentRuntime(...)` checks live chain identity, all 12
+  runtime hashes, suite topology, USDG, and deployment commitments, then returns
+  an SDK-issued proof capability.
 
-- `NAKAMA_COVERAGE_PROTOCOL_ABI`
-- `NAKAMA_POLICY_REGISTRY_ABI`
-- `NAKAMA_PROTOCOL_FACTORY_ABI`
-- `NAKAMA_RESERVE_VAULT_ABI`
-- `NAKAMA_COVERAGE_PROTOCOL_ARTIFACT_METADATA`
-- `encodeEthereumCalldata(...)`
-- `decodeEthereumCalldata(...)`
-- `decodeEthereumEventLogs(...)`
-- `decodeEthereumRevert(...)`
-- `inspectErc20(...)`
+## Product reads and writes
 
-## Deployment and finality
+- `createRobinhoodReadClient(...)` reads program, accounting, membership,
+  request, obligation, role, and pause state at pinned blocks.
+- `reconcileRobinhoodRead(...)` compares an indexer page with direct-chain
+  truth; `assertRobinhoodWriteStateSafe(...)` rejects stale or divergent state.
+- `createRobinhoodActionBuilder(...)` produces immutable, capability-marked
+  actions bound to the verified suite and one program ID.
+- `simulateRobinhoodAction(...)` performs the exact chain-pinned simulation.
+- `requestRobinhoodAction(...)` reruns a fresh exact simulation and submits only
+  the same action through an EIP-1193 wallet.
 
-- `validateEthereumDeploymentManifest(...)`
-- `validateEthereumContractDeployment(...)`
-- `verifyEthereumSourcifyDeployment(...)`
-- `waitForEthereumReceipt(...)`
-- `verifyEthereumReceipt(...)`
-- `verifyEthereumTransactionIntent(...)`
+## Review decisions and finality
 
-## Claim-recipient authorization
+- `createNakamaDecisionSigningPayload(...)` and
+  `createNakamaDecisionPreview(...)` create the exact protocol EIP-712 message
+  and human review copy.
+- `requestNakamaDecisionSignature(...)` requests a signature without accepting
+  or handling a private key.
+- `verifyNakamaDecision(...)` binds signer, role, round, nonce, expiry, module,
+  digest, and optional EIP-1271 validation.
+- `createRobinhoodSubmittedTransactionFromSubmission(...)` converts the sealed
+  wallet result into finality input without losing its action binding.
+- `readRobinhoodEconomicFinality(...)` and
+  `waitForRobinhoodFinality(...)` distinguish UI confirmation from independently
+  corroborated L2/L1 economic finality.
 
-- `createClaimRecipientAuthorizationSigningPayload(...)`
-- `verifyClaimRecipientAuthorization(...)`
-- `verifyAndConsumeClaimRecipientAuthorization(...)`
-- `claimRecipientNonceReplayKey(...)`
+## Agents and Virtuals
 
-Generated symbol-level markdown is available at
-`docs/generated/api/README.md`. Legacy Solana APIs are documented separately in
-`docs/API_REFERENCE.md` for read and migration compatibility only.
+- `validateRobinhoodSmartAccountPolicy(...)` validates narrow policy shape;
+  Phase-0 smart-account submission remains disabled pending independent
+  finalized onchain policy proof.
+- `validateVirtualsLaunchPacketStructure(...)` checks a supplied packet for
+  internal consistency and explicit Robinhood/USDG identity. It performs no RPC,
+  legal, identity, approval, launch, signing, or broadcast operation.

@@ -13,20 +13,7 @@ import {
 } from 'viem';
 
 import {
-  NAKAMA_COVERAGE_PROTOCOL_ARTIFACT_METADATA,
-  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
-  NAKAMA_POLICY_REGISTRY_ABI,
-  NAKAMA_POLICY_REGISTRY_ABI_SHA256,
-  NAKAMA_POLICY_REGISTRY_ARTIFACT_METADATA,
-  NAKAMA_PROTOCOL_FACTORY_ABI_SHA256,
-  NAKAMA_PROTOCOL_FACTORY_ARTIFACT_METADATA,
-  NAKAMA_RESERVE_VAULT_ABI_SHA256,
-  NAKAMA_RESERVE_VAULT_ARTIFACT_METADATA,
-  NakamaEthereumContractError,
-  NakamaEthereumReceiptError,
   assertEthereumCreationBytecodeHash,
-  createEip1193TransactionSigningPayload,
-  createReceiptSubmissionV2,
   decodeEthereumCalldata,
   decodeEthereumEventLogs,
   encodeEthereumCalldata,
@@ -38,9 +25,28 @@ import {
   verifyEthereumReceipt,
   verifyEthereumSourcifyDeployment,
   verifyEthereumTransactionIntent,
-  NAKAMA_COVERAGE_PROTOCOL_ABI_SHA256,
+} from '../src/ethereum_contract.js';
+import {
+  createEip1193TransactionSigningPayload,
+  createReceiptSubmissionV2,
   type EthereumPublicClient,
-} from '../src/index.js';
+} from '../src/ethereum.js';
+import {
+  NakamaEthereumContractError,
+  NakamaEthereumReceiptError,
+} from '../src/errors.js';
+import {
+  NAKAMA_COVERAGE_PROTOCOL_ARTIFACT_METADATA,
+  NAKAMA_ETHEREUM_MAINNET_DEPLOYMENT,
+  NAKAMA_POLICY_REGISTRY_ABI,
+  NAKAMA_POLICY_REGISTRY_ABI_SHA256,
+  NAKAMA_POLICY_REGISTRY_ARTIFACT_METADATA,
+  NAKAMA_PROTOCOL_FACTORY_ABI_SHA256,
+  NAKAMA_PROTOCOL_FACTORY_ARTIFACT_METADATA,
+  NAKAMA_RESERVE_VAULT_ABI_SHA256,
+  NAKAMA_RESERVE_VAULT_ARTIFACT_METADATA,
+  NAKAMA_COVERAGE_PROTOCOL_ABI_SHA256,
+} from '../src/generated/ethereum_protocol.js';
 
 const DEPLOYER = '0x0000000000000000000000000000000000000030' as Address;
 const FACTORY = getContractAddress({ from: DEPLOYER, nonce: 7n });

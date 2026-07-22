@@ -1,121 +1,156 @@
-# Nakama SDK Quality Doctrine
+# SDK quality contract
 
-This SDK is the public integration boundary for Nakama's Ethereum protocol.
-It should preserve user agency and Ethereum neutrality: applications
-bring their own RPC and wallet, users keep their keys, and contract state is the
-settlement source of truth.
+This SDK is the public integration boundary for Nakama protection programs on
+Robinhood Chain. Its primary job is to keep identity, product state, assets,
+actions, signatures, and finality explicit; convenience must never turn
+placeholder configuration or self-asserted evidence into authority.
 
-## Canonical network
+## Canonical product surface
 
-- Canonical chain identity is Ethereum mainnet: chain ID `1`, CAIP-2
-  `eip155:1`.
-- RPC URLs are caller-owned configuration. No vendor endpoint is privileged.
-- EIP-1193 requests must validate the wallet's current chain and must not switch
-  it silently.
-- Ethereum addresses are checksummed at trust boundaries and CAIP-10 identifiers
-  retain chain context.
+- The package root and `/robinhood` expose the same canonical API.
+- Robinhood mainnet is chain `4663` / `eip155:4663`; testnet is `46630` /
+  `eip155:46630`. There is no implicit chain-1 or legacy-network fallback.
+- Every RPC or wallet operation requires an explicit selected network. The SDK
+  never silently chooses a production RPC and never switches the user's chain.
+- Ethereum-mainnet and Solana APIs remain explicit legacy migration subpaths and
+  cannot be re-exported by the root.
 
-## Contract parity
+## Asset integrity
 
-- The canonical artifact contains `NakamaProtocolFactory`,
-  `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and the `ReserveVault`
-  template. The SDK refuses another contract set, chain, deployment plan, or
-  source artifact.
-- All four checked-in ABIs, generated constants, ABI SHA-256 digests, metadata,
-  and the deployment manifest must agree before release.
-- Calldata and event helpers consume ABI input; there is no hand-maintained
-  parallel instruction schema.
-- The protocol has scoped controllers and bounded scoped pauses, with no global
-  owner, upgrade proxy, or global pause in the canonical ABI. SDK docs must not
-  invent those powers.
+- Mainnet settlement is Global Dollar (`USDG`) at
+  `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`, with six decimals.
+- Amounts carry chain, CAIP-2, token address, name, symbol, decimals, and integer
+  units together. Cross-asset comparisons, lookalike addresses, excess decimal
+  precision, negative values, and rounding are rejected.
+- Testnet USDG remains unavailable until a canonical address and code proof are
+  published; callers cannot override it through an amount constructor.
+- Approval builders verify their exact spender, positive bounded amount, and
+  disclosure after encoding. The SDK does not expose a generic unlimited-
+  approval shortcut.
 
-## Deployment safety
+## Artifact and deployment provenance
 
-- An unconfigured manifest contains no factory, registry, protocol, deployer,
-  transaction, block, bytecode, or verification claim. ReserveVault remains a
-  CREATE2 template and never receives a launch address.
-- A configured deployment must prove one successful factory receipt, registry
-  at factory nonce one, protocol at nonce two, mutual factory/registry/core
-  getters, at least 12 confirmations, and an independent audit.
-- Published manifests bind the audit report, release approval, protocol
-  artifact, standalone ABI, source-verification provider/URL, and verification
-  evidence by canonical lowercase SHA-256 digest. Raw deployment output remains
-  `deployed-unverified` until the reviewed promotion gate succeeds.
-- Live validation checks all three exact runtime hashes and immutable-aware
-  templates, the factory creation input, and the approved ReserveVault template.
-- Source verification is exactly Sourcify v2 on Ethereum mainnet for the
-  factory, registry, and core; each canonical lookup must reproduce the exact
-  creation/runtime matches, timestamp, and match ID in the manifest.
-- Until those fields exist, contract-targeted writes are unavailable. A zero or
-  placeholder address is never a release shortcut.
+- The generated bundle contains exactly 12 named contracts: four global
+  registries/factory roles and eight per-program components.
+- `scripts/sync-robinhood-artifacts.mjs` imports the byte-identical canonical
+  artifact and ABIs, recomputes every raw SHA-256, and generates the TypeScript
+  binding. Generated files are never hand-maintained.
+- The source artifact SHA-256 and factory-authorized CREATE2 deployment-code
+  commitment are declared in `SDK_RUNTIME.json` and verified by
+  `npm run runtime:check`.
+- Generated artifacts are cloned and recursively frozen behind an internal
+  revisioned store, so consumer mutation cannot poison future reads.
+- Deployment manifests use a closed schema. An unconfigured manifest contains
+  no contract addresses; a deployed one contains every unique role address,
+  exact ABI/runtime hash, verification URL, deployment block/transaction,
+  source release/commit, canonical asset, audit evidence, and approval evidence.
+- Static configuration is not runtime proof. Live verification checks selected
+  chain, all 12 code hashes, asset code/metadata, suite graph, program identity,
+  and deployment commitment before issuing an internal runtime capability.
 
-## Signing and authorization
+## Read and cache semantics
 
-- `SigningPayloadV2` carries version `2`, CAIP-2 chain identity, CAIP-10 account
-  identity, and exactly one transaction or typed-data branch.
-- Wallet results use kind-matched `ReceiptSubmissionV2` or
-  `AuthorizationSubmissionV2` envelopes tied to a server-issued intent ID;
-  transaction hashes and signatures are never interchangeable.
-- The SDK never accepts, stores, or derives a private key.
-- Claim-recipient authorization must exactly match the policy registry's EIP-712
-  domain (`Nakama Policy Registry`, version `1`) and `ClaimRecipient` type.
-- Verification binds contract, chain, claimant, claim ID, recipient, trusted
-  onchain nonce, and deadline. ERC-1271 claimants require RPC-backed signature
-  validation.
-- Relayers must atomically consume both the typed-data digest and claim/nonce
-  replay key in durable shared storage.
+- Product reads are pinned to one block and carry network, CAIP-2, block number,
+  block hash, head/safe/finalized markers, observation time, and reconciliation
+  state.
+- Memberships expose remaining benefit rather than inferring consumption from
+  unrelated counters. Obligations distinguish `none`, `approved_unpaid`, and
+  `settled`; pause state exposes its review deadline without inventing expiry.
+- Indexers are caches. A write requires a fresh direct-chain observation and an
+  explicit safe reconciliation result.
+- Offline cache entries accept only bounded public-safe values with canonical
+  timestamps and can never authorize a write. Private health evidence and PHI
+  remain offchain and outside the cache API.
 
-## Assets and finality
+## Action and wallet integrity
 
-- ERC-20 integrations validate code before reading metadata, balance, or
-  allowance and can pin expected decimals and symbol.
-- Transaction success means more than a receipt: verification checks revert
-  status, confirmation depth, canonical block hash, a stable second receipt,
-  and Ethereum safe head.
-- Revert data should be decoded with the canonical ABI when available and
-  surfaced as typed SDK errors.
-- Contract-write backends must verify the mined sender, destination, calldata,
-  value, and submitted intent ID against their server-owned transaction intent
-  before accepting the receipt.
+- Typed builders encode only protocol-named operations against the verified
+  suite and program ID. Returned actions are frozen and capability-marked.
+- Caller-built, cloned, JSON-round-tripped, relabeled, expired, wrong-program,
+  wrong-runtime, wrong-network, or semantically contradictory actions are
+  rejected at simulation/submission boundaries.
+- Submission requires a successful exact simulation and performs a fresh exact
+  simulation before `eth_sendTransaction`.
+- The wallet request is bound to chain, sender, target, selector, calldata,
+  native value, intent, expiry, explanation, and expected state changes.
+- The SDK never accepts a private key and never performs background signing.
 
-## Legacy compatibility
+## Decisions and replay safety
 
-- Solana modules remain only for historical decoding, reads, simulation, and
-  migration while consumers move to Ethereum.
-- Legacy Solana modules are absent from the canonical root, and their runtime
-  dependencies are optional peers installed only by explicit migration users.
-- Every Solana instruction/transaction builder, safe-client write method,
-  broadcast, and MagicBlock write path fails with
-  `NAKAMA_LEGACY_WRITE_DISABLED`.
-- Explicit EIP-1193 gas limits above the EIP-7825 `0x1000000` ceiling fail
-  before a wallet request is constructed.
-- New examples and docs use `ethereum`, `ethereum_contract`, or
-  `ethereum_oracle`; they do not present legacy subpaths as canonical.
+- EIP-712 types exactly mirror the protocol `NakamaDecision` schema and include
+  an explicit `EIP712Domain` for wallet serialization.
+- Domain, types, message, signing payload, and preview are immutable. The domain
+  binds name/version, selected Robinhood chain, and deployed DecisionModule.
+- Verification binds expected signer, program/module, role/round/action
+  semantics, amount, evidence version, nonce, expiry, digest, and replay key.
+- EIP-1271 is used only when a public client is provided and code exists at the
+  expected reviewer address.
+- Replay keys are round-aware and must be reserved atomically by the relayer.
 
-## Generated artifacts and docs
+## Smart-account boundary
 
-- `npm run import:ethereum-contract` imports the canonical sibling protocol
-  artifact and records ABI plus bytecode provenance.
-- `npm run generate:protocol-bindings` regenerates the TypeScript ABI and
-  deployment constants from checked-in inputs.
-- `npm run docs:api:generate` owns generated API markdown.
-- README, API reference, runtime manifest, generated docs, package exports, and
-  tests must agree on availability and side effects.
+- Phase-0 policies may simulate only four permissionless maintenance actions:
+  membership expiry, no-quorum escalation, information-timeout escalation, and
+  unappealed-denial finalization.
+- Economic, funding, settlement, membership issuance/recovery, decision, role,
+  pause, and other privileged actions are not agent-allowlisted.
+- Smart-account submission remains disabled until independent finalized reads
+  prove module code, installed policy, limits, revocation, target, selector,
+  program, and action constraints. Adapter self-attestation is not proof.
 
-## Required validation
+## Receipt and finality semantics
+
+- Receipt states preserve submitted, soft-confirmed, L1-posted, finalized,
+  reverted, replaced, timed-out, and reorged outcomes.
+- The SDK-sealed wallet result carries action commitment, calldata hash, value,
+  chain, sender, target, transaction hash, and intent; a reconstructed object
+  cannot enter the economic-finality lane.
+- Readers must match exact transaction input/value/from/to/chain and canonical
+  receipt ordering.
+- One provider can supply a display state but never `economicFinal: true`.
+- Economic finality requires two L2 readers and two L1 batch readers whose
+  provider IDs, endpoint origins, and operators are independently distinct and
+  whose observations agree.
+
+## Virtuals boundary
+
+- The launch-packet helper is offline structural validation. It checks explicit
+  Robinhood/USDG identity, named contract evidence, ownership references,
+  allocation/fee arithmetic, simulation-hash parity, timestamps, and finalized
+  block ordering.
+- Supplied booleans, hashes, identities, and block numbers are not independently
+  trusted. Passing cannot prove platform approval, legal eligibility, KYC/KYB,
+  ownership, deployed code, current fees, simulation truth, or launch finality.
+- The SDK contains no Virtuals launch signer or broadcaster. Production tooling
+  must resolve current official platform/legal/identity/RPC evidence and use the
+  official launch surface.
+
+## Required gates
+
+Before a package handoff or release candidate, run at least:
 
 ```bash
-npm run protocol:artifact:check
+npm run sync:robinhood-artifacts:check
 npm run typecheck
 npm run lint
 npm run format:check
-npm run build
 npm test
+npm run build
 npm run docs:api:check
 npm run docs:check
 npm run runtime:check
+npm run examples:check
+npm run dogfood:consumer
+npm run cli:check
+npm run templates:check
+npm run dx:smoke
+npm run security:secrets
+npm run security:package
+npm run audit:prod
 npm run audit:packed-consumer
+npm pack --dry-run
 ```
 
-Mainnet fork tests, independent contract review, source verification, and live
-RPC/deployment checks are release gates outside a standalone SDK unit suite.
+Passing local gates does not make an unconfigured deployment production-ready
+and does not authorize a contract deployment, package publication, token launch,
+or public marketing claim.

@@ -21,7 +21,7 @@ import {
   NAKAMA_RESERVE_VAULT_ABI,
   NAKAMA_RESERVE_VAULT_ABI_SHA256,
   NAKAMA_RESERVE_VAULT_ARTIFACT_METADATA,
-} from '../src/index.js';
+} from '../src/generated/ethereum_protocol.js';
 
 const CONTRACTS = [
   {

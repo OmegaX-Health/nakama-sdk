@@ -4,12 +4,34 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-const CONTRACT_NAMES = [
-  'NakamaProtocolFactory',
-  'NakamaCoverageProtocol',
-  'NakamaPolicyRegistry',
-  'ReserveVault',
-];
+const CONTRACT_ROLES = Object.freeze({
+  assetRegistry: 'AssetRegistry',
+  templateRegistry: 'TemplateRegistry',
+  poolRegistry: 'PoolRegistry',
+  factory: 'NakamaFactory',
+  program: 'ProtectionProgram',
+  vault: 'PoolVault',
+  membershipRegistry: 'MembershipRegistry',
+  decisionModule: 'DecisionModule',
+  requestManager: 'ClaimManager',
+  settlementModule: 'SettlementModule',
+  agentAuthorizationRegistry: 'AgentAuthorizationRegistry',
+  safetyGuardian: 'SafetyGuardian',
+});
+const NETWORKS = Object.freeze({
+  mainnet: Object.freeze({
+    name: 'Robinhood Chain Mainnet',
+    chainId: 4663,
+    caip2: 'eip155:4663',
+    deploymentManifest: 'deployments/robinhood-mainnet.json',
+  }),
+  testnet: Object.freeze({
+    name: 'Robinhood Chain Testnet',
+    chainId: 46630,
+    caip2: 'eip155:46630',
+    deploymentManifest: 'deployments/robinhood-testnet.json',
+  }),
+});
 const CANONICAL_PRODUCTION_DEPENDENCIES = ['viem'];
 const LEGACY_OPTIONAL_PEERS = [
   '@coral-xyz/anchor',
@@ -18,24 +40,21 @@ const LEGACY_OPTIONAL_PEERS = [
   'bs58',
   'tweetnacl',
 ];
-const DEPLOYMENT_PLAN = {
-  transactionCount: 1,
-  entryContract: 'NakamaProtocolFactory',
-  factoryCreates: [
-    { contractName: 'NakamaPolicyRegistry', nonce: 1 },
-    { contractName: 'NakamaCoverageProtocol', nonce: 2 },
-  ],
-  templates: [
-    {
-      contractName: 'ReserveVault',
-      deploymentKind: 'core-create2',
-      saltDerivation: 'keccak256(abi.encode(domainId,assetToken))',
-    },
-  ],
-};
+const CANONICAL_SUBPATHS = ['.', './robinhood'];
+const MAINNET_USDG = Object.freeze({
+  name: 'Global Dollar',
+  symbol: 'USDG',
+  decimals: 6,
+  mainnetAddress: '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168',
+  testnetAddress: null,
+});
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+function sha256(raw) {
+  return createHash('sha256').update(raw).digest('hex');
 }
 
 function fail(message) {
@@ -45,7 +64,9 @@ function fail(message) {
 
 function assertEqual(actual, expected, label) {
   if (actual !== expected) {
-    fail(`${label} mismatch: expected ${expected}, got ${actual}`);
+    fail(
+      `${label} mismatch: expected ${String(expected)}, got ${String(actual)}`,
+    );
   }
 }
 
@@ -71,14 +92,12 @@ function listTypeScriptFiles(root) {
 
 const packageJson = readJson('package.json');
 const manifest = readJson('SDK_RUNTIME.json');
-const deployment = readJson(manifest.protocol.deploymentManifest);
-const deploymentSchema = readJson(manifest.protocol.deploymentSchema);
 const sourceText = listTypeScriptFiles('src')
   .map((path) => readFileSync(path, 'utf8'))
   .join('\n');
 const rootEntrypoint = readFileSync('src/index.ts', 'utf8');
 
-assertEqual(manifest.schemaVersion, 3, 'SDK runtime schemaVersion');
+assertEqual(manifest.schemaVersion, 4, 'SDK runtime schemaVersion');
 assertEqual(manifest.package.name, packageJson.name, 'package name');
 assertEqual(manifest.package.version, packageJson.version, 'package version');
 assertEqual(manifest.package.node, packageJson.engines?.node, 'node engine');
@@ -96,15 +115,22 @@ assertArrayEqual(
 for (const dependency of LEGACY_OPTIONAL_PEERS) {
   if (!packageJson.devDependencies?.[dependency]) {
     fail(
-      `Legacy peer ${dependency} must remain available for local compatibility tests.`,
+      `Legacy peer ${dependency} must remain available for compatibility tests.`,
     );
   }
   if (packageJson.peerDependenciesMeta?.[dependency]?.optional !== true) {
     fail(`Legacy peer ${dependency} must be marked optional.`);
   }
 }
+
+if (!rootEntrypoint.includes("export * from './robinhood/index.js'")) {
+  fail('Canonical root entrypoint must export the Robinhood surface.');
+}
 for (const legacyModule of [
   'claims',
+  'ethereum',
+  'ethereum_contract',
+  'ethereum_oracle',
   'oracle',
   'protocol',
   'protocol_models',
@@ -120,185 +146,209 @@ for (const legacyModule of [
     );
   }
 }
+
 assertEqual(manifest.protocol.chainFamily, 'eip155', 'chain family');
-assertEqual(manifest.protocol.chainId, 1, 'chain ID');
-assertEqual(manifest.protocol.caip2, 'eip155:1', 'CAIP-2 chain');
 assertJsonEqual(
-  manifest.protocol.deploymentPlan,
-  DEPLOYMENT_PLAN,
-  'factory deployment plan',
+  Object.fromEntries(
+    Object.entries(manifest.protocol.networks ?? {}).map(([network, value]) => [
+      network,
+      {
+        name: value.name,
+        chainId: value.chainId,
+        caip2: value.caip2,
+        deploymentManifest: value.deploymentManifest,
+      },
+    ]),
+  ),
+  NETWORKS,
+  'Robinhood networks',
 );
+assertJsonEqual(manifest.protocol.fundingAsset, MAINNET_USDG, 'funding asset');
 assertArrayEqual(
   Object.keys(manifest.protocol.contracts ?? {}),
-  CONTRACT_NAMES,
-  'runtime contract set',
+  Object.keys(CONTRACT_ROLES),
+  'runtime contract roles',
 );
 
 const siblingArtifactPath = join(
   manifest.protocol.sourceRepo,
   manifest.protocol.sourceArtifact,
 );
-const siblingArtifact = existsSync(siblingArtifactPath)
-  ? readJson(siblingArtifactPath)
-  : null;
-const siblingArtifactRaw = siblingArtifact
-  ? readFileSync(siblingArtifactPath, 'utf8')
-  : null;
-if (siblingArtifact) {
-  assertEqual(siblingArtifact.schemaVersion, 3, 'sibling schemaVersion');
-  assertEqual(
-    siblingArtifact.chainFamily,
-    manifest.protocol.chainFamily,
-    'sibling chain family',
-  );
-  assertEqual(
-    siblingArtifact.canonicalChain,
-    manifest.protocol.caip2,
-    'sibling canonical chain',
-  );
-  assertJsonEqual(
-    siblingArtifact.deploymentPlan,
-    DEPLOYMENT_PLAN,
-    'sibling deployment plan',
-  );
-  assertEqual(
-    createHash('sha256').update(siblingArtifactRaw).digest('hex'),
-    manifest.protocol.sourceArtifactSha256,
-    'sibling artifact SHA-256',
-  );
+if (!existsSync(siblingArtifactPath)) {
+  fail(`Canonical Robinhood artifact is missing: ${siblingArtifactPath}`);
 }
+const siblingArtifactRaw = readFileSync(siblingArtifactPath, 'utf8');
+const siblingArtifact = JSON.parse(siblingArtifactRaw);
+const checkedInArtifactRaw = readFileSync(
+  'contracts/robinhood/protocol_contract.json',
+  'utf8',
+);
+
+assertEqual(siblingArtifact.schemaVersion, 1, 'sibling artifact schemaVersion');
+assertEqual(siblingArtifact.chainFamily, 'eip155', 'sibling chain family');
+assertEqual(
+  sha256(siblingArtifactRaw),
+  manifest.protocol.sourceArtifactSha256,
+  'sibling artifact SHA-256',
+);
+assertEqual(
+  checkedInArtifactRaw,
+  siblingArtifactRaw,
+  'checked-in artifact bytes',
+);
+assertJsonEqual(
+  siblingArtifact.supportedChains,
+  Object.values(NETWORKS).map(({ name, chainId, caip2 }) => ({
+    name,
+    chainId,
+    caip2,
+  })),
+  'supported chains',
+);
+assertJsonEqual(
+  siblingArtifact.fundingAsset,
+  MAINNET_USDG,
+  'artifact funding asset',
+);
+assertEqual(
+  siblingArtifact.deploymentPlan?.deploymentCodeCommitment,
+  manifest.protocol.deploymentCodeCommitment,
+  'deployment code commitment',
+);
+assertEqual(
+  siblingArtifact.deploymentPlan?.deploymentKind,
+  manifest.protocol.deploymentKind,
+  'deployment kind',
+);
 
 let functionCount = 0;
 let eventCount = 0;
-for (const contractName of CONTRACT_NAMES) {
-  const contract = manifest.protocol.contracts[contractName];
+for (const [role, contractName] of Object.entries(CONTRACT_ROLES)) {
+  const contract = manifest.protocol.contracts[role];
+  const artifactContract = siblingArtifact.contracts?.[contractName];
   const abiRaw = readFileSync(contract.abiArtifact, 'utf8');
   const abi = JSON.parse(abiRaw);
-  const metadata = readJson(contract.metadataArtifact);
-  const abiSha256 = createHash('sha256').update(abiRaw).digest('hex');
+  const abiSha256 = sha256(abiRaw);
 
-  assertEqual(metadata.schemaVersion, 3, `${contractName} metadata schema`);
-  assertEqual(metadata.contractName, contractName, `${contractName} metadata`);
-  assertEqual(metadata.chainFamily, 'eip155', `${contractName} chain family`);
+  assertEqual(contract.contractName, contractName, `${role} contract name`);
   assertEqual(
-    metadata.canonicalChain,
-    'eip155:1',
-    `${contractName} canonical chain`,
+    contract.abiArtifact,
+    `contracts/robinhood/${contractName}.abi.json`,
+    `${contractName} ABI path`,
   );
-  assertEqual(metadata.abiSha256, abiSha256, `${contractName} metadata ABI`);
-  assertEqual(contract.abiSha256, abiSha256, `${contractName} runtime ABI`);
   assertEqual(
-    metadata.sourceArtifactSha256,
-    manifest.protocol.sourceArtifactSha256,
-    `${contractName} source artifact`,
+    contract.abiSha256,
+    abiSha256,
+    `${contractName} runtime ABI hash`,
   );
-  for (const field of [
-    'creationBytecodeHash',
-    'creationBytecodeBytes',
-    'runtimeBytecodeTemplateHash',
-    'runtimeBytecodeBytes',
-  ]) {
-    assertEqual(metadata[field], contract[field], `${contractName} ${field}`);
-  }
-  assertJsonEqual(
-    metadata.immutableReferences,
-    contract.immutableReferences,
-    `${contractName} immutable references`,
+  assertEqual(
+    artifactContract?.abiSha256,
+    abiSha256,
+    `${contractName} artifact ABI hash`,
   );
-  assertJsonEqual(
-    metadata.deploymentPlan,
-    DEPLOYMENT_PLAN,
-    `${contractName} metadata deployment plan`,
-  );
-
-  if (siblingArtifact) {
-    const siblingContract = siblingArtifact.contracts?.[contractName];
-    assertJsonEqual(siblingContract?.abi, abi, `${contractName} sibling ABI`);
-    for (const field of [
-      'abiSha256',
-      'creationBytecodeHash',
-      'creationBytecodeBytes',
-      'runtimeBytecodeTemplateHash',
-      'runtimeBytecodeBytes',
-      'immutableReferences',
-    ]) {
-      assertJsonEqual(
-        siblingContract?.[field],
-        contract[field],
-        `${contractName} sibling ${field}`,
-      );
-    }
-  }
+  assertJsonEqual(artifactContract?.abi, abi, `${contractName} artifact ABI`);
 
   const siblingAbiPath = join(
     manifest.protocol.sourceRepo,
-    `shared/ethereum/${contractName}.abi.json`,
+    `shared/robinhood/${contractName}.abi.json`,
   );
-  if (existsSync(siblingAbiPath)) {
-    assertEqual(
-      readFileSync(siblingAbiPath, 'utf8'),
-      abiRaw,
-      `${contractName} standalone sibling ABI bytes`,
-    );
-  }
+  assertEqual(
+    readFileSync(siblingAbiPath, 'utf8'),
+    abiRaw,
+    `${contractName} sibling ABI bytes`,
+  );
 
   functionCount += abi.filter((entry) => entry.type === 'function').length;
   eventCount += abi.filter((entry) => entry.type === 'event').length;
 }
 
-assertEqual(deployment.schemaVersion, 3, 'deployment schemaVersion');
-assertEqual(deployment.chainId, 1, 'deployment chain ID');
-assertEqual(deployment.caip2, 'eip155:1', 'deployment CAIP-2');
-assertEqual(
-  deployment.entryContract,
-  'NakamaProtocolFactory',
-  'deployment entry contract',
-);
-assertEqual(
-  deployment.status,
-  manifest.protocol.deploymentStatus,
-  'deployment status',
-);
+const deploymentSchema = readJson(manifest.protocol.deploymentSchema);
 assertEqual(
   deploymentSchema.properties?.schemaVersion?.const,
-  3,
-  'final deployment schemaVersion',
-);
-assertEqual(
-  deploymentSchema.properties?.entryContract?.const,
-  'NakamaProtocolFactory',
-  'final deployment schema entry contract',
+  1,
+  'deployment schema version',
 );
 assertEqual(
   deploymentSchema.additionalProperties,
   false,
-  'final deployment schema additionalProperties',
+  'deployment schema closed shape',
 );
-
-const siblingDeploymentSchema = join(
-  manifest.protocol.sourceRepo,
-  'deployments/ethereum-mainnet.final.schema.json',
-);
-if (existsSync(siblingDeploymentSchema)) {
-  assertJsonEqual(
-    readJson(siblingDeploymentSchema),
-    deploymentSchema,
-    'sibling deployment schema',
+for (const [network, expected] of Object.entries(NETWORKS)) {
+  const networkManifest = manifest.protocol.networks[network];
+  const deployment = readJson(networkManifest.deploymentManifest);
+  assertEqual(
+    deployment.schemaVersion,
+    1,
+    `${network} deployment schemaVersion`,
   );
+  assertEqual(deployment.network, network, `${network} deployment network`);
+  assertEqual(
+    deployment.chainId,
+    expected.chainId,
+    `${network} deployment chainId`,
+  );
+  assertEqual(deployment.caip2, expected.caip2, `${network} deployment CAIP-2`);
+  assertEqual(
+    deployment.status,
+    networkManifest.deploymentStatus,
+    `${network} deployment status`,
+  );
+  if (deployment.status === 'unconfigured') {
+    assertEqual(
+      Object.keys(deployment.contracts ?? {}).length,
+      0,
+      `${network} placeholder contracts`,
+    );
+    assertEqual(
+      deployment.verified,
+      false,
+      `${network} placeholder verified flag`,
+    );
+  }
+  if (network === 'mainnet') {
+    assertEqual(
+      deployment.settlementAsset.address,
+      MAINNET_USDG.mainnetAddress,
+      'mainnet USDG address',
+    );
+    assertEqual(
+      deployment.settlementAsset.status,
+      'verified',
+      'mainnet USDG status',
+    );
+  } else {
+    assertEqual(
+      deployment.settlementAsset.address,
+      null,
+      'testnet USDG address',
+    );
+    assertEqual(
+      deployment.settlementAsset.status,
+      'unconfigured',
+      'testnet USDG status',
+    );
+  }
 }
 
+const packageSubpaths = Object.keys(packageJson.exports ?? {});
+assertArrayEqual(manifest.publicSubpaths, packageSubpaths, 'public subpaths');
 assertArrayEqual(
-  manifest.publicSubpaths,
-  Object.keys(packageJson.exports ?? {}),
-  'public subpaths',
+  manifest.canonicalSubpaths,
+  CANONICAL_SUBPATHS,
+  'canonical subpaths',
 );
-for (const subpath of [
-  ...(manifest.canonicalSubpaths ?? []),
-  ...(manifest.legacyReadMigrationSubpaths ?? []),
-]) {
-  if (!manifest.publicSubpaths.includes(subpath)) {
-    fail(`Manifest subpath is not exported: ${subpath}`);
-  }
+const classifiedSubpaths = [
+  ...manifest.canonicalSubpaths,
+  ...manifest.legacyReadMigrationSubpaths,
+  './package.json',
+];
+assertArrayEqual(
+  classifiedSubpaths,
+  packageSubpaths,
+  'classified public subpaths',
+);
+if (new Set(classifiedSubpaths).size !== classifiedSubpaths.length) {
+  fail('Canonical, legacy, and metadata subpaths must not overlap.');
 }
 
 for (const scriptField of ['parityCommand', 'importCommand']) {
@@ -365,5 +415,5 @@ for (const lane of manifest.lanes ?? []) {
 
 if (process.exitCode) process.exit(process.exitCode);
 console.log(
-  `SDK runtime manifest check passed (${CONTRACT_NAMES.length} contracts, ${functionCount} functions, ${eventCount} events, deployment ${deployment.status}).`,
+  `SDK runtime manifest check passed (${Object.keys(CONTRACT_ROLES).length} Robinhood contracts, ${functionCount} functions, ${eventCount} events, deployments fail-closed).`,
 );

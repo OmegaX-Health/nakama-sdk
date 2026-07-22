@@ -1,63 +1,73 @@
-# Error Catalog — `@nakama-health/protocol-sdk`
+# Robinhood error catalog
 
-Canonical Ethereum errors extend `NakamaEthereumError` and expose a stable
-`code`, optional `details`, and optional `cause`. Branch on `instanceof` or
-`code`; message strings are explanatory, not an API.
+Canonical errors extend `NakamaRobinhoodError` and carry stable SDK error codes.
+Catch the narrow type when remediation is safe; otherwise stop the operation and
+surface the error rather than retrying a write blindly.
 
-## `NAKAMA_ETHEREUM_CONFIG_ERROR`
+## `NakamaRobinhoodConfigError`
 
-The RPC, signing payload, JSON-RPC quantity, fee fields, or caller configuration
-is invalid. Correct the configuration or payload before retrying.
+Network, RPC, deployment, timestamp, policy, or required configuration is
+missing or inconsistent. Supply an explicit network/RPC and trusted current
+configuration; do not add a permissive default.
 
-## `NAKAMA_ETHEREUM_ADDRESS_ERROR`
+## `NakamaRobinhoodAddressError`
 
-An Ethereum address could not be normalized or checksummed. Reject the input at
-the application boundary; retry only with a corrected address.
+An address or CAIP account is malformed, zero where forbidden, or on a different
+Robinhood network. Re-resolve the identity from the authoritative source and
+rebuild the operation.
 
-## `NAKAMA_ETHEREUM_WRONG_CHAIN`
+## `NakamaRobinhoodWrongChainError`
 
-An RPC, wallet, CAIP identifier, EIP-1193 request, EIP-712 domain, or deployment
-manifest does not target Ethereum mainnet chain ID `1`. Do not switch a user's
-wallet silently; ask them to choose mainnet or replace the endpoint.
+The RPC or wallet reports a chain other than the selected `4663`/`46630` chain.
+Abort and let the user reconnect; the SDK deliberately does not switch networks.
 
-## `NAKAMA_ETHEREUM_CONTRACT_ERROR`
+## `NakamaRobinhoodAssetError`
 
-ABI encoding, event decoding, ERC-20 inspection, deployment schema, artifact
-hash, runtime bytecode, creation receipt, source verification, or audit evidence
-failed. This is deterministic until the input, deployment, or reviewed evidence
-changes.
+USDG metadata, address, decimals, chain, amount precision, or paired asset
+identity is wrong. Mainnet accepts only the canonical USDG address and six
+decimals; testnet is unavailable until a verified address is published.
 
-## `NAKAMA_ETHEREUM_RECEIPT_ERROR`
+## `NakamaRobinhoodArtifactError`
 
-A transaction reverted, lacks confirmations, is outside safe head, has a
-noncanonical block hash, or changed between receipt reads. Retry reads for
-temporary confirmation depth; do not treat a reorged or reverted transaction as
-successful.
+The imported source/ABI checksum, role mapping, deployment commitment, manifest,
+or generated bundle differs from canonical evidence. Re-import from the reviewed
+protocol artifact and inspect the diff; do not modify generated output manually.
 
-## `NAKAMA_ETHEREUM_ATTESTATION_ERROR`
+## `NakamaRobinhoodContractError`
 
-A claim-recipient typed-data domain, message, nonce, deadline, claimant, or
-signature is invalid. Rebuild the canonical payload from trusted contract state
-and ask the claimant to authorize that exact payload.
+Live bytecode, suite topology, program binding, decoded calldata, event, or
+contract state conflicts with the verified deployment. Treat this as a stopped
+operation and investigate the deployment/RPC state before retrying.
 
-## `NAKAMA_ETHEREUM_REPLAY`
+## `NakamaRobinhoodSimulationError`
 
-The authorization digest or contract/claim nonce was already consumed. Do not
-retry the same authorization; read the current nonce and create a fresh payload.
+The exact prepared action reverted, was stale, changed, or was not simulated on
+the selected verified network. Explain the decoded failure when available,
+refresh state, rebuild, and simulate a new action.
 
-## `NAKAMA_LEGACY_WRITE_DISABLED`
+## `NakamaRobinhoodReceiptError`
 
-A caller attempted to construct a Solana instruction/transaction, use a legacy
-safe-client write method, broadcast, or invoke a MagicBlock network/write
-operation. Those paths are disabled in the Ethereum mainnet SDK. Migrate the
-flow to an EIP-1193 wallet request and canonical Ethereum contract call.
+Receipt, transaction input, canonical block, provider agreement, L1 evidence,
+or finality ordering is missing or contradictory. Preserve the explicit status;
+do not translate disagreement, replacement, reorg, or timeout into success.
 
-## Legacy compatibility errors
+## `NakamaRobinhoodSignatureError`
 
-`OMEGAX_CONFIG_ERROR`, `OMEGAX_INVALID_PUBLIC_KEY`,
-`OMEGAX_PROGRAM_MISMATCH`, `OMEGAX_ACCOUNT_NOT_FOUND`,
-`OMEGAX_ACCOUNT_OWNER_MISMATCH`, `OMEGAX_TOKEN_ACCOUNT_PREFLIGHT`,
-`OMEGAX_INSTRUCTION_BUILD`, `OMEGAX_TRANSACTION_DECODE`, and
-`OMEGAX_RPC_ERROR` remain stable for historical Solana reads, decoding,
-simulation, and migration. New Ethereum integrations should use the Nakama
-error classes above.
+The EIP-712 payload, signer, role/round/action combination, module, nonce,
+expiry, digest, replay key, or EIP-1271 result is invalid. Rebuild from trusted
+current request state and never reuse the failed payload.
+
+## `NakamaRobinhoodAccountPolicyError`
+
+An agent policy is too broad, expired, mismatched, unproven, or requests a
+disabled submission. Keep the Phase-0 operation in simulation; adapter
+self-attestation is not sufficient onchain policy evidence.
+
+## `NakamaRobinhoodStaleStateError`
+
+A write depends on stale, divergent, malformed, or offline-cached state. Refresh
+the direct-chain pinned read, reconcile it, and require a safe context before
+building a new action.
+
+Legacy `NakamaEthereumError` and Solana-era errors remain available only through
+their explicit migration subpaths and are not canonical Robinhood error types.

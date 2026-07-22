@@ -2,7 +2,7 @@ import {
   NAKAMA_POLICY_REGISTRY_ABI,
   decodeEthereumCalldata,
   encodeEthereumCalldata,
-} from '@nakama-health/protocol-sdk';
+} from '@nakama-health/protocol-sdk/ethereum_contract';
 
 const calldata = encodeEthereumCalldata({
   abi: NAKAMA_POLICY_REGISTRY_ABI,

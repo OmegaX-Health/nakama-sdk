@@ -5,16 +5,18 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 import {
   InMemoryClaimRecipientReplayGuard,
-  NakamaEthereumAttestationError,
-  NakamaEthereumReplayError,
   createClaimRecipientAuthorizationSigningPayload,
   createClaimRecipientAuthorizationTypedData,
   verifyAndConsumeClaimRecipientAuthorization,
   verifyClaimRecipientAuthorization,
   type ClaimRecipientAuthorizationMessage,
   type ClaimRecipientAuthorizationTypedData,
-  type EthereumPublicClient,
-} from '../src/index.js';
+} from '../src/ethereum_oracle.js';
+import type { EthereumPublicClient } from '../src/ethereum.js';
+import {
+  NakamaEthereumAttestationError,
+  NakamaEthereumReplayError,
+} from '../src/errors.js';
 
 const CLAIMANT = privateKeyToAccount(`0x${'01'.padStart(64, '0')}` as Hex);
 const CONTRACT = '0x0000000000000000000000000000000000000010';
