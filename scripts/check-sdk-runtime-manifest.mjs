@@ -198,54 +198,54 @@ const siblingArtifactPath = join(
   manifest.protocol.sourceRepo,
   manifest.protocol.sourceArtifact,
 );
-if (!existsSync(siblingArtifactPath)) {
+const siblingRepoAvailable = existsSync(manifest.protocol.sourceRepo);
+const siblingArtifactAvailable = existsSync(siblingArtifactPath);
+if (siblingRepoAvailable && !siblingArtifactAvailable) {
   fail(`Canonical Robinhood artifact is missing: ${siblingArtifactPath}`);
 }
-const siblingArtifactRaw = readFileSync(siblingArtifactPath, 'utf8');
-const siblingArtifact = JSON.parse(siblingArtifactRaw);
 const checkedInArtifactRaw = readFileSync(
   'contracts/robinhood/protocol_contract.json',
   'utf8',
 );
+const checkedInArtifact = JSON.parse(checkedInArtifactRaw);
 
-assertEqual(siblingArtifact.schemaVersion, 2, 'sibling artifact schemaVersion');
 assertEqual(
-  siblingArtifact.protocolSuiteMajor,
+  checkedInArtifact.schemaVersion,
   2,
-  'sibling protocol suite major',
+  'checked-in artifact schemaVersion',
 );
 assertEqual(
-  siblingArtifact.economicEventSchemaVersion,
+  checkedInArtifact.protocolSuiteMajor,
   2,
-  'sibling economic event schema version',
+  'checked-in protocol suite major',
 );
-assertEqual(siblingArtifact.chainFamily, 'eip155', 'sibling chain family');
+assertEqual(
+  checkedInArtifact.economicEventSchemaVersion,
+  2,
+  'checked-in economic event schema version',
+);
+assertEqual(checkedInArtifact.chainFamily, 'eip155', 'checked-in chain family');
 if (
-  typeof siblingArtifact.sourceCommit !== 'string' ||
-  !/^[0-9a-f]{40}$/.test(siblingArtifact.sourceCommit) ||
-  /^0{40}$/.test(siblingArtifact.sourceCommit)
+  typeof checkedInArtifact.sourceCommit !== 'string' ||
+  !/^[0-9a-f]{40}$/.test(checkedInArtifact.sourceCommit) ||
+  /^0{40}$/.test(checkedInArtifact.sourceCommit)
 ) {
   fail(
-    'Sibling artifact sourceCommit must be a nonzero full lowercase Git SHA.',
+    'Checked-in artifact sourceCommit must be a nonzero full lowercase Git SHA.',
   );
 }
 assertEqual(
-  siblingArtifact.sourceCommit,
+  checkedInArtifact.sourceCommit,
   manifest.protocol.sourceCommit,
-  'sibling artifact sourceCommit',
+  'checked-in artifact sourceCommit',
 );
 assertEqual(
-  sha256(siblingArtifactRaw),
+  sha256(checkedInArtifactRaw),
   manifest.protocol.sourceArtifactSha256,
-  'sibling artifact SHA-256',
-);
-assertEqual(
-  checkedInArtifactRaw,
-  siblingArtifactRaw,
-  'checked-in artifact bytes',
+  'checked-in artifact SHA-256',
 );
 assertJsonEqual(
-  siblingArtifact.supportedChains,
+  checkedInArtifact.supportedChains,
   Object.values(NETWORKS).map(({ name, chainId, caip2 }) => ({
     name,
     chainId,
@@ -254,27 +254,35 @@ assertJsonEqual(
   'supported chains',
 );
 assertJsonEqual(
-  siblingArtifact.fundingAsset,
+  checkedInArtifact.fundingAsset,
   MAINNET_USDG,
   'artifact funding asset',
 );
 assertEqual(
-  siblingArtifact.deploymentPlan?.deploymentCodeCommitment,
+  checkedInArtifact.deploymentPlan?.deploymentCodeCommitment,
   manifest.protocol.deploymentCodeCommitment,
   'deployment code commitment',
 );
 assertEqual(
-  siblingArtifact.deploymentPlan?.deploymentKind,
+  checkedInArtifact.deploymentPlan?.deploymentKind,
   manifest.protocol.deploymentKind,
   'deployment kind',
 );
+
+if (siblingArtifactAvailable) {
+  assertEqual(
+    readFileSync(siblingArtifactPath, 'utf8'),
+    checkedInArtifactRaw,
+    'sibling artifact bytes',
+  );
+}
 
 let functionCount = 0;
 let eventCount = 0;
 const abis = {};
 for (const [role, contractName] of Object.entries(CONTRACT_ROLES)) {
   const contract = manifest.protocol.contracts[role];
-  const artifactContract = siblingArtifact.contracts?.[contractName];
+  const artifactContract = checkedInArtifact.contracts?.[contractName];
   const abiRaw = readFileSync(contract.abiArtifact, 'utf8');
   const abi = JSON.parse(abiRaw);
   abis[role] = abi;
@@ -302,11 +310,17 @@ for (const [role, contractName] of Object.entries(CONTRACT_ROLES)) {
     manifest.protocol.sourceRepo,
     `shared/robinhood/${contractName}.abi.json`,
   );
-  assertEqual(
-    readFileSync(siblingAbiPath, 'utf8'),
-    abiRaw,
-    `${contractName} sibling ABI bytes`,
-  );
+  if (siblingArtifactAvailable) {
+    if (!existsSync(siblingAbiPath)) {
+      fail(`Canonical Robinhood ABI is missing: ${siblingAbiPath}`);
+    } else {
+      assertEqual(
+        readFileSync(siblingAbiPath, 'utf8'),
+        abiRaw,
+        `${contractName} sibling ABI bytes`,
+      );
+    }
+  }
 
   functionCount += abi.filter((entry) => entry.type === 'function').length;
   eventCount += abi.filter((entry) => entry.type === 'event').length;
@@ -533,6 +547,9 @@ for (const lane of manifest.lanes ?? []) {
 }
 
 if (process.exitCode) process.exit(process.exitCode);
+const artifactParityMode = siblingArtifactAvailable
+  ? 'checked-in artifacts and sibling protocol parity'
+  : 'checked-in canonical artifacts; sibling protocol repository unavailable';
 console.log(
-  `SDK runtime manifest check passed (${Object.keys(CONTRACT_ROLES).length} Robinhood contracts, ${functionCount} functions, ${eventCount} events, deployments fail-closed).`,
+  `SDK runtime manifest check passed (${Object.keys(CONTRACT_ROLES).length} Robinhood contracts, ${functionCount} functions, ${eventCount} events, ${artifactParityMode}, deployments fail-closed).`,
 );
