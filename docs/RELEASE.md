@@ -1,263 +1,172 @@
-# Release Guide — `@nakama-health/protocol-sdk`
+# Robinhood SDK release procedure
 
-This is the maintainer flow for publishing the canonical SDK release.
+This procedure publishes a package that truthfully reflects deployed state. The
+current mainnet and testnet manifests are `unconfigured`, so the SDK can be
+validated as implementation-ready but must not be described as live,
+deployment-ready, audited, or Virtuals-approved.
 
-## Release targets
+## Release states
 
-- Protocol: `omegax-protocol` commit `763c7da`
-- Protocol contract hash:
-  `f95822562b0c1f1b2d5bddde10f63d98d49dca7135c879011e432d0706735222`
-- SDK: `@nakama-health/protocol-sdk v0.8.10`
-- Docs portal: `docs.nakama.health` content synced to the matching SDK surface
+Keep these states separate because each has a different evidence threshold:
 
-## Preconditions
+1. **Implementation-ready.** Source, generated artifacts, tests, docs,
+   templates, examples, package consumer checks, and security gates pass against
+   fail-closed manifests. This is the current target.
+2. **Testnet deployment-ready.** All 12 contracts and testnet USDG are deployed,
+   source-verified, runtime-verified, reviewed, and recorded in the testnet
+   manifest. This does not imply mainnet readiness.
+3. **Mainnet deployment-ready.** The exact release artifact is audited and
+   approved, all 12 contracts plus canonical USDG are live and verified, and the
+   mainnet manifest contains complete immutable evidence.
+4. **Virtuals launch-ready.** Current platform approval, legal/entity/identity
+   work, official launch configuration, ownership/allocation disclosure, and
+   finalized simulation are complete outside this SDK. Structural packet
+   validation alone never reaches this state.
 
-- `package.json` version is final.
-- `docs/RELEASE_NOTES.md` is updated for the version being published.
-- `docs/OMEGAX_DOCS_SYNC.json` points at the merged docs commit.
-- Each docs sync mapping includes a current `sdkDocSha256` content hash.
-- Local protocol parity is green against the intended sibling `omegax-protocol` workspace.
-- The SDK release tag is annotated, signed, and matches `package.json`.
-- SDK commits include `Signed-off-by` trailers because CI enforces DCO.
-- GitHub `main` branch protection requires the approving review and CODEOWNERS
-  review needed to protect release-sensitive changes before release tags are
-  cut. This is not a standing instruction to request automated Codex or Copilot
-  code reviews on ordinary SDK PRs.
-- GitHub `main` branch protection requires strict status checks, does not allow
-  force pushes, and does not allow branch deletion.
-- The `npm-production` environment requires at least two reviewers and prevents
-  self-review for the protected publish job.
-- A repository Actions secret named `OMEGAX_GOVERNANCE_READ_TOKEN` is available
-  to the unprotected `verify` job and can read repository branch and environment
-  protection settings.
-- Stale repository, organization, or environment secrets named `NPM_TOKEN` or
-  `NODE_AUTH_TOKEN` have been removed before tagging. Publishing uses trusted
-  publishing/OIDC instead of a long-lived npm token.
-- npm trusted publishing is configured for this repository/package/environment;
-  do not add a long-lived `NPM_TOKEN` or `NODE_AUTH_TOKEN` publish path.
-- The release workflow keeps `verify` and `publish` split: `verify` runs the
-  live governance gate with `OMEGAX_GOVERNANCE_READ_TOKEN`, and `publish`
-  depends on `verify`, uses `npm-production`, requests `id-token: write`, runs
-  `security:release-tag`, and publishes with provenance.
+## 1. Freeze and identify the protocol artifact
 
-## Local release checks
+The protocol repository owns Solidity and the canonical artifact. Before SDK
+import, require a reviewed protocol commit, compiler settings, source artifact,
+standalone ABIs, creation/runtime hashes, component order, and deployment-code
+commitment.
+
+From the SDK repository:
 
 ```bash
-npm ci
+npm run sync:robinhood-artifacts:check
+```
+
+If the reviewed protocol source intentionally changed:
+
+```bash
+npm run import:robinhood-contract
+git diff -- contracts/robinhood src/generated/robinhood_protocol.ts
+npm run sync:robinhood-artifacts:check
+```
+
+Review every ABI change as a public API/security change. Do not hand-edit the
+import or generated TypeScript and do not import from an unreviewed working tree
+for a release.
+
+## 2. Deploy without weakening placeholders
+
+Deployment tooling belongs to the protocol release, not this SDK. Keep each SDK
+manifest `unconfigured` until deployment output is final and independently
+reviewed. A deployed manifest must contain:
+
+- exact network, chain ID, CAIP-2, protocol release, and 40-hex source commit;
+- imported artifact-bundle SHA-256 and deployment transaction/block/hash;
+- all 12 role addresses, ABI SHA-256 values, runtime bytecode hashes, and HTTPS
+  source-verification URLs;
+- exact USDG identity and verified status;
+- `verified: true` only after full live runtime and suite-graph checks;
+- `auditStatus: audited` plus the final audit-report SHA-256; and
+- a release-approval SHA-256 produced by the authorized review process.
+
+Addresses must be unique, nonzero, and mapped to their exact roles. A partial
+deployment remains unconfigured; never fill unknown fields with zero addresses,
+copied hashes, or temporary URLs to satisfy schema shape.
+
+## 3. Verify the live release
+
+Use independent, caller-selected Robinhood RPC endpoints to verify chain
+identity, all 12 runtime hashes, USDG code/metadata, factory/component topology,
+program IDs, registry links, and deployment-code commitment. Archive the
+provider endpoints, observed block identities, verification results, and reviewer
+approval outside the package without storing credentials.
+
+The SDK's `verifyRobinhoodDeploymentRuntime(...)` produces an in-process proof
+capability for consumers. It does not replace the deployment team's signed
+release evidence and it cannot turn an unconfigured manifest into a deployment.
+
+## 4. Reconcile public material
+
+Update `SDK_RUNTIME.json`, deployment manifests, README, release notes, examples,
+and any external launch/operations documentation from the same reviewed release.
+Claims must match the narrowest proven state: implementation-ready, testnet,
+mainnet, or Virtuals launch-ready.
+
+Generate the API reference only from the canonical root:
+
+```bash
+npm run docs:api:generate
+npm run docs:api:check
+npm run docs:check
+npm run runtime:check
+```
+
+Historical Ethereum/Solana docs can remain for provenance, but current entry
+pages must route new consumers to Robinhood and label legacy subpaths explicitly.
+
+## 5. Run the package gates
+
+Run the aggregate verifier when its external documentation state is available:
+
+```bash
+npm run verify:release
+```
+
+For an explicit local gate sequence:
+
+```bash
+npm run security:secrets
+npm run security:install-scripts
 npm run typecheck
 npm run lint
 npm run format:check
-npm run build
 npm test
+npm run build
 npm run docs:api:check
 npm run docs:check
-npm run docs:sync:check:strict
 npm run runtime:check
 npm run protocol:artifact:check
+npm run security:package
+npm run audit:prod
+npm run audit:packed-consumer
 npm run examples:check
 npm run dogfood:consumer
 npm run cli:check
 npm run templates:check
 npm run dx:smoke
-npm run release:state
-npm run verify:release
-npm run security:secrets
-npm run security:install-scripts
-npm run security:release-governance
-npm run security:release-governance:live
-npm run security:package
-npm run audit:prod
-npm run verify:protocol:local
-npm run test:protocol:localnet
 npm pack --dry-run
 ```
 
-Use `npm run verify:release:strict` after the docs mirror commit is available.
-Use `npm run verify:release:protocol` before tagging or publishing when the
-sibling protocol checkout is part of the release decision.
-Treat `verify:release:strict` as the canonical aggregate local release gate;
-the expanded checklist above is kept for readable audit trails and one-off
-reruns.
-`npm run security:release-governance` is the local static workflow check when
-GitHub credentials are absent. `npm run security:release-governance:live` is the
-authoritative live GitHub branch/environment/secret check. It uses
-`OMEGAX_GOVERNANCE_TOKEN` or `GITHUB_TOKEN` when either is set, otherwise it
-falls back to the local authenticated `gh` CLI token without printing it. Use
-`npm run security:release-governance:live -- --json` when an automation needs
-structured `failures`, `warnings`, and non-secret `evidence` instead of stderr
-scraping. The `evidence` object summarizes branch protection, `npm-production`
-reviewers, visible eligible human reviewers, stale release-secret names, and
-optional collaborator/team/invitation inventory when the governance token can
-read it.
-`npm run release:state` is the read-only public release truth report: it compares
-`package.json`, local git ahead/behind state, npm registry versions, remote tags,
-and visible GitHub releases without mutating any external service. Use
-`npm run release:state -- --json` when an automation needs structured evidence,
-or `npm run release:state -- --fail-on-blockers` when local ahead/behind drift
-should fail the command. External probes time out after 15 seconds by default;
-set `OMEGAX_RELEASE_STATE_TIMEOUT_MS` only when an unusually slow local network
-needs a larger read-only window.
+`docs:sync:check:strict`, live release-governance checks, and protocol deployment
+verification require their external sources and credentials; record them as
+separate evidence rather than skipping or faking them.
 
-Production moderate-or-higher dependency advisories are release blockers unless
-`npm run audit:prod` identifies a reviewed upstream no-fix advisory path. Current
-Solana-chain moderate advisories are allowed only through that script's narrow
-documented exception rather than forced transitive overrides.
+## 6. Inspect the packed consumer boundary
 
-## GitHub release governance setup
+The tarball, rather than the source checkout, is what users install. Confirm:
 
-Release governance setup is a live GitHub admin change. The helper defaults to a
-dry run and requires explicit reviewer input before it can mutate anything:
+- `dist/` contains root and `/robinhood` declarations/JavaScript;
+- all 12 Robinhood ABIs, artifact, schema, and deployment manifests are present;
+- canonical docs, examples, and templates are present;
+- no source maps, environment files with secrets, private keys, local caches,
+  deployment credentials, or unlisted files appear;
+- a clean consumer can install with only `viem` as a production dependency; and
+- legacy Solana peers remain optional and are unnecessary for canonical imports.
 
-Use this flow only when preparing or repairing release governance. For routine
-SDK PRs, prefer the smallest relevant local validation and the normal
-branch-protection review path; do not create automated code-review requests just
-to satisfy this release checklist.
+`npm run security:package` and `npm run audit:packed-consumer` enforce most of
+this mechanically; still inspect `npm pack --dry-run` before publication.
 
-```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
-OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
-npm run security:release-governance:setup
-```
+## 7. Version and publish deliberately
 
-Or dry-run with an eligible reviewer team:
+Choose the version based on API compatibility, update package/runtime/release
+notes together, and rerun every gate after the version change. Create the tag
+from the exact reviewed clean commit, use the protected release workflow, and
+verify registry provenance plus the installed package after publication.
 
-```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
-OMEGAX_RELEASE_REVIEWERS=marinosabijan \
-OMEGAX_RELEASE_REVIEWER_TEAMS=<team-slug> \
-npm run security:release-governance:setup
-```
+Do not publish from a dirty worktree, an unreviewed artifact import, a partial
+deployment manifest, or a local `npm publish` bypass. Package publication also
+does not deploy contracts or launch a Virtuals token; those are separate,
+approval-bound operations.
 
-After reviewing the planned branch and environment settings, apply them only with
-explicit approval:
+## 8. Post-release verification and rollback
 
-```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
-OMEGAX_RELEASE_REVIEWERS=marinosabijan,<second-reviewer-login> \
-npm run security:release-governance:setup -- --apply
-```
-
-Or apply with an eligible reviewer team:
-
-```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
-OMEGAX_RELEASE_REVIEWERS=marinosabijan \
-OMEGAX_RELEASE_REVIEWER_TEAMS=<team-slug> \
-npm run security:release-governance:setup -- --apply
-```
-
-The setup helper preserves existing required status checks, GitHub App-bound
-checks, branch push restrictions, branch safety flags, pull-request review
-dismissal/bypass allowances, and environment deployment branch policy while
-adding the required review and protected publish gates. Review the dry-run JSON
-before applying. Add `--json` for pure structured output when an automation
-needs to classify reviewer-input failures or inspect the planned settings
-without parsing the dry-run prose.
-
-Then verify live state:
-
-```bash
-GITHUB_REPOSITORY=OmegaX-Health/omegax-sdk \
-OMEGAX_REQUIRE_GITHUB_GOVERNANCE=1 \
-npm run security:release-governance
-```
-
-Or use the packaged live gate:
-
-```bash
-npm run security:release-governance:live
-```
-
-The live gate also validates distinct human reviewers for `npm-production`.
-When a required reviewer is a GitHub team, the governance token must be allowed
-to read that team's members; otherwise the live gate fails closed instead of
-accepting an opaque team as independent release approval. The setup helper and
-live gate both honor `OMEGAX_RELEASE_EXCLUDED_REVIEWERS`.
-
-The second reviewer must already have write, maintain, or admin access to this
-repository, and npm trusted publishing must be configured in npm for the
-`npm-production` GitHub environment. Reviewer lists must use real independent
-GitHub users or teams; code-owner alias accounts, automation identities, and
-duplicate reviewer entries do not satisfy the second-reviewer requirement. If an
-alias account needs to be rejected during setup, pass it through
-`OMEGAX_RELEASE_EXCLUDED_REVIEWERS`. Reviewer teams must contribute at least
-one visible non-excluded human who is not merely the same direct reviewer, so
-the token used for setup must be allowed to read team membership; empty teams,
-teams made only of excluded code-owner aliases, and teams that only contain an
-already-listed reviewer fail the dry run.
-
-The governance token is used in the release workflow's `verify` job before the
-protected `npm-production` publish job starts, so configure it as a repository
-Actions secret. An environment-only secret on `npm-production` will not be
-visible to `verify`, and an organization secret is harder to audit from the
-repo-level release gate.
-
-Before tagging, confirm the release no longer has legacy npm publish tokens:
-
-```bash
-gh secret list --repo OmegaX-Health/omegax-sdk
-gh secret list --org OmegaX-Health -a actions
-gh secret list --repo OmegaX-Health/omegax-sdk --env npm-production
-```
-
-The release governance checker audits organization Actions secrets when the
-token has org-secret visibility; otherwise it warns and treats org-secret review
-as a human security checklist item.
-
-If `NPM_TOKEN` or `NODE_AUTH_TOKEN` exists, remove it only after explicit
-security approval:
-
-```bash
-gh secret delete NPM_TOKEN --repo OmegaX-Health/omegax-sdk
-gh secret delete NODE_AUTH_TOKEN --repo OmegaX-Health/omegax-sdk
-```
-
-Remove organization or environment scoped npm tokens through the matching
-GitHub UI or `gh secret delete` scope only after the same explicit approval.
-
-## Protocol binding refresh
-
-Whenever the protocol IDL or contract artifact changes:
-
-```bash
-npm run generate:protocol-bindings
-```
-
-Commit regenerated artifacts with the source change. Do not hand-edit generated protocol bindings.
-
-## Release publish order
-
-1. Finalize and push `omegax-protocol` `main`.
-2. Finalize and push `omegax-docs` `main`.
-3. Update `docs/OMEGAX_DOCS_SYNC.json` with the merged docs commit.
-4. Finalize and push `omegax-sdk` `main`.
-5. Tag SDK `v0.8.10`.
-6. Let the release workflow complete the uncredentialed `verify` job.
-7. Approve the protected `npm-production` publish job only after verify is green.
-8. Confirm `npm publish` and clean import smoke pass.
-9. Tag the matching protocol release marker only after the protocol repo owner approves that public tag.
-
-The publish job has OIDC permission and intentionally does not use `NPM_TOKEN`.
-Configure npm trusted publishing for `npm-production`; a token-based publish path
-is a release-governance regression unless it goes through a separate explicit
-security review.
-
-## Post-publish verification
-
-```bash
-npm run release:state
-npm view @nakama-health/protocol-sdk version
-```
-
-Then run a clean install/import smoke test:
-
-```bash
-npm init -y
-npm install @nakama-health/protocol-sdk@0.8.10
-node --input-type=module -e "const m = await import('@nakama-health/protocol-sdk'); console.log(Object.keys(m).length)"
-```
-
-The `v0.8.9` package is published. Its release workflow failed after publish in
-the clean install/import smoke because npm registry visibility lagged behind the
-workflow retry window. Future tags should use the extended post-publish retry
-window before treating that smoke as a real package failure.
+Install the exact registry version in a fresh consumer, run the doctor against
+the intended network/RPC, compare all public exports and artifact hashes, and
+repeat live runtime verification. If evidence differs, stop new writes, preserve
+the conflicting observations, and issue a corrected release through the normal
+review path. Do not mutate an already published tarball or silently replace a
+deployment manifest at the same version.

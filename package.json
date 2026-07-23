@@ -1,19 +1,26 @@
 {
   "name": "@nakama-health/protocol-sdk",
-  "version": "0.8.10",
-  "description": "TypeScript SDK for the canonical Nakama health capital markets protocol surface on Solana devnet.",
-  "author": "OMEGAX HEALTH FZCO",
+  "version": "0.9.0",
+  "description": "Robinhood Chain-native SDK for Nakama protection programs, USDG settlement, agent-safe execution, and offline Virtuals launch packet checks.",
+  "author": "Nakama Health",
   "contributors": [
     "Marino Sabijan, MD"
   ],
   "keywords": [
     "nakama",
-    "solana",
+    "robinhood-chain",
+    "virtuals-protocol",
+    "usdg",
+    "arbitrum-orbit",
+    "eip-712",
+    "account-abstraction",
+    "caip",
     "protocol",
     "oracle",
     "sdk",
     "health",
-    "devnet"
+    "mainnet",
+    "ethereum"
   ],
   "license": "Apache-2.0",
   "private": false,
@@ -39,9 +46,25 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./robinhood": {
+      "types": "./dist/robinhood.d.ts",
+      "import": "./dist/robinhood.js"
+    },
     "./claims": {
       "types": "./dist/claims.d.ts",
       "import": "./dist/claims.js"
+    },
+    "./ethereum": {
+      "types": "./dist/ethereum.d.ts",
+      "import": "./dist/ethereum.js"
+    },
+    "./ethereum_contract": {
+      "types": "./dist/ethereum_contract.d.ts",
+      "import": "./dist/ethereum_contract.js"
+    },
+    "./ethereum_oracle": {
+      "types": "./dist/ethereum_oracle.d.ts",
+      "import": "./dist/ethereum_oracle.js"
     },
     "./errors": {
       "types": "./dist/errors.d.ts",
@@ -87,6 +110,8 @@
   },
   "files": [
     "dist",
+    "contracts",
+    "deployments",
     "docs",
     "examples/README.md",
     "examples/.env.example",
@@ -106,10 +131,19 @@
     "format:write": "prettier --write .",
     "prepare": "npm run build",
     "prepack": "npm run build",
-    "generate:protocol-bindings": "node scripts/sync-idl-fixture.mjs",
+    "generate:protocol-bindings": "node scripts/sync-robinhood-artifacts.mjs",
+    "import:robinhood-contract": "node scripts/sync-robinhood-artifacts.mjs --import-artifact",
+    "sync:robinhood-artifacts": "node scripts/sync-robinhood-artifacts.mjs",
+    "sync:robinhood-artifacts:check": "node scripts/sync-robinhood-artifacts.mjs --check",
+    "import:ethereum-contract": "node scripts/sync-ethereum-abi.mjs --import-artifact",
+    "sync:ethereum-abi": "node scripts/sync-ethereum-abi.mjs",
+    "sync:ethereum-abi:check": "node scripts/sync-ethereum-abi.mjs --check",
+    "sync:legacy-solana-idl": "node scripts/sync-idl-fixture.mjs",
     "sync:idl-fixture": "node scripts/sync-idl-fixture.mjs",
     "test:protocol:localnet": "node scripts/run-protocol-localnet.mjs",
-    "verify:protocol:local": "node scripts/verify-protocol-local.mjs",
+    "verify:protocol:local": "npm run sync:robinhood-artifacts:check",
+    "verify:legacy-ethereum:local": "npm run sync:ethereum-abi:check",
+    "verify:legacy-solana:local": "node scripts/verify-protocol-local.mjs",
     "docs:api:generate": "typedoc --options typedoc.json",
     "docs:api:check": "node scripts/check-generated-api-docs.mjs",
     "docs:check": "node scripts/verify-doc-symbols.mjs",
@@ -117,12 +151,18 @@
     "docs:sync:check:strict": "node scripts/check-omegax-docs-sync.mjs --strict",
     "docs:sync:update": "node scripts/update-docs-sync-manifest.mjs",
     "runtime:check": "node scripts/check-sdk-runtime-manifest.mjs",
-    "protocol:artifact:check": "node scripts/check-protocol-artifact-parity.mjs",
+    "protocol:artifact:check": "node scripts/sync-robinhood-artifacts.mjs --check",
+    "protocol:legacy-artifact:check": "node scripts/check-protocol-artifact-parity.mjs",
     "dx:smoke": "node scripts/dx-smoke.mjs",
-    "example:smoke": "npm run build && tsx examples/devnet-smoke.ts",
-    "example:app": "npm run build && tsx examples/app-builder-read.ts",
-    "example:oracle": "npm run build && tsx examples/oracle-attestation.ts",
-    "examples:check": "npm run build && tsx examples/devnet-smoke.ts && tsx examples/app-builder-read.ts && tsx examples/oracle-attestation.ts",
+    "example:smoke": "npm run build && tsx examples/robinhood-smoke.ts",
+    "example:contract": "npm run build && tsx examples/robinhood-decision.ts",
+    "example:authorization": "npm run build && tsx examples/virtuals-launch-plan.ts",
+    "example:legacy-ethereum:smoke": "npm run build && tsx examples/ethereum-mainnet-smoke.ts",
+    "example:legacy-ethereum:contract": "npm run build && tsx examples/contract-calldata.ts",
+    "example:legacy-ethereum:authorization": "npm run build && tsx examples/claim-recipient-authorization.ts",
+    "example:app": "npm run example:contract",
+    "example:oracle": "npm run example:authorization",
+    "examples:check": "npm run build && tsx examples/robinhood-smoke.ts && tsx examples/robinhood-decision.ts && tsx examples/virtuals-launch-plan.ts",
     "dogfood:consumer": "node scripts/dogfood-consumer-app.mjs",
     "cli:check": "node scripts/check-cli.mjs",
     "templates:check": "node scripts/check-templates.mjs",
@@ -131,6 +171,7 @@
     "verify:release:strict": "node scripts/verify-release.mjs --strict",
     "verify:release:protocol": "node scripts/verify-release.mjs --strict --protocol",
     "audit:prod": "node scripts/audit-prod-dependencies.mjs",
+    "audit:packed-consumer": "node scripts/audit-packed-consumer.mjs",
     "security:secrets": "node scripts/check-secrets.mjs",
     "security:install-scripts": "node scripts/check-install-scripts.mjs",
     "security:package": "node scripts/check-package-manifest.mjs",
@@ -142,12 +183,31 @@
     "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
+    "viem": "^2.55.2"
+  },
+  "peerDependencies": {
     "@coral-xyz/anchor": "^0.32.1",
-    "@noble/hashes": "^1.8.0",
     "@solana/web3.js": "^1.98.4",
     "bn.js": "^5.2.3",
     "bs58": "^6.0.0",
     "tweetnacl": "^1.0.3"
+  },
+  "peerDependenciesMeta": {
+    "@coral-xyz/anchor": {
+      "optional": true
+    },
+    "@solana/web3.js": {
+      "optional": true
+    },
+    "bn.js": {
+      "optional": true
+    },
+    "bs58": {
+      "optional": true
+    },
+    "tweetnacl": {
+      "optional": true
+    }
   },
   "overrides": {
     "bn.js": "^5.2.3",
@@ -157,9 +217,13 @@
     "uuid": "14.0.0"
   },
   "devDependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
     "@eslint/js": "^10.0.1",
+    "@solana/web3.js": "^1.98.4",
     "@types/bn.js": "^5.2.0",
     "@types/node": "^20.19.37",
+    "bn.js": "^5.2.3",
+    "bs58": "^6.0.0",
     "eslint": "^10.1.0",
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
@@ -167,7 +231,8 @@
     "typedoc": "^0.28.19",
     "typedoc-plugin-markdown": "^4.11.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.2"
+    "typescript-eslint": "^8.57.2",
+    "tweetnacl": "^1.0.3"
   },
   "engines": {
     "node": ">=20"

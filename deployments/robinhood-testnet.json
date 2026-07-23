@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "status": "unconfigured",
+  "network": "testnet",
+  "chainId": 46630,
+  "caip2": "eip155:46630",
+  "protocolRelease": null,
+  "sourceCommit": null,
+  "artifactBundleSha256": null,
+  "deploymentTransaction": null,
+  "deploymentBlock": null,
+  "deploymentBlockHash": null,
+  "contracts": {},
+  "settlementAsset": {
+    "network": "testnet",
+    "chainId": 46630,
+    "caip2": "eip155:46630",
+    "address": null,
+    "name": "Global Dollar",
+    "symbol": "USDG",
+    "decimals": 6,
+    "status": "unconfigured"
+  },
+  "verified": false,
+  "auditStatus": "unaudited",
+  "auditReportSha256": null,
+  "releaseApprovalSha256": null
+}

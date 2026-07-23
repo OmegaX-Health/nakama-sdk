@@ -1,238 +1,190 @@
-# SDK Recipes — `@nakama-health/protocol-sdk`
+# Robinhood recipes
 
-These recipes are copy-paste starting points for common external integrations.
-Use `createSafeProtocolClient(...)` by default. Use raw builders, dynamic
-instruction construction, or custom program IDs only for protocol-maintainer,
-localnet, or test workflows.
+These snippets demonstrate boundaries rather than a live deployment. The
+checked-in manifests are unconfigured, so the runtime-dependent recipes fail
+closed until audited deployment evidence exists.
 
-## Start With The CLI
-
-```bash
-npx @nakama-health/protocol-sdk doctor
-npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
-npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
-```
-
-Expected output: `doctor` should report passing checks without requiring a
-funded wallet, private key, or transaction submission.
-
-Next step: choose one scaffold and run `npm install`, `npm run typecheck`,
-`npm run build`, and `npm run smoke` inside it.
-
-## Node Backend
-
-Install:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
-cd nakama-provider-backend
-npm install
-```
+## Inspect network and artifact identity
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
+  getGeneratedRobinhoodArtifactBundle,
+  getRobinhoodCaip2,
+  getRobinhoodChainId,
 } from '@nakama-health/protocol-sdk';
 
-const networkInfo = getOmegaXNetworkInfo('devnet');
-const connection = createConnection({
-  network: 'devnet',
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
-});
-const protocol = createSafeProtocolClient(connection, {
-  programId: PROTOCOL_PROGRAM_ID,
-});
-
-export function reserveDomainAddress(domainId: string) {
-  return deriveReserveDomainPda({
-    domainId,
-    programId: protocol.getProgramId(),
-  }).toBase58();
-}
+const bundle = getGeneratedRobinhoodArtifactBundle();
+console.log(getRobinhoodChainId('mainnet')); // 4663
+console.log(getRobinhoodCaip2('mainnet')); // eip155:4663
+console.log(Object.keys(bundle.contracts)); // all 12 protocol roles
+console.log(bundle.deployments.mainnet.status); // unconfigured today
 ```
 
-Expected output: a JSON status payload with `network`, `programId`,
-`reserveDomain`, `healthPlan`, instruction count, and account count.
-
-Next step: wire the status helper into your backend route and keep all
-signing/funded flows behind explicit product review.
-
-## Next.js Server Route
-
-Install:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-```
-
-```ts
-import { NextResponse } from 'next/server';
-import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
-} from '@nakama-health/protocol-sdk';
-
-export async function GET() {
-  const protocol = createSafeProtocolClient(
-    createConnection({
-      network: 'devnet',
-      rpcUrl: process.env.SOLANA_RPC_URL,
-    }),
-    { programId: PROTOCOL_PROGRAM_ID },
-  );
-
-  return NextResponse.json({
-    programId: protocol.getProgramId().toBase58(),
-    instructions: listProtocolInstructionNames(),
-    accounts: listProtocolAccountNames(),
-  });
-}
-```
-
-Expected output: the GET route returns protocol metadata without any signer.
-
-Next step: move the generated route into `app/api/nakama/status/route.ts` and
-swap demo IDs for your product IDs.
-
-## Oracle Worker
-
-Install:
-
-```bash
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
-cd nakama-oracle-worker
-npm install
-```
+## Parse exact USDG without rounding
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  attestProtocolOutcome,
-  createOracleSignerFromEnv,
-} from '@nakama-health/protocol-sdk';
+  formatRobinhoodAssetAmount,
+  parseRobinhoodUsdg,
+} from '@nakama-health/protocol-sdk/robinhood';
 
-const signer = createOracleSignerFromEnv();
-
-export async function attestClaimOutcome(params: {
-  healthPlan: string;
-  fundingLine: string;
-  claimCase: string;
-  nonce: string;
-}) {
-  return await attestProtocolOutcome({
-    userId: 'member-001',
-    cycleId: 'claim-cycle-001',
-    outcomeId: 'claim-supported',
-    payload: {
-      decision: 'support_approve',
-      approvedAmountRaw: '150000000',
-    },
-    context: {
-      network: 'devnet',
-      programId: PROTOCOL_PROGRAM_ID,
-      healthPlan: params.healthPlan,
-      fundingLine: params.fundingLine,
-      claimCase: params.claimCase,
-      schemaKeyHashHex: 'ab'.repeat(32),
-      audience: 'claim-intake-service',
-      nonce: params.nonce,
-      asOfIso: new Date().toISOString(),
-      expiresAtIso: new Date(Date.now() + 5 * 60_000).toISOString(),
-    },
-    signer,
-  });
-}
+const amount = parseRobinhoodUsdg('125.500001', 'mainnet');
+console.log(amount.units); // 125500001n
+console.log(formatRobinhoodAssetAmount(amount)); // 125.500001
 ```
 
-Expected output: a protocol-bound attestation verifies locally and prints an
-attestation ID plus digest.
+More than six fractional digits, a negative value, a wrong token address, or
+testnet USDG before its address is configured is rejected.
 
-Next step: replace the in-memory demo signer with KMS or secret-manager wiring
-and keep signer material out of tracked files.
-
-## Read-Only Frontend
-
-Install:
-
-```bash
-npm install @nakama-health/protocol-sdk
-```
+## Prove deployment code before constructing a client
 
 ```ts
 import {
-  createConnection,
-  deriveHealthPlanPda,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
-  listProtocolAccountNames,
+  assertRobinhoodDeploymentReady,
+  createRobinhoodPublicClient,
+  getGeneratedRobinhoodArtifactBundle,
+  verifyRobinhoodDeploymentRuntime,
 } from '@nakama-health/protocol-sdk';
 
-const networkInfo = getOmegaXNetworkInfo('devnet');
-const connection = createConnection({
-  network: 'devnet',
-  rpcUrl: networkInfo.defaultRpcUrl,
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const manifest = bundle.deployments.mainnet;
+const client = createRobinhoodPublicClient({
+  network: 'mainnet',
+  rpcUrl: process.env.ROBINHOOD_MAINNET_RPC_URL!,
 });
 
-const reserveDomain = deriveReserveDomainPda({ domainId: 'open-usdc-domain' });
-const healthPlan = deriveHealthPlanPda({
-  reserveDomain,
-  planId: 'genesis-protect-acute',
-});
-
-console.log({
-  rpcEndpoint: connection.rpcEndpoint,
-  healthPlan: healthPlan.toBase58(),
-  accountTypes: listProtocolAccountNames(),
+assertRobinhoodDeploymentReady(manifest, bundle);
+const runtime = await verifyRobinhoodDeploymentRuntime({
+  client,
+  manifest,
+  bundle,
 });
 ```
 
-Expected output: a read-only status object with an RPC endpoint, derived health
-plan PDA, and known account types.
+The assertion currently throws by design. Do not replace the proof with a cast,
+fixture, copied JSON object, or caller-supplied boolean.
 
-Next step: move RPC calls that need secrets, signing, or privileged context into
-a backend route.
-
-## Typed Error Handling
+## Reconcile a direct read before writing
 
 ```ts
 import {
-  OmegaXError,
-  OmegaXProgramMismatchError,
-  createConnection,
-  createSafeProtocolClient,
+  assertRobinhoodWriteStateSafe,
+  reconcileRobinhoodRead,
 } from '@nakama-health/protocol-sdk';
 
-try {
-  createSafeProtocolClient(createConnection(), {
-    programId: '11111111111111111111111111111111',
-  });
-} catch (error) {
-  if (error instanceof OmegaXProgramMismatchError) {
-    console.error(error.code, error.details);
-  } else if (error instanceof OmegaXError) {
-    console.error(error.code, error.message);
-  } else {
-    throw error;
-  }
-}
+const reconciled = reconcileRobinhoodRead(directRead, indexerPage, {
+  now: new Date().toISOString(),
+  maxIndexerAgeSeconds: 30,
+  identity: (program) => program.programId,
+});
+
+assertRobinhoodWriteStateSafe(reconciled.context);
 ```
 
-## Dogfood Fixture
+Use an indexer for discovery and UX, then use the direct pinned read as the
+authority. An `offline_cache`, stale, divergent, or malformed context cannot
+authorize a write.
 
-Run the tracked external-consumer fixture before release:
+## Decode the canonical economic ledger event
 
-```bash
-npm run dogfood:consumer
+```ts
+import {
+  decodeRobinhoodEconomicActivity,
+  getGeneratedRobinhoodArtifactBundle,
+} from '@nakama-health/protocol-sdk';
+
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const activity = decodeRobinhoodEconomicActivity({
+  log,
+  manifest: bundle.deployments.mainnet,
+  bundle,
+});
+
+console.log(activity.kind); // one of the nine protocol activity names
+console.log(activity.accounting.trackedAssets); // post-activity vault state
 ```
 
-The fixture installs the packed SDK tarball into a temp project, typechecks,
-builds, and runs a no-signature smoke.
+The decoder accepts only `PoolVault.EconomicActivity` schema 2. It rejects a
+wrong contract, unknown kind, substituted asset, or post-state accounting that
+does not satisfy the protocol identities, so indexers do not need to reconcile
+parallel economic event families.
+
+## Encode durable blocked-attempt telemetry from an adapter
+
+```ts
+import { createRobinhoodRecordBlockedAttemptCall } from '@nakama-health/protocol-sdk';
+
+const call = createRobinhoodRecordBlockedAttemptCall({
+  manifest,
+  bundle,
+  runtime,
+  programId,
+  adapter: reviewedAdapterAddress,
+  authorizationId,
+  principal,
+  selector,
+  nativeValue: 0n,
+  assetAmount,
+});
+
+await handoffToReviewedAdapter(call);
+```
+
+The returned object is adapter calldata, not a `PreparedRobinhoodAction` and not
+a transaction sender. The reviewed adapter must make the registry call itself,
+because `msg.sender` is part of the protocol authorization boundary; an EOA,
+generic smart account, protocol contract, or USDG address cannot stand in for it.
+
+## Request a decision signature
+
+```ts
+import {
+  createNakamaDecisionPreview,
+  createNakamaDecisionSigningPayload,
+  requestNakamaDecisionSignature,
+} from '@nakama-health/protocol-sdk';
+
+const payload = createNakamaDecisionSigningPayload(decisionInput);
+const preview = createNakamaDecisionPreview(payload);
+
+showReviewer(preview);
+const signature = await requestNakamaDecisionSignature(
+  window.ethereum,
+  payload,
+);
+```
+
+Create the preview from the same immutable payload sent to the wallet. The SDK
+uses `eth_signTypedData_v4`, exposes `EIP712Domain` in wallet JSON, and never
+accepts a private key.
+
+## Assess display finality without overstating it
+
+```ts
+import { readRobinhoodFinality } from '@nakama-health/protocol-sdk';
+
+const display = await readRobinhoodFinality({
+  submitted,
+  reader,
+  now: new Date().toISOString(),
+});
+
+console.log(display.status);
+console.log(display.economicFinal); // always false in the single-reader lane
+```
+
+Use `readRobinhoodEconomicFinality(...)` only with the SDK-sealed wallet
+submission, two independent L2 readers, and two independent L1 batch readers.
+
+## Validate a launch packet offline
+
+```ts
+import { validateVirtualsLaunchPacketStructure } from '@nakama-health/protocol-sdk';
+
+const checked = validateVirtualsLaunchPacketStructure(decodedPacket);
+console.log(checked.warning);
+```
+
+The result is a consistency check, not Virtuals approval or onchain proof. Never
+route it directly to a signer; re-resolve current official platform, legal,
+identity, code, simulation, and finalized-chain evidence first.

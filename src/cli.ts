@@ -6,14 +6,22 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  getOmegaXNetworkInfo,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
-} from './index.js';
-import { OmegaXError, OmegaXProgramMismatchError } from './errors.js';
+  ROBINHOOD_CONTRACT_ROLES,
+  getGeneratedRobinhoodArtifactBundle,
+  validateRobinhoodDeploymentManifest,
+} from './robinhood/artifacts.js';
+import {
+  getRobinhoodCaip2,
+  getRobinhoodChainId,
+  createRobinhoodPublicClient,
+  normalizeRobinhoodAddress,
+  type RobinhoodNetwork,
+} from './robinhood/chains.js';
+import {
+  NakamaRobinhoodAddressError,
+  NakamaRobinhoodError,
+  NakamaRobinhoodWrongChainError,
+} from './robinhood/errors.js';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(cliDir, '..');
@@ -22,16 +30,11 @@ const packageJsonPath = resolve(packageRoot, 'package.json');
 const supportedTemplates = ['node-backend', 'next-route', 'oracle-worker'];
 const subpaths = [
   '@nakama-health/protocol-sdk',
-  '@nakama-health/protocol-sdk/claims',
+  '@nakama-health/protocol-sdk/robinhood',
   '@nakama-health/protocol-sdk/errors',
-  '@nakama-health/protocol-sdk/oracle',
-  '@nakama-health/protocol-sdk/protocol',
-  '@nakama-health/protocol-sdk/protocol_models',
-  '@nakama-health/protocol-sdk/protocol_seeds',
-  '@nakama-health/protocol-sdk/rpc',
-  '@nakama-health/protocol-sdk/transactions',
-  '@nakama-health/protocol-sdk/types',
-  '@nakama-health/protocol-sdk/utils',
+  '@nakama-health/protocol-sdk/ethereum',
+  '@nakama-health/protocol-sdk/ethereum_contract',
+  '@nakama-health/protocol-sdk/ethereum_oracle',
 ];
 
 type CheckStatus = 'pass' | 'fail';
@@ -61,7 +64,7 @@ interface CliOptions {
 function usage(): string {
   return [
     'Usage:',
-    '  nakama-sdk doctor [--network devnet] [--rpc-url <url>] [--json]',
+    '  nakama-sdk doctor [--network mainnet|testnet] [--rpc-url <url>] [--json]',
     '  nakama-sdk scaffold <node-backend|next-route|oracle-worker> [--out <dir>] [--force]',
     '  nakama-sdk examples',
   ].join('\n');
@@ -156,7 +159,7 @@ async function collectDoctorCheck(
       code,
       status: 'fail',
       message: error instanceof Error ? error.message : String(error),
-      ...(error instanceof OmegaXError && error.details
+      ...(error instanceof NakamaRobinhoodError && error.details
         ? { details: error.details }
         : {}),
     };
@@ -168,7 +171,7 @@ export async function runDoctor(
 ): Promise<DoctorResult> {
   const version = await packageVersion();
   const checks: DoctorCheck[] = [];
-  const network = options.network ?? 'devnet';
+  const network = options.network ?? 'mainnet';
 
   checks.push(
     await collectDoctorCheck('node-version', 'NODE_VERSION', () => {
@@ -209,61 +212,99 @@ export async function runDoctor(
   );
 
   checks.push(
-    await collectDoctorCheck('network-metadata', 'NETWORK_METADATA', () => {
-      const networkInfo = getOmegaXNetworkInfo(network as never);
+    await collectDoctorCheck('robinhood-network', 'ROBINHOOD_NETWORK', () => {
+      if (network !== 'mainnet' && network !== 'testnet') {
+        throw new NakamaRobinhoodWrongChainError(
+          `Robinhood network must be mainnet or testnet; received ${network}.`,
+        );
+      }
       return {
-        network: networkInfo.network,
-        cluster: networkInfo.solanaCluster,
-        defaultRpcUrl: networkInfo.defaultRpcUrl,
-        status: networkInfo.status,
+        network,
+        chainId: getRobinhoodChainId(network),
+        caip2: getRobinhoodCaip2(network),
       };
     }),
   );
 
   checks.push(
-    await collectDoctorCheck('canonical-program-id', 'PROGRAM_ID', () => {
-      const connection = createConnection({
-        network: network as never,
-        rpcUrl: options.rpcUrl,
-        warnOnComingSoon: false,
-      });
-      const client = createSafeProtocolClient(connection, {
-        programId: PROTOCOL_PROGRAM_ID,
-      });
-      if (client.getProgramId().toBase58() !== PROTOCOL_PROGRAM_ID) {
-        throw new Error('safe client did not resolve the canonical program ID');
-      }
-      return { programId: client.getProgramId().toBase58() };
-    }),
+    await collectDoctorCheck(
+      'deployment-manifest',
+      'DEPLOYMENT_MANIFEST',
+      () => {
+        if (network !== 'mainnet' && network !== 'testnet') {
+          throw new NakamaRobinhoodWrongChainError(
+            `Cannot select a deployment for unsupported network ${network}.`,
+          );
+        }
+        const bundle = getGeneratedRobinhoodArtifactBundle();
+        const deployment = validateRobinhoodDeploymentManifest(
+          bundle.deployments[network],
+          network,
+        );
+        return {
+          status: deployment.status,
+          chainId: deployment.chainId,
+          caip2: deployment.caip2,
+          protocolRelease: deployment.protocolRelease,
+          artifactBundleSha256: deployment.artifactBundleSha256,
+          settlementAsset: deployment.settlementAsset,
+          contracts: Object.fromEntries(
+            ROBINHOOD_CONTRACT_ROLES.map((role) => [
+              role,
+              deployment.contracts[role] ?? null,
+            ]),
+          ),
+        };
+      },
+    ),
   );
 
   checks.push(
-    await collectDoctorCheck('protocol-surface', 'PROTOCOL_SURFACE', () => {
-      const instructions = listProtocolInstructionNames();
-      const accounts = listProtocolAccountNames();
-      if (instructions.length === 0 || accounts.length === 0) {
-        throw new Error('protocol instruction/account surface is empty');
+    await collectDoctorCheck('contract-surface', 'CONTRACT_SURFACE', () => {
+      const bundle = getGeneratedRobinhoodArtifactBundle();
+      const contractCounts = Object.fromEntries(
+        ROBINHOOD_CONTRACT_ROLES.map((role) => {
+          const artifact = bundle.contracts[role];
+          if (artifact == null) {
+            throw new Error(`generated bundle is missing ${role}`);
+          }
+          return [
+            role,
+            {
+              contractName: artifact.contractName,
+              abiSha256: artifact.abiSha256,
+              functions: artifact.abi.filter(
+                (entry) => entry.type === 'function',
+              ).length,
+              events: artifact.abi.filter((entry) => entry.type === 'event')
+                .length,
+            },
+          ];
+        }),
+      );
+      if (
+        Object.values(contractCounts).some((counts) => counts.functions === 0)
+      ) {
+        throw new Error('one or more contract ABI function surfaces are empty');
       }
-      return { instructions: instructions.length, accounts: accounts.length };
+      return { contracts: contractCounts };
     }),
   );
 
   checks.push(
     await collectDoctorCheck('typed-errors', 'TYPED_ERRORS', () => {
       try {
-        createSafeProtocolClient(createConnection(), {
-          programId: '11111111111111111111111111111111',
-        });
+        normalizeRobinhoodAddress('not-a-robinhood-address');
       } catch (error) {
         if (
-          error instanceof OmegaXProgramMismatchError &&
-          error.code === 'OMEGAX_PROGRAM_MISMATCH'
+          error instanceof NakamaRobinhoodAddressError &&
+          error.code === 'NAKAMA_ROBINHOOD_ADDRESS_ERROR'
         ) {
           return { code: error.code };
         }
         throw error;
       }
-      throw new Error('custom program ID did not throw a typed error');
+      throw new Error('invalid Robinhood address did not throw a typed error');
     }),
   );
 
@@ -273,18 +314,26 @@ export async function runDoctor(
         'rpc-connectivity',
         'RPC_CONNECTIVITY',
         async () => {
-          const connection = createConnection({
-            network: network as never,
-            rpcUrl: options.rpcUrl,
-            warnOnComingSoon: false,
+          if (network !== 'mainnet' && network !== 'testnet') {
+            throw new NakamaRobinhoodWrongChainError(
+              `Cannot create an RPC client for unsupported network ${network}.`,
+            );
+          }
+          const selectedNetwork: RobinhoodNetwork = network;
+          const client = createRobinhoodPublicClient({
+            network: selectedNetwork,
+            rpcUrl: options.rpcUrl!,
           });
-          const blockhash = await withTimeout(
-            connection.getLatestBlockhash('confirmed'),
-            5_000,
-          );
+          const chainId = await withTimeout(client.getChainId(), 5_000);
+          const expectedChainId = getRobinhoodChainId(selectedNetwork);
+          if (chainId !== expectedChainId) {
+            throw new NakamaRobinhoodWrongChainError(
+              `RPC returned chainId ${chainId}; expected Robinhood ${selectedNetwork} chainId ${expectedChainId}.`,
+            );
+          }
           return {
             rpcUrl: options.rpcUrl,
-            blockhash: blockhash.blockhash,
+            chainId,
           };
         },
       ),
@@ -359,8 +408,8 @@ function printExamples(): void {
     [
       'Nakama SDK examples:',
       '  npm run example:smoke',
-      '  npm run example:app',
-      '  npm run example:oracle',
+      '  npm run example:contract',
+      '  npm run example:authorization',
       '  npm run dogfood:consumer',
       '',
       'Public docs:',

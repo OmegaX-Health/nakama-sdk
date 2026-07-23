@@ -1,52 +1,14 @@
-# @nakama-health/protocol-sdk
+# `@nakama-health/protocol-sdk`
 
-Build health apps, oracle services, and outcome-triggered settlement flows on Solana devnet beta with the canonical Nakama Protocol SDK.
+The canonical TypeScript SDK for Nakama protection programs on Robinhood Chain.
+It binds product reads and actions to explicit chain identity, the protocol's
+generated ABIs, verified deployment/runtime evidence, exact USDG amounts,
+simulation, self-custodial wallets, and reorg-aware finality.
 
-`@nakama-health/protocol-sdk` gives builders unsigned transaction builders, readers, PDA helpers, reserve-aware read models, and oracle attestation helpers for the current public Nakama surface.
-
-## What you can build today
-
-- oracle and event-production services that sign compatible outcome events and settlement-grade claim evidence
-- health apps, wallets, and agents that read claim, obligation, and payout state
-- sponsor and reserve integrations that create reserve domains, plans, policy series, funding lines, and reserve-backed settlement
-
-## Who should use it
-
-- oracle and event producers
-- health / wallet / app builders
-- sponsor, treasury, and reserve integrators
-
-## Choose your path
-
-### Oracle and event producers
-
-Use `@nakama-health/protocol-sdk/oracle` to sign outcome and settlement-grade claim attestations.
-
-Start with:
-
-- `/docs/GETTING_STARTED.md`
-- `/docs/WORKFLOWS.md`
-- [Oracle Event Production](https://docs.nakama.health/docs/oracle/event-production)
-
-### Health / wallet / app builders
-
-Use reader helpers and claim builders to power user-facing views and outcome-driven product flows.
-
-Start with:
-
-- `/docs/GETTING_STARTED.md`
-- `/docs/WORKFLOWS.md`
-- `/docs/API_REFERENCE.md`
-
-### Sponsor and reserve integrators
-
-Use reserve-domain, plan, policy-series, funding-line, and reserve-capital builders to launch or manage sponsor lanes on the canonical model.
-
-Start with:
-
-- `/docs/WORKFLOWS.md`
-- `/docs/API_REFERENCE.md`
-- `/docs/TROUBLESHOOTING.md`
+The SDK is implementation-ready but not deployment-ready. All 12 protocol ABIs
+are synchronized from `nakama-protocol`; both checked-in deployment manifests
+remain `unconfigured`, so contract reads and writes fail closed until reviewed
+addresses, runtime hashes, audit evidence, and release approval are published.
 
 ## Install
 
@@ -54,196 +16,286 @@ Start with:
 npm install @nakama-health/protocol-sdk
 ```
 
-## Runtime basics
+Node.js `>=20` is required. The package is ESM-first and uses
+[viem](https://viem.sh) for EVM encoding and clients.
 
-- Node.js `>=20`
-- ESM-only package
-- Protocol builders are unsigned
-- `programId` must be configured explicitly in runtime integrations
-- Public integrations should stay on devnet until Nakama announces mainnet availability
+## Network and settlement identity
 
-## Quickstart
+The root export and `@nakama-health/protocol-sdk/robinhood` are the same
+Robinhood-native surface:
 
-Create clients once, then branch into the workflow that matches your product.
+| Network           | Chain ID | CAIP-2         | Status                                  |
+| ----------------- | -------: | -------------- | --------------------------------------- |
+| Robinhood mainnet |   `4663` | `eip155:4663`  | Explicitly supported                    |
+| Robinhood testnet |  `46630` | `eip155:46630` | Explicitly supported; USDG unconfigured |
+
+There is no chain-1 default. Client construction requires both a network and a
+caller-selected RPC URL or EIP-1193 provider:
+
+```ts
+import { createRobinhoodPublicClient } from '@nakama-health/protocol-sdk';
+
+const client = createRobinhoodPublicClient({
+  network: 'mainnet',
+  rpcUrl: process.env.ROBINHOOD_MAINNET_RPC_URL!,
+});
+```
+
+The SDK knows Robinhood's public endpoints for display and setup, but it never
+silently selects one for production calls.
+
+Mainnet settlement is Global Dollar (`USDG`) at
+`0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`, with six decimals. The asset API
+binds amount, chain, token address, symbol, and decimals together:
+
+```ts
+import { parseRobinhoodUsdg } from '@nakama-health/protocol-sdk';
+
+const amount = parseRobinhoodUsdg('125.50', 'mainnet');
+console.log(amount.units); // 125500000n
+```
+
+Testnet USDG has no canonical address in this release. Parsing or preparing a
+testnet USDG action fails until a verified asset configuration is supplied.
+
+## Generated protocol seam
+
+The 12 ABIs are copied byte-for-byte from the canonical protocol artifact and
+their SHA-256 values are checked during generation:
+
+```text
+../nakama-protocol/shared/robinhood/protocol_contract.json
+../nakama-protocol/shared/robinhood/<ContractName>.abi.json
+                         │
+                         ▼
+scripts/sync-robinhood-artifacts.mjs
+                         │
+           ┌─────────────┴──────────────────┐
+           ▼                                ▼
+contracts/robinhood/*            src/generated/robinhood_protocol.ts
+```
+
+```bash
+npm run import:robinhood-contract
+npm run sync:robinhood-artifacts:check
+```
+
+The bundle currently contains `AssetRegistry`, `TemplateRegistry`,
+`PoolRegistry`, `NakamaFactory`, `ProtectionProgram`, `PoolVault`,
+`MembershipRegistry`, `DecisionModule`, `ClaimManager`, `SettlementModule`,
+`AgentAuthorizationRegistry`, and `SafetyGuardian`.
+
+The imported artifact is schema `2`, pins protocol suite major `2`, and pins
+economic-event schema `2`. Older artifacts are rejected before TypeScript
+generation, even when their contract names happen to match.
+
+## Deployment gate
+
+Use the checked-in manifests for inspection, then require a deployed manifest
+before constructing product clients:
 
 ```ts
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  createRpcClient,
-  getOmegaXNetworkInfo,
-  listProtocolInstructionNames,
+  assertRobinhoodDeploymentReady,
+  getGeneratedRobinhoodArtifactBundle,
 } from '@nakama-health/protocol-sdk';
 
-const network =
-  (process.env.OMEGAX_NETWORK as 'devnet' | 'mainnet' | undefined) ?? 'devnet';
-const networkInfo = getOmegaXNetworkInfo(network);
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const manifest = bundle.deployments.mainnet;
 
-const connection = createConnection({
-  network,
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
+assertRobinhoodDeploymentReady(manifest, bundle); // throws today by design
+```
+
+A writable release must name every contract address, ABI checksum, runtime
+bytecode hash, verification URL, deployment transaction/block, protocol commit,
+audit report, and release approval. `verifyRobinhoodDeploymentRuntime(...)`
+then checks the selected RPC's chain ID and live bytecode hashes. A manifest
+alone is never accepted as runtime proof.
+
+## Typed product reads
+
+`createRobinhoodReadClient(...)` provides program, accounting, membership,
+request, obligation, role, pause, and agent-authorization failure reads at
+pinned block numbers. Each result contains its network, CAIP-2 identity, block
+hash, head/safe/finalized markers, and reconciliation state.
+
+`decodeRobinhoodEconomicActivity(...)` decodes the sole canonical economic
+event into nine discriminated activity kinds and returns the complete
+post-mutation accounting snapshot. Consumers can replay successful vault logs
+without merging older event vocabularies. `decodeRobinhoodEvent(...)` remains
+the generic decoder for non-economic protocol events.
+
+Indexer output is treated as a cache. `reconcileRobinhoodRead(...)` compares it
+with a direct-chain read, and `assertRobinhoodWriteStateSafe(...)` blocks a
+follow-up write when the indexer is stale or divergent. Public-safe reads can
+be stored with the bounded offline cache helpers; private health evidence must
+remain offchain.
+
+`collectRobinhoodIndexerPages(...)` isolates a provider-specific public indexer
+behind a bounded adapter. It validates chain, block hash, safe/finalized heads,
+reconciliation status, page size, retry count, cursor progress, and one stable
+snapshot across every page. `invalidateRobinhoodOfflineCacheAfterReorg(...)`
+conservatively drops cached descendants after a detected reorg. Neither helper
+can make indexed or offline state safe for writes.
+
+## Typed actions, simulation, and wallets
+
+`createRobinhoodActionBuilder(...)` covers the program lifecycle, exact USDG
+approval/funding, memberships, exact-digest eligibility revocation,
+requests/evidence, initial and appeal decisions, settlement, agent
+authorizations, and guardian controls. Canonical eligibility/revocation EIP-712
+helpers bind the chain and MembershipRegistry while allowing any wallet to relay
+the attestor's signature without receiving attestor authority. Construction
+requires an audited deployment plus live runtime verification, so placeholder
+addresses cannot produce a transaction.
+
+Every prepared action carries an intent ID, CAIP-10 account, target, selector,
+calldata, expiry, human explanation, and expected state change. It is frozen and
+internally capability-marked; reconstructed, cloned, relabeled, or caller-built
+objects cannot cross the submission boundary. The safe order is fixed:
+
+1. Reconcile the relevant read state.
+2. Build one typed action from a verified deployment/runtime.
+3. Simulate that exact action with `simulateRobinhoodAction(...)`.
+4. Show the explanation and state changes to the user.
+5. Submit the successful simulation through `requestRobinhoodAction(...)`.
+6. Track canonical finality with `waitForRobinhoodFinality(...)`.
+
+The SDK never accepts a private key and never switches the wallet's network.
+`requestRobinhoodAction(...)` only calls `eth_sendTransaction` for the already
+simulated action.
+
+`createRobinhoodRecordBlockedAttemptCall(...)` encodes the separate
+`recordBlockedAttempt` telemetry call for a reviewed adapter. It deliberately
+does not return a `PreparedRobinhoodAction`: the registry requires the adapter
+contract itself as `msg.sender`, and a wallet must never impersonate that
+boundary. The call records a current failure reason without consuming a grant
+or executing the target.
+
+Phase-0 smart-account submission remains limited to a narrow allowlist of
+permissionless maintenance calls. Before `submit(...)` exists, callers must run
+`verifyRobinhoodSmartAccountRuntime(...)` against a reviewed manifest for the
+account, factory, entry point, validation, recovery, and passkey modules. The
+client reruns the exact simulation, enforces gas and block bounds, and rejects a
+provider result that changes the chain, account, entry point, intent, or action
+commitment. An adapter's self-attestation is never treated as proof.
+
+`createRobinhoodPaymasterClient(...)` is also quote-only. Its provider-neutral
+policy and returned quote must bind sponsor, account, program, action
+commitment, policy commitment, target, selector, native value, gas, rate window,
+and expiry. It does not submit a user operation or turn provider-supplied
+payloads into trusted onchain proof.
+
+`createRobinhoodSmartAccountLifecycleClient(...)` supplies the provider-neutral
+account creation, passkey enrollment, signer rotation, and recovery contract.
+Every operation binds a one-time human approval, expiry, expected revision, and
+request commitment, then requires exact provider readback. A production vendor,
+fallback-wallet UX, live conformance run, and independently verified installed
+policy/revocation state remain external Phase-0 gates.
+
+For sponsor onboarding, `createRobinhoodSponsorFundingBatch(...)` can produce a
+non-submitting exact approval-plus-funding plan. It rejects mismatched accounts,
+programs, timing, vaults, amounts, and infinite approval; a provider still needs
+separate review before it may encode or execute that plan.
+
+## Decision signatures
+
+The decision helpers exactly mirror the protocol's EIP-712 type:
+
+```ts
+import {
+  NAKAMA_DECISION_ACTION,
+  NAKAMA_DECISION_REVIEWER_ROLE,
+  NAKAMA_DECISION_REVIEW_ROUND,
+  createNakamaDecisionSigningPayload,
+} from '@nakama-health/protocol-sdk';
+
+const payload = createNakamaDecisionSigningPayload({
+  network: 'mainnet',
+  reviewer,
+  decisionModule,
+  message: {
+    programId,
+    requestId,
+    termsCommitment,
+    evidenceManifestCommitment,
+    evidenceVersion: 1,
+    reviewRound: NAKAMA_DECISION_REVIEW_ROUND.initial,
+    reviewerRole: NAKAMA_DECISION_REVIEWER_ROLE.initialReviewer,
+    action: NAKAMA_DECISION_ACTION.approve,
+    approvedAmount: 2_500_000n,
+    recipientCommitment,
+    publicReasonCode,
+    nonce,
+    validUntil,
+  },
 });
-
-const programId = process.env.OMEGAX_PROGRAM_ID ?? PROTOCOL_PROGRAM_ID;
-const protocol = createSafeProtocolClient(connection, { programId });
-const rpc = createRpcClient(connection);
-const instructions = listProtocolInstructionNames();
 ```
 
-From there:
+The domain is `Nakama Protection Decision`, version `1`, with the selected
+Robinhood chain ID and the deployed `DecisionModule`. Verification binds the
+signer, module, nonce, expiry, digest, and replay key, with EIP-1271 support when
+a public client is supplied.
 
-- oracle and event producers usually move into `attestOutcome(...)`, `attestProtocolOutcome(...)`, and `verifyProtocolOracleAttestation(...)`
-- health and wallet builders usually move into claim / obligation reads plus `buildOpenClaimCaseTx(...)` and `buildAuthorizeClaimRecipientTx(...)`
-- sponsor and reserve integrators usually move into safe reserve-domain, plan, funding-line, and reserve-capital builders from `/docs/WORKFLOWS.md`
+## Receipt and finality model
 
-## First success smoke
+Robinhood Chain is an L2, so a mined receipt is useful UI feedback rather than
+the final settlement state. The receipt API distinguishes `submitted`,
+`soft_confirmed`, `l1_posted`, `finalized`, `reverted`, `replaced`, `timed_out`,
+and `reorged`; it checks the canonical block hash instead of relying on a
+confirmation count alone.
 
-Run the smoke before choosing a deeper workflow. It verifies package imports,
-network metadata, safe client creation, deterministic PDA derivation, and the
-public protocol surface without requiring funded signers or a live transaction.
+Economic-finality tracking begins with the exact sealed wallet submission. It
+binds the action commitment, calldata hash, native value, chain, sender, and
+target; each L2 reader must read back and match the transaction input. Economic
+finality additionally requires independent provider/operator identities for two
+L2 readers and two L1 batch-evidence readers. Single-provider `finalized` is a
+display state and never sets `economicFinal`.
 
-```bash
-npm run example:smoke
-```
+## Offline Virtuals launch packet
 
-For a clean external project, copy the same pattern from
-`examples/devnet-smoke.ts`.
+`validateVirtualsLaunchPacketStructure(...)` checks a caller-supplied launch
+packet for explicit Robinhood mainnet identity, canonical USDG, the five named
+Virtuals contract roles, nonzero and unique addresses, runtime hash parity,
+beneficial-owner references, transparent allocation concentration, fee-share
+arithmetic, simulation metadata, and finalized block ordering.
 
-## Public surface coverage
+It is intentionally offline and non-authoritative. Self-supplied gate booleans,
+identity flags, hashes, and block numbers do not prove Virtuals acceptance,
+legal eligibility, ownership, or onchain state. Production launch tooling must
+obtain platform/legal/identity approvals independently, read verified contract
+configuration from Robinhood RPC, simulate the exact packet, and then use the
+official Virtuals launch surface. This SDK never signs or broadcasts a Virtuals
+launch.
 
-This package exposes the live canonical object model:
+See [the Robinhood and Virtuals guide](docs/ROBINHOOD_VIRTUALS.md) for the full
+boundary and launch checklist.
 
-- reserve domains and domain asset vaults
-- health plans and policy series
-- funding lines and plan reserve ledgers
-- reserve capital contributions, sponsor budgets, premium income, and reserve earnings
-- obligations, claim cases, and reserve-backed payouts
-- oracle attestation helpers for outcome and settlement-grade claim evidence
-- reserve-aware read models for sponsors, members, and capital providers
-- RPC helpers for unsigned transaction submission flows
+## Legacy network surfaces
 
-## Release status
+Earlier Ethereum-mainnet and Solana integrations remain available only through
+explicit subpaths. They are absent from the root export and are not a fallback:
 
-- SDK release target: `0.8.10`
-- Protocol surface target: `omegax-protocol` commit `763c7da`
-- Current public network target: Solana devnet beta
-- Public docs: [docs.nakama.health](https://docs.nakama.health)
+- `@nakama-health/protocol-sdk/ethereum`
+- `@nakama-health/protocol-sdk/ethereum_contract`
+- `@nakama-health/protocol-sdk/ethereum_oracle`
+- `@nakama-health/protocol-sdk/protocol` and the other legacy Solana subpaths
 
-## Release notes
+Legacy Solana write builders remain disabled. Applications migrating old
+Ethereum code must retain explicit imports; new integrations should import the
+package root or `/robinhood`.
 
-- `0.8.10` adds an agent-readable runtime contract, packages docs and safe examples, removes stale reward/seeker-era public types, and hardens package/release verification gates.
-- `0.8.9` hardens `validateSignedClaimTx(...)` so claim intake must compare signed transactions against the service's trusted `expectedUnsignedTxBase64`, not client-submitted intent bytes.
-- `0.8.8` refreshes generated bindings for the 62-instruction / 31-account local protocol surface, removes the retired commitment-campaign API from current exports, adds governance authority accept/cancel builders, updates reserve-asset rail confidence inputs, adds direct plus selected-asset claim-case settlement helpers, and reflects inactive pool/allocation guard errors.
-- `0.8.7` adds the full onboarding DX pass: documented `protocol_models`, `transactions`, and `errors` subpath exports, named safe-client types, runnable smoke/app/oracle examples, a tracked external consumer dogfood fixture, generated API markdown, and packed consumer smokes in CI.
-- `0.8.5` refreshes generated bindings for the then-current protocol surface, adds reserve and commitment PDA helpers, exports canonical reserve/membership/oracle/schema constants, expands the on-chain claim-case attestation builder, and hardens claim intents, oracle attestations, program targeting, strict encoding, and release gates.
-- `0.8.4` refreshes generated bindings for the post-fee-vault hardening surface, derives protocol-owned domain vault token accounts, adds fee-vault PDA helpers, binds client builders and optional account placeholders to the configured program id, fixes membership-anchor PDA derivation, and hardens signed simulation fallback behavior.
-- `0.8.3` refreshes generated bindings for `omegax-protocol v0.3.1`, requires concrete domain vault token accounts, and reflects custody-aware inflows plus NAV-derived redemptions.
-- `0.8.2` keeps invite-only member enrollment builders aligned with the protocol account metas by preserving the optional invite-authority signer.
-- `0.8.1` refreshes generated bindings and protocol parity for the latest linked-claim and obligation-settlement hardening on the public `v0.3.0` surface.
-- `0.8.0` adds full parity for the current oracle and schema registry surface, plus a first-class oracle attestation helper module for service-side signing flows.
-- The package now exports `@nakama-health/protocol-sdk/oracle` alongside the root exports so oracle workers can use a narrower import surface when they only need attestation helpers.
-- Canonical protocol builders, readers, seeds, generated bindings, and local surface verification are aligned to the current `omegax-protocol` `main` surface.
-
-## Documentation map
-
-- `/docs/INDEX.md` for the maintainer and builder reading order
-- `/docs/GETTING_STARTED.md` for installation, client setup, and choosing the right builder path
-- `/docs/WORKFLOWS.md` for oracle, app, sponsor, and capital flows on the canonical surface
-- `/docs/TOP_APIS.md` for the shortest public API list by builder lane
-- `/docs/RECIPES.md` for Node, Next.js, oracle worker, and read-only frontend snippets
-- `/docs/ERROR_CATALOG.md` for stable SDK error codes and fixes
-- `/docs/API_REFERENCE.md` for the exported package surface
-- `/docs/generated/api/README.md` for generated symbol-level API markdown
-- `/docs/TROUBLESHOOTING.md` for common failure modes and remediation
-- `/docs/RELEASE_NOTES.md` for versioned SDK release notes
-- `/docs/RELEASE.md` for the release checklist
-- `/docs/DOCS_SYNC_WORKFLOW.md` for SDK to portal sync rules
-- `/docs/CROSS_REPO_RELEASE_ORDER.md` for the coordinated protocol + docs + SDK publish order
-
-## Canonical module map
-
-- Root package: connection helpers, RPC helpers, protocol builders, PDA helpers, reserve-model helpers, shared types
-- `@nakama-health/protocol-sdk/protocol`: IDL-backed builder and reader helpers such as `createSafeProtocolClient(...)`, `createProtocolClient(...)`, `listProtocolInstructionNames(...)`, `decodeProtocolAccount(...)`, and `compileTransactionToV0(...)`
-- `@nakama-health/protocol-sdk/errors`: typed SDK errors such as `OmegaXProgramMismatchError`, `OmegaXAccountNotFoundError`, and `OmegaXRpcError`
-- `@nakama-health/protocol-sdk/protocol_seeds`: deterministic PDA helpers such as `deriveReserveDomainPda(...)`, `deriveDomainAssetVaultPda(...)`, `deriveHealthPlanPda(...)`, `derivePolicySeriesPda(...)`, `deriveFundingLinePda(...)`, `deriveObligationPda(...)`, and `deriveClaimCasePda(...)`
-- `@nakama-health/protocol-sdk/protocol_models`: constants and read-model helpers such as `recomputeReserveBalanceSheet(...)`, `buildSponsorReadModel(...)`, `buildCapitalReadModel(...)`, and `buildMemberReadModel(...)`
-- `@nakama-health/protocol-sdk/claims`: claim validation and obligation failure helpers such as `validateSignedClaimTx(...)` and `normalizeClaimSimulationFailure(...)`
-- `@nakama-health/protocol-sdk/oracle`: oracle attestation helpers such as `createOracleSignerFromEnv(...)`, `createOracleSignerFromKmsAdapter(...)`, `attestOutcome(...)`, `attestProtocolOutcome(...)`, `verifyOracleAttestation(...)`, and `verifyProtocolOracleAttestation(...)` for service-side signing and settlement-grade evidence verification
-- `@nakama-health/protocol-sdk/rpc`: `createConnection(...)`, `createRpcClient(...)`, and network metadata helpers
-- `@nakama-health/protocol-sdk/transactions`: transaction serialization and signer-inspection helpers such as `serializeSolanaTransactionBase64(...)`, `decodeSolanaTransaction(...)`, and `solanaTransactionMessageBase64(...)`
-- `@nakama-health/protocol-sdk/utils`: hashing, binary encoding, and misc utilities
-- `@nakama-health/protocol-sdk/types`: generated protocol contract types plus SDK RPC and failure types
-
-## CLI
+## Verification
 
 ```bash
-npx @nakama-health/protocol-sdk doctor
-npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
-npx @nakama-health/protocol-sdk scaffold next-route --out nakama-health-route
-npx @nakama-health/protocol-sdk scaffold oracle-worker --out nakama-oracle-worker
-```
-
-The CLI is no-signature by default. It does not require funded wallets, private
-keys, or live transaction submission for first success.
-
-## What the SDK is for
-
-- Sponsors and operators can build reserve-domain, health-plan, policy-series, funding-line, reserve-capital, obligation, and claim-case settlement transactions directly.
-- Capital contributors can deposit and return reserve capital against canonical funding lines, then inspect the resulting contribution and ledger state.
-- Wallet apps and members can inspect plan participation, obligations, claim state, and payout history with the read-model helpers.
-- Oracle operators can sign outcome and settlement-grade claim attestations with a narrow attestation helper surface.
-- External integrators can enumerate the live instruction and account surface with `listProtocolInstructionNames(...)` and `listProtocolAccountNames(...)`.
-- Product flows should use `createSafeProtocolClient(...)` or the checked convenience builders. The safe client covers sponsor funding, premium intake, claim-case settlement, and obligation reserve/release/settle flows. Raw `buildProtocolInstruction(...)` and `buildProtocolTransaction(...)` remain advanced escape hatches and enforce strict argument encoding.
-- Safe settlement calls require `recipientOwnerAddress` alongside the custody accounts so the SDK can preflight payout token-account mint and owner before users sign.
-
-## What the SDK does not do
-
-- It does not keep pool-first compatibility aliases.
-- It does not hide settlement-critical accounting in offchain helpers.
-- It does not invent a second protocol surface for wrappers or regulated participation.
-- It does not sign transactions on your behalf.
-
-## Local verification
-
-```bash
-npm ci
+npm run sync:robinhood-artifacts:check
 npm run typecheck
 npm run lint
-npm run format:check
-npm run build
 npm test
-npm run docs:api:check
-npm run docs:check
-npm run docs:sync:check:strict
-npm run runtime:check
+npm run build
 npm run examples:check
-npm run dogfood:consumer
-npm run cli:check
-npm run templates:check
-npm run dx:smoke
-npm run verify:release
-npm run security:secrets
-npm run security:install-scripts
 npm run security:package
-npm run audit:prod
-npm pack --dry-run
-npm run verify:protocol:local
 ```
 
-To refresh checked-in protocol artifacts from a sibling `omegax-protocol` workspace:
-
-```bash
-npm run generate:protocol-bindings
-```
-
-## Release coordination
-
-This package is released only when all three surfaces agree:
-
-1. `omegax-protocol`
-2. `omegax-docs`
-3. `omegax-sdk`
-
-Use `/docs/CROSS_REPO_RELEASE_ORDER.md` and `/docs/OMEGAX_DOCS_SYNC.json` to keep that publish train honest.
+No contract deployment, token launch, package publication, or production write
+is performed by these commands.

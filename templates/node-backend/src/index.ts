@@ -1,52 +1,54 @@
 import { createServer } from 'node:http';
 
 import {
-  PROTOCOL_PROGRAM_ID,
-  OmegaXError,
-  createConnection,
-  createSafeProtocolClient,
-  deriveHealthPlanPda,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
+  ROBINHOOD_CONTRACT_ROLES,
+  ROBINHOOD_MAINNET_CAIP2,
+  ROBINHOOD_MAINNET_CHAIN_ID,
+  NakamaRobinhoodError,
+  createRobinhoodPublicClient,
+  getGeneratedRobinhoodArtifactBundle,
+  validateRobinhoodDeploymentManifest,
 } from '@nakama-health/protocol-sdk';
 
 export function buildProtocolStatus() {
-  const networkInfo = getOmegaXNetworkInfo('devnet');
-  const connection = createConnection({
-    network: 'devnet',
-    rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-    commitment: 'confirmed',
-  });
-  const protocol = createSafeProtocolClient(connection, {
-    programId: PROTOCOL_PROGRAM_ID,
-  });
-  const reserveDomain = deriveReserveDomainPda({
-    domainId: process.env.OMEGAX_DOMAIN_ID ?? 'hospital-demo-domain',
-    programId: protocol.getProgramId(),
-  });
-  const healthPlan = deriveHealthPlanPda({
-    reserveDomain,
-    planId: process.env.OMEGAX_PLAN_ID ?? 'hospital-demo-plan',
-    programId: protocol.getProgramId(),
-  });
+  const bundle = getGeneratedRobinhoodArtifactBundle();
+  const deployment = validateRobinhoodDeploymentManifest(
+    bundle.deployments.mainnet,
+    'mainnet',
+  );
+  const rpcUrl = process.env.ROBINHOOD_MAINNET_RPC_URL;
+  const client = rpcUrl
+    ? createRobinhoodPublicClient({ network: 'mainnet', rpcUrl })
+    : null;
 
   return {
     ok: true,
-    role: 'health-or-hospital-backend',
-    network: networkInfo.network,
-    rpcUrl: connection.rpcEndpoint,
-    programId: protocol.getProgramId().toBase58(),
-    reserveDomain: reserveDomain.toBase58(),
-    healthPlan: healthPlan.toBase58(),
-    instructions: listProtocolInstructionNames().length,
-    accounts: listProtocolAccountNames().length,
+    role: 'protection-program-backend',
+    chainId: ROBINHOOD_MAINNET_CHAIN_ID,
+    caip2: ROBINHOOD_MAINNET_CAIP2,
+    rpcConfigured: client != null,
+    clientChainId: client?.chain?.id ?? null,
+    artifactStatus: bundle.status,
+    artifactSha256: bundle.sourceArtifactSha256,
+    deploymentStatus: deployment.status,
+    settlementAsset: deployment.settlementAsset,
+    contracts: Object.fromEntries(
+      ROBINHOOD_CONTRACT_ROLES.map((role) => [
+        role,
+        {
+          contractName: bundle.contracts[role]?.contractName ?? null,
+          abiSha256: bundle.contracts[role]?.abiSha256 ?? null,
+          address: deployment.contracts[role]?.address ?? null,
+        },
+      ]),
+    ),
+    writesEnabled: false,
+    next: 'Enable writes only after an audited generated deployment and finalized runtime verification.',
   };
 }
 
 function errorPayload(error: unknown) {
-  if (error instanceof OmegaXError) {
+  if (error instanceof NakamaRobinhoodError) {
     return {
       ok: false,
       code: error.code,

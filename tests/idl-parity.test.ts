@@ -3,14 +3,15 @@ import assert from 'node:assert/strict';
 import { Keypair } from '@solana/web3.js';
 
 import fixtureIdl from './fixtures/omegax_protocol.idl.json' with { type: 'json' };
+import { NakamaLegacyWriteDisabledError } from '../src/errors.js';
 import {
   PROTOCOL_INSTRUCTION_ACCOUNTS,
   PROTOCOL_INSTRUCTION_DISCRIMINATORS,
   PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createProtocolClient,
   type ProtocolInstructionName,
-} from '../src/index.js';
+} from '../src/generated/protocol_contract.js';
+import { createProtocolClient } from '../src/protocol.js';
+import { createConnection } from '../src/rpc.js';
 
 type IdlType =
   | string
@@ -101,7 +102,7 @@ function buildDummyArgs(instructionName: ProtocolInstructionName) {
   return buildDummyValue(argType, 'args') as Record<string, unknown>;
 }
 
-test('canonical builders preserve instruction order, account metas, and discriminators', () => {
+test('generated legacy builders cover the IDL surface and fail closed', () => {
   const client = createProtocolClient(
     createConnection('http://127.0.0.1:8899', 'confirmed'),
     PROTOCOL_PROGRAM_ID,
@@ -126,50 +127,20 @@ test('canonical builders preserve instruction order, account metas, and discrimi
           args: Record<string, unknown>;
           accounts: Record<string, string>;
           recentBlockhash: string;
-        }) => {
-          instructions: Array<{
-            keys: Array<{
-              pubkey: { toBase58(): string };
-              isSigner: boolean;
-              isWritable: boolean;
-            }>;
-            data: Uint8Array;
-            programId: { toBase58(): string };
-          }>;
-        })
+        }) => unknown)
       | undefined;
 
     assert.equal(typeof builder, 'function', `${builderName} is missing`);
 
-    const tx = builder({
-      args: buildDummyArgs(instructionName),
-      accounts,
-      recentBlockhash,
-    });
-    const ix = tx.instructions[0];
-    assert(ix, `missing instruction for ${instructionName}`);
-    assert.equal(ix.programId.toBase58(), PROTOCOL_PROGRAM_ID);
-    assert.deepEqual(
-      [...ix.data.subarray(0, 8)],
-      [...PROTOCOL_INSTRUCTION_DISCRIMINATORS[instructionName]],
-    );
-
-    const expectedAccounts = PROTOCOL_INSTRUCTION_ACCOUNTS[instructionName].map(
-      (account) => ({
-        pubkey: account.address ?? accounts[account.name],
-        isSigner: account.signer,
-        isWritable: account.writable,
-      }),
-    );
-
-    assert.deepEqual(
-      ix.keys.map((account) => ({
-        pubkey: account.pubkey.toBase58(),
-        isSigner: account.isSigner,
-        isWritable: account.isWritable,
-      })),
-      expectedAccounts,
-      `account meta mismatch for ${instructionName}`,
+    assert.throws(
+      () =>
+        builder({
+          args: buildDummyArgs(instructionName),
+          accounts,
+          recentBlockhash,
+        }),
+      NakamaLegacyWriteDisabledError,
+      instructionName,
     );
   }
 });

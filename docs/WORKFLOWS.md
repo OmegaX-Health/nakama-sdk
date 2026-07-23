@@ -1,221 +1,149 @@
-# Integration Workflows — `@nakama-health/protocol-sdk`
+# Canonical Robinhood workflows
 
-These workflows map the canonical Nakama economic model to the actual SDK builders and readers.
+Every production workflow begins with an explicit Robinhood network and a
+caller-selected RPC. A static manifest is only configuration; live runtime proof
+must come from `verifyRobinhoodDeploymentRuntime(...)`, and both checked-in
+manifests intentionally fail that prerequisite today.
 
-Use them by builder lane rather than reading the entire catalog in protocol-object order.
+## Read a protection program
 
-## Shared integration pattern
+1. Create the public client for chain `4663` or `46630`.
+2. Load the generated bundle and selected deployment manifest.
+3. Assert the deployment is complete, audited, approved, and verified.
+4. Verify all 12 live runtimes and suite relationships through the same client.
+5. Construct `createRobinhoodReadClient(...)` with the manifest, immutable
+   bundle, SDK-issued runtime proof, and exact program ID.
+6. Read at a pinned block. Preserve the returned block hash, safe/finalized
+   markers, and reconciliation state alongside the product value.
 
-1. Create `connection`, `protocol`, and `rpc` clients.
-2. Derive canonical addresses with PDA helpers.
-3. Build unsigned transactions with `build...Tx(...)`.
-4. Sign with your wallet or signer stack.
-5. Broadcast with `broadcastSignedTx(...)`.
-6. Verify state with `fetch...(...)` readers and reserve-model helpers.
+An indexer can improve discovery and latency, but it cannot authorize a write.
+Use `reconcileRobinhoodRead(...)` against a fresh direct-chain observation, then
+call `assertRobinhoodWriteStateSafe(...)` before preparing the action.
 
-Use `createSafeProtocolClient(...)` for product and operator flows. Raw
-`createProtocolClient(...)` builders are useful for protocol engineering and
-tests, but production flows should stay on the safe layer unless an explicit
-unsafe custom-program override is part of a devnet or localnet workflow.
+For multi-page discovery, use `collectRobinhoodIndexerPages(...)` with a
+provider-specific adapter scoped to `public_protocol_state`. The helper retries
+only errors the adapter explicitly classifies as transient, caps every retry
+and page, rejects repeated cursors or a changed indexed block/hash, and requires
+finality plus reconciliation context on every page. On a detected reorg, pass
+the affected block to `invalidateRobinhoodOfflineCacheAfterReorg(...)`; cached
+descendants are discarded and still cannot authorize a write.
 
-Runnable starting points:
+## Reconstruct economic accounting
 
-- `npm run example:smoke` for a no-signature safe-client import and PDA smoke.
-- `npm run example:app` for member, claim, and obligation read-model shaping.
-- `npm run example:oracle` for protocol-bound oracle attestation signing and verification.
+Subscribe to `PoolVault.EconomicActivity` and pass each canonical log to
+`decodeRobinhoodEconomicActivity(...)`. The decoder rejects every other role,
+event name, and unknown kind, then returns one of the nine schema-2 activities
+with the asset, actor, beneficiary, signed delta, and complete accounting
+snapshot after the mutation. Replay logs in canonical block, transaction, and
+log order; reorg handling must discard the changed block and every descendant
+before rebuilding the projection.
 
-## Path A: Oracle and event producers
+Do not merge the removed sponsor-funding, liability, reservation, obligation,
+settlement, and refund event names into the projection. Schema 2 made
+`EconomicActivity` the only economic vocabulary so one successful mutation has
+one reconstructable record.
 
-Use this path when your service needs to sign Nakama-compatible outcome events and feed settlement-grade evidence into the claim lifecycle.
+## Submit a user action
 
-### Workflow A1: Oracle attestation services
+The wallet path is deliberately linear because each step binds the next:
 
-Use this when an external oracle worker or service needs a stable signing surface for outcome attestations before it forwards them into downstream transport or settlement systems.
+1. Reconcile the direct state that controls the action.
+2. Build one action through `createRobinhoodActionBuilder(...)`.
+3. Display its explanation, exact USDG amount, recipient, expiry, and expected
+   state changes.
+4. Simulate that capability-marked action with `simulateRobinhoodAction(...)`.
+5. Pass the successful result to `requestRobinhoodAction(...)`; it verifies the
+   action/runtime/program bindings and reruns a fresh exact simulation.
+6. Let the user's EIP-1193 wallet authorize `eth_sendTransaction`.
+7. Convert the SDK-sealed submission to finality input and track it without
+   reconstructing or relabeling the action.
 
-Helpers:
+An arbitrary calldata object, a cloned prepared action, a changed label, an old
+simulation, or caller-fabricated runtime proof is rejected. The SDK never holds
+a private key and never switches the user's network.
 
-- `createOracleSignerFromEnv(...)`
-- `createOracleSignerFromKmsAdapter(...)`
-- `attestOutcome(...)`
-- `attestProtocolOutcome(...)`
-- `verifyOracleAttestation(...)`
-- `verifyProtocolOracleAttestation(...)`
+## Fund with USDG
 
-Use `attestProtocolOutcome(...)` for settlement-grade claim evidence. It binds
-the signed payload to network, program ID, health plan, funding line, claim
-case, schema key hash, audience, nonce, issue time, as-of time, and expiry.
-Use `verifyProtocolOracleAttestation(...)` before settlement intake so the SDK
-checks signature, trusted expected verifier identity, expiry, expected
-network/program/account IDs, audience, and nonce together. Generic
-`attestOutcome(...)` and `verifyOracleAttestation(...)` remain available for
-non-settlement telemetry.
+`parseRobinhoodUsdg(...)` represents the amount as integer units plus exact
+network, CAIP-2, token address, symbol, and decimals. Mainnet accepts only
+`0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`; testnet remains unavailable until
+a canonical address is published.
 
-Off-chain attestations bind to a claim case by hash; the on-chain decision is
-recorded by the plan's claims operator through `buildAdjudicateClaimCaseTx(...)`,
-which carries the evidence and decision-support hashes into protocol state.
+Approval and funding are separate actions. The approval builder decodes its own
+calldata before returning it, confirming the canonical vault spender, positive
+bounded amount, and matching human disclosure. Do not request an unlimited
+approval through a generic transaction helper.
 
-See `examples/oracle-attestation.ts` for an offline KMS-adapter example that
-does not require secrets or a funded signer.
+## Review and sign a decision
 
-## Path B: Health / wallet / app builders
+Build one `NakamaDecision` EIP-712 payload from trusted request/program state,
+then generate the preview from that same payload. The message commits to the
+program, request, terms, evidence manifest/version, review round, reviewer role,
+decision action, approved amount, recipient commitment, public reason code,
+nonce, and expiry.
 
-Use this path when your app needs member, claim, obligation, and payout state without owning the entire sponsor or capital stack.
+After signature collection, call `verifyNakamaDecision(...)` with the expected
+reviewer, module, nonce, and time. Persist
+`nakamaDecisionReplayKey(...)` atomically before relaying, and provide a public
+client when contract-wallet EIP-1271 verification is allowed.
 
-### Workflow B1: Protection claims and premium flows
+## Determine economic finality
 
-Use this when a policy series needs explicit premium intake, claim review, and settlement consequences.
+A single provider can report `soft_confirmed`, `l1_posted`, or `finalized` for
+display, but the result remains `economicFinal: false`. Economic finality needs:
 
-Builders:
+- the exact SDK-sealed submission, including action commitment, calldata hash,
+  value, sender, target, chain, and intent;
+- transaction input/value/sender/target readback matching that submission;
+- two L2 readers with distinct provider, endpoint-origin, and operator identity;
+- two L1 batch-evidence readers with the same independence rules; and
+- agreement on the canonical receipt, L2 ordering, and L1 posting/finality.
 
-- `buildRecordPremiumPaymentTx(...)`
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildAdjudicateClaimCaseTx(...)`
-- `buildSettleClaimCaseTx(...)`
-- `buildCreateObligationTx(...)`
-- `buildReserveObligationTx(...)`
-- `buildReleaseReserveTx(...)`
-- `buildSettleObligationTx(...)`
+Provider disagreement, a changed receipt, replacement, timeout, revert, or
+canonical-block mismatch remains explicit and cannot be collapsed into success.
 
-Readers:
+## Simulate a maintenance agent
 
-- `fetchClaimCase(...)`
-- `fetchObligation(...)`
-- `fetchFundingLineLedger(...)`
-- `fetchPlanReserveLedger(...)`
+The Phase-0 smart-account client can simulate only permissionless maintenance:
+expiry, no-quorum escalation, information-timeout escalation, and unappealed
+denial finalization. Economic, membership, role, funding, settlement, pause, and
+other privileged actions are rejected.
 
-Failure helpers:
+Submission for the allowlist requires a capability returned by
+`verifyRobinhoodSmartAccountRuntime(...)`. That verifier reads the account and
+all five privilege-bearing module bytecodes at one canonical block. The client
+then reruns simulation and validates the provider's user-operation result
+against the exact action, chain, entry point, account, gas cap, and commitment.
+Installed policy/revocation readback remains a live provider-conformance gate;
+an adapter's self-attestation is insufficient.
 
-- `normalizeClaimSimulationFailure(...)`
-- `normalizeClaimRpcFailure(...)`
-- `validateSignedClaimTx(...)` for checking the submitted signed transaction
-  against a server-stored unsigned transaction plus a nonce-bearing, expiring
-  `ClaimIntent` before trusting claim intake.
+When an adapter's `consumeAuthorization(...)` simulation or transaction fails,
+the adapter may separately submit calldata from
+`createRobinhoodRecordBlockedAttemptCall(...)`. The registry recomputes the
+failure and persists `AuthorizationBlocked`; it rejects an attempt that is
+currently authorized and does not change consumption counters. The helper does
+not return a wallet action because the reviewed adapter contract must be the
+actual caller.
 
-See `examples/app-builder-read.ts` for deterministic app-facing read-model
-shaping from member, claim, and obligation snapshots.
+A selected paymaster can later implement `RobinhoodPaymasterAdapter`, but the
+Phase-0 client requests and validates quotes only. Policy and quote must agree
+on sponsor, account, program, canonical policy commitment, action commitment,
+target, selector, native value, gas ceiling, bounded rate window, and expiry.
+Paymaster submission remains outside this quote client.
+`createRobinhoodSmartAccountLifecycleClient(...)` does expose a strict,
+revision-bound provider contract for account creation, passkey enrollment,
+signer rotation, and recovery with post-mutation readback. Provider selection,
+fallback-wallet UX, live lifecycle conformance, and independently finalized
+sponsorship verification remain release gates.
 
-### Workflow B2: Member read models
+## Validate a Virtuals packet
 
-Use this when you want wallet-facing or app-facing views rather than raw account objects.
+`validateVirtualsLaunchPacketStructure(...)` runs offline. Use it to catch
+missing ownership references, inconsistent allocations, incorrect USDG/chain
+identity, duplicate addresses, mismatched simulation hashes, and impossible
+block ordering before a packet reaches an official workflow.
 
-Helpers:
-
-- `buildMemberReadModel(...)`
-- `describeEligibilityStatus(...)`
-- `describeClaimStatus(...)`
-- `describeObligationStatus(...)`
-- `shortenAddress(...)`
-
-## Path C: Sponsor and reserve integrators
-
-Use this path when you need to create the settlement boundary, launch sponsor programs, and fund plan reserves.
-
-### Workflow C1: Reserve-domain and asset-vault bootstrap
-
-Use this when preparing the settlement boundary for a new domain and asset.
-
-`buildCreateDomainAssetVaultTx(...)` derives the protocol-owned SPL vault token account at the canonical `domain_asset_vault_token` PDA. Do not create or pass an admin-owned token account; the protocol initializes the PDA-owned account inline.
-
-Builders:
-
-- `buildCreateReserveDomainTx(...)`
-- `buildUpdateReserveDomainControlsTx(...)`
-- `buildCreateDomainAssetVaultTx(...)`
-
-Readers:
-
-- `fetchReserveDomain(...)`
-- `fetchDomainAssetVault(...)`
-- `fetchDomainAssetLedger(...)`
-
-PDA helpers:
-
-- `deriveReserveDomainPda(...)`
-- `deriveDomainAssetVaultPda(...)`
-- `deriveDomainAssetVaultTokenAccountPda(...)`
-- `deriveDomainAssetLedgerPda(...)`
-
-### Workflow C2: Sponsor-funded health plan
-
-Use this for sponsor budgets, reward programs, and plans funded from sponsor budgets, premium income, and reserve capital contributions.
-
-Sponsor budget, premium, reserve-capital, and settlement builders move tokens as
-part of the instruction. Provide the payer source or payout recipient token
-account, the canonical domain vault token account, the asset mint, and the token
-program alongside the reserve ledgers.
-
-Product integrations should prefer `createSafeProtocolClient(...)` for sponsor
-funding, premium payment, and settlement flows. The safe layer derives
-PDA-owned vaults, enforces classic SPL Token accounts, and preflights
-token-account mint/owner where a `Connection` is available. Safe settlement
-additionally requires `recipientOwnerAddress` so the payout token account owner
-is checked before signing.
-
-`buildOpenClaimCaseTx(...)` requires an explicit `claimantAddress` or
-`memberWalletAddress`; operator-submitted claims never default the claimant to
-the operator authority.
-
-Builders:
-
-- `buildCreateHealthPlanTx(...)`
-- `buildUpdateHealthPlanControlsTx(...)`
-- `buildCreatePolicySeriesTx(...)`
-- `buildVersionPolicySeriesTx(...)`
-- `buildOpenFundingLineTx(...)`
-- `buildFundSponsorBudgetTx(...)`
-- `buildRecordPremiumPaymentTx(...)`
-- `buildDepositReserveCapitalTx(...)`
-- `buildRecordReserveEarningsTx(...)`
-- `buildReturnReserveCapitalTx(...)`
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildAdjudicateClaimCaseTx(...)`
-- `buildSettleClaimCaseTx(...)`
-- `buildCreateObligationTx(...)`
-- `buildReserveObligationTx(...)`
-- `buildReleaseReserveTx(...)`
-- `buildSettleObligationTx(...)`
-
-Readers:
-
-- `fetchHealthPlan(...)`
-- `fetchPolicySeries(...)`
-- `fetchFundingLine(...)`
-- `fetchFundingLineLedger(...)`
-- `fetchCapitalContribution(...)`
-- `fetchClaimCase(...)`
-- `fetchPlanReserveLedger(...)`
-- `fetchObligation(...)`
-
-Reserve helpers:
-
-- `recomputeReserveBalanceSheet(...)`
-- `buildSponsorReadModel(...)`
-- `buildCapitalReadModel(...)`
-
-## Local release preflight
-
-```bash
-npm ci
-npm run typecheck
-npm run lint
-npm run format:check
-npm run build
-npm test
-npm run docs:check
-npm run docs:api:check
-npm run docs:sync:check:strict
-npm run runtime:check
-npm run examples:check
-npm run dogfood:consumer
-npm run cli:check
-npm run templates:check
-npm run dx:smoke
-npm run security:secrets
-npm run security:install-scripts
-npm run security:package
-npm run audit:prod
-npm pack --dry-run
-npm run verify:protocol:local
-```
+Passing does not prove Virtuals acceptance, legal eligibility, KYC/KYB,
+beneficial ownership, deployed code, or finalized configuration. Resolve those
+through current official platform, legal, identity, and Robinhood RPC sources;
+this SDK never signs or broadcasts a launch.

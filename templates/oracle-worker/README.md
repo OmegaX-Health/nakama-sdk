@@ -1,7 +1,9 @@
-# Nakama Oracle Worker Starter
+# Nakama Human Review Payload Worker
 
-Protocol-bound oracle attestation starter. The smoke uses an in-memory keypair;
-production workers should use KMS or a secret manager.
+Builds the Robinhood Chain program's exact `Decision` EIP-712 payload, human
+preview, digest, and round-scoped replay key. It never handles a private key or
+lets an AI agent sign a coverage decision. Set `DECISION_MODULE_ADDRESS` only
+from the generated audited deployment after runtime verification.
 
 ```bash
 npm install

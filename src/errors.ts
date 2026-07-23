@@ -102,3 +102,78 @@ export class OmegaXRpcError extends OmegaXError {
     });
   }
 }
+
+/** Base error for the Ethereum-first Nakama SDK surface. */
+export class NakamaEthereumError extends OmegaXError {}
+
+export class NakamaEthereumConfigError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_CONFIG_ERROR',
+    });
+  }
+}
+
+export class NakamaEthereumAddressError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_ADDRESS_ERROR',
+    });
+  }
+}
+
+export class NakamaEthereumWrongChainError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_WRONG_CHAIN',
+    });
+  }
+}
+
+export class NakamaEthereumContractError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_CONTRACT_ERROR',
+    });
+  }
+}
+
+export class NakamaEthereumReceiptError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_RECEIPT_ERROR',
+    });
+  }
+}
+
+export class NakamaEthereumAttestationError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_ATTESTATION_ERROR',
+    });
+  }
+}
+
+export class NakamaEthereumReplayError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_ETHEREUM_REPLAY',
+    });
+  }
+}
+
+export class NakamaLegacyWriteDisabledError extends NakamaEthereumError {
+  constructor(message: string, options: Omit<OmegaXErrorOptions, 'code'> = {}) {
+    super(message, {
+      ...options,
+      code: 'NAKAMA_LEGACY_WRITE_DISABLED',
+    });
+  }
+}

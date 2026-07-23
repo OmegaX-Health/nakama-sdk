@@ -64,11 +64,36 @@ async function main() {
   ) {
     throw new Error('doctor did not verify package subpath imports');
   }
+  const deploymentCheck = doctor.checks.find(
+    (check) => check.name === 'deployment-manifest',
+  );
+  const contractNames = Object.keys(
+    deploymentCheck?.details?.contracts ?? {},
+  ).sort();
+  const expectedContractNames = [
+    'agentAuthorizationRegistry',
+    'assetRegistry',
+    'decisionModule',
+    'factory',
+    'membershipRegistry',
+    'poolRegistry',
+    'program',
+    'requestManager',
+    'safetyGuardian',
+    'settlementModule',
+    'templateRegistry',
+    'vault',
+  ].sort();
+  if (JSON.stringify(contractNames) !== JSON.stringify(expectedContractNames)) {
+    throw new Error(
+      'doctor did not report all twelve Robinhood contract roles',
+    );
+  }
 
   const failingDoctor = parseJsonOutput(
     run(
       process.execPath,
-      [cliPath, 'doctor', '--network', 'testnet', '--json'],
+      [cliPath, 'doctor', '--network', 'ethereum', '--json'],
       {
         capture: true,
         expectFailure: true,

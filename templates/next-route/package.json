@@ -8,7 +8,7 @@
     "smoke": "node dist/smoke.js"
   },
   "dependencies": {
-    "@nakama-health/protocol-sdk": "^0.8.10"
+    "@nakama-health/protocol-sdk": "^0.9.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.37",

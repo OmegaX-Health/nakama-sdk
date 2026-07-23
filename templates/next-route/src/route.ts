@@ -1,45 +1,32 @@
 import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  deriveHealthPlanPda,
-  deriveReserveDomainPda,
-  getOmegaXNetworkInfo,
-  listProtocolAccountNames,
-  listProtocolInstructionNames,
+  ROBINHOOD_CONTRACT_ROLES,
+  ROBINHOOD_MAINNET_CAIP2,
+  ROBINHOOD_MAINNET_CHAIN_ID,
+  getGeneratedRobinhoodArtifactBundle,
+  validateRobinhoodDeploymentManifest,
 } from '@nakama-health/protocol-sdk';
 
-export function buildOmegaXStatus() {
-  const networkInfo = getOmegaXNetworkInfo('devnet');
-  const connection = createConnection({
-    network: 'devnet',
-    rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  });
-  const protocol = createSafeProtocolClient(connection, {
-    programId: PROTOCOL_PROGRAM_ID,
-  });
-  const reserveDomain = deriveReserveDomainPda({
-    domainId: 'app-builder-domain',
-    programId: protocol.getProgramId(),
-  });
-  const healthPlan = deriveHealthPlanPda({
-    reserveDomain,
-    planId: 'app-builder-plan',
-    programId: protocol.getProgramId(),
-  });
+export function buildNakamaStatus() {
+  const bundle = getGeneratedRobinhoodArtifactBundle();
+  const deployment = validateRobinhoodDeploymentManifest(
+    bundle.deployments.mainnet,
+    'mainnet',
+  );
 
   return {
     ok: true,
-    role: 'health-app-route',
-    network: networkInfo.network,
-    programId: protocol.getProgramId().toBase58(),
-    reserveDomain: reserveDomain.toBase58(),
-    healthPlan: healthPlan.toBase58(),
-    instructions: listProtocolInstructionNames().length,
-    accounts: listProtocolAccountNames().length,
+    role: 'protection-program-route',
+    chainId: ROBINHOOD_MAINNET_CHAIN_ID,
+    caip2: ROBINHOOD_MAINNET_CAIP2,
+    artifactStatus: bundle.status,
+    artifactSha256: bundle.sourceArtifactSha256,
+    deploymentStatus: deployment.status,
+    settlementAsset: deployment.settlementAsset,
+    contractRoles: ROBINHOOD_CONTRACT_ROLES,
+    writesEnabled: false,
   };
 }
 
 export async function GET(): Promise<Response> {
-  return Response.json(buildOmegaXStatus());
+  return Response.json(buildNakamaStatus());
 }

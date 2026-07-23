@@ -1,9 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BorshCoder } from '@coral-xyz/anchor';
-import { Keypair, type Transaction } from '@solana/web3.js';
+import { Connection, Keypair } from '@solana/web3.js';
 
-import idl from '../src/generated/omegax_protocol.idl.json' with { type: 'json' };
+import { NakamaLegacyWriteDisabledError } from '../src/errors.js';
 import {
   PROTOCOL_INSTRUCTION_ACCOUNTS,
   PROTOCOL_PROGRAM_ID,
@@ -31,19 +30,17 @@ import {
   buildUpdateHealthPlanControlsTx,
   buildUpdateReserveDomainControlsTx,
   buildVersionPolicySeriesTx,
+  buildProtocolInstruction,
+  buildProtocolTransaction,
+  createProtocolClient,
+  createSafeProtocolClient,
 } from '../src/protocol.js';
 
-// A correct, deployed-surface-aligned builder must emit exactly the accounts the
-// on-chain program expects, in order, with the right signer/writable flags, and
-// must encode args the program coder can decode. This suite proves that for all
-// 21 instructions by reconciling each built instruction against the generated
-// contract (PROTOCOL_INSTRUCTION_ACCOUNTS) — the single source of truth synced
-// from the program IDL. Every optional account is supplied so each position is a
-// real account whose flags must match the contract exactly.
+// The legacy builder signatures stay available on the explicit Solana migration
+// subpath, but every construction path must fail before producing signable data.
 
 const BLOCKHASH = '11111111111111111111111111111111';
 const HASH = 'a1'.repeat(32);
-const coder = new BorshCoder(idl as never);
 const k = () => Keypair.generate().publicKey;
 
 // Fixed actors/inputs reused across builders.
@@ -62,43 +59,7 @@ const recipientTokenAccount = k();
 const contributor = k();
 const recipient = k();
 
-function assertInstruction(
-  name: ProtocolInstructionName,
-  tx: Transaction,
-): void {
-  const ix = tx.instructions[0];
-  assert.ok(ix, `${name}: produced an instruction`);
-  assert.equal(
-    ix.programId.toBase58(),
-    PROTOCOL_PROGRAM_ID,
-    `${name}: program id`,
-  );
-  const spec = PROTOCOL_INSTRUCTION_ACCOUNTS[name];
-  assert.equal(
-    ix.keys.length,
-    spec.length,
-    `${name}: account count (got ${ix.keys.length}, contract ${spec.length})`,
-  );
-  spec.forEach((acct, i) => {
-    const key = ix.keys[i];
-    assert.equal(
-      key.isSigner,
-      acct.signer,
-      `${name}[${i}] ${acct.name}: signer flag`,
-    );
-    assert.equal(
-      key.isWritable,
-      acct.writable,
-      `${name}[${i}] ${acct.name}: writable flag`,
-    );
-  });
-  // Data must decode against the program coder (discriminator + args round-trip).
-  const decoded = coder.instruction.decode(ix.data);
-  assert.ok(decoded, `${name}: instruction data decodes`);
-  assert.equal(decoded?.name, name, `${name}: decoded instruction name`);
-}
-
-const cases: Array<[ProtocolInstructionName, () => Transaction]> = [
+const cases: Array<[ProtocolInstructionName, () => unknown]> = [
   [
     'create_reserve_domain',
     () =>
@@ -453,45 +414,68 @@ const cases: Array<[ProtocolInstructionName, () => Transaction]> = [
   ],
 ];
 
-test('all 21 builders emit contract-aligned accounts and decodable data', () => {
+test('all 21 legacy Solana convenience builders fail closed', () => {
   const covered = new Set<string>();
   for (const [name, build] of cases) {
-    assertInstruction(name, build());
+    assert.throws(build, NakamaLegacyWriteDisabledError, name);
     covered.add(name);
   }
-  // Guard: the suite must cover exactly the deployed instruction surface.
   const expected = Object.keys(PROTOCOL_INSTRUCTION_ACCOUNTS).sort();
   assert.deepEqual([...covered].sort(), expected, 'all instructions covered');
 });
 
-test('optional accounts collapse to a non-writable program-id placeholder when omitted', () => {
-  // open_funding_line: omit the optional policy_series; it must become a
-  // program-id placeholder (non-signer, non-writable), not a missing account.
-  const tx = buildOpenFundingLineTx({
-    authority,
-    healthPlanAddress: healthPlan,
-    reserveDomainAddress: reserveDomain,
-    assetMint,
-    recentBlockhash: BLOCKHASH,
-    lineId: 'line-2',
-    lineType: 0,
-    fundingPriority: 0,
-    committedAmount: 1000n,
-    capsHashHex: HASH,
-  });
-  const spec = PROTOCOL_INSTRUCTION_ACCOUNTS.open_funding_line;
-  const ix = tx.instructions[0];
-  assert.equal(
-    ix.keys.length,
-    spec.length,
-    'account count unchanged when optional omitted',
+test('low-level and generated-client legacy write builders fail closed', () => {
+  assert.throws(
+    () => buildProtocolInstruction({} as never),
+    NakamaLegacyWriteDisabledError,
   );
-  const idx = spec.findIndex((a) => a.name === 'policy_series');
-  assert.equal(
-    ix.keys[idx].pubkey.toBase58(),
-    PROTOCOL_PROGRAM_ID,
-    'omitted optional → program id placeholder',
+  assert.throws(
+    () => buildProtocolTransaction({} as never),
+    NakamaLegacyWriteDisabledError,
   );
-  assert.equal(ix.keys[idx].isWritable, false, 'placeholder is non-writable');
-  assert.equal(ix.keys[idx].isSigner, false, 'placeholder is non-signer');
+
+  const connection = new Connection('http://127.0.0.1:8899');
+  const raw = createProtocolClient(connection, PROTOCOL_PROGRAM_ID);
+  assert.throws(
+    () => raw.buildInstruction({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  assert.throws(
+    () => raw.buildCreateReserveDomainTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+});
+
+test('safe-client legacy write methods fail before any RPC preflight', async () => {
+  const safe = createSafeProtocolClient(
+    new Connection('http://127.0.0.1:8899'),
+  );
+  await assert.rejects(
+    safe.buildFundSponsorBudgetTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  await assert.rejects(
+    safe.buildRecordPremiumPaymentTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  assert.throws(
+    () => safe.buildOpenClaimCaseTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  assert.throws(
+    () => safe.buildReserveObligationTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  assert.throws(
+    () => safe.buildReleaseReserveTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  await assert.rejects(
+    safe.buildSettleObligationTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
+  await assert.rejects(
+    safe.buildSettleClaimCaseTx({} as never),
+    NakamaLegacyWriteDisabledError,
+  );
 });

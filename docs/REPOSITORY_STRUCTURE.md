@@ -1,62 +1,71 @@
-# Repository Structure
+# Repository structure
 
-This repo has one main job: keep the TypeScript SDK aligned with the canonical
-Nakama protocol surface while making the public integration surface easy to
-inspect, test, and package.
+The SDK has a canonical Robinhood surface, a generated artifact seam, and
+explicit legacy migration surfaces. Keeping those boundaries visible prevents
+an old network implementation from silently becoming production behavior.
 
-## Source Ownership
+## Canonical source
 
-- `src/index.ts` is the root package barrel. Keep it small and boring.
-- `src/protocol.ts` owns the public protocol builders, account readers, safe
-  client, and transaction assembly helpers.
-- `src/protocol_seeds.ts` owns deterministic PDA derivation and program ID
-  helpers.
-- `src/protocol_models.ts` owns canonical constants and reserve/read-model
-  helpers.
-- `src/claims.ts`, `src/oracle.ts`, `src/rpc.ts`, `src/transactions.ts`,
-  `src/errors.ts`, `src/magicblock.ts`, `src/types.ts`, and `src/utils.ts` own
-  their exported package subpaths.
-- `src/internal/` is for authored implementation details that should not become
-  package subpaths. For example, `src/internal/protocol-codec.ts` owns IDL
-  encoding, account decoding, and hash normalization used by `src/protocol.ts`.
-- `src/generated/` is script-owned output from the canonical protocol artifacts.
-  Do not hand-edit it.
+- `src/index.ts` exports only `src/robinhood/index.ts`.
+- `src/robinhood.ts` provides the explicit `/robinhood` package entrypoint.
+- `src/robinhood/chains.ts` owns Robinhood chain, CAIP, RPC, address, and provider
+  validation.
+- `src/robinhood/assets.ts` owns exact USDG identity and integer-unit amounts.
+- `src/robinhood/artifacts.ts` validates artifacts/deployments and produces live
+  runtime proof.
+- `src/robinhood/protocol.ts` owns product reads, typed action builders,
+  simulations, event decoding, and protocol-domain mappings.
+- `src/robinhood/wallet.ts` owns EIP-1193 submissions, the disabled-by-default
+  Phase-0 smart-account boundary, and provider-neutral quote-only paymaster
+  policy.
+- `src/robinhood/decision.ts` owns the exact protocol EIP-712 decision schema.
+- `src/robinhood/receipts.ts` owns L2 receipt, L1 posting, reorg, and independent
+  economic-finality assessment.
+- `src/robinhood/query.ts` owns indexer reconciliation, bounded public
+  pagination/retries, block-snapshot consistency, reorg invalidation, and
+  read-only offline caching.
+- `src/robinhood/virtuals.ts` owns offline structural launch-packet validation.
 
-## Support Surfaces
+Files named `*-integrity.ts` and `generated-artifact-store.ts` are internal
+capability stores. They prevent consumers from constructing runtime proofs,
+prepared actions, sealed submissions, or generated artifact state by shape
+alone; they are not public exports.
 
-- `tests/` contains unit, parity, release-state, and protocol-workspace checks.
-  Shared test adapters live in `tests/support/`.
-- `scripts/` contains local and CI verification commands. See
-  `../scripts/README.md` for the script taxonomy.
-- `docs/` contains authored SDK docs plus generated TypeDoc markdown under
-  `docs/generated/`.
-- `examples/` and `templates/` are packaged developer experience fixtures.
-- `e2e/` contains the protocol frontend adapter and local smoke harness.
-- `typecheck/` contains compile-only consumer fixtures.
-- `dist/` and `artifacts/` are generated outputs. They are not authored source.
+## Generated artifacts
 
-## Change Rules
+- `contracts/robinhood/protocol_contract.json` is a byte-identical import of the
+  sibling protocol artifact.
+- `contracts/robinhood/*.abi.json` contains the 12 exact contract ABIs.
+- `src/generated/robinhood_protocol.ts` is generated TypeScript metadata.
+- `scripts/sync-robinhood-artifacts.mjs` is the only supported generator/import
+  path and recomputes source and ABI SHA-256 values.
 
-- Public SDK behavior belongs in exported `src/*.ts` modules and must remain
-  represented in `package.json#exports`, `SDK_RUNTIME.json`, docs, and tests.
-- Internal helpers belong under `src/internal/` when they reduce public-module
-  size or clarify ownership without creating a new public API.
-- Generated protocol bindings, IDL fixtures, and generated API docs must be
-  refreshed through the project scripts, not edited by hand.
-- Protocol-facing changes should update builders/readers, tests, fixtures, and
-  user-facing docs together.
-- Release or docs-sync changes should keep `docs/OMEGAX_DOCS_SYNC.json` honest
-  against the real `omegax-docs` commit.
+Never hand-edit generated output. Change and validate the protocol source, run
+`npm run import:robinhood-contract`, inspect the diff, then require
+`npm run sync:robinhood-artifacts:check` to reproduce it.
 
-## Validation By Change Type
+## Deployment evidence
 
-- Authored TypeScript: `npm run typecheck`, `npm run lint`, `npm test`.
-- Formatting-sensitive edits: `npm run format:check`.
-- Public exports or package shape: `npm run build`, `npm run runtime:check`,
-  `npm run security:package`.
-- Docs: `npm run docs:check`, and `npm run docs:api:check` when generated API
-  markdown should change.
-- Protocol-facing builders, readers, seeds, or fixtures:
-  `npm run verify:protocol:local`.
-- Release-sensitive changes: follow `SDK_QUALITY.md` and `docs/RELEASE.md`
-  before tagging or publishing.
+`deployments/robinhood-mainnet.json` and
+`deployments/robinhood-testnet.json` are release evidence, not address books.
+Their closed schema is `deployments/robinhood-deployment.schema.json`. An
+unconfigured manifest must have no contract addresses and cannot be promoted by
+SDK code; a deployed manifest must supply the full 12-role suite, hashes,
+verification URLs, transaction/block identity, audit evidence, and approval.
+
+## Consumer surfaces
+
+- `examples/` demonstrates offline or fail-closed Robinhood usage.
+- `templates/` contains Node backend, Next route, and human-review oracle-worker
+  starters.
+- `src/cli.ts` provides a read-only Robinhood doctor.
+- `tests/robinhood-*.test.ts` covers chain, assets, artifacts, actions,
+  decisions, receipts, smart accounts, cache behavior, and Virtuals structure.
+- `e2e/` and `scripts/dx-smoke.mjs` test the built/packed package as a consumer.
+
+## Legacy code
+
+The top-level Ethereum and Solana modules remain only because existing consumers
+may still import their explicit package subpaths. They are excluded from the
+canonical root. Changes to those modules are compatibility work and must not
+weaken or alias the Robinhood contracts, assets, networks, or safety proofs.

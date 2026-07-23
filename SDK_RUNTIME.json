@@ -1,31 +1,145 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 6,
   "package": {
     "name": "@nakama-health/protocol-sdk",
-    "version": "0.8.10",
+    "version": "0.9.0",
     "module": "module",
     "node": ">=20"
   },
   "protocol": {
-    "sourceRepo": "../omegax-protocol",
-    "bindingRefreshCommit": "434ee42d",
-    "programId": "6EXiDfGVbG7V1X2xaEALDZ7CtSuezkM8ZvXXFpk5WxQM",
-    "contractSha256": "9c7eb5d1484f21c064e560d7ecd80060b61f564496565fb28036e074952bb9fc",
-    "surface": {
-      "instructions": 21,
-      "accounts": 11,
-      "types": 43
+    "chainFamily": "eip155",
+    "artifactSchemaVersion": 2,
+    "protocolSuiteMajor": 2,
+    "economicEventSchemaVersion": 2,
+    "economicEvent": {
+      "contractRole": "vault",
+      "name": "EconomicActivity",
+      "topic0": "0x66c2674649a39002b7b60387490bfe265f1679193ced8acb3ffb131893cde2f6"
     },
-    "parityCommand": "npm run verify:protocol:local"
+    "networks": {
+      "mainnet": {
+        "name": "Robinhood Chain Mainnet",
+        "chainId": 4663,
+        "caip2": "eip155:4663",
+        "deploymentManifest": "deployments/robinhood-mainnet.json",
+        "deploymentStatus": "unconfigured"
+      },
+      "testnet": {
+        "name": "Robinhood Chain Testnet",
+        "chainId": 46630,
+        "caip2": "eip155:46630",
+        "deploymentManifest": "deployments/robinhood-testnet.json",
+        "deploymentStatus": "unconfigured"
+      }
+    },
+    "sourceRepo": "../nakama-protocol",
+    "sourceArtifact": "shared/robinhood/protocol_contract.json",
+    "sourceCommit": "6392e2c774b66252b62245ffee18c18b3803b9be",
+    "sourceArtifactSha256": "3e66c8340badccb9e413414e7dada7e80c3a8d46560d439153a799a9be5e2f1b",
+    "deploymentCodeCommitment": "0xafca0d891a53056ba7689c1c83a49d48ce7337e24709f380d52459892fe39677",
+    "deploymentKind": "factory-authorized-create2",
+    "deploymentSchema": "deployments/robinhood-deployment.schema.json",
+    "fundingAsset": {
+      "name": "Global Dollar",
+      "symbol": "USDG",
+      "decimals": 6,
+      "mainnetAddress": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "testnetAddress": null
+    },
+    "contracts": {
+      "assetRegistry": {
+        "contractName": "AssetRegistry",
+        "abiArtifact": "contracts/robinhood/AssetRegistry.abi.json",
+        "abiSha256": "13fb7931d4bb89cf3cdf7360b430d6fa1fceb80349459a76398ad3063545492c"
+      },
+      "templateRegistry": {
+        "contractName": "TemplateRegistry",
+        "abiArtifact": "contracts/robinhood/TemplateRegistry.abi.json",
+        "abiSha256": "e48e9c7835f61bd2b343e3bba0ed3199a27498b504d7695ea4290da68894e3d0"
+      },
+      "poolRegistry": {
+        "contractName": "PoolRegistry",
+        "abiArtifact": "contracts/robinhood/PoolRegistry.abi.json",
+        "abiSha256": "532c832ffaab3485150f5e50fe3e201071387bc3b4d704d85ae3cdbbe9bde390"
+      },
+      "factory": {
+        "contractName": "NakamaFactory",
+        "abiArtifact": "contracts/robinhood/NakamaFactory.abi.json",
+        "abiSha256": "f10b97c9f537bbbd0564b8ab27f55498bb6803211089e1eae54762733bc14f16"
+      },
+      "program": {
+        "contractName": "ProtectionProgram",
+        "abiArtifact": "contracts/robinhood/ProtectionProgram.abi.json",
+        "abiSha256": "bf6cf82d09944d94a7f668c9bd44b99705ba9d75ea6e76084c0b5053d0c35d81"
+      },
+      "vault": {
+        "contractName": "PoolVault",
+        "abiArtifact": "contracts/robinhood/PoolVault.abi.json",
+        "abiSha256": "4e8dae8989e20802b7cdcecf5accc413f0a0ffd3da554f0e18d0c78885ace44d"
+      },
+      "membershipRegistry": {
+        "contractName": "MembershipRegistry",
+        "abiArtifact": "contracts/robinhood/MembershipRegistry.abi.json",
+        "abiSha256": "aea59e0c6ac27d8cdb11fe91f0e5538d1a4a54b4aa9715625e28b9251bc9ae2d"
+      },
+      "decisionModule": {
+        "contractName": "DecisionModule",
+        "abiArtifact": "contracts/robinhood/DecisionModule.abi.json",
+        "abiSha256": "0b317cb621d6b27adb2c41aa1a4772391811b612647b009e98a61c3466e1c7af"
+      },
+      "requestManager": {
+        "contractName": "ClaimManager",
+        "abiArtifact": "contracts/robinhood/ClaimManager.abi.json",
+        "abiSha256": "59bcd33d84304ddc2a05003367b3d36dfb849b3ae8d180bb5045db85eb27aa42"
+      },
+      "settlementModule": {
+        "contractName": "SettlementModule",
+        "abiArtifact": "contracts/robinhood/SettlementModule.abi.json",
+        "abiSha256": "32653e443c9443aa9deb5a4a9192d5cc13f4a05d01771c2bea3490adbd5243b2"
+      },
+      "agentAuthorizationRegistry": {
+        "contractName": "AgentAuthorizationRegistry",
+        "abiArtifact": "contracts/robinhood/AgentAuthorizationRegistry.abi.json",
+        "abiSha256": "7c9c1705b5479ee3dca29fb331a89ee1e34e3ed975ae1c0e19d2383f8d4518ea"
+      },
+      "safetyGuardian": {
+        "contractName": "SafetyGuardian",
+        "abiArtifact": "contracts/robinhood/SafetyGuardian.abi.json",
+        "abiSha256": "7a41de5c4524a4182f9315575613487e4829830c0eb74c720d22a84513a66bd5"
+      }
+    },
+    "parityCommand": "npm run sync:robinhood-artifacts:check",
+    "importCommand": "npm run import:robinhood-contract"
   },
   "publicSubpaths": [
     ".",
+    "./robinhood",
     "./claims",
+    "./ethereum",
+    "./ethereum_contract",
+    "./ethereum_oracle",
     "./errors",
-    "./magicblock",
     "./oracle",
-    "./package.json",
     "./protocol",
+    "./magicblock",
+    "./protocol_models",
+    "./protocol_seeds",
+    "./rpc",
+    "./transactions",
+    "./types",
+    "./utils",
+    "./package.json"
+  ],
+  "canonicalSubpaths": [".", "./robinhood"],
+  "legacyReadMigrationSubpaths": [
+    "./claims",
+    "./ethereum",
+    "./ethereum_contract",
+    "./ethereum_oracle",
+    "./errors",
+    "./oracle",
+    "./protocol",
+    "./magicblock",
     "./protocol_models",
     "./protocol_seeds",
     "./rpc",
@@ -35,116 +149,174 @@
   ],
   "lanes": [
     {
-      "id": "app-read-build",
+      "id": "robinhood-identity-read",
       "entrypoints": [
-        { "name": "createConnection", "kind": "function", "subpath": "." },
         {
-          "name": "createSafeProtocolClient",
-          "kind": "function",
-          "subpath": "."
-        },
-        { "name": "deriveHealthPlanPda", "kind": "function", "subpath": "." },
-        { "name": "derivePolicySeriesPda", "kind": "function", "subpath": "." }
-      ],
-      "sideEffects": "Reads network state only when a fetch method is called; builders return unsigned transactions."
-    },
-    {
-      "id": "claim-intake",
-      "entrypoints": [
-        { "name": "ClaimIntent", "kind": "type", "subpath": "./types" },
-        { "name": "validateSignedClaimTx", "kind": "function", "subpath": "." },
-        { "name": "simulateSignedTx", "kind": "method", "subpath": "./rpc" },
-        { "name": "broadcastSignedTx", "kind": "method", "subpath": "./rpc" }
-      ],
-      "sideEffects": "Validation is local; simulation and broadcast require explicit RPC calls."
-    },
-    {
-      "id": "oracle-attestation",
-      "entrypoints": [
-        { "name": "attestProtocolOutcome", "kind": "function", "subpath": "." },
-        {
-          "name": "verifyProtocolOracleAttestation",
-          "kind": "function",
-          "subpath": "."
+          "name": "createRobinhoodPublicClient",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "createOracleSignerFromKmsAdapter",
-          "kind": "function",
-          "subpath": "."
+          "name": "verifyRobinhoodDeploymentRuntime",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodReadClient",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "decodeRobinhoodEconomicActivity",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "decodeRobinhoodFactoryConfigurationError",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "reconcileRobinhoodRead",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "collectRobinhoodIndexerPages",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "invalidateRobinhoodOfflineCacheAfterReorg",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
-      ],
-      "sideEffects": "Signing occurs only through the caller-provided signer adapter."
+      ]
     },
     {
-      "id": "maintainer-protocol-parity",
+      "id": "robinhood-actions-wallet",
       "entrypoints": [
         {
-          "name": "listProtocolInstructionNames",
-          "kind": "function",
-          "subpath": "."
+          "name": "createRobinhoodActionBuilder",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
         {
-          "name": "listProtocolAccountNames",
-          "kind": "function",
-          "subpath": "."
+          "name": "createRobinhoodRecordBlockedAttemptCall",
+          "kind": "value",
+          "subpath": "./robinhood"
         },
-        { "name": "decodeProtocolAccount", "kind": "function", "subpath": "." },
         {
-          "name": "buildProtocolInstruction",
-          "kind": "function",
-          "subpath": "."
+          "name": "simulateRobinhoodAction",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "requestRobinhoodAction",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodSmartAccountClient",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodPaymasterClient",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "validateRobinhoodPaymasterPolicy",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "hashRobinhoodPaymasterPolicy",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "createRobinhoodSponsorFundingBatch",
+          "kind": "value",
+          "subpath": "./robinhood"
         }
-      ],
-      "sideEffects": "No network mutation unless the caller separately signs and broadcasts."
+      ]
+    },
+    {
+      "id": "decision-and-finality",
+      "entrypoints": [
+        {
+          "name": "createNakamaDecisionSigningPayload",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "verifyNakamaDecision",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "waitForRobinhoodFinality",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "readRobinhoodEconomicFinality",
+          "kind": "value",
+          "subpath": "./robinhood"
+        }
+      ]
+    },
+    {
+      "id": "virtuals-offline-structure",
+      "entrypoints": [
+        {
+          "name": "decodeVirtualsLaunchPlan",
+          "kind": "value",
+          "subpath": "./robinhood"
+        },
+        {
+          "name": "validateVirtualsLaunchPacketStructure",
+          "kind": "value",
+          "subpath": "./robinhood"
+        }
+      ]
     }
   ],
-  "environment": {
-    "required": [],
-    "optional": ["SOLANA_RPC_URL", "OMEGAX_PROTOCOL_REPO"],
-    "unsafe": [
-      {
-        "name": "OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID",
-        "purpose": "Allows custom program IDs for devnet, localnet, and test workflows only."
-      }
-    ]
-  },
-  "safetyRules": [
-    "No hidden signing.",
-    "No hidden broadcast.",
-    "No implicit production cluster.",
-    "Custom program IDs fail closed unless explicitly unsafe-enabled.",
-    "Signed claim transactions must be compared with trusted expected unsigned bytes."
+  "securityBoundaries": [
+    "No deployment manifest is usable until all 12 addresses, runtime hashes, verification URLs, audit evidence, and release approval are populated.",
+    "Runtime verification is an SDK-issued capability; caller-built or cloned proof objects are rejected.",
+    "Prepared actions are builder-issued capabilities, must pass an exact fresh simulation, and cannot be relabeled before wallet submission.",
+    "The SDK never accepts a private key, silently selects an RPC, or switches a user's chain.",
+    "Phase-0 smart-account submission requires SDK-sealed account, factory, entry-point, validation, recovery, and passkey runtime verification plus exact fresh simulation and provider-result binding; live installed-policy and revocation conformance remains external.",
+    "Smart-account creation, passkey enrollment, signer rotation, and recovery are one-time-approval, expiry, revision, commitment, transition, and readback bound; selecting and qualifying a production provider remains external.",
+    "Paymaster adapters are quote-only; provider payloads cannot submit or prove sponsorship, and every quote is bound to exact action, canonical policy commitment, gas, rate, and expiry policy.",
+    "Blocked-attempt calldata is adapter-only and never becomes a wallet PreparedRobinhoodAction; the registry persists a failure reason without consuming a grant or executing a target.",
+    "Indexer and offline-cache state is public and read-only; page sizes, pagination, and retries are bounded, snapshot changes fail, and reorged descendants invalidate.",
+    "Economic finality requires sealed transaction-intent readback plus two independent L2 readers and two independent L1 batch readers.",
+    "The Virtuals validator is an offline structural check; it cannot prove platform acceptance, legal eligibility, ownership, code deployment, or launch finality."
   ],
   "docs": [
     "README.md",
     "SDK_QUALITY.md",
+    "docs/INDEX.md",
     "docs/GETTING_STARTED.md",
     "docs/API_REFERENCE.md",
+    "docs/ROBINHOOD_VIRTUALS.md",
     "docs/WORKFLOWS.md",
-    "docs/RECIPES.md",
-    "examples/README.md"
+    "docs/ERROR_CATALOG.md",
+    "docs/TROUBLESHOOTING.md"
   ],
   "validationGates": [
-    "npm test",
+    "npm run sync:robinhood-artifacts:check",
     "npm run typecheck",
     "npm run lint",
-    "npm run format:check",
+    "npm test",
     "npm run build",
-    "npm run docs:api:check",
     "npm run docs:check",
-    "npm run docs:sync:check:strict",
     "npm run runtime:check",
-    "npm run protocol:artifact:check",
     "npm run examples:check",
-    "npm run dogfood:consumer",
-    "npm run cli:check",
-    "npm run templates:check",
-    "npm run dx:smoke",
-    "npm run security:secrets",
-    "npm run security:install-scripts",
-    "npm run security:release-governance",
-    "npm run security:package",
-    "npm run audit:prod",
-    "npm pack --dry-run"
+    "npm run security:package"
   ]
 }

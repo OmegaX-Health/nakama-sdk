@@ -1,252 +1,191 @@
 # Getting Started — `@nakama-health/protocol-sdk`
 
-This guide gets you from install to a usable Nakama client on Solana devnet beta, then points you into the right builder path.
+This guide connects an application to the Robinhood-native SDK without
+inventing a deployment address, trusting an indexer as settlement truth, or
+giving a library custody of a signing key.
 
-## Prerequisites
-
-- Node.js `>=20`
-- ESM runtime
-- A Solana RPC endpoint
-- The canonical deployed Nakama `programId` for your target cluster
-
-Public integrations should target devnet beta until Nakama announces public mainnet availability.
-
-## Install
+## 1. Install and choose the network explicitly
 
 ```bash
 npm install @nakama-health/protocol-sdk
-npm install --save-dev tsx
 ```
 
-## Check Your Environment
+```ts
+import { createRobinhoodPublicClient } from '@nakama-health/protocol-sdk';
 
-```bash
-npx @nakama-health/protocol-sdk doctor
+const client = createRobinhoodPublicClient({
+  network: 'mainnet',
+  rpcUrl: process.env.ROBINHOOD_MAINNET_RPC_URL!,
+});
 ```
 
-`doctor` checks Node, ESM, package imports, network metadata, the canonical
-program ID, typed errors, and protocol instruction/account listings. Add
-`--rpc-url <url>` when you want it to check RPC connectivity too.
+Mainnet is chain `4663` (`eip155:4663`); testnet is chain `46630`
+(`eip155:46630`). Both the network and transport are mandatory, and the SDK
+does not fall back to Ethereum chain `1` or a public endpoint.
 
-## First success smoke
+For an injected browser wallet, pass `{ network, provider }` instead of an RPC
+URL. Passing both transports is a type error, and wallet requests verify the
+connected chain without switching it.
 
-Run this before choosing a deeper workflow. It verifies package imports, network
-metadata, safe client creation, deterministic PDA derivation, and the public
-instruction/account surface without funded signers or a live transaction.
+## 2. Inspect the generated artifacts and deployment state
+
+```ts
+import {
+  getGeneratedRobinhoodArtifactBundle,
+  validateRobinhoodDeploymentManifest,
+} from '@nakama-health/protocol-sdk';
+
+const bundle = getGeneratedRobinhoodArtifactBundle();
+const manifest = validateRobinhoodDeploymentManifest(
+  bundle.deployments.mainnet,
+  'mainnet',
+);
+
+console.log(bundle.status); // ready: all 12 ABIs are imported
+console.log(bundle.protocolSuiteMajor); // 2
+console.log(bundle.economicEventSchemaVersion); // 2
+console.log(manifest.status); // unconfigured: no deployed addresses yet
+```
+
+`assertRobinhoodDeploymentReady(...)` currently throws by design. After a
+deployment is reviewed, call `verifyRobinhoodDeploymentRuntime(...)` against
+the same RPC before constructing a read client or action builder. Static JSON
+cannot prove that code still exists at an address.
+
+## 3. Represent USDG exactly
+
+```ts
+import {
+  formatRobinhoodAssetAmount,
+  parseRobinhoodUsdg,
+} from '@nakama-health/protocol-sdk';
+
+const requestedAmount = parseRobinhoodUsdg('2500.00', 'mainnet');
+console.log(requestedAmount.units); // 2500000000n
+console.log(formatRobinhoodAssetAmount(requestedAmount)); // 2500
+```
+
+The amount carries mainnet chain identity, the canonical Global Dollar address,
+symbol `USDG`, and six decimals. More than six fractional digits are rejected;
+no rounding occurs. Testnet is fail-closed because a canonical USDG address has
+not been configured.
+
+## 4. Read product state
+
+Once the deployment is published and verified:
+
+```ts
+import { createRobinhoodReadClient } from '@nakama-health/protocol-sdk';
+
+const nakama = createRobinhoodReadClient({
+  client,
+  manifest,
+  bundle,
+  runtime: verifiedRuntime,
+  programId,
+});
+
+const program = await nakama.readProgram();
+console.log(program.value.state);
+console.log(program.context.reconciliation); // direct_chain_only
+```
+
+Reads pin all calls to one block and return block/finality context alongside the
+domain value. If the UI also uses an indexer, reconcile it with a direct read
+before enabling a write.
+
+For an economic projection, decode only canonical PoolVault logs with
+`decodeRobinhoodEconomicActivity(...)`. The result is one of nine typed kinds
+and includes the complete post-mutation accounting snapshot; replay in canonical
+log order and rewind changed blocks after a reorg.
+
+## 5. Prepare, simulate, and submit one action
+
+```ts
+import {
+  assertRobinhoodWriteStateSafe,
+  createRobinhoodActionBuilder,
+  requestRobinhoodAction,
+  simulateRobinhoodAction,
+} from '@nakama-health/protocol-sdk';
+
+assertRobinhoodWriteStateSafe(program.context);
+
+const actions = createRobinhoodActionBuilder({
+  manifest,
+  bundle,
+  runtime: verifiedRuntime,
+  programId,
+});
+
+const prepared = actions.openRequest({
+  account: memberAddress,
+  intentId: crypto.randomUUID(),
+  membershipId,
+  evidenceManifestCommitment,
+  recipientCommitment,
+  requestedAmount,
+});
+
+const simulated = await simulateRobinhoodAction({
+  client,
+  bundle,
+  action: prepared,
+});
+
+if (!simulated.simulation.success) {
+  throw new Error(
+    simulated.simulation.decodedError?.name ?? 'Simulation failed',
+  );
+}
+
+const submission = await requestRobinhoodAction(window.ethereum, simulated, {
+  client,
+  manifest,
+  bundle,
+  runtime: verifiedRuntime,
+});
+```
+
+Display `prepared.explanation` and `prepared.expectedStateChanges` before the
+wallet prompt. A failed, expired, wrong-chain, or unverified action cannot be
+submitted through the SDK.
+
+## 6. Track finality
+
+Convert the exact sealed wallet result with
+`createRobinhoodSubmittedTransactionFromSubmission(...)`. Each receipt reader
+must read back transaction input and value. Single-provider state is UI-only;
+economic finality requires two independent L2 readers and two independent L1
+batch readers with distinct provider, endpoint, and operator identities.
+Replaced, reverted, timed-out, and reorged transactions remain distinct.
+
+## 7. Build decision signatures safely
+
+Use `createNakamaDecisionSigningPayload(...)` and
+`createNakamaDecisionPreview(...)` from the same object shown to the reviewer.
+The signature domain binds Robinhood network and the deployed DecisionModule;
+the message binds program, request, terms, evidence version, round, role,
+action, amount, recipient commitment, reason, nonce, and expiry.
+
+Backends should call `verifyNakamaDecision(...)` with trusted expected signer,
+module, nonce, and time. Supply the public client for EIP-1271 contract wallets,
+and persist `nakamaDecisionReplayKey(...)` atomically before relaying.
+
+## 8. Treat the Virtuals checker as structural only
+
+`validateVirtualsLaunchPacketStructure(...)` is an offline schema and
+consistency check. It cannot prove that Virtuals approved a launch, the listed
+owners passed KYC, counsel approved the structure, or the supplied hashes came
+from Robinhood. See [Robinhood and Virtuals](ROBINHOOD_VIRTUALS.md) before using
+it in a launch workflow.
+
+## Run the local examples
 
 ```bash
 npm run example:smoke
+npm run example:contract
+npm run example:authorization
 ```
 
-In a separate integration project, copy `examples/devnet-smoke.ts` and run:
-
-```bash
-npx tsx devnet-smoke.ts
-```
-
-## Choose your builder path
-
-- Oracle and event producers: sign compatible outcome attestations and feed settlement-grade evidence into the claim lifecycle.
-- Health / wallet / app builders: read claim, obligation, and payout state, then build user-facing claim flows.
-- Sponsor and reserve integrators: launch reserve domains, asset vaults, plans, policy series, funding lines, reserve capital, and reserve-backed settlement on the canonical surface.
-
-## Create clients
-
-```ts
-import {
-  PROTOCOL_PROGRAM_ID,
-  createConnection,
-  createSafeProtocolClient,
-  createRpcClient,
-  getOmegaXNetworkInfo,
-} from '@nakama-health/protocol-sdk';
-
-const network =
-  (process.env.OMEGAX_NETWORK as 'devnet' | 'mainnet' | undefined) ?? 'devnet';
-const networkInfo = getOmegaXNetworkInfo(network);
-
-const connection = createConnection({
-  network,
-  rpcUrl: process.env.SOLANA_RPC_URL ?? networkInfo.defaultRpcUrl,
-  commitment: 'confirmed',
-});
-
-const protocol = createSafeProtocolClient(connection, {
-  programId: PROTOCOL_PROGRAM_ID,
-});
-const rpc = createRpcClient(connection);
-```
-
-Production clients default to the canonical Nakama program. Custom program IDs
-are rejected unless `unsafeAllowCustomProgramId: true` or
-`OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` is used for devnet, localnet, or
-tests.
-
-Use `createProtocolClient(...)` only for protocol engineering, generated-surface
-tests, or advanced flows that need raw IDL-backed builders.
-
-For framework-specific snippets, see `docs/RECIPES.md`.
-
-## Inspect the current public surface
-
-Use the SDK to inspect the live contract shape before choosing builders.
-
-```ts
-import { listProtocolInstructionNames } from '@nakama-health/protocol-sdk';
-
-const instructions = listProtocolInstructionNames();
-```
-
-## Build, sign, and broadcast
-
-Every canonical instruction follows the same pattern:
-
-- choose the workflow-specific `build...Tx(...)`
-- pass the required `args`
-- pass the runtime `accounts`
-- attach a fresh `recentBlockhash`
-
-When you have a transaction:
-
-```ts
-const signedTx = await wallet.signTransaction(tx);
-const signedTxBase64 = Buffer.from(signedTx.serialize()).toString('base64');
-const result = await rpc.broadcastSignedTx({
-  signedTxBase64,
-  commitment: 'confirmed',
-});
-```
-
-Simulate before sending when you want preflight detail:
-
-```ts
-const signedTx = await wallet.signTransaction(tx);
-const signedTxBase64 = Buffer.from(signedTx.serialize()).toString('base64');
-const simulation = await rpc.simulateSignedTx({
-  signedTxBase64,
-  sigVerify: true,
-  replaceRecentBlockhash: false,
-});
-if (!simulation.signatureVerified) {
-  throw new Error('Transaction signature was not verified during simulation.');
-}
-```
-
-Signature-verifying simulation should keep `replaceRecentBlockhash: false`;
-some RPC implementations reject the combination of signature verification and a
-replaced blockhash. Simulation is preflight feedback, not authentication. Claim
-and intake services that accept user-submitted transactions should call
-`validateSignedClaimTx(...)` with the server-stored `expectedUnsignedTxBase64`
-plus a `ClaimIntent` containing `intentId`, `nonce`, `expiresAtIso`,
-`requiredSigner`, and `unsignedTxBase64`. Treat the submitted intent as metadata
-to check against server state, not as the source of truth for the transaction
-bytes. Operator flows can set `requireExactMessage: true`; wallet flows may
-allow blockhash-only refresh when every non-blockhash byte still matches.
-
-## Path A: Oracle and event producers
-
-Start here when your service needs to turn private or messy inputs into Nakama-compatible outcome events.
-
-Relevant helpers:
-
-- `createOracleSignerFromEnv(...)`
-- `createOracleSignerFromKmsAdapter(...)`
-- `attestOutcome(...)`
-- `attestProtocolOutcome(...)`
-- `verifyOracleAttestation(...)`
-- `verifyProtocolOracleAttestation(...)`
-
-Then continue with:
-
-- [SDK Workflows](WORKFLOWS.md)
-- [API Reference](API_REFERENCE.md)
-- [Oracle Event Production](https://docs.nakama.health/docs/oracle/event-production)
-
-## Path B: Health / wallet / app builders
-
-Start here when your product needs to show users what they hold, what happened, and what can be paid.
-
-Relevant builders and helpers:
-
-- `buildOpenClaimCaseTx(...)`
-- `buildAuthorizeClaimRecipientTx(...)`
-- `buildMemberReadModel(...)`
-- `describeEligibilityStatus(...)`
-- `describeClaimStatus(...)`
-- `describeObligationStatus(...)`
-
-Then continue with:
-
-- [SDK Workflows](WORKFLOWS.md)
-- [API Reference](API_REFERENCE.md)
-- [Troubleshooting](TROUBLESHOOTING.md)
-
-## Path C: Sponsor and reserve integrators
-
-Start here when you need to create settlement boundaries, plan lanes, and reserve-backed settlement on the canonical model.
-
-Reserve-moving builders require real token rails. Create the domain vault through the protocol so it initializes the canonical SPL vault token account, then provide source and vault token accounts for sponsor funding, premium payments, and reserve capital deposits. Use the safe client for sponsor funding, premium payments, and settlement so PDA derivation, classic SPL token guards, and token-account preflights stay in one place. Safe settlement calls also require `recipientOwnerAddress` to preflight payout token-account ownership before signing.
-
-Example: derive canonical addresses for a sponsor-side deployment:
-
-```ts
-import {
-  deriveReserveDomainPda,
-  deriveDomainAssetVaultTokenAccountPda,
-  deriveHealthPlanPda,
-  derivePolicySeriesPda,
-  deriveFundingLinePda,
-} from '@nakama-health/protocol-sdk';
-
-const reserveDomain = deriveReserveDomainPda({
-  domainId: 'open-usdc-domain',
-  programId,
-}).toBase58();
-const healthPlan = deriveHealthPlanPda({
-  reserveDomain,
-  planId: 'builder-demo-plan',
-  programId,
-}).toBase58();
-const vaultTokenAccount = deriveDomainAssetVaultTokenAccountPda({
-  reserveDomain,
-  assetMint: process.env.ASSET_MINT!,
-  programId,
-}).toBase58();
-const policySeries = derivePolicySeriesPda({
-  healthPlan,
-  seriesId: 'builder-demo-protection',
-  programId,
-}).toBase58();
-const fundingLine = deriveFundingLinePda({
-  healthPlan,
-  lineId: 'builder-demo-premium',
-  programId,
-}).toBase58();
-```
-
-Relevant builders and helpers:
-
-- `buildCreateReserveDomainTx(...)`
-- `buildCreateDomainAssetVaultTx(...)`
-- `buildCreateHealthPlanTx(...)`
-- `buildCreatePolicySeriesTx(...)`
-- `buildVersionPolicySeriesTx(...)`
-- `buildOpenFundingLineTx(...)`
-- `buildDepositReserveCapitalTx(...)`
-- `buildSettleClaimCaseTx(...)`
-- `buildSettleObligationTx(...)`
-- `recomputeReserveBalanceSheet(...)`
-
-Then continue with:
-
-- [SDK Workflows](WORKFLOWS.md)
-- [API Reference](API_REFERENCE.md)
-- [Release Notes](RELEASE_NOTES.md)
-
-## Next steps
-
-1. Use [SDK Workflows](WORKFLOWS.md) to map your builder path to the right canonical builders and readers.
-2. Use [API Reference](API_REFERENCE.md) to inspect the exported reader, helper, and builder surface in detail.
-3. Use [Release Notes](RELEASE_NOTES.md) to confirm the current SDK version and newly added modules.
-4. Run `npm run generate:protocol-bindings` whenever the sibling protocol repo changes.
-5. Run `npm run verify:protocol:local` before shipping SDK changes that affect runtime parity.
+All three are offline and do not sign, submit, deploy, or launch anything.

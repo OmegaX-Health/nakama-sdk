@@ -24,6 +24,7 @@ const checks = [
   { command: 'npm', args: ['run', 'protocol:artifact:check'] },
   { command: 'npm', args: ['run', 'security:package'] },
   { command: 'npm', args: ['run', 'audit:prod'] },
+  { command: 'npm', args: ['run', 'audit:packed-consumer'] },
   { command: 'npm', args: ['run', 'examples:check'] },
   {
     command: 'npm',

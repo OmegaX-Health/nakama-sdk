@@ -1,14 +1,14 @@
-# OmegaX SDK Agent Rules
+# Nakama SDK Agent Rules
 
 ## Source Of Truth
 
-- Treat `../omegax-protocol` as the active protocol source of truth while the project is devnet-first.
+- Treat `../nakama-protocol` as the active Ethereum protocol source of truth.
 - Keep the SDK aligned to the canonical protocol surface, not archived forks or parallel variants.
 - Keep `README.md`, `docs/*.md`, exported symbols, fixtures, and tests aligned with actual SDK behavior.
 
 ## Owned Surfaces
 
-- `src/`: authored SDK surface, including builders, readers, RPC helpers, and exports.
+- `src/`: authored Ethereum SDK surface plus explicit legacy read/migration subpaths.
 - `tests/`: unit behavior, IDL parity, local protocol workspace parity, and fixtures.
 - `scripts/`: verification, fixture-sync, and docs-sync helpers used locally and in CI.
 - `docs/`: SDK docs plus `OMEGAX_DOCS_SYNC.json` for `omegax-docs` parity.
@@ -16,14 +16,14 @@
 
 ## Naming
 
-- Do not introduce `v2`, `legacy`, or parallel compatibility names unless the live protocol still requires them.
+- Do not introduce parallel compatibility names unless a versioned wire contract or retained migration boundary requires them.
 - Prefer canonical terms such as `policy series`, `policy position`, `claim record`, and `protocol config`.
 - When protocol naming changes, update the SDK surface in place instead of adding aliases by default.
 
 ## Workflow
 
-- For protocol-facing builders, readers, seeds, account fixtures, or exported callables, update `src/`, tests, fixtures, and user-facing docs together.
-- Refresh `tests/fixtures/omegax_protocol.idl.json` with `npm run sync:idl-fixture` when the canonical IDL changes.
+- For protocol-facing calldata, readers, generated ABIs, deployment fixtures, or exported callables, update `src/`, tests, fixtures, and user-facing docs together.
+- Refresh canonical Ethereum artifacts with `npm run import:ethereum-contract`; use `npm run sync:legacy-solana-idl` only for explicit Solana migration compatibility.
 - Validate docs parity through `docs/OMEGAX_DOCS_SYNC.json` instead of leaving release-doc path or version drift behind.
 
 ## Review Routing
@@ -37,7 +37,7 @@
 ## Validation
 
 - Run `npm test` for normal SDK validation.
-- Run `npm run verify:protocol:local` when protocol-facing code, seeds, fixtures, or workspace integration changes.
+- Run `npm run verify:protocol:local` when Ethereum protocol artifacts, fixtures, or workspace integration changes.
 - Run `npm run docs:check` when touching `README.md`, `docs/`, or exported SDK callables mentioned there.
 - Run `npm run docs:sync:check` when touching `docs/OMEGAX_DOCS_SYNC.json`, release docs, or SDK-to-`omegax-docs` mappings.
 - Run `npm run typecheck`, `npm run lint`, and `npm run format:check` before handing off broad or release-sensitive changes.

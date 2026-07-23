@@ -1,74 +1,50 @@
 # Nakama SDK Examples
 
-These examples are safe first-run checks for external builders. They do not
-require funded signers, private keys, or live transaction submission.
+These examples exercise the Robinhood Chain SDK without funded accounts,
+private keys, platform credentials, or transaction submission.
 
-## Devnet Smoke
+## Robinhood Chain smoke
 
-Verifies the package import surface, safe client setup, PDA derivation, network
-metadata, and public protocol surface.
+Checks chain identity, CAIP formatting, canonical USDG metadata, generated ABI
+provenance, and the fail-closed deployment manifest.
 
 ```bash
 npm run example:smoke
 ```
 
-Optional:
+## Human decision payload
+
+Builds the exact `Decision` EIP-712 wallet payload, human preview, digest, and
+round-scoped replay key. An AI agent never signs this payload.
 
 ```bash
-SOLANA_RPC_URL=https://api.devnet.solana.com npm run example:smoke
+npm run example:contract
 ```
 
-In an installed consumer project, use the packaged examples and CLI:
+## Virtuals launch packet
+
+Validates the offline launch packet structure, allocations, code-hash evidence,
+and finality fields. Caller-supplied gates remain claims until independently
+verified through the platform, legal, identity, and onchain workflows.
 
 ```bash
-npm install @nakama-health/protocol-sdk
-npm install --save-dev tsx
-npx @nakama-health/protocol-sdk examples
-npx tsx node_modules/@nakama-health/protocol-sdk/examples/devnet-smoke.ts
+npm run example:authorization
 ```
 
-## App Builder Read Model
-
-Shows how a health app, wallet, or backend can turn member positions,
-obligations, and claim cases into a user-facing read model.
-
-```bash
-npm run example:app
-```
-
-## Oracle Attestation
-
-Shows how an oracle service can sign and verify a protocol-bound claim
-attestation with a KMS-style adapter. The example uses an in-memory keypair for
-demonstration only.
-
-```bash
-npm run example:oracle
-```
-
-## Check All Examples
+## Full checks
 
 ```bash
 npm run examples:check
-```
-
-## Consumer Dogfood App
-
-`examples/consumer-app` is a tracked external-consumer dogfood fixture. It does
-not import SDK source files directly.
-
-```bash
 npm run dogfood:consumer
 ```
 
-The script packs the SDK, installs the tarball into a temporary copy of the app,
-typechecks, builds, scaffolds the public templates, and runs no-signature
-smokes.
+The dogfood app installs the packed SDK as an external consumer, compiles both
+the canonical root and `/robinhood` subpath, and runs a no-signature smoke.
 
 ## Public CLI
 
 ```bash
-npx @nakama-health/protocol-sdk doctor
+npx @nakama-health/protocol-sdk doctor --network mainnet
 npx @nakama-health/protocol-sdk scaffold node-backend --out nakama-provider-backend
 npx @nakama-health/protocol-sdk examples
 ```

@@ -12,13 +12,6 @@ import {
 } from '@solana/web3.js';
 
 import {
-  OBLIGATION_DELIVERY_MODE_CLAIMABLE,
-  OBLIGATION_DELIVERY_MODE_PAYABLE,
-  OBLIGATION_STATUS_CANCELED,
-  OBLIGATION_STATUS_CLAIMABLE_PAYABLE,
-  OBLIGATION_STATUS_SETTLED,
-  SERIES_MODE_REWARD,
-  SERIES_STATUS_ACTIVE,
   buildAdjudicateClaimCaseTx,
   buildAuthorizeClaimRecipientTx,
   buildCreateDomainAssetVaultTx,
@@ -40,9 +33,21 @@ import {
   buildUpdateHealthPlanControlsTx,
   buildUpdateReserveDomainControlsTx,
   buildVersionPolicySeriesTx,
-  createConnection,
   createProtocolClient,
-  createRpcClient,
+  type ProtocolClient,
+} from '../src/protocol.js';
+import {
+  OBLIGATION_DELIVERY_MODE_CLAIMABLE,
+  OBLIGATION_DELIVERY_MODE_PAYABLE,
+  OBLIGATION_STATUS_CANCELED,
+  OBLIGATION_STATUS_CLAIMABLE_PAYABLE,
+  OBLIGATION_STATUS_SETTLED,
+  SERIES_MODE_REWARD,
+  SERIES_STATUS_ACTIVE,
+  recomputeReserveBalanceSheet,
+} from '../src/protocol_models.js';
+import { createConnection, createRpcClient } from '../src/rpc.js';
+import {
   deriveClaimCasePda,
   deriveDomainAssetLedgerPda,
   deriveDomainAssetVaultPda,
@@ -54,9 +59,7 @@ import {
   derivePlanReserveLedgerPda,
   derivePolicySeriesPda,
   deriveReserveDomainPda,
-  recomputeReserveBalanceSheet,
-  type ProtocolClient,
-} from '../src/index.js';
+} from '../src/protocol_seeds.js';
 
 // Canonical 21-instruction localnet smoke. The protocol surface was trimmed to
 // the reserve-domain → vault → plan → series → funding-line → capital →

@@ -1,141 +1,84 @@
-# Error Catalog - `@nakama-health/protocol-sdk`
+# Robinhood error catalog
 
-Public SDK errors extend `OmegaXError` and include a stable `code`, optional
-`details`, and optional `cause`. Branch on `instanceof` or `code`; do not parse
-message strings.
+Canonical errors extend `NakamaRobinhoodError` and carry stable SDK error codes.
+Catch the narrow type when remediation is safe; otherwise stop the operation and
+surface the error rather than retrying a write blindly.
 
-## `OMEGAX_CONFIG_ERROR`
+## `NakamaRobinhoodConfigError`
 
-Meaning: SDK configuration is invalid or incomplete.
+Network, RPC, deployment, timestamp, policy, or required configuration is
+missing or inconsistent. Supply an explicit network/RPC and trusted current
+configuration; do not add a permissive default.
 
-Likely causes:
+## `NakamaRobinhoodAddressError`
 
-- Unsupported network input.
-- Missing oracle signer environment variable.
-- Invalid oracle signer secret length.
+An address or CAIP account is malformed, zero where forbidden, or on a different
+Robinhood network. Re-resolve the identity from the authoritative source and
+rebuild the operation.
 
-Fix: correct network, env, or signer configuration before retrying.
+## `NakamaRobinhoodWrongChainError`
 
-Retry: no, unless configuration changed.
+The RPC or wallet reports a chain other than the selected `4663`/`46630` chain.
+Abort and let the user reconnect; the SDK deliberately does not switch networks.
 
-## `OMEGAX_INVALID_PUBLIC_KEY`
+## `NakamaRobinhoodAssetError`
 
-Meaning: a provided address cannot be normalized to a Solana public key.
+USDG metadata, address, decimals, chain, amount precision, or paired asset
+identity is wrong. Mainnet accepts only the canonical USDG address and six
+decimals; testnet is unavailable until a verified address is published.
 
-Likely causes:
+## `NakamaRobinhoodArtifactError`
 
-- Empty address.
-- Typo in base58 string.
-- Object with invalid `toBase58()` output.
+The imported source/ABI checksum, role mapping, deployment commitment, manifest,
+or generated bundle differs from canonical evidence. Re-import from the reviewed
+protocol artifact and inspect the diff; do not modify generated output manually.
 
-Fix: validate the address at the application boundary.
+## `NakamaRobinhoodContractError`
 
-Retry: no, unless input changed.
+Live bytecode, suite topology, program binding, decoded calldata, event, or
+contract state conflicts with the verified deployment. Treat this as a stopped
+operation and investigate the deployment/RPC state before retrying.
 
-## `OMEGAX_PROGRAM_MISMATCH`
+For factory planning failures, use
+`decodeRobinhoodFactoryConfigurationError(...)`. `InvalidRole` identifies a
+zero or incompatible infrastructure address, `DuplicateRole` names both
+authority positions that were collapsed, and `IncompatibleSuiteVersion`
+reports expected versus actual major version. These are configuration failures;
+changing gas or retrying the same calldata cannot fix them.
 
-Meaning: the requested program ID does not match the canonical Nakama program
-for safe production flows.
+`decodeRobinhoodEconomicActivity(...)` also raises this error for an unknown
+economic kind or a non-vault event. Stop projection at that log because silently
+accepting a new schema would corrupt reconstructed accounting.
 
-Likely causes:
+## `NakamaRobinhoodSimulationError`
 
-- Custom localnet/devnet program ID passed without unsafe opt-in.
-- Builder call mixed two different program IDs.
-- Token program is not the classic SPL Token program where required.
+The exact prepared action reverted, was stale, changed, or was not simulated on
+the selected verified network. Explain the decoded failure when available,
+refresh state, rebuild, and simulate a new action.
 
-Fix: use `PROTOCOL_PROGRAM_ID` for product flows. Use
-`unsafeAllowCustomProgramId` only for localnet, test, or explicitly unsafe
-devnet workflows.
+## `NakamaRobinhoodReceiptError`
 
-Retry: no, unless configuration changed.
+Receipt, transaction input, canonical block, provider agreement, L1 evidence,
+or finality ordering is missing or contradictory. Preserve the explicit status;
+do not translate disagreement, replacement, reorg, or timeout into success.
 
-## `OMEGAX_ACCOUNT_NOT_FOUND`
+## `NakamaRobinhoodSignatureError`
 
-Meaning: an expected account was not found at the provided address.
+The EIP-712 payload, signer, role/round/action combination, module, nonce,
+expiry, digest, replay key, or EIP-1271 result is invalid. Rebuild from trusted
+current request state and never reuse the failed payload.
 
-Likely causes:
+## `NakamaRobinhoodAccountPolicyError`
 
-- Account has not been initialized.
-- Wrong PDA seed or program ID.
-- RPC points at the wrong cluster.
+An agent policy is too broad, expired, mismatched, unproven, or requests a
+disabled submission. Keep the Phase-0 operation in simulation; adapter
+self-attestation is not sufficient onchain policy evidence.
 
-Fix: confirm network, program ID, seeds, and account creation state.
+## `NakamaRobinhoodStaleStateError`
 
-Retry: yes only after account creation or RPC/network correction.
+A write depends on stale, divergent, malformed, or offline-cached state. Refresh
+the direct-chain pinned read, reconcile it, and require a safe context before
+building a new action.
 
-## `OMEGAX_ACCOUNT_OWNER_MISMATCH`
-
-Meaning: an account exists but is owned by an unexpected program.
-
-Likely causes:
-
-- Wrong cluster or address.
-- Token account expected but a system/program account was supplied.
-- Protocol account belongs to a different program ID.
-
-Fix: inspect the address and expected owner before asking users to sign.
-
-Retry: no, unless input changed.
-
-## `OMEGAX_TOKEN_ACCOUNT_PREFLIGHT`
-
-Meaning: a token custody account failed mint, owner, or layout preflight.
-
-Likely causes:
-
-- Recipient token account has wrong mint.
-- Recipient owner does not match expected owner.
-- Token account data is malformed or not a classic SPL Token account.
-
-Fix: create or select the correct token account, then retry.
-
-Retry: yes after token account correction.
-
-## `OMEGAX_INSTRUCTION_BUILD`
-
-Meaning: the SDK could not safely build the requested instruction or
-transaction.
-
-Likely causes:
-
-- Missing required account.
-- Fee payer could not be inferred.
-- Required recent blockhash or fee payer missing for v0 compilation.
-- Partial optional account scope supplied.
-
-Fix: provide the complete account scope or use `createSafeProtocolClient(...)`
-for guarded builders.
-
-Retry: no, unless the builder input changed.
-
-## `OMEGAX_TRANSACTION_DECODE`
-
-Meaning: serialized transaction bytes could not be decoded.
-
-Likely causes:
-
-- Malformed base64.
-- Truncated transaction.
-- Invalid legacy or versioned transaction message.
-
-Fix: preserve the original payload and validate serialization before submission.
-
-Retry: no, unless the transaction payload changed.
-
-## `OMEGAX_RPC_ERROR`
-
-Meaning: an RPC call returned a malformed or failed response through SDK RPC
-helpers.
-
-Likely causes:
-
-- RPC rejected simulation arguments.
-- RPC returned no result payload.
-- Transport or node behavior differs from Solana web3 expectations.
-
-Fix: inspect RPC logs, endpoint health, and simulation options. Use
-`allowSigVerifyFallback` only when the application explicitly accepts unverified
-simulation fallback metadata.
-
-Retry: yes for transport/node health failures; no for deterministic payload
-failures.
+Legacy `NakamaEthereumError` and Solana-era errors remain available only through
+their explicit migration subpaths and are not canonical Robinhood error types.

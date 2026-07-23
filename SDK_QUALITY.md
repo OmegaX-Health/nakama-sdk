@@ -1,125 +1,173 @@
-# OmegaX SDK Quality Doctrine
+# SDK quality contract
 
-This SDK is a production integration surface for humans and AI agents. It should
-be boringly reliable: easy to inspect, explicit about trust boundaries, and
-aligned with the live OmegaX protocol.
+This SDK is the public integration boundary for Nakama protection programs on
+Robinhood Chain. Its primary job is to keep identity, product state, assets,
+actions, signatures, and finality explicit; convenience must never turn
+placeholder configuration or self-asserted evidence into authority.
 
-## API Naming
+## Canonical product surface
 
-- Use canonical protocol language: policy series, policy position, claim record,
-  and protocol config.
-- Do not add `v2`, `legacy`, compatibility, reward, or seeker-era names unless
-  the active protocol surface still requires them.
-- Prefer stable nouns over app-specific roles. SDK names should describe the
-  protocol concept, not a current UI journey.
+- The package root and `/robinhood` expose the same canonical API.
+- Robinhood mainnet is chain `4663` / `eip155:4663`; testnet is `46630` /
+  `eip155:46630`. There is no implicit chain-1 or legacy-network fallback.
+- Every RPC or wallet operation requires an explicit selected network. The SDK
+  never silently chooses a production RPC and never switches the user's chain.
+- Ethereum-mainnet and Solana APIs remain explicit legacy migration subpaths and
+  cannot be re-exported by the root.
 
-## Public Exports
+## Asset integrity
 
-- Every public export must be useful from TypeScript tooling, documented through
-  generated API docs, and covered by an authored doc, example, or test when it is
-  a primary workflow entrypoint.
-- Public subpaths must stay listed in `package.json#exports` and
-  `SDK_RUNTIME.json`.
-- Remove stale exports in place during pre-1.0 alignment rather than adding
-  parallel aliases by default.
+- Mainnet settlement is Global Dollar (`USDG`) at
+  `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`, with six decimals.
+- Amounts carry chain, CAIP-2, token address, name, symbol, decimals, and integer
+  units together. Cross-asset comparisons, lookalike addresses, excess decimal
+  precision, negative values, and rounding are rejected.
+- Testnet USDG remains unavailable until a canonical address and code proof are
+  published; callers cannot override it through an amount constructor.
+- Approval builders verify their exact spender, positive bounded amount, and
+  disclosure after encoding. The SDK does not expose a generic unlimited-
+  approval shortcut.
 
-## Transaction Builders
+## Artifact and deployment provenance
 
-- Builders produce unsigned transaction intent only. They must never sign,
-  broadcast, assume a wallet, or hide network mutation.
-- Required accounts and args must fail before a nonsensical instruction is
-  produced.
-- Custom program IDs are unsafe by default. They require an explicit unsafe flag
-  or `OMEGAX_SDK_UNSAFE_ALLOW_CUSTOM_PROGRAM_ID=1` for devnet, localnet, and
-  tests.
-- PDA derivation must use the same configured program ID as the instruction
-  being built.
+- The generated bundle contains exactly 12 named contracts: four global
+  registries/factory roles and eight per-program components.
+- `scripts/sync-robinhood-artifacts.mjs` imports the byte-identical canonical
+  artifact and ABIs, recomputes every raw SHA-256, and generates the TypeScript
+  binding. Generated files are never hand-maintained.
+- The nonzero full contract-source Git commit, source artifact SHA-256, and
+  factory-authorized CREATE2 deployment-code commitment are declared in
+  `SDK_RUNTIME.json` and verified by `npm run runtime:check`.
+- Artifact schema `2`, suite major `2`, economic-event schema `2`, and the
+  canonical `EconomicActivity` topic are version-pinned. A same-named legacy
+  ABI cannot pass import or runtime parity.
+- Generated artifacts are cloned and recursively frozen behind an internal
+  revisioned store, so consumer mutation cannot poison future reads.
+- Deployment manifests use a closed schema. An unconfigured manifest contains
+  no contract addresses; a deployed one contains every unique role address,
+  exact ABI/runtime hash, verification URL, deployment block/transaction,
+  source release/commit, canonical asset, audit evidence, and approval evidence.
+- Static configuration is not runtime proof. Live verification checks selected
+  chain, all 12 code hashes, asset code/metadata, suite graph, program identity,
+  and deployment commitment before issuing an internal runtime capability.
 
-## Readers And RPC Helpers
+## Read and cache semantics
 
-- Readers must validate protocol account ownership and discriminators where the
-  SDK has enough information to do so.
-- RPC helpers must make simulation, broadcast, and signature-verification
-  downgrades explicit in return values.
-- Helpers may read network state only when their name and docs make that clear.
+- Product reads are pinned to one block and carry network, CAIP-2, block number,
+  block hash, head/safe/finalized markers, observation time, and reconciliation
+  state.
+- Memberships expose remaining benefit rather than inferring consumption from
+  unrelated counters. Obligations distinguish `none`, `approved_unpaid`, and
+  `settled`; pause state exposes its review deadline without inventing expiry.
+- Economic projection consumes only `PoolVault.EconomicActivity`. Its nine
+  discriminated kinds include the signed delta and full post-mutation
+  accounting snapshot, so replay does not reconcile parallel event families.
+- Indexers are caches. A write requires a fresh direct-chain observation and an
+  explicit safe reconciliation result.
+- The public indexer adapter caps pages/retries, requires chain, finality, and
+  reconciliation context, detects cursor loops and snapshot changes, and never
+  retries errors unless the adapter marks them transient.
+- Offline cache entries accept only bounded public-safe values with canonical
+  timestamps, invalidate conservatively after a reorg, and can never authorize
+  a write. Private health evidence and PHI remain offchain and outside the
+  cache API.
 
-## Errors And Validation
+## Action and wallet integrity
 
-- SDK-thrown errors should use stable `OmegaX*Error` classes with deterministic
-  `code` values and actionable messages.
-- Validation should fail closed around signing, expected transaction bytes,
-  account ownership, custom program IDs, and protocol-derived addresses.
-- Silent fallbacks are allowed only when the result records the fallback and the
-  caller can reject it.
+- Typed builders encode only protocol-named operations against the verified
+  suite and program ID. Returned actions are frozen and capability-marked.
+- Caller-built, cloned, JSON-round-tripped, relabeled, expired, wrong-program,
+  wrong-runtime, wrong-network, or semantically contradictory actions are
+  rejected at simulation/submission boundaries.
+- Submission requires a successful exact simulation and performs a fresh exact
+  simulation before `eth_sendTransaction`.
+- The wallet request is bound to chain, sender, target, selector, calldata,
+  native value, intent, expiry, explanation, and expected state changes.
+- The SDK never accepts a private key and never performs background signing.
+- Blocked-attempt calldata is adapter-only and is never capability-marked as a
+  wallet action. Recording recomputes a current failure, changes no consumption
+  counter, and executes no target.
 
-## Safety And Side Effects
+## Decisions and replay safety
 
-- No hidden signing.
-- No hidden broadcast.
-- No hidden cluster assumption.
-- No hidden mutation from examples, docs, templates, or CLI checks.
-- Side-effectful methods must name the action and document the caller-owned
-  signer, payer, network, and retry behavior.
+- EIP-712 types exactly mirror the protocol `NakamaDecision` schema and include
+  an explicit `EIP712Domain` for wallet serialization.
+- Domain, types, message, signing payload, and preview are immutable. The domain
+  binds name/version, selected Robinhood chain, and deployed DecisionModule.
+- Verification binds expected signer, program/module, role/round/action
+  semantics, amount, evidence version, nonce, expiry, digest, and replay key.
+- EIP-1271 is used only when a public client is provided and code exists at the
+  expected reviewer address.
+- Replay keys are round-aware and must be reserved atomically by the relayer.
 
-## Protocol Parity
+## Smart-account boundary
 
-- Treat `../omegax-protocol` as the active source of truth while the protocol is
-  devnet-first.
-- Refresh fixtures and generated bindings only through project scripts.
-- Preserve the release target in `SDK_RUNTIME.json` and keep protocol surface
-  counts, program ID, and contract hash aligned with generated artifacts.
-- Run `npm run verify:protocol:local` whenever builders, readers, seeds,
-  fixtures, or workspace integration change.
+- Phase-0 policies may simulate only four permissionless maintenance actions:
+  membership expiry, no-quorum escalation, information-timeout escalation, and
+  unappealed-denial finalization.
+- Economic, funding, settlement, membership issuance/recovery, decision, role,
+  pause, and other privileged actions are not agent-allowlisted.
+- Smart-account submission remains disabled until independent finalized reads
+  prove module code, installed policy, limits, revocation, target, selector,
+  program, and action constraints. Adapter self-attestation is not proof.
+- Paymaster adapters can return quotes only. Policy and quote jointly bind
+  sponsor, account, program, the canonical policy commitment, action commitment,
+  target, selector, native value, gas, rate window, and expiry; no provider
+  payload can enter a submission path in this release.
 
-## Docs And Examples
+## Receipt and finality semantics
 
-- `README.md`, `docs/*.md`, generated API docs, templates, and examples must
-  agree on imports, subpaths, side effects, and command snippets.
-- Examples must be copyable without funded keys or irreversible actions by
-  default.
-- Docs must state setup assumptions, return types, side effects, failure modes,
-  and the validation command for the workflow.
-- Packaged docs and examples are part of the developer experience, not release
-  leftovers.
+- Receipt states preserve submitted, soft-confirmed, L1-posted, finalized,
+  reverted, replaced, timed-out, and reorged outcomes.
+- The SDK-sealed wallet result carries action commitment, calldata hash, value,
+  chain, sender, target, transaction hash, and intent; a reconstructed object
+  cannot enter the economic-finality lane.
+- Readers must match exact transaction input/value/from/to/chain and canonical
+  receipt ordering.
+- One provider can supply a display state but never `economicFinal: true`.
+- Economic finality requires two L2 readers and two L1 batch readers whose
+  provider IDs, endpoint origins, and operators are independently distinct and
+  whose observations agree.
 
-## Agent-Friendly Usage
+## Virtuals boundary
 
-- Agents should be able to start from `README.md`, `SDK_RUNTIME.json`, or
-  `examples/README.md` and discover the safe entrypoint for each lane.
-- Prefer obvious import surfaces and deterministic commands over prose-only
-  guidance.
-- Keep first-action flows small: connect, derive/read, build unsigned intent,
-  validate signed intent, then broadcast only when the caller explicitly asks.
-- Do not rely on ambient env vars except documented unsafe/test-only paths.
+- The launch-packet helper is offline structural validation. It checks explicit
+  Robinhood/USDG identity, named contract evidence, ownership references,
+  allocation/fee arithmetic, simulation-hash parity, timestamps, and finalized
+  block ordering.
+- Supplied booleans, hashes, identities, and block numbers are not independently
+  trusted. Passing cannot prove platform approval, legal eligibility, KYC/KYB,
+  ownership, deployed code, current fees, simulation truth, or launch finality.
+- The SDK contains no Virtuals launch signer or broadcaster. Production tooling
+  must resolve current official platform/legal/identity/RPC evidence and use the
+  official launch surface.
 
-## Release Gates
+## Required gates
 
-Before handoff for broad or release-sensitive SDK work, run:
+Before a package handoff or release candidate, run at least:
 
 ```bash
-npm test
+npm run sync:robinhood-artifacts:check
 npm run typecheck
 npm run lint
 npm run format:check
+npm test
 npm run build
 npm run docs:api:check
 npm run docs:check
-npm run docs:sync:check:strict
 npm run runtime:check
-npm run protocol:artifact:check
 npm run examples:check
 npm run dogfood:consumer
 npm run cli:check
 npm run templates:check
 npm run dx:smoke
-npm run release:state
 npm run security:secrets
-npm run security:install-scripts
-npm run security:release-governance
 npm run security:package
 npm run audit:prod
+npm run audit:packed-consumer
 npm pack --dry-run
 ```
 
-Run `npm run verify:release:protocol` before tagging or publishing when protocol
-parity is in scope.
+Passing local gates does not make an unconfigured deployment production-ready
+and does not authorize a contract deployment, package publication, token launch,
+or public marketing claim.

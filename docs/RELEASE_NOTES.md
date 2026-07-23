@@ -1,7 +1,66 @@
 # Release Notes — `@nakama-health/protocol-sdk`
 
+## `0.9.0` — Robinhood-native protection SDK
+
+- Made Robinhood Chain mainnet (`4663`) and testnet (`46630`) the canonical root
+  surface, with an explicit `/robinhood` export and no chain-1 fallback.
+- Imported the exact 12-contract protocol artifact/ABIs and added reproducible
+  source, ABI, compiler, component-code, and deployment-commitment checks. A
+  ready bundle now requires the nonzero committed contract-source revision and
+  rejects null, malformed, zero, or caller-substituted provenance.
+- Migrated that boundary to artifact schema 2 and suite major 2, with the sole
+  schema-2 `EconomicActivity` event decoded into nine reconstructable kinds.
+  Runtime verification now rejects a legacy-major suite even when its factory
+  and deployment commitment otherwise match.
+- Added the adapter-only `recordBlockedAttempt` calldata/read boundary and typed
+  factory role/version errors. Blocked telemetry cannot enter the wallet action
+  path, consume a grant, or execute a target.
+- Added closed, fail-closed deployment manifests; both remain `unconfigured`, so
+  no production read/write can be constructed until audited deployment evidence
+  and live runtime verification exist.
+- Added exact canonical mainnet USDG identity/amount handling and left testnet
+  USDG unavailable until a verified address is published.
+- Added pinned product reads, indexer reconciliation, public-safe offline cache,
+  typed capability-marked actions, exact simulations, EIP-1193 wallet requests,
+  immutable protocol EIP-712 decisions, sealed transaction-intent finality, and
+  dual-independent L2/L1 economic-finality assessment.
+- Added canonical eligibility and exact-target eligibility-revocation EIP-712
+  helpers, a relayer-safe revocation action builder, exhaustive revocation event
+  decoding, and artifact parity with the hardened MembershipRegistry ABI.
+- Added independent smart-account account/module bytecode verification, exact
+  user-operation submission binding, and a provider-neutral lifecycle state
+  machine for creation, passkeys, signer rotation, and recovery. Paymaster
+  behavior remains quote-only pending provider selection and live conformance.
+- Added bounded public indexer pagination/retry validation, cursor-loop
+  detection, finality/reconciliation context, and block-hash reorg cache
+  invalidation; offline or unreconciled state remains read-only.
+- Added offline Virtuals launch-packet structural validation with explicit
+  warnings that it performs no platform, legal, identity, RPC, signing,
+  broadcast, or launch operation.
+- Reworked CLI doctor, templates, examples, package/runtime manifest, consumer
+  smoke tests, and canonical documentation around the Robinhood product lane.
+
+The entries below are historical releases and do not describe the canonical
+network or recommended integration path in the current working tree.
+
 ## `0.8.10`
 
+- Ported the canonical SDK lane to Ethereum mainnet (`eip155:1`) with a
+  fail-closed schema-v3 deployment manifest for one factory transaction, the
+  nonce-one policy registry, the nonce-two core, and addressless ReserveVault
+  CREATE2 template metadata.
+- Imported and generated exact ABI/bytecode metadata for
+  `NakamaProtocolFactory`, `NakamaPolicyRegistry`, `NakamaCoverageProtocol`, and
+  `ReserveVault`, with sibling-artifact parity, package/runtime gates, and
+  all-four-contract CLI/example/template diagnostics.
+- Removed the public `recordPremiumPayment` ABI path, added
+  `PolicyPremiumCollected` and the immutable core `deploymentFactory()` getter,
+  and made live deployment verification require that getter to resolve to the
+  receipt-bound manifest factory.
+- Added receipt/finality and transaction-intent verification, live factory and
+  child-address derivation, mutual getter and immutable-aware bytecode checks,
+  per-contract Sourcify validation, and ClaimRecipient EIP-712 authorization
+  bound to the Nakama Policy Registry with EOA/ERC-1271 and replay protection.
 - Added `SDK_QUALITY.md` and `SDK_RUNTIME.json` so humans and AI agents can
   inspect the SDK contract, safety rules, public lanes, protocol target, and
   release gates without inferring them from prose.
@@ -10,6 +69,12 @@
   templates, secrets, install scripts, and packed consumer smokes.
 - Removed stale reward/seeker-era public types from the canonical SDK surface
   and regenerated symbol-level API docs.
+- Removed all Solana modules and dependencies from the canonical root, moved
+  retained read/migration compatibility behind explicit subpaths and optional
+  peers, and made every legacy instruction/transaction builder and safe-client
+  write method fail closed.
+- Added an isolated packed-consumer production audit gate and EIP-7825
+  `0x1000000` transaction gas-limit enforcement with boundary tests.
 - Clarified the protocol surface target and `v0.8.9` post-publish smoke history
   without treating the already-published package as unpublished.
 

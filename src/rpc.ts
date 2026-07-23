@@ -1,6 +1,6 @@
 import { Connection, type Commitment } from '@solana/web3.js';
 
-import { OmegaXConfigError } from './errors.js';
+import { NakamaLegacyWriteDisabledError, OmegaXConfigError } from './errors.js';
 import type {
   BroadcastSignedTxParams,
   BroadcastSignedTxResult,
@@ -161,31 +161,11 @@ export function createRpcClient(connection: Connection): RpcClient {
     async broadcastSignedTx(
       params: BroadcastSignedTxParams,
     ): Promise<BroadcastSignedTxResult> {
-      const raw = Buffer.from(params.signedTxBase64, 'base64');
-      const signature = await connection.sendRawTransaction(raw, {
-        skipPreflight: params.skipPreflight ?? false,
-        maxRetries: params.maxRetries,
-      });
-
-      const commitment = params.commitment ?? 'confirmed';
-      const confirmation = await connection.confirmTransaction(
-        signature,
-        commitment,
+      void params;
+      throw new NakamaLegacyWriteDisabledError(
+        'Solana transaction broadcasting is disabled in the Ethereum mainnet SDK. Use an EIP-1193 SigningPayloadV2 flow.',
+        { details: { legacyNetwork: 'solana' } },
       );
-
-      if (confirmation.value.err) {
-        return {
-          signature,
-          status: 'failed',
-          slot: confirmation.context.slot,
-        };
-      }
-
-      return {
-        signature,
-        status: commitment === 'processed' ? 'submitted' : 'confirmed',
-        slot: confirmation.context.slot,
-      };
     },
 
     async simulateSignedTx(
