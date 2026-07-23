@@ -214,6 +214,12 @@ test('SigningPayloadV2 validates and signs the canonical serialized claim-recipi
   assert.equal(checked.kind, 'typed_data');
   assert.equal(checked.typedData.primaryType, 'ClaimRecipient');
   assert.deepEqual(checked.typedData.types, {
+    EIP712Domain: [
+      { name: 'name', type: 'string' },
+      { name: 'version', type: 'string' },
+      { name: 'chainId', type: 'uint256' },
+      { name: 'verifyingContract', type: 'address' },
+    ],
     ClaimRecipient: [
       { name: 'claimId', type: 'bytes32' },
       { name: 'recipient', type: 'address' },
@@ -253,6 +259,14 @@ test('SigningPayloadV2 validates and signs the canonical serialized claim-recipi
     (requests[1]?.params as readonly unknown[])[1] as string,
   ) as { primaryType: string; message: Record<string, unknown> };
   assert.equal(walletTypedData.primaryType, 'ClaimRecipient');
+  assert.deepEqual(
+    (
+      walletTypedData as {
+        types: { EIP712Domain: readonly Record<string, unknown>[] };
+      }
+    ).types.EIP712Domain,
+    checked.typedData.types.EIP712Domain,
+  );
   assert.equal(walletTypedData.message.nonce, '0');
   assert.equal(walletTypedData.message.deadline, '2000000000');
 });

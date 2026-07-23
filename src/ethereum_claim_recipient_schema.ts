@@ -15,14 +15,31 @@ export const NAKAMA_CLAIM_RECIPIENT_DOMAIN_NAME =
   'Nakama Policy Registry' as const;
 export const NAKAMA_CLAIM_RECIPIENT_DOMAIN_VERSION = '1' as const;
 
-export const CLAIM_RECIPIENT_EIP712_TYPES = {
-  ClaimRecipient: [
-    { name: 'claimId', type: 'bytes32' },
-    { name: 'recipient', type: 'address' },
-    { name: 'nonce', type: 'uint256' },
-    { name: 'deadline', type: 'uint256' },
-  ],
-} as const;
+function freezeTypeFields<
+  T extends readonly Readonly<{ name: string; type: string }>[],
+>(fields: T): T {
+  for (const field of fields) Object.freeze(field);
+  return Object.freeze(fields);
+}
+
+const CLAIM_RECIPIENT_EIP712_DOMAIN_FIELDS = freezeTypeFields([
+  { name: 'name', type: 'string' },
+  { name: 'version', type: 'string' },
+  { name: 'chainId', type: 'uint256' },
+  { name: 'verifyingContract', type: 'address' },
+] as const);
+
+const CLAIM_RECIPIENT_FIELDS = freezeTypeFields([
+  { name: 'claimId', type: 'bytes32' },
+  { name: 'recipient', type: 'address' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'deadline', type: 'uint256' },
+] as const);
+
+export const CLAIM_RECIPIENT_EIP712_TYPES = Object.freeze({
+  EIP712Domain: CLAIM_RECIPIENT_EIP712_DOMAIN_FIELDS,
+  ClaimRecipient: CLAIM_RECIPIENT_FIELDS,
+});
 
 export interface CanonicalClaimRecipientSigningTypedData {
   domain: {
@@ -89,36 +106,17 @@ export function validateCanonicalClaimRecipientSigningTypedData(
   );
 
   const types = requireRecord(typedData.types, 'typedData.types');
-  assertExactKeys(types, ['ClaimRecipient'], 'typedData.types');
-  const claimRecipientFields = types.ClaimRecipient;
-  if (
-    !Array.isArray(claimRecipientFields) ||
-    claimRecipientFields.length !==
-      CLAIM_RECIPIENT_EIP712_TYPES.ClaimRecipient.length
-  ) {
-    throw new NakamaEthereumConfigError(
-      'Claim-recipient typedData.types must use the canonical ClaimRecipient schema.',
-    );
-  }
-  for (const [index, expected] of Object.entries(
+  assertExactKeys(types, ['EIP712Domain', 'ClaimRecipient'], 'typedData.types');
+  assertCanonicalTypeFields(
+    types.EIP712Domain,
+    CLAIM_RECIPIENT_EIP712_TYPES.EIP712Domain,
+    'EIP712Domain',
+  );
+  assertCanonicalTypeFields(
+    types.ClaimRecipient,
     CLAIM_RECIPIENT_EIP712_TYPES.ClaimRecipient,
-  )) {
-    const field = requireRecord(
-      claimRecipientFields[Number(index)],
-      `typedData.types.ClaimRecipient[${index}]`,
-    );
-    assertExactKeys(
-      field,
-      ['name', 'type'],
-      `typedData.types.ClaimRecipient[${index}]`,
-    );
-    if (field.name !== expected.name || field.type !== expected.type) {
-      throw new NakamaEthereumConfigError(
-        'Claim-recipient typedData.types must use the canonical ClaimRecipient schema.',
-        { details: { fieldIndex: Number(index) } },
-      );
-    }
-  }
+    'ClaimRecipient',
+  );
 
   const message = requireRecord(typedData.message, 'typedData.message');
   assertExactKeys(
@@ -154,6 +152,38 @@ export function validateCanonicalClaimRecipientSigningTypedData(
       deadline: requireUint256(message.deadline, 'typedData.message.deadline'),
     },
   };
+}
+
+function assertCanonicalTypeFields(
+  actual: unknown,
+  expected: readonly Readonly<{ name: string; type: string }>[],
+  typeName: string,
+): void {
+  if (!Array.isArray(actual) || actual.length !== expected.length) {
+    throw new NakamaEthereumConfigError(
+      `Claim-recipient typedData.types must use the canonical ${typeName} schema.`,
+    );
+  }
+  for (const [index, expectedField] of expected.entries()) {
+    const field = requireRecord(
+      actual[index],
+      `typedData.types.${typeName}[${index}]`,
+    );
+    assertExactKeys(
+      field,
+      ['name', 'type'],
+      `typedData.types.${typeName}[${index}]`,
+    );
+    if (
+      field.name !== expectedField.name ||
+      field.type !== expectedField.type
+    ) {
+      throw new NakamaEthereumConfigError(
+        `Claim-recipient typedData.types must use the canonical ${typeName} schema.`,
+        { details: { fieldIndex: index, typeName } },
+      );
+    }
+  }
 }
 
 function requireRecord(value: unknown, label: string): Record<string, unknown> {

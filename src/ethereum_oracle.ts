@@ -138,7 +138,7 @@ export function createClaimRecipientAuthorizationSigningPayload(params: {
 export function hashClaimRecipientAuthorization(
   typedData: ClaimRecipientAuthorizationTypedData,
 ): Hex {
-  return hashTypedData(typedData);
+  return hashTypedData(toViemClaimRecipientTypedData(typedData));
 }
 
 export async function verifyClaimRecipientAuthorization(
@@ -201,7 +201,7 @@ export async function verifyClaimRecipientAuthorization(
     }
     const valid = await options.client.verifyTypedData({
       address: claimant,
-      ...canonical,
+      ...toViemClaimRecipientTypedData(canonical),
       signature: options.signature,
     } as never);
     if (!valid) {
@@ -217,7 +217,7 @@ export async function verifyClaimRecipientAuthorization(
       );
     }
     const recovered = await recoverTypedDataAddress({
-      ...canonical,
+      ...toViemClaimRecipientTypedData(canonical),
       signature: options.signature,
     });
     if (recovered !== claimant) {
@@ -299,6 +299,16 @@ function normalizeClaimRecipientMessage(
     recipient,
     nonce: message.nonce,
     deadline: message.deadline,
+  };
+}
+
+/** Viem derives EIP712Domain itself; wallet JSON retains the explicit schema. */
+function toViemClaimRecipientTypedData(
+  typedData: ClaimRecipientAuthorizationTypedData,
+) {
+  return {
+    ...typedData,
+    types: { ClaimRecipient: typedData.types.ClaimRecipient },
   };
 }
 

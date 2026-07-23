@@ -60,7 +60,26 @@ test('claim-recipient authorization matches the contract EIP-712 domain and type
     chainId: 1,
     verifyingContract: CONTRACT,
   });
+  assert.deepEqual(
+    payload.typedData.types.EIP712Domain.map(
+      ({ name, type }) => `${name}:${type}`,
+    ),
+    [
+      'name:string',
+      'version:string',
+      'chainId:uint256',
+      'verifyingContract:address',
+    ],
+  );
   assert.equal(payload.typedData.primaryType, 'ClaimRecipient');
+  assert.throws(() => {
+    (
+      payload.typedData.types.ClaimRecipient[0] as {
+        name: string;
+        type: string;
+      }
+    ).type = 'address';
+  }, TypeError);
 });
 
 test('claim-recipient verification binds claimant, contract, nonce, and deadline', async () => {
