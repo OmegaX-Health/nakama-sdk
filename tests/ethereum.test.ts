@@ -203,6 +203,114 @@ test('SigningPayloadV2 rejects wrong CAIP, account mismatch, and mixed branches'
   );
 });
 
+test('SigningPayloadV2 validates and signs the canonical serialized claim-recipient typed data', async () => {
+  const serialized = JSON.parse(
+    JSON.stringify(typedDataPayload(), (_key, value) =>
+      typeof value === 'bigint' ? value.toString(10) : value,
+    ),
+  ) as Record<string, unknown>;
+  const checked = validateSigningPayloadV2(serialized);
+
+  assert.equal(checked.kind, 'typed_data');
+  assert.equal(checked.typedData.primaryType, 'ClaimRecipient');
+  assert.deepEqual(checked.typedData.types, {
+    ClaimRecipient: [
+      { name: 'claimId', type: 'bytes32' },
+      { name: 'recipient', type: 'address' },
+      { name: 'nonce', type: 'uint256' },
+      { name: 'deadline', type: 'uint256' },
+    ],
+  });
+  assert.deepEqual(checked.typedData.message, {
+    claimId: `0x${'11'.repeat(32)}`,
+    recipient: RECIPIENT,
+    nonce: 0n,
+    deadline: 2_000_000_000n,
+  });
+
+  const requests: Array<{
+    method: string;
+    params?: readonly unknown[] | Record<string, unknown>;
+  }> = [];
+  const provider: Eip1193ProviderLike = {
+    async request(request) {
+      requests.push(request);
+      return request.method === 'eth_chainId' ? '0x1' : SIGNATURE;
+    },
+  };
+  assert.equal(
+    await requestSigningPayloadV2(
+      provider,
+      serialized as unknown as SigningPayloadV2,
+    ),
+    SIGNATURE,
+  );
+  assert.deepEqual(
+    requests.map(({ method }) => method),
+    ['eth_chainId', 'eth_signTypedData_v4'],
+  );
+  const walletTypedData = JSON.parse(
+    (requests[1]?.params as readonly unknown[])[1] as string,
+  ) as { primaryType: string; message: Record<string, unknown> };
+  assert.equal(walletTypedData.primaryType, 'ClaimRecipient');
+  assert.equal(walletTypedData.message.nonce, '0');
+  assert.equal(walletTypedData.message.deadline, '2000000000');
+});
+
+test('SigningPayloadV2 rejects unrelated claim-recipient data before opening the wallet', async () => {
+  const canonical = typedDataPayload();
+  let providerRequestCount = 0;
+  const provider: Eip1193ProviderLike = {
+    async request() {
+      providerRequestCount += 1;
+      throw new Error('wallet must not be called');
+    },
+  };
+  const unrelatedPayloads = [
+    {
+      ...canonical,
+      typedData: {
+        ...canonical.typedData,
+        primaryType: 'Permit',
+      },
+    },
+    {
+      ...canonical,
+      typedData: {
+        ...canonical.typedData,
+        types: {
+          Permit: [
+            { name: 'owner', type: 'address' },
+            { name: 'spender', type: 'address' },
+          ],
+        },
+      },
+    },
+    {
+      ...canonical,
+      typedData: {
+        ...canonical.typedData,
+        message: {
+          owner: ACCOUNT,
+          spender: RECIPIENT,
+        },
+      },
+    },
+  ];
+
+  for (const payload of unrelatedPayloads) {
+    assert.throws(
+      () => validateSigningPayloadV2(payload),
+      NakamaEthereumConfigError,
+    );
+    await assert.rejects(
+      requestSigningPayloadV2(provider, payload as SigningPayloadV2),
+      NakamaEthereumConfigError,
+    );
+  }
+  assert.equal(providerRequestCount, 0);
+});
+
 test('EIP-1193 request maps canonical transaction payload and verifies wallet chain', async () => {
   const requests: Array<{ method: string; params?: unknown }> = [];
   const provider: Eip1193ProviderLike = {

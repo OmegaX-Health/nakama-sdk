@@ -15,6 +15,11 @@ import {
   NakamaEthereumWrongChainError,
 } from './errors.js';
 import {
+  CLAIM_RECIPIENT_EIP712_TYPES,
+  NAKAMA_CLAIM_RECIPIENT_DOMAIN_NAME,
+  NAKAMA_CLAIM_RECIPIENT_DOMAIN_VERSION,
+} from './ethereum_claim_recipient_schema.js';
+import {
   ETHEREUM_MAINNET_CHAIN_ID,
   createEip712SigningPayload,
   normalizeEthereumAddress,
@@ -22,18 +27,11 @@ import {
   type TypedDataSigningPayloadV2,
 } from './ethereum.js';
 
-export const NAKAMA_CLAIM_RECIPIENT_DOMAIN_NAME =
-  'Nakama Policy Registry' as const;
-export const NAKAMA_CLAIM_RECIPIENT_DOMAIN_VERSION = '1' as const;
-
-export const CLAIM_RECIPIENT_EIP712_TYPES = {
-  ClaimRecipient: [
-    { name: 'claimId', type: 'bytes32' },
-    { name: 'recipient', type: 'address' },
-    { name: 'nonce', type: 'uint256' },
-    { name: 'deadline', type: 'uint256' },
-  ],
-} as const;
+export {
+  CLAIM_RECIPIENT_EIP712_TYPES,
+  NAKAMA_CLAIM_RECIPIENT_DOMAIN_NAME,
+  NAKAMA_CLAIM_RECIPIENT_DOMAIN_VERSION,
+};
 
 export interface ClaimRecipientAuthorizationMessage {
   claimId: Hex;

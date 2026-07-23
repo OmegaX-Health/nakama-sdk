@@ -18,6 +18,7 @@ import {
   NakamaEthereumConfigError,
   NakamaEthereumWrongChainError,
 } from './errors.js';
+import { validateCanonicalClaimRecipientSigningTypedData } from './ethereum_claim_recipient_schema.js';
 
 export const ETHEREUM_MAINNET_CHAIN_ID = 1 as const;
 export const ETHEREUM_MAINNET_CHAIN_ID_HEX = '0x1' as const;
@@ -251,18 +252,17 @@ export function createEip712SigningPayload(params: {
   typedData: Eip712TypedDataDefinition;
   authorizationType?: 'claim_recipient';
 }): TypedDataSigningPayloadV2 {
-  const domainChainId = Number(params.typedData.domain.chainId);
-  if (domainChainId !== ETHEREUM_MAINNET_CHAIN_ID) {
-    throw new NakamaEthereumWrongChainError(
-      `EIP-712 domain chainId must be ${ETHEREUM_MAINNET_CHAIN_ID}.`,
-      {
-        details: {
-          actualChainId: params.typedData.domain.chainId,
-          expectedChainId: ETHEREUM_MAINNET_CHAIN_ID,
-        },
-      },
+  if (
+    params.authorizationType != null &&
+    params.authorizationType !== 'claim_recipient'
+  ) {
+    throw new NakamaEthereumConfigError(
+      'EIP-712 signing payload authorizationType must be claim_recipient.',
     );
   }
+  const typedData = validateCanonicalClaimRecipientSigningTypedData(
+    params.typedData,
+  );
 
   return {
     version: 2,
@@ -270,7 +270,7 @@ export function createEip712SigningPayload(params: {
     accountId: toEthereumMainnetCaip10(params.account),
     kind: 'typed_data',
     authorizationType: params.authorizationType ?? 'claim_recipient',
-    typedData: params.typedData,
+    typedData,
   };
 }
 
